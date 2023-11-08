@@ -7,8 +7,8 @@ import { async } from "q";
 import Select from 'react-select';
 import { useCookies } from "react-cookie";
 import { date, number } from "joi";
-import { numberWithCommas} from '../lib/number';
-import {BiSearchAlt } from "react-icons/bi";
+import { numberWithCommas } from '../lib/number';
+import { BiSearchAlt } from "react-icons/bi";
 import Modal from 'react-bootstrap/Modal';
 import ModalSearchAgent from "./ModalSearchAgent";
 import DatePicker from 'react-datepicker';
@@ -21,26 +21,30 @@ const PolicyScreen = (props) => {
   const [cookies, setCookie, removeCookie] = useCookies(["jwt"]);
   const headers = {
     headers: { Authorization: `Bearer ${cookies["jwt"]}` }
-};
+  };
   const url = window.globalConfig.BEST_POLICY_V1_BASE_URL;
   const tax = config.tax;
   const duty = config.duty;
   const withheld = config.witheld;
+  const motorcode = config.motorcode;
   let datenow = new Date()
   datenow = datenow.toISOString().substring(0, 10);
-  
+
   //import excel
   const [formData, setFormData] = useState({
-    grossprem:0,
-    specdiscamt:0,
-    netgrossprem:0,
+    grossprem: 0,
+    specdiscamt: 0,
+    netgrossprem: 0,
     specdiscrate: 0,
-    duty :0,
-    tax:0,
-    totalprem:0,
-    withheld:0,
-    agentCode:'',
-    agentCode2:'',
+    duty: 0,
+    tax: 0,
+    totalprem: 0,
+    withheld: 0,
+    agentCode: '',
+    agentCode2: '',
+    unregisterflag: 'Y',
+    actTime: "16:30",
+    expTime: "16:30",
   });
   const [provinceDD, setProvinceDD] = useState([]);
   const [districDD, setDistricDD] = useState([]);
@@ -53,44 +57,62 @@ const PolicyScreen = (props) => {
   const [insurerDD, setInsurerDD] = useState([]);
   const [motorbrandDD, setMotorbrandDD] = useState([]);
   const [motormodelDD, setMotormodelDD] = useState([]);
-  const [hidecard, setHidecard] = useState([false,0]);
+  const [hidecard, setHidecard] = useState([false, 0]);
   const [showMotorData, setShowMotorData] = useState(false);
 
   //for modal
-  const editCard =(e,name) =>{
+  const editCard = (e, name) => {
     // console.log(policiesData[e.target.id]);
-    
-    setHidecard([true,name])
-   
+
+    setHidecard([true, name])
+
   };
-  const handleChangeCard =  (e,name,data) => {
-   console.log(data);
-     setFormData((prevState) => ({
-          ...prevState,
-          [name]: data,
-        }))
-      setHidecard([false,0])
-    
-    
+  const handleChangeCard = (e, name, data) => {
+    console.log(data);
+    setFormData((prevState) => ({
+      ...prevState,
+      [name]: data,
+    }))
+    setHidecard([false, 0])
+
+
   };
-  const handleClose = (e) =>{
-        setHidecard([false,0])
-      }
+  const handleClose = (e) => {
+    setHidecard([false, 0])
+  }
   //end modal
 
   const handleChange = async (e) => {
     e.preventDefault();
     // console.log(e);
-    
-    setFormData((prevState) => ({
-      ...prevState,
-      [e.target.name]: e.target.value,
-    }));
+    if (e.target.name === 'branch') {
+      const value = e.target.value;
+      // Check if the input is a number and has a length of 5 or less
+      if (/^\d+$/.test(value)) {
+        // Format the value with leading zeros
+        let formattedValue = value.padStart(5, "0");
+        if (value.length > 5) {
+          formattedValue = value.substring(1)
+        }
+        setFormData((prevState) => ({
+          ...prevState,
+          'branch': formattedValue,
+        }));
+        document.getElementsByName('branch')[0].value = formattedValue
+      } else {
+        document.getElementsByName('branch')[0].value = value.replace(/[^0-9]/g, '')
+      }
+    } else {
+      setFormData((prevState) => ({
+        ...prevState,
+        [e.target.name]: e.target.value,
+      }));
+    }
     //set dropdown title follow to personType
     if (e.target.name === "personType") {
       if (e.target.value === "P") {
         axios
-          .get(url + "/static/titles/person/all",headers)
+          .get(url + "/static/titles/person/all", headers)
           .then((title) => {
             const array2 = [];
             title.data.forEach((ele) => {
@@ -98,16 +120,16 @@ const PolicyScreen = (props) => {
                 // <option key={ele.TITLEID} value={ele.TITLETHAIBEGIN}>
                 //   {ele.TITLETHAIBEGIN}
                 // </option>
-                {label: ele.TITLETHAIBEGIN, value: ele.TITLETHAIBEGIN}
+                { label: ele.TITLETHAIBEGIN, value: ele.TITLEID, label2: ele.TITLETHAIEND || '' }
               );
-              
+
             });
             setTitleDD(array2);
           })
           .catch((err) => { });
       } else {
         axios
-          .get(url + "/static/titles/company/all",headers)
+          .get(url + "/static/titles/company/all", headers)
           .then((title) => {
             const array2 = [];
             title.data.forEach((ele) => {
@@ -115,7 +137,7 @@ const PolicyScreen = (props) => {
                 // <option key={ele.TITLEID} value={ele.TITLETHAIBEGIN}>
                 //   {ele.TITLETHAIBEGIN}
                 // </option>
-                {label: ele.TITLETHAIBEGIN, value: ele.TITLETHAIBEGIN}
+                { label: ele.TITLETHAIBEGIN, value: ele.TITLEID, label2: ele.TITLETHAIEND || '' }
               );
             });
             setTitleDD(array2);
@@ -155,10 +177,10 @@ const PolicyScreen = (props) => {
 
   };
 
-  const handleChangeActdate =  (e) => {
+  const handleChangeActdate = (e) => {
     e.preventDefault();
     console.log(e.target.value);
-    console.log( typeof(e.target.value));
+    console.log(typeof (e.target.value));
     const originalDate = new Date(e.target.value);
 
     // Add one year (365 days) to the date
@@ -166,14 +188,14 @@ const PolicyScreen = (props) => {
 
     // Convert the updated Date object back to a string
     const updatedDateString = originalDate.toISOString().substring(0, 10);
-    
+
 
     setFormData((prevState) => ({
       ...prevState,
       actDate: e.target.value,
       expDate: updatedDateString
     }));
- 
+
 
   };
 
@@ -183,25 +205,25 @@ const PolicyScreen = (props) => {
     let maxdate = new Date()
     if (e.target.name === 'actDate') {
       mindate.setFullYear(mindate.getFullYear() - 3)
-      maxdate.setFullYear(maxdate.getFullYear() + 3)    
-    }else if (e.target.name === 'expDate'){
+      maxdate.setFullYear(maxdate.getFullYear() + 3)
+    } else if (e.target.name === 'expDate') {
       mindate.setFullYear(mindate.getFullYear() - 4)
-      maxdate.setFullYear(maxdate.getFullYear() + 4)   
+      maxdate.setFullYear(maxdate.getFullYear() + 4)
     }
-  
+
     const inputDate = new Date(e.target.value);
-    let actdate =''
+    let actdate = ''
     let expdate = ''
-  
+
     if (inputDate < mindate) {
-       actdate = mindate.toISOString().substring(0, 10)
+      actdate = mindate.toISOString().substring(0, 10)
       mindate.setFullYear(mindate.getFullYear() + 1)
-       expdate = mindate.toISOString().substring(0, 10)
+      expdate = mindate.toISOString().substring(0, 10)
     } else if (inputDate > maxdate) {
-       actdate = maxdate.toISOString().substring(0, 10)
+      actdate = maxdate.toISOString().substring(0, 10)
       maxdate.setFullYear(maxdate.getFullYear() + 1)
-       expdate = maxdate.toISOString().substring(0, 10)
-    }else {
+      expdate = maxdate.toISOString().substring(0, 10)
+    } else {
       actdate = e.target.value
       inputDate.setFullYear(inputDate.getFullYear() + 1)
       expdate = inputDate.toISOString().substring(0, 10)
@@ -214,7 +236,7 @@ const PolicyScreen = (props) => {
         expDate: expdate
       }));
       // document.getElementsByName("actDate")[0].value = actdate
-    }else if (e.target.name === 'expDate'){
+    } else if (e.target.name === 'expDate') {
       setFormData((prevState) => ({
         ...prevState,
         expDate: actdate
@@ -222,14 +244,63 @@ const PolicyScreen = (props) => {
       // document.getElementsByName("expDate")[0].value = actdate
     }
   }
+
+  function validateCitizenID(e) {
+    // Remove any non-numeric characters
+    const citizenID = document.getElementsByName("regisNo")[0].value
+    const m = citizenID.match(/(\d{12})(\d)/)
+    if (!m) {
+      console.warn('Bad input from user, invalid thaiId=', citizenID)
+      alert('เลขบัตรประชาชนไม่ครบ 13 หลัก')
+      document.getElementsByName("regisNo")[0].value = ''
+      return
+    }
+    const digits = m[1].split('');
+    const sum = digits.reduce((total, digit, i) => {
+      return total + (13 - i) * +digit;
+    }, 0)
+    const lastDigit = `${(11 - sum % 11) % 10}`
+    const inputLastDigit = m[2]
+    if (lastDigit !== inputLastDigit) {
+      alert('เลขบัตรประชาชนไม่ถูกต้อง')
+      document.getElementsByName("regisNo")[0].value = ''
+      return
+    }
+
+
+    // You can add more specific validation rules here, like checking for a valid checksum or pattern.
+
+    // If all checks pass, the citizen ID is considered valid
+
+  }
+  function isEmailValid(e) {
+    // Regular expression for a basic email format
+    const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
+    const email = document.getElementsByName("Email")[0].value
+    // Use the test method of the regex to check if the email matches the pattern
+    if (!emailRegex.test(email)) {
+      alert('Email ไม่ถูกต้อง')
+      document.getElementsByName("Email")[0].value = ''
+    }
+  }
+  function isPhoneNumberValid(e) {
+    // Regular expression for a Thai phone number format
+    const phoneRegex = /^0\d{9}$/;
+    const phoneNumber = document.getElementsByName("telNum_1")[0].value
+    // Use the test method of the regex to check if the phone number matches the pattern
+    if (!phoneRegex.test(phoneNumber)) {
+      document.getElementsByName("telNum_1")[0].value = ''
+      alert('หมายเลขมือถือผิด')
+    }
+  }
   const handleChangePrem = async (e) => {
     e.preventDefault();
     // console.log(e);
-    
+
     //  set totalprem
     if (e.target.name === 'grossprem') {
       const netgrosspremamt = e.target.value - formData.specdiscamt
-      const dutyamt =Math.ceil( netgrosspremamt * duty)
+      const dutyamt = Math.ceil(netgrosspremamt * duty)
       const taxamt = parseFloat(((netgrosspremamt + dutyamt) * tax).toFixed(2))
       const totalpremamt = netgrosspremamt + dutyamt + taxamt
       setFormData((prevState) => ({
@@ -237,14 +308,13 @@ const PolicyScreen = (props) => {
         grossprem: e.target.value,
         netgrossprem: netgrosspremamt,
         duty: dutyamt,
-        tax: taxamt, 
+        tax: taxamt,
         totalprem: totalpremamt,
       }));
-    } else if(e.target.name === 'specdiscrate')
-    {
-      const specdiscamt =parseFloat( (e.target.value * formData.grossprem/100).toFixed(2))
+    } else if (e.target.name === 'specdiscrate') {
+      const specdiscamt = parseFloat((e.target.value * formData.grossprem / 100).toFixed(2))
       const netgrosspremamt = formData.grossprem - specdiscamt
-      const dutyamt =Math.ceil( netgrosspremamt * duty)
+      const dutyamt = Math.ceil(netgrosspremamt * duty)
       const taxamt = parseFloat(((netgrosspremamt + dutyamt) * tax).toFixed(2))
       const totalpremamt = netgrosspremamt + dutyamt + taxamt
       setFormData((prevState) => ({
@@ -253,11 +323,11 @@ const PolicyScreen = (props) => {
         specdiscamt: specdiscamt,
         netgrossprem: netgrosspremamt,
         duty: dutyamt,
-        tax: taxamt, 
+        tax: taxamt,
         totalprem: totalpremamt,
       }));
-    } 
-    else  {
+    }
+    else {
       if (e.target.name === 'commin_rate') {
         setFormData((prevState) => ({
           ...prevState,
@@ -290,37 +360,55 @@ const PolicyScreen = (props) => {
     }
   };
 
- 
- 
 
-  const changeProvince = (e) =>{
+
+
+  const changeProvince = (e) => {
     setFormData((prevState) => ({
       ...prevState,
       province: e.value,
     }));
-      getDistrict(e.value);
-    
-    
+    getDistrict(e.value);
+
+
   }
-  const changeDistrict = (e) =>{
+  const changeDistrict = (e) => {
     setFormData((prevState) => ({
       ...prevState,
       district: e.value,
     }));
-      getSubDistrict(e.value);
+    getSubDistrict(e.value);
   }
-  const changeMotorBrand = (e) =>{
+  const changeSubDistrict = (e) =>{
+    setFormData((prevState) => ({
+      ...prevState,
+      subdistrict: e.value,
+    }));
+    const postcode = subDistricDD.find(el => el.value === e.value).postcode;
+    
+    const arrayZip = postcode.map((zip, index) => (
+      <option key={index} value={zip}>
+        {zip}
+      </option>
+    ));
+    setZipCodeDD(arrayZip);
+        setFormData((prevState) => ({
+          ...prevState,
+          zipcode: postcode[0]
+        }))
+  }
+  const changeMotorBrand = (e) => {
     setFormData((prevState) => ({
       ...prevState,
       brandname: e.value,
     }));
-      getMotormodel(e.value);
+    getMotormodel(e.value);
   }
 
   const getDistrict = (provincename) => {
     //get distric in province selected
     axios
-      .post(url + "/static/amphurs/search", { provincename: provincename },headers)
+      .post(url + "/static/amphurs/search", { provincename: provincename }, headers)
       .then((distric) => {
         const array = [];
         distric.data.forEach((ele) => {
@@ -329,7 +417,7 @@ const PolicyScreen = (props) => {
           //     {ele.t_amphurname}
           //   </option>
           // );
-          array.push({label: ele.t_amphurname, value: ele.t_amphurname})
+          array.push({ label: ele.t_amphurname, value: ele.t_amphurname })
         });
         setDistricDD(array);
       })
@@ -341,7 +429,7 @@ const PolicyScreen = (props) => {
   const getMotormodel = (brandname) => {
     //get distric in province selected
     axios
-      .post(url + "/static/mt_models/search", { brandname: brandname },headers)
+      .post(url + "/static/mt_models/search", { brandname: brandname }, headers)
       .then((model) => {
         const array = [];
         model.data.forEach((ele) => {
@@ -350,7 +438,7 @@ const PolicyScreen = (props) => {
           //     {ele.MODEL}
           //   </option>
           // );
-          array.push({label: ele.MODEL, value: ele.MODEL})
+          array.push({ label: ele.MODEL, value: ele.MODEL })
         });
         setMotormodelDD(array);
       })
@@ -361,28 +449,18 @@ const PolicyScreen = (props) => {
   const getSubDistrict = (amphurname) => {
     //get tambons in distric selected
     axios
-      .post(url + "/static/tambons/search", { amphurname: amphurname },headers)
+      .post(url + "/static/tambons/search", { amphurname: amphurname }, headers)
       .then((subdistric) => {
         const arraySub = [];
         const arrayZip = [];
         const zip = [];
         subdistric.data.forEach((ele) => {
-          // arraySub.push(
-          //   <option id={ele.tambonid} value={ele.t_tambonname}>
-          //     {ele.t_tambonname}
-          //   </option>
-          // );
-          arraySub.push({label: ele.t_tambonname, value: ele.t_tambonname})
-          zip.push(ele.postcodeall.split("/"));
+          
+          arraySub.push({ label: ele.t_tambonname, value: ele.t_tambonname,  postcode: ele.postcodeall.split("/")  })
+        
         });
-        const uniqueZip = [...new Set(...zip)];
-        console.log(uniqueZip);
-        uniqueZip.forEach((zip) => {
-          // arrayZip.push(<option value={zip}>{zip}</option>);
-          arrayZip.push({label: zip, value: zip})
-        });
+       
         setSubDistricDD(arraySub);
-        setZipCodeDD(arrayZip);
       })
       .catch((err) => {
         // alert("cant get tambons");
@@ -392,14 +470,14 @@ const PolicyScreen = (props) => {
   const getcommov = (e) => {
     e.preventDefault();
     //get comm  ov setup
-    let i =1
-    if(e.target.name === 'btn_comm1'){
-      i =1
-    }else if(e.target.name === 'btn_comm2'){
-      i =2
+    let i = 1
+    if (e.target.name === 'btn_comm1') {
+      i = 1
+    } else if (e.target.name === 'btn_comm2') {
+      i = 2
     }
     axios
-      .post(url + "/insures/getcommov", formData,headers)
+      .post(url + "/insures/getcommov", formData, headers)
       .then((res) => {
         console.log(res.data);
         setFormData((prevState) => ({
@@ -464,34 +542,34 @@ const PolicyScreen = (props) => {
     data[0].netgrossprem = document.getElementsByName('grossprem')[0].value - document.getElementsByName('specdiscamt')[0].value
     data[0].tax = document.getElementsByName('tax')[0].value
     data[0].duty = document.getElementsByName('duty')[0].value
-    data[0].totalprem = document.getElementsByName('totalprem')[0].value 
-    data[0].commin_amt = document.getElementsByName('commin_amt')[0].value 
-    data[0].ovin_amt = document.getElementsByName('ovin_amt')[0].value 
-    data[0].commout1_amt = document.getElementsByName('commout1_amt')[0].value 
-    data[0].ovout1_amt = document.getElementsByName('ovout1_amt')[0].value 
+    data[0].totalprem = document.getElementsByName('totalprem')[0].value
+    data[0].commin_amt = document.getElementsByName('commin_amt')[0].value
+    data[0].ovin_amt = document.getElementsByName('ovin_amt')[0].value
+    data[0].commout1_amt = document.getElementsByName('commout1_amt')[0].value
+    data[0].ovout1_amt = document.getElementsByName('ovout1_amt')[0].value
     if (document.getElementsByName('commout2_amt')[0]) {
-      data[0].commout2_amt = document.getElementsByName('commout2_amt')[0].value 
+      data[0].commout2_amt = document.getElementsByName('commout2_amt')[0].value
     }
     if (document.getElementsByName('ovout2_amt')[0]) {
-      
-      data[0].ovout2_amt = document.getElementsByName('ovout2_amt')[0].value 
+
+      data[0].ovout2_amt = document.getElementsByName('ovout2_amt')[0].value
     }
-    data[0].commout_amt = document.getElementsByName('commout_amt')[0].value 
-    data[0].ovout_amt = document.getElementsByName('ovout_amt')[0].value 
+    data[0].commout_amt = document.getElementsByName('commout_amt')[0].value
+    data[0].ovout_amt = document.getElementsByName('ovout_amt')[0].value
     console.log(data);
     e.preventDefault();
-    await axios.post(url + "/policies/policydraft/batch", data,headers).then((res) => {
+    await axios.post(url + "/policies/policydraft/batch", data, headers).then((res) => {
       alert("policy batch Created");
       window.location.reload(false);
-    }).catch((err)=>{ alert("Something went wrong, Try Again.");});
+    }).catch((err) => { alert("Something went wrong, Try Again."); });
   };
 
 
   useEffect(() => {
-    
+
     // get province
     axios
-      .get(url + "/static/provinces/all",headers)
+      .get(url + "/static/provinces/all", headers)
       .then((province) => {
         // let token = res.data.jwt;
         // let decode = jwt_decode(token);
@@ -507,12 +585,12 @@ const PolicyScreen = (props) => {
           //   </option>
           // );
 
-          array.push({label:ele.t_provincename, value:ele.t_provincename})
+          array.push({ label: ele.t_provincename, value: ele.t_provincename })
         });
         setProvinceDD(array);
         // get title
         axios
-          .get(url + "/static/titles/company/all",headers)
+          .get(url + "/static/titles/company/all", headers)
           .then((title) => {
             const array2 = [];
             title.data.forEach((ele) => {
@@ -531,7 +609,7 @@ const PolicyScreen = (props) => {
 
     //get insureType
     axios
-      .get(url + "/insures/insuretypeall",headers)
+      .get(url + "/insures/insuretypeall", headers)
       .then((insuretype) => {
         // let token = res.data.jwt;
         // let decode = jwt_decode(token);
@@ -563,7 +641,7 @@ const PolicyScreen = (props) => {
 
     //get insurer
     axios
-      .get(url + "/persons/insurerall",headers)
+      .get(url + "/persons/insurerall", headers)
       .then((insurer) => {
         // let token = res.data.jwt;
         // let decode = jwt_decode(token);
@@ -587,7 +665,7 @@ const PolicyScreen = (props) => {
 
     //get motor brand
     axios
-      .get(url + "/static/mt_brands/all",headers)
+      .get(url + "/static/mt_brands/all", headers)
       .then((brands) => {
         // let token = res.data.jwt;
         // let decode = jwt_decode(token);
@@ -602,7 +680,7 @@ const PolicyScreen = (props) => {
           //     {ele.BRANDNAME}
           //   </option>
           // );
-          array.push({label:ele.BRANDNAME, value:ele.BRANDNAME})
+          array.push({ label: ele.BRANDNAME, value: ele.BRANDNAME })
         });
         setMotorbrandDD(array);
       })
@@ -612,14 +690,14 @@ const PolicyScreen = (props) => {
 
   return (
     <div>
-      <Modal  size="l" show={hidecard[0]} onHide={handleClose} >
+      <Modal size="l" show={hidecard[0]} onHide={handleClose} >
         <Modal.Header closeButton>
           <Modal.Title >ค้นหาผู้แนะนำ</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-        {<ModalSearchAgent name ={hidecard[1]} formData={formData} setFormData ={handleChangeCard}/>}
+          {<ModalSearchAgent name={hidecard[1]} formData={formData} setFormData={handleChangeCard} />}
         </Modal.Body>
-       
+
       </Modal>
 
       <h1 className="text-center">สร้างรายการกรมธรรม์</h1>
@@ -645,18 +723,33 @@ const PolicyScreen = (props) => {
             วันที่เริ่มคุ้มครอง<span class="text-danger"> *</span>
           </label>
           <input
-        
+
             className="form-control"
             type="date"
             format="dd/MM/yyyy"
             value={formData.actDate}
             name={`actDate`}
             onChange={handleChangeActdate}
-            onBlur={(e)=>validateDate(e)}
+            onBlur={(e) => validateDate(e)}
           />
-        
-        </div>
 
+        </div>
+        <div class="col-2 form-group ">
+          <label class="form-label">
+            เวลาเริ่มคุ้มครอง<span class="text-danger"> *</span>
+          </label>
+          <input
+
+            className="form-control"
+            type="time"
+            format="dd/MM/yyyy"
+            defaultValue={"16:30"}
+            name={`actTime`}
+            onChange={handleChangeActdate}
+            onBlur={(e) => validateDate(e)}
+          />
+
+        </div>
         <div class="col-2 form-group ">
           <label class="form-label ">
             วันที่สิ้นสุด<span class="text-danger"> *</span>
@@ -664,11 +757,24 @@ const PolicyScreen = (props) => {
           <input
             className="form-control"
             type="date"
-            
+
             value={formData.expDate}
             name={`expDate`}
             onChange={handleChange}
-            onBlur={(e)=>validateDate(e)}
+            onBlur={(e) => validateDate(e)}
+          />
+        </div>
+        <div class="col-2 form-group ">
+          <label class="form-label ">
+            เวลาสิ้นสุด<span class="text-danger"> *</span>
+          </label>
+          <input
+            className="form-control"
+            type="time"
+            defaultValue={"16:30"}
+            name={`expTime`}
+            onChange={handleChange}
+            onBlur={(e) => validateDate(e)}
           />
         </div>
         <div class="col-2 form-group ">
@@ -692,13 +798,13 @@ const PolicyScreen = (props) => {
 
       <div class="row">
         <div className="col-1"></div>
-        
+
 
         <div class="col-2 form-group ">
           <label class="form-label px-3">
             รหัสผู้แนะนำ 1<span class="text-danger"> *</span>
           </label>
-          <div class="input-group mb-3">              
+          <div class="input-group mb-3">
             <input
               className="form-control"
               type="text"
@@ -706,17 +812,17 @@ const PolicyScreen = (props) => {
               name={`agentCode`}
               onChange={handleChange}
             />
-          <div class="input-group-append">
-              <button class="btn btn-primary" type="button" name="btn-agent1" onClick={(e)=>editCard(e,'agentCode')}><BiSearchAlt  style={{fontSize: "30px", color: "white"}}/></button>
+            <div class="input-group-append">
+              <button class="btn btn-primary" type="button" name="btn-agent1" onClick={(e) => editCard(e, 'agentCode')}><BiSearchAlt style={{ fontSize: "30px", color: "white" }} /></button>
             </div>
-       </div>
+          </div>
         </div>
 
         <div class="col-2 form-group ">
           <label class="form-label px-3">
             รหัสผู้แนะนำ 2
           </label>
-          <div class="input-group mb-3">              
+          <div class="input-group mb-3">
             <input
               className="form-control"
               type="text"
@@ -724,48 +830,48 @@ const PolicyScreen = (props) => {
               name={`agentCode2`}
               onChange={handleChange}
             />
-          <div class="input-group-append">
-              <button class="btn btn-primary" type="button" name="btn-agent2" onClick={(e)=>editCard(e,"agentCode2")}><BiSearchAlt  style={{fontSize: "30px", color: "white"}}/></button>
+            <div class="input-group-append">
+              <button class="btn btn-primary" type="button" name="btn-agent2" onClick={(e) => editCard(e, "agentCode2")}><BiSearchAlt style={{ fontSize: "30px", color: "white" }} /></button>
             </div>
-       </div>
-        
+          </div>
+
         </div>
         <div class="col-2 form-group ">
           <div className="row">
-            
-          <div className="col form-group">
-          <label class="form-label ">
-            Class<span class="text-danger"> *</span>
-          </label>
-          <select
-            className="form-control"
-            name={`class`}
-            onChange={handleChange}
-          >
-            <option value={formData.class} selected disabled hidden>
-              {formData.class}
-            </option>
-            {insureClassDD}
-          </select>
+
+            <div className="col form-group">
+              <label class="form-label ">
+                Class<span class="text-danger"> *</span>
+              </label>
+              <select
+                className="form-control"
+                name={`class`}
+                onChange={handleChange}
+              >
+                <option value={formData.class} selected disabled hidden>
+                  {formData.class}
+                </option>
+                {insureClassDD}
+              </select>
+            </div>
+            <div className="col form-group">
+              <label class="form-label ">
+                Subclass<span class="text-danger"> *</span>
+              </label>
+              <select
+                className="form-control"
+                name={`subClass`}
+                onChange={handleChange}
+              >
+                <option value={formData.subClass} selected disabled hidden>
+                  {formData.subClass}
+                </option>
+                {insureSubClassDD}
+              </select>
+            </div>
+
           </div>
-          <div className="col form-group">
-          <label class="form-label ">
-            Subclass<span class="text-danger"> *</span>
-          </label>
-          <select
-            className="form-control"
-            name={`subClass`}
-            onChange={handleChange}
-          >
-            <option value={formData.subClass} selected disabled hidden>
-              {formData.subClass}
-            </option>
-            {insureSubClassDD}
-          </select>
-          </div>
-          
-          </div>
-        
+
         </div>
         <div class="col-2 form-group ">
           <label class="form-label px-3">
@@ -780,7 +886,7 @@ const PolicyScreen = (props) => {
             onChange={handleChange}
           />
         </div>
-       
+
       </div>
       {/* policy table */}
 
@@ -795,17 +901,17 @@ const PolicyScreen = (props) => {
             id="grossprem"
             type="number"
             step={0.1}
-            value={formData.grossprem}    
+            value={formData.grossprem}
             name={`grossprem`}
             onChange={(e) => handleChangePrem(e)}
           />
-{/* <NumberInputWithCommas value={formData.grossprem} name={`grossprem`} onChange={handleChange}  /> */}
+          {/* <NumberInputWithCommas value={formData.grossprem} name={`grossprem`} onChange={handleChange}  /> */}
 
         </div>
 
         <div class="col-2">
           <label class="form-label ">
-            ส่วนลด walkin 
+            ส่วนลด walkin
           </label>
           <div className="row">
             <div className="col">
@@ -813,7 +919,7 @@ const PolicyScreen = (props) => {
                 className="form-control"
                 type="number"
                 step={0.1}
-                value={parseFloat(formData[`specdiscrate`]) }
+                value={parseFloat(formData[`specdiscrate`])}
                 name={`specdiscrate`}
                 onChange={(e) => handleChangePrem(e)}
               />
@@ -836,7 +942,7 @@ const PolicyScreen = (props) => {
 
         <div class="col-2">
           <label class="form-label ">
-            เบี้ยสุทธิ 
+            เบี้ยสุทธิ
           </label>
           <input
             type="number" // Use an input element for displaying numbers
@@ -853,40 +959,40 @@ const PolicyScreen = (props) => {
         <div class="col-2">
           <div className="row">
             <div className="col">
-            <label class="form-label ">
-            อากร
-          </label>
-          <input
-            className="form-control"
-            type="number"
-            step={0.1}
-            disabled
-            // netgrossprem * tax 
-            // value={parseFloat(((100 - formData[`specdiscrate`]) * formData[`grossprem`] / 100 * duty).toFixed(2)) || 0}
-            value={formData.duty}
-            name={`duty`}
-            onChange={handleChange}
-          />
+              <label class="form-label ">
+                อากร
+              </label>
+              <input
+                className="form-control"
+                type="number"
+                step={0.1}
+                disabled
+                // netgrossprem * tax 
+                // value={parseFloat(((100 - formData[`specdiscrate`]) * formData[`grossprem`] / 100 * duty).toFixed(2)) || 0}
+                value={formData.duty}
+                name={`duty`}
+                onChange={handleChange}
+              />
             </div>
             <div className="col">
-            <label class="form-label ">
-            ภาษี
-          </label>
-          <input
-            className="form-control"
-            type="number"
-            step={0.1}
-            disabled
-            
-            // value={parseFloat((((100 - formData[`specdiscrate`]) * formData[`grossprem`] / 100 )* tax).toFixed(2)) || ""}
-            value={formData.tax}
-            name={`tax`}
-            onChange={handleChange}
-          />
+              <label class="form-label ">
+                ภาษี
+              </label>
+              <input
+                className="form-control"
+                type="number"
+                step={0.1}
+                disabled
+
+                // value={parseFloat((((100 - formData[`specdiscrate`]) * formData[`grossprem`] / 100 )* tax).toFixed(2)) || ""}
+                value={formData.tax}
+                name={`tax`}
+                onChange={handleChange}
+              />
             </div>
-            
+
           </div>
-          
+
         </div>
 
         <div class="col-2">
@@ -905,18 +1011,24 @@ const PolicyScreen = (props) => {
           />
         </div>
 
-       
+
 
       </div>
 
       <div class="row">
         <div className="col-1"></div>
         <div class="col-2">
+
+          <label class="form-label">
+            Comm/OV IN
+          </label>
+        </div>
+        <div class="col-3">
           <label class="form-label ">
-            Comm In% <span class="text-danger"> *</span>
+            Comm Rate/Amt<span class="text-danger"> *</span>
           </label>
           <div className="row">
-            <div className="col">
+            <div className="input-group  col">
               <input
                 className="form-control"
                 type="number"
@@ -925,14 +1037,21 @@ const PolicyScreen = (props) => {
                 name={`commin_rate`}
                 onChange={(e) => handleChange(e)}
               />
-            </div>
+              <div class="input-group-append">
+                <div class="input-group-text ">
+                  <label class="form-check-label" >%</label>
+
+                </div>
+              </div>
+            </div> 
+            
             <div className="col">
               <input
                 className="form-control"
                 type="number"
                 disabled
                 step={0.1}
-                value={parseFloat((formData[`commin_rate`] * (100 - formData[`specdiscrate`]) * formData[`grossprem`] / 10000 ).toFixed(2))|| ""}
+                value={parseFloat((formData[`commin_rate`] * (100 - formData[`specdiscrate`]) * formData[`grossprem`] / 10000).toFixed(2)) || ""}
                 name={`commin_amt`}
                 onChange={(e) => handleChange(e)}
               />
@@ -942,12 +1061,12 @@ const PolicyScreen = (props) => {
         </div>
 
 
-        <div class="col-2">
+        <div class="col-3">
           <label class="form-label ">
-            Ov In% <span class="text-danger"> *</span>
+            OV Rate/Amt<span class="text-danger"> *</span>
           </label>
           <div className="row">
-            <div className="col">
+            <div className="col input-group">
               <input
                 className="form-control"
                 type="number"
@@ -956,6 +1075,12 @@ const PolicyScreen = (props) => {
                 name={`ovin_rate`}
                 onChange={handleChange}
               />
+              <div class="input-group-append">
+                <div class="input-group-text ">
+                  <label class="form-check-label" >%</label>
+
+                </div>
+              </div>
             </div>
             <div className="col">
               <input
@@ -964,20 +1089,28 @@ const PolicyScreen = (props) => {
                 disabled
                 step={0.1}
                 name={`ovin_amt`}
-                value={parseFloat((formData[`ovin_rate`]  * (100 - formData[`specdiscrate`]) * formData[`grossprem`] / 10000 ).toFixed(2)) || ""}
+                value={parseFloat((formData[`ovin_rate`] * (100 - formData[`specdiscrate`]) * formData[`grossprem`] / 10000).toFixed(2)) || ""}
                 onChange={handleChange}
               />
             </div>
           </div>
 
         </div>
-
+      </div>
+      <div class="row">
+        <div className="col-1"></div>
         <div class="col-2">
+
+          <label class="form-label">
+            Comm/OV OUT <br /> ผู้แนะนำ 1
+          </label>
+        </div>
+        <div class="col-3">
           <label class="form-label ">
-            Comm Out% (1)<span class="text-danger"> *</span>
+            {/* Comm Out% (1)<span class="text-danger"> *</span> */}
           </label>
           <div className="row">
-            <div className="col">
+            <div className="col input-group">
               <input
                 className="form-control"
                 type="number"
@@ -986,6 +1119,12 @@ const PolicyScreen = (props) => {
                 name={`commout1_rate`}
                 onChange={handleChange}
               />
+              <div class="input-group-append">
+                <div class="input-group-text ">
+                  <label class="form-check-label" >%</label>
+
+                </div>
+              </div>
             </div>
             <div className="col">
               <input
@@ -993,7 +1132,7 @@ const PolicyScreen = (props) => {
                 type="number"
                 disabled
                 step={0.1}
-                value={parseFloat((formData[`commout1_rate`]  * (100 - formData[`specdiscrate`]) * formData[`grossprem`] / 10000 ).toFixed(2)) || ""}
+                value={parseFloat((formData[`commout1_rate`] * (100 - formData[`specdiscrate`]) * formData[`grossprem`] / 10000).toFixed(2)) || ""}
                 name={`commout1_amt`}
                 onChange={handleChange}
               />
@@ -1001,13 +1140,13 @@ const PolicyScreen = (props) => {
 
           </div>
         </div>
-        <div class="col-2">
+        <div class="col-3">
           <label class="form-label ">
-            Ov Out% (1)<span class="text-danger"> *</span>
+            {/* Ov Out% (1)<span class="text-danger"> *</span> */}
           </label>
 
           <div className="row">
-            <div className="col">
+            <div className="col input-group">
               <input
                 className="form-control"
                 type="number"
@@ -1016,6 +1155,12 @@ const PolicyScreen = (props) => {
                 name={`ovout1_rate`}
                 onChange={handleChange}
               />
+              <div class="input-group-append">
+                <div class="input-group-text ">
+                  <label class="form-check-label" >%</label>
+
+                </div>
+              </div>
             </div>
             <div className="col">
               <input
@@ -1025,29 +1170,36 @@ const PolicyScreen = (props) => {
                 step={0.1}
                 name={`ovout1_amt`}
                 //value={(formData[`ovout1_rate`] * formData[`grossprem`]) / 100 || ""}
-                value={parseFloat((formData[`ovout1_rate`]  * (100 - formData[`specdiscrate`]) * formData[`grossprem`] / 10000 ).toFixed(2)) || ""}
+                value={parseFloat((formData[`ovout1_rate`] * (100 - formData[`specdiscrate`]) * formData[`grossprem`] / 10000).toFixed(2)) || ""}
                 onChange={handleChange}
               />
             </div>
 
           </div>
         </div>
-        <div class="col-1 align-bottom">
-        
+        <div class="col-2 align-bottom">
+
           <button type="button" name="btn_comm1" class="btn btn-primary align-bottom form-control" onClick={getcommov} >ค่า comm/ov : ผู้แนะนำคนที่ 1</button>
         </div>
 
 
       </div>
 
-      <div class="row">
+        {formData.agentCode2 !== '' ? 
+        <div class="row">
         <div className="col-1"></div>
         <div class="col-2">
+
+          <label class="form-label">
+            Comm/OV OUT <br /> ผู้แนะนำ 2
+          </label>
+        </div>
+        <div class="col-3">
           <label class="form-label ">
-            Comm Out% (2)
+            {/* Comm Out% (2) */}
           </label>
           <div className="row">
-            <div className="col">
+            <div className="col input-group">
               <input
                 className="form-control"
                 type="number"
@@ -1056,6 +1208,12 @@ const PolicyScreen = (props) => {
                 name={`commout2_rate`}
                 onChange={(e) => handleChange(e)}
               />
+              <div class="input-group-append">
+                <div class="input-group-text ">
+                  <label class="form-check-label" >%</label>
+
+                </div>
+              </div>
             </div>
             <div className="col">
               <input
@@ -1064,7 +1222,7 @@ const PolicyScreen = (props) => {
                 disabled
                 step={0.1}
                 //value={(formData[`commin2_rate`] * formData[`grossprem`]) / 100 || ""}
-                value={parseFloat((formData[`commout2_rate`]  * (100 - formData[`specdiscrate`]) * formData[`grossprem`] / 10000 ).toFixed(2)) || ""}
+                value={parseFloat((formData[`commout2_rate`] * (100 - formData[`specdiscrate`]) * formData[`grossprem`] / 10000).toFixed(2)) || ""}
                 name={`commout2_amt`}
                 onChange={(e) => handleChange(e)}
               />
@@ -1074,12 +1232,12 @@ const PolicyScreen = (props) => {
         </div>
 
 
-        <div class="col-2">
+        <div class="col-3">
           <label class="form-label ">
-            Ov Out% (2)
+            {/* Ov Out% (2) */}
           </label>
           <div className="row">
-            <div className="col">
+            <div className="col input-group">
               <input
                 className="form-control"
                 type="number"
@@ -1088,6 +1246,12 @@ const PolicyScreen = (props) => {
                 name={`ovout2_rate`}
                 onChange={handleChange}
               />
+              <div class="input-group-append">
+                <div class="input-group-text ">
+                  <label class="form-check-label" >%</label>
+
+                </div>
+              </div>
             </div>
             <div className="col">
               <input
@@ -1097,28 +1261,48 @@ const PolicyScreen = (props) => {
                 step={0.1}
                 name={`ovout2_amt`}
                 //value={(formData[`ovin2_rate`] * formData[`grossprem`]) / 100 || ""}
-                value={parseFloat((formData[`ovout2_rate`]  * (100 - formData[`specdiscrate`]) * formData[`grossprem`] / 10000 ).toFixed(2)) || ""}
+                value={parseFloat((formData[`ovout2_rate`] * (100 - formData[`specdiscrate`]) * formData[`grossprem`] / 10000).toFixed(2)) || ""}
                 onChange={handleChange}
               />
             </div>
           </div>
 
         </div>
+        <div class="col-2 align-bottom">
 
+          <button type="button" name="btn_comm2" class="btn btn-primary align-bottom" onClick={getcommov} >ค่า comm/ov : ผู้แนะนำคนที่ 2</button>
+        </div>
+      </div>
+      :null}
+      
+      <div class="row">
+        <div className="col-1"></div>
         <div class="col-2">
+
+          <label class="form-label">
+            Comm/OV OUT <br /> TOTAL
+          </label>
+        </div>
+        <div class="col-3">
           <label class="form-label ">
-            Comm Out% (sum)
+            {/* Comm Out% (sum) */}
           </label>
           <div className="row">
-            <div className="col">
+            <div className="col input-group">
               <input
                 className="form-control"
                 type="number"
                 step={0.1}
-                value={parseFloat(formData[`commout1_rate`] || 0)  + parseFloat(formData[`commout2_rate`] || 0)}
+                value={parseFloat(formData[`commout1_rate`] || 0) + parseFloat(formData[`commout2_rate`] || 0)}
                 name={`commout_rate`}
                 onChange={handleChange}
               />
+              <div class="input-group-append">
+                <div class="input-group-text ">
+                  <label class="form-check-label" >%</label>
+
+                </div>
+              </div>
             </div>
             <div className="col">
               <input
@@ -1126,30 +1310,36 @@ const PolicyScreen = (props) => {
                 type="number"
                 disabled
                 step={0.1}
-                // value={parseFloat((formData[`commout_rate`]  * (100 - formData[`specdiscrate`]) * formData[`grossprem`] / 10000 ).toFixed(2)) || ""}
-                value={((document.getElementsByName(`commout_rate`)[0] ? document.getElementsByName(`commout_rate`)[0].value: 0) * ((100 - formData[`specdiscrate`]) * formData[`grossprem`] / 10000 ).toFixed(2)) || ''}
-                name={`commout_amt`}
+              // value={((document.getElementsByName(`commout_rate`)[0] ? document.getElementsByName(`commout_rate`)[0].value : 0) * ((100 - formData[`specdiscrate`]) * formData[`grossprem`] / 10000).toFixed(2)) || ''}
+              value={ ((parseFloat(formData[`commout1_rate`] || 0) + parseFloat(formData[`commout2_rate`] || 0))* ((100 - formData[`specdiscrate`]) * formData[`grossprem`] / 10000).toFixed(2)) || ''}  
+              name={`commout_amt`}
                 onChange={handleChange}
               />
             </div>
 
           </div>
         </div>
-        <div class="col-2">
+        <div class="col-3">
           <label class="form-label ">
-            Ov Out% (sum)
+            {/* Ov Out% (sum) */}
           </label>
 
           <div className="row">
-            <div className="col">
+            <div className="col input-group">
               <input
                 className="form-control"
                 type="number"
-                step={0.1} 
-                value={parseFloat(formData[`ovout1_rate`] || 0)  + parseFloat(formData[`ovout2_rate`] || 0)}
+                step={0.1}
+                value={parseFloat(formData[`ovout1_rate`] || 0) + parseFloat(formData[`ovout2_rate`] || 0)}
                 name={`ovout_rate`}
                 onChange={handleChange}
               />
+              <div class="input-group-append">
+                <div class="input-group-text ">
+                  <label class="form-check-label" >%</label>
+
+                </div>
+              </div>
             </div>
             <div className="col">
               <input
@@ -1158,18 +1348,15 @@ const PolicyScreen = (props) => {
                 disabled
                 step={0.1}
                 name={`ovout_amt`}
-                //value={(formData[`ovout2_rate`] * formData[`grossprem`]) / 100 || ""}
-                value={((document.getElementsByName(`ovout_rate`)[0] ? document.getElementsByName(`ovout_rate`)[0].value: 0) * ((100 - formData[`specdiscrate`]) * formData[`grossprem`] / 10000 ).toFixed(2)) || ''}
+                // value={((document.getElementsByName(`ovout_rate`)[0] ? document.getElementsByName(`ovout_rate`)[0].value : 0) * ((100 - formData[`specdiscrate`]) * formData[`grossprem`] / 10000).toFixed(2)) || ''}
+                value={((parseFloat(formData[`ovout1_rate`] || 0) + parseFloat(formData[`ovout2_rate`] || 0))* ((100 - formData[`specdiscrate`]) * formData[`grossprem`] / 10000).toFixed(2)) || ''}
                 onChange={handleChange}
               />
             </div>
 
           </div>
         </div>
-        <div class="col-1 align-bottom">
 
-          <button type="button" name="btn_comm2" class="btn btn-primary align-bottom" onClick={getcommov} >ค่า comm/ov : ผู้แนะนำคนที่ 2</button>
-        </div>
 
 
       </div>
@@ -1193,20 +1380,10 @@ const PolicyScreen = (props) => {
           </select>
         </div>
 
-        <div class="col-1">
+        {/* <div class="col-1">
           <label class="form-label ">
             คำนำหน้า<span class="text-danger"> </span>
           </label>
-          {/* <select
-            className="form-control"
-            name={`title`}
-            onChange={handleChange}
-          >
-            <option value={formData.title} disabled selected hidden>
-              {formData.title}
-            </option>
-            {titleDD}
-          </select> */}
 
           <Select
           // className="form-control"
@@ -1258,20 +1435,106 @@ const PolicyScreen = (props) => {
               onChange={handleChange}
             />
           </div>
-        )}
+        )} */}
+        {formData.personType === 'P' ?
+          <>
+            <div class="col-1">
+              <label class="form-label ">คำนำหน้า<span class="text-danger"> *</span></label>
+              <Select
+                formatOptionLabel={(option, { context }) => context === 'value' ? option.label : `${option.label}  ${option.label2}`}
+                name={`title`}
+                onChange={(e) => setFormData((prevState) => ({
+                  ...prevState,
+                  titleID: e.value
+                }))}
+                options={titleDD}
+              />
+            </div>
 
-        <div class="col-2">
-          <label class="form-label ">
-            เลขประจำตัว<span class="text-danger"> *</span>
-          </label>
-          <input
-            className="form-control"
-            type="text"
-            defaultValue={formData.regisNo}
-            name={`regisNo`}
-            onChange={handleChange}
-          />
-        </div>
+            <div class="col-2">
+              <label class="form-label ">ชื่อ<span class="text-danger"> *</span></label>
+              <input
+                className="form-control"
+                type="text"
+                name="t_fn"
+                onChange={handleChange}
+              />
+            </div>
+            <div class="col-2">
+              <label class="form-label ">นามสกุล<span class="text-danger"> *</span></label>
+              <input
+                className="form-control"
+                type="text"
+                name="t_ln"
+                onChange={handleChange}
+              />
+            </div>
+            <div class="col-2">
+              <label class="form-label ">
+                เลขที่บัตรประชาชน<span class="text-danger"> *</span>
+              </label>
+              <input
+                className="form-control"
+                type="text"
+                defaultValue={formData.regisNo}
+                name={`regisNo`}
+                onBlur={validateCitizenID}
+                onChange={handleChange}
+              />
+            </div>
+          </>
+          :
+          <>
+            <div class="col-1">
+              <label class="form-label ">คำนำหน้า<span class="text-danger"> *</span></label>
+              <Select
+                formatOptionLabel={(option, { context }) => context === 'value' ? option.label : `${option.label} - ${option.label2}`}
+                name={`title`}
+                onChange={(e) => setFormData((prevState) => ({
+                  ...prevState,
+                  titleID: e.value,
+                  suffix: titleDD.find((a) => a.value == e.value).label2
+                }))}
+                options={titleDD}
+              />
+            </div>
+            <div class="col-2">
+              <label class="form-label ">ชื่อ<span class="text-danger"> *</span></label>
+              <input
+                className="form-control"
+                type="text"
+                name="t_fn"
+                onChange={handleChange}
+              />
+            </div>
+            <div class="col-2">
+              <label class="form-label ">ลำดับสาขา<span class="text-danger"> *</span></label>
+              <input
+                className="form-control"
+                type="text"
+                name="branch"
+                onChange={handleChange}
+              />
+            </div>
+            <div class="col-2">
+              <label class="form-label ">คำลงท้าย<span class="text-danger"> *</span></label>
+              <input type="text" disabled className="form-control" value={formData.suffix} />
+
+            </div>
+            <div class="col-2">
+              <label class="form-label ">
+                เลขที่จดทะเบียน<span class="text-danger"> *</span>
+              </label>
+              <input
+                className="form-control"
+                type="text"
+                defaultValue={formData.regisNo}
+                name={`regisNo`}
+                onChange={handleChange}
+              />
+            </div>
+          </>}
+
       </div>
       {/* location table */}
       <div class="row">
@@ -1351,18 +1614,18 @@ const PolicyScreen = (props) => {
             search
           /> */}
           <Select
-          // className="form-control"
-          name={`province`}
-          onChange={ (e) =>changeProvince(e)}
-          options={provinceDD}
-          styles={{zIndex:2000}}
+            // className="form-control"
+            name={`province`}
+            onChange={(e) => changeProvince(e)}
+            options={provinceDD}
+            styles={{ zIndex: 2000 }}
           // onChange={opt => console.log(opt)}
           />
-            {/* <option value={formData.province} disabled selected hidden>
+          {/* <option value={formData.province} disabled selected hidden>
               {formData.province}
             </option>
             {provinceDD} */}
-          
+
         </div>
         <div class="col-2">
           <label class="form-label ">
@@ -1381,10 +1644,10 @@ const PolicyScreen = (props) => {
           </select> */}
 
           <Select
-          // className="form-control"
-          name={`district`}
-          onChange={ (e) =>changeDistrict(e)}
-          options={districDD}
+            // className="form-control"
+            name={`district`}
+            onChange={(e) => changeDistrict(e)}
+            options={districDD}
           />
 
         </div>
@@ -1392,25 +1655,13 @@ const PolicyScreen = (props) => {
           <label class="form-label ">
             ตำบล<span class="text-danger"> *</span>
           </label>
-          {/* <select
-            className="form-control"
-            name={`subdistrict`}
-            onChange={handleChange}
-          >
-            <option value={formData.subdistrict} disabled selected hidden>
-              {formData.subdistrict}
-            </option>
-            {subDistricDD}
-          </select> */}
+        
 
           <Select
-          // className="form-control"
-          name={`subdistrict`}
-          onChange={ (e) =>setFormData((prevState) => ({
-            ...prevState,
-            subdistrict: e.value,
-          }))}
-          options={subDistricDD}
+            // className="form-control"
+            name={`subdistrict`}
+            onChange={ (e) =>changeSubDistrict(e)}
+            options={subDistricDD}
           />
 
         </div>
@@ -1418,25 +1669,24 @@ const PolicyScreen = (props) => {
           <label class="form-label ">
             รหัสไปรษณี<span class="text-danger"> *</span>
           </label>
-          {/* <select
+          <select
             className="form-control"
             name={`zipcode`}
             onChange={handleChange}
           >
-            <option value={formData.zipcode} disabled selected hidden>
-              {formData.zipcode}
-            </option>
+            
             {zipcodeDD}
-          </select> */}
-        <Select
-          // className="form-control"
-          name={`zipcode`}
-          onChange={ (e) =>setFormData((prevState) => ({
-            ...prevState,
-            zipcode: e.value,
-          }))}
-          options={zipcodeDD}
-          />
+          </select>
+          {/* <Select
+            // className="form-control"
+            name={`zipcode`}
+            onChange={(e) => setFormData((prevState) => ({
+              ...prevState,
+              zipcode: e.value,
+            }))}
+            options={zipcodeDD}
+          /> */}
+          
 
         </div>
       </div>
@@ -1444,7 +1694,7 @@ const PolicyScreen = (props) => {
         <div className="col-1"></div>
         <div class="col-2">
           <label class="form-label ">
-            เบอร์โทรศัพท์<span class="text-danger"> *</span>
+            เบอร์มือถือ<span class="text-danger"> *</span>
           </label>
           <input
             className="form-control"
@@ -1452,6 +1702,7 @@ const PolicyScreen = (props) => {
             defaultValue={formData.telNum_1}
             name={`telNum_1`}
             onChange={handleChange}
+            onBlur={isPhoneNumberValid}
           />
         </div>
         <div class="col-2">
@@ -1464,140 +1715,71 @@ const PolicyScreen = (props) => {
             defaultValue={formData.Email}
             name={`Email`}
             onChange={handleChange}
+            onBlur={isEmailValid}
           />
         </div>
       </div>
-      { formData.class === "MO" ? 
-      <div class="row">
-            <div className="col-3"></div>
-            <div className="col-3"><h4>รายละเอียดรถ (ทรัพย์สินที่เอาประกัน) </h4></div>
-            <div className="col-3">
-              <button className="p-2 btn btn-danger" name="showMotor" onClick={(e) =>{setShowMotorData(!showMotorData)}}>
-                hide/unhide
-              </button>
-</div>
-            </div>
-            : null }
+      {formData.class === "MO" ?
+        <div class="row">
+          <div className="col-3"></div>
+          <div className="col-3"><h4>รายละเอียดรถ (ทรัพย์สินที่เอาประกัน) </h4></div>
+          <div className="col-3">
+            <button className="p-2 btn btn-danger" name="showMotor" onClick={(e) => { setShowMotorData(!showMotorData) }}>
+              hide/unhide
+            </button>
+          </div>
+        </div>
+        : null}
       {/* motor table formData.class === "MO"*/}
-      { showMotorData ? (
+      {showMotorData ? (
         <>
-         <div class="row">
+          <div class="row">
             <div className="col-1"></div>
-            <div class="col-2">
-              <label class="form-label ">
-                เลขทะเบียนรถ<span class="text-danger"> *</span>
-              </label>
-              <input
-                className="form-control"
-                type="text"
-                name={`licenseNo`}
-                defaultValue={formData.licenseNo}
-                onChange={handleChange}
-              />
-            </div>
-            <div class="col-2">
-              <label class="form-label ">
-                ยี่ห้อรถยนต์<span class="text-danger"> *</span>
-              </label>
 
-              {/* <select
-                className="form-control"
-                name={`brandname`}
-                onChange={handleChange}
-              >
-                <option value={formData.brandname} selected disabled hidden>
-                  {formData.brandname}
-                </option>
-                {motorbrandDD}
-              </select> */}
-
-              <Select
-          // className="form-control"
-          name={`brandname`}
-          onChange={ (e) =>changeMotorBrand(e)}
-          options={motorbrandDD}
-          />
-
-            </div>
-            <div class="col-2">
-              <label class="form-label ">
-                รุ่น<span class="text-danger"> *</span>
-              </label>
-
-              {/* <select
-                className="form-control"
-                name={`modelname`}
-                onChange={handleChange}
-              >
-                <option value={formData.modelname} selected disabled hidden>
-                  {formData.modelname}
-                </option>
-                {motormodelDD}
-              </select> */}
-
-              <Select
-          // className="form-control"
-          name={`modelname`}
-          onChange={ (e) =>setFormData((prevState) => ({
-            ...prevState,
-            modelname: e.value,
-          }))}
-          options={motormodelDD}
-          />
-
-            </div>
             <div class="col-2">
               <label class="form-label ">
                 รหัสรถ (V)<span class="text-danger"> </span>
               </label>
-              <input
-                className="form-control"
-                type="text"
-                name={`chassisNo`}
-                defaultValue={formData.chassisNo}
-                onChange={handleChange}
+              <Select
+                // className="form-control"
+                name={`voluntaryCode`}
+                onChange={(e) => setFormData((prevState) => ({
+                  ...prevState,
+                  voluntaryCode: e.value,
+                }))}
+                options={motorcode}
+                styles={{ zIndex: 2000 }}
+              // onChange={opt => console.log(opt)}
+              />
+            </div>
+            <div class="col-2">
+              <label class="form-label ">
+                รหัสรถ (C)<span class="text-danger"> </span>
+              </label>
+              <Select
+                // className="form-control"
+                name={`compulsoryCode`}
+                onChange={(e) => setFormData((prevState) => ({
+                  ...prevState,
+                  compulsoryCode: e.value,
+                }))}
+                options={motorcode}
+                styles={{ zIndex: 2000 }}
+              // onChange={opt => console.log(opt)}
               />
             </div>
             <div class="col-1">
               <label class="form-label ">
-                รหัสรถ (C)<span class="text-danger"> </span>
+                ป้ายแดง<span class="text-danger"> *</span>
               </label>
-              <input
-                className="form-control"
-                type="text"
-                name={`modelYear`}
-                defaultValue={formData.modelYear}
-                onChange={handleChange}
-              />
+
+
+              <select required name={`unregisterflag`} class="form-control" onChange={handleChange} >
+                <option value="Y" selected >ไม่ใช่</option>
+                <option value="N" >ใช่</option>
+              </select>
+
             </div>
-            <div class="col-1">
-          <label class="form-label ">
-            ป้ายแดง<span class="text-danger"> *</span>
-          </label>
-          {/* <Typeahead
-            className="form-control"
-            labelKey={`province`}
-            onChange={handleChange}
-            options={provinceDD}
-            search
-          /> */}
-          <Select
-          // className="form-control"
-          name={`motorprovinceID`}
-          onChange={  (e) =>setFormData((prevState) => ({
-            ...prevState,
-            motorprovinceID: e.value,
-          }))}
-          options={provinceDD}
-          styles={{zIndex:2000}}
-          // onChange={opt => console.log(opt)}
-          />
-            {/* <option value={formData.province} disabled selected hidden>
-              {formData.province}
-            </option>
-            {provinceDD} */}
-          
-        </div>
           </div>
           <div class="row">
             <div className="col-1"></div>
@@ -1613,37 +1795,31 @@ const PolicyScreen = (props) => {
                 onChange={handleChange}
               />
             </div>
-            <div class="col-1">
-          <label class="form-label ">
-            จังหวัด<span class="text-danger"> *</span>
-          </label>
-          {/* <Typeahead
-            className="form-control"
-            labelKey={`province`}
-            onChange={handleChange}
-            options={provinceDD}
-            search
-          /> */}
-          <Select
-          // className="form-control"
-          name={`motorprovinceID`}
-          onChange={  (e) =>setFormData((prevState) => ({
-            ...prevState,
-            motorprovinceID: e.value,
-          }))}
-          options={provinceDD}
-          styles={{zIndex:2000}}
-          // onChange={opt => console.log(opt)}
-          />
-            {/* <option value={formData.province} disabled selected hidden>
+            <div class="col-2">
+              <label class="form-label ">
+                จังหวัด<span class="text-danger"> *</span>
+              </label>
+
+              <Select
+                // className="form-control"
+                name={`motorprovinceID`}
+                onChange={(e) => setFormData((prevState) => ({
+                  ...prevState,
+                  motorprovinceID: e.value,
+                }))}
+                options={provinceDD}
+                styles={{ zIndex: 2000 }}
+              // onChange={opt => console.log(opt)}
+              />
+              {/* <option value={formData.province} disabled selected hidden>
               {formData.province}
             </option>
             {provinceDD} */}
-          
-        </div>
-        <div class="col-2">
+
+            </div>
+            <div class="col-2">
               <label class="form-label ">
-                เลขตัวถังรถ<span class="text-danger"> *</span>
+                เลขคัสซี<span class="text-danger"> *</span>
               </label>
               <input
                 className="form-control"
@@ -1660,12 +1836,12 @@ const PolicyScreen = (props) => {
               <input
                 className="form-control"
                 type="text"
-                name={`chassisNo`}
-                defaultValue={formData.chassisNo}
+                name={`engineNo`}
+                defaultValue={formData.engineNo}
                 onChange={handleChange}
               />
             </div>
-            <div class="col-1">
+            <div class="col-2">
               <label class="form-label ">
                 ปีที่จดทะเบียน<span class="text-danger"> *</span>
               </label>
@@ -1677,60 +1853,9 @@ const PolicyScreen = (props) => {
                 onChange={handleChange}
               />
             </div>
-            <div class="col-2">
-              <label class="form-label ">
-                ยี่ห้อรถยนต์<span class="text-danger"> *</span>
-              </label>
 
-              {/* <select
-                className="form-control"
-                name={`brandname`}
-                onChange={handleChange}
-              >
-                <option value={formData.brandname} selected disabled hidden>
-                  {formData.brandname}
-                </option>
-                {motorbrandDD}
-              </select> */}
 
-              <Select
-          // className="form-control"
-          name={`brandname`}
-          onChange={ (e) =>changeMotorBrand(e)}
-          options={motorbrandDD}
-          />
 
-            </div>
-            <div class="col-2">
-              <label class="form-label ">
-                รุ่น<span class="text-danger"> *</span>
-              </label>
-
-              {/* <select
-                className="form-control"
-                name={`modelname`}
-                onChange={handleChange}
-              >
-                <option value={formData.modelname} selected disabled hidden>
-                  {formData.modelname}
-                </option>
-                {motormodelDD}
-              </select> */}
-
-              <Select
-          // className="form-control"
-          name={`modelname`}
-          onChange={ (e) =>setFormData((prevState) => ({
-            ...prevState,
-            modelname: e.value,
-          }))}
-          options={motormodelDD}
-          />
-
-            </div>
-            
-           
-            
           </div>
 
           <div class="row">
@@ -1740,23 +1865,14 @@ const PolicyScreen = (props) => {
                 ยี่ห้อรถยนต์<span class="text-danger"> *</span>
               </label>
 
-              {/* <select
-                className="form-control"
-                name={`brandname`}
-                onChange={handleChange}
-              >
-                <option value={formData.brandname} selected disabled hidden>
-                  {formData.brandname}
-                </option>
-                {motorbrandDD}
-              </select> */}
+
 
               <Select
-          // className="form-control"
-          name={`brandname`}
-          onChange={ (e) =>changeMotorBrand(e)}
-          options={motorbrandDD}
-          />
+                // className="form-control"
+                name={`brandname`}
+                onChange={(e) => changeMotorBrand(e)}
+                options={motorbrandDD}
+              />
 
             </div>
             <div class="col-2">
@@ -1776,14 +1892,14 @@ const PolicyScreen = (props) => {
               </select> */}
 
               <Select
-          // className="form-control"
-          name={`modelname`}
-          onChange={ (e) =>setFormData((prevState) => ({
-            ...prevState,
-            modelname: e.value,
-          }))}
-          options={motormodelDD}
-          />
+                // className="form-control"
+                name={`modelname`}
+                onChange={(e) => setFormData((prevState) => ({
+                  ...prevState,
+                  modelname: e.value,
+                }))}
+                options={motormodelDD}
+              />
 
             </div>
             <div class="col-2">
@@ -1793,13 +1909,13 @@ const PolicyScreen = (props) => {
               <input
                 className="form-control"
                 type="text"
-                name={`chassisNo`}
-                defaultValue={formData.chassisNo}
+                name={`specname`}
+                defaultValue={formData.specname}
                 onChange={handleChange}
               />
             </div>
-            
-            
+
+
           </div>
           <div class="row">
             <div className="col-1"></div>
@@ -1819,12 +1935,13 @@ const PolicyScreen = (props) => {
                 {motorbrandDD}
               </select> */}
 
-              <Select
-          // className="form-control"
-          name={`brandname`}
-          onChange={ (e) =>changeMotorBrand(e)}
-          options={motorbrandDD}
-          />
+              <input
+                className="form-control"
+                type="number"
+                name={`cc`}
+                defaultValue={formData.cc}
+                onChange={handleChange}
+              />
 
             </div>
             <div class="col-2">
@@ -1832,26 +1949,13 @@ const PolicyScreen = (props) => {
                 ที่นั่ง<span class="text-danger"> *</span>
               </label>
 
-              {/* <select
+              <input
                 className="form-control"
-                name={`modelname`}
+                type="number"
+                name={`seat`}
+                defaultValue={formData.seat}
                 onChange={handleChange}
-              >
-                <option value={formData.modelname} selected disabled hidden>
-                  {formData.modelname}
-                </option>
-                {motormodelDD}
-              </select> */}
-
-              <Select
-          // className="form-control"
-          name={`modelname`}
-          onChange={ (e) =>setFormData((prevState) => ({
-            ...prevState,
-            modelname: e.value,
-          }))}
-          options={motormodelDD}
-          />
+              />
 
             </div>
             <div class="col-2">
@@ -1860,18 +1964,18 @@ const PolicyScreen = (props) => {
               </label>
               <input
                 className="form-control"
-                type="text"
-                name={`chassisNo`}
-                defaultValue={formData.chassisNo}
+                type="number"
+                name={`gvw`}
+                defaultValue={formData.gvw}
                 onChange={handleChange}
               />
             </div>
-            
-            
+
+
           </div>
         </>
       ) : null}
-      
+
       <div class="d-flex justify-content-center">
 
         <button className="p-2 btn btn-primary" name="saveChange" onClick={handleSubmit}>

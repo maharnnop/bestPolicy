@@ -34,7 +34,12 @@ const Agent = () => {
   };
   const url = window.globalConfig.BEST_POLICY_V1_BASE_URL;
   const navigate = useNavigate();
-  const [agentData, setAgentData] = useState({ entityID: null, commovCreditUnit: 'D', premCreditUnit: 'D' });
+  const [agentData, setAgentData] = useState({ 
+    entityID: null,
+     commovCreditUnit: 'D',
+     deductTaxRate: 3,
+    deductTaxType : "หักภาษี ณ ที่จ่ายค่านายหน้า", 
+     premCreditUnit: 'D' });
   const [entityData, setEntityData] = useState({ personType: "P" });
   const [locationData, setLocationData] = useState({ entityID: null, locationType: 'A' });
   const [row, setRow] = useState(0);
@@ -394,7 +399,7 @@ const Agent = () => {
             </select>
           </div>
 
-          <div class="col-1">
+          <div class="col-2">
             <label class="form-label ">เครดิตเทอมค่าเบี้ย <span class="text-danger"> *</span></label>
             <input
               className="form-control"
@@ -418,7 +423,7 @@ const Agent = () => {
               <option value="Y">ปี</option>
             </select>
           </div>
-          <div class="col-1">
+          <div class="col-2">
             <label class="form-label ">เครดิตเทอมค่าcom <span class="text-danger"> *</span></label>
             <input
               className="form-control"
@@ -441,17 +446,7 @@ const Agent = () => {
               <option value="Y">ปี</option>
             </select>
           </div>
-          <div class="col-2">
-            <label class="form-label ">Licenseno Sub-Broker <span class="text-danger"> *</span></label>
-            <input
-              className="form-control"
-              type="text"
-              required
-              // placeholder="InsurerCode"
-              name="licentNo"
-              onChange={changeAgent}
-            />
-          </div>
+          
 
         </div>
 
@@ -540,7 +535,17 @@ const Agent = () => {
 
               </div>
             </>}
-
+            <div class="col-2">
+            <label class="form-label ">Licenseno Sub-Broker <span class="text-danger"> *</span></label>
+            <input
+              className="form-control"
+              type="text"
+              required
+              // placeholder="InsurerCode"
+              name="licentNo"
+              onChange={changeAgent}
+            />
+          </div>
 
         </div>
 
@@ -589,11 +594,11 @@ const Agent = () => {
             <input
               className="form-control"
               type="text"
-              name="taxno"
-              onChange={changeAgent}
+              name="taxNo"
+              onChange={changeEntity}
             />
           </div>
-          <div class="col-1">
+          <div class="col-2">
             <label class="form-label ">
               วันที่จดทะเบียน<span class="text-danger"> *</span>
             </label>
@@ -605,7 +610,7 @@ const Agent = () => {
               onChange={changeEntity}
             />
           </div>
-          <div class="col-1">
+          <div class="col-2">
             <label class="form-label ">
               วันที่หมดอายุ<span class="text-danger"> *</span>
             </label>

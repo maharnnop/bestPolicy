@@ -42,7 +42,9 @@ const Insurer = () => {
   const [insurerData, setInsurerData] = useState({
     entityID: null,
     deductTaxRate: 3,
-    deductTaxType : "หักภาษี ณ ที่จ่ายค่านายหน้า"
+    deductTaxType : "หักภาษี ณ ที่จ่ายค่านายหน้า",
+    commovCreditUnit: 'D',
+    premCreditUnit : 'D'
   });
   const [entityData, setEntityData] = useState({
     personType: "O",
@@ -268,21 +270,7 @@ const Insurer = () => {
         // localStorage.setItem("jwt", token);
         console.log(res.data);
         alert("create new insurer success");
-        axios
-          .post(url + "/insures/commovinnew", {
-            insurer: insurerData,
-            entity: entityData,
-            location: locationData,
-          }, headers)
-          .then((res) => {
-            // let token = res.data.jwt;
-            // let decode = jwt_decode(token);
-            // navigate("/");
-            // window.location.reload();
-            // localStorage.setItem("jwt", token);
-            console.log(res.data);
-            alert("setup new com ov in success");
-          });
+       
       })
       .catch((err) => {
         alert("create new insurer fail");
@@ -339,7 +327,7 @@ const Insurer = () => {
                 </option>
               </select>
             </div>
-            <div class="col-1">
+            <div class="col-2">
               <label class="form-label ">
                 เครดิตเทอมเบี้ย<span class="text-danger"> *</span>
               </label>
@@ -362,7 +350,7 @@ const Insurer = () => {
                 <option value="Y">ปี</option>
               </select>
             </div>
-            <div class="col-1">
+            <div class="col-2">
               <label class="form-label ">
                 เครดิตเทอมCom<span class="text-danger"> *</span>
               </label>
@@ -492,7 +480,7 @@ const Insurer = () => {
                 onChange={changeEntity}
               />
             </div>
-            <div class="col-1">
+            <div class="col-2">
               <label class="form-label ">
                 วันที่จดทะเบียน<span class="text-danger"> *</span>
               </label>
@@ -511,7 +499,7 @@ const Insurer = () => {
               />
 
             </div>
-            <div class="col-1">
+            <div class="col-2">
               <label class="form-label ">
                 วันที่หมดอายุ<span class="text-danger"> *</span>
               </label>

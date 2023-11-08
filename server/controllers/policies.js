@@ -851,13 +851,15 @@ const draftPolicyList = async (req, res) => {
     const t = await sequelize.transaction();
   try {
     await sequelize.query(
-      'insert into static_data."Entities" ("personType","titleID","t_ogName","t_firstName","t_lastName","idCardType","idCardNo","taxNo") ' +
-      'values (:personType, (select "TITLEID" from static_data."Titles" where "TITLETHAIBEGIN" = :title limit 1), :t_ogName, :t_firstName, :t_lastName,:idCardType,:idCardNo,:taxNo) ' +
-      'ON CONFLICT ((case when :personType = \'P\' then "idCardNo" else "taxNo" end)) DO NOTHING RETURNING "id" ',
+      `insert into static_data."Entities" ("personType","titleID","t_ogName","t_firstName","t_lastName","idCardType","idCardNo","taxNo") 
+      values (:personType, 
+      (case when :titleID is null then :titleID else (select "TITLEID" from static_data."Titles" where "TITLETHAIBEGIN" = :title limit 1) end ), :t_ogName, :t_firstName, :t_lastName,:idCardType,:idCardNo,:taxNo) 
+      ON CONFLICT ((case when :personType = \'P\' then "idCardNo" else "taxNo" end)) DO NOTHING RETURNING "id" `,
       {
         replacements: {
           personType: req.body[i].personType,
-          title: req.body[i].title,
+          title: req.body[i].title || '',
+          titleID: req.body[i].titleID,
           t_ogName: req.body[i].t_ogName,
           t_firstName: req.body[i].t_firstName,
           t_lastName: req.body[i].t_lastName,
@@ -875,7 +877,7 @@ const draftPolicyList = async (req, res) => {
       if (entity[1] === 1) {   // entity[1] === 1 when create new entity
 
 
-        const insuree = await Insuree.create({ entityID: entity[0][0].id, insureeCode: 'A' + entity[0][0].id }, { returning: ['insureeCode'] })
+        const insuree = await Insuree.create({ entityID: entity[0][0].id, insureeCode:  entity[0][0].id }, { returning: ['insureeCode'] })
        
         insureeCode = insuree['dataValues'].insureeCode
         
@@ -922,21 +924,30 @@ const draftPolicyList = async (req, res) => {
       let cars = [{id: null}]
       if (req.body[i].class === 'MO') {
         cars = await sequelize.query(
-          'WITH inserted AS ( '+
-          'INSERT INTO static_data."Motors" ("brand", "voluntaryCode", "model", "specname", "licenseNo", "motorprovinceID", "chassisNo", "modelYear") '+
-          'VALUES (:brandname, :voluntaryCode , :modelname , :specname, :licenseNo, :motorprovinceID, :chassisNo, :modelYear) ON CONFLICT ("chassisNo") DO NOTHING RETURNING * ) '+
-          'SELECT * FROM inserted UNION ALL SELECT * FROM static_data."Motors" WHERE "chassisNo" = :chassisNo ',
+          `WITH inserted AS ( 
+          INSERT INTO static_data."Motors" ("brand", "voluntaryCode", "model", "specname", "licenseNo", "motorprovinceID", "chassisNo", "modelYear",
+          "compulsoryCode", "unregisterflag", "engineNo", "cc", "seat", "gvw"  ) 
+          VALUES (:brandname, :voluntaryCode , :modelname , :specname, :licenseNo, 
+           (select id from static_data.provinces  where t_provincename =  :motorprovince limit 1), :chassisNo, :modelYear,
+          :compulsoryCode, :unregisterflag, :engineNo, :cc, :seat, :gvw  ) ON CONFLICT ("chassisNo") DO NOTHING RETURNING * ) 
+          SELECT * FROM inserted UNION ALL SELECT * FROM static_data."Motors" WHERE "chassisNo" = :chassisNo `,
           {
             replacements: {
-              licenseNo: req.body[i].licenseNo,
+              brandname: req.body[i].brandname || null,
+              voluntaryCode: req.body[i].voluntaryCode|| '',
+              modelname: req.body[i].modelname || null,
+              specname: req.body[i].specname || null,
+              licenseNo: req.body[i].licenseNo || null,
+              motorprovince: req.body[i].motorprovinceID,
               chassisNo: req.body[i].chassisNo,
-              brandname: req.body[i].brandname,
-              voluntaryCode: req.body[i].voluntaryCode|| '220',
-              modelname: req.body[i].modelname|| null,
-              specname: 'tesz',
-              // motorprovinceID: req.body[i].motorprovinceID,
-              motorprovinceID:2,
               modelYear: req.body[i].modelYear,
+
+              compulsoryCode : req.body[i].compulsoryCode || '',
+              unregisterflag : req.body[i].unregisterflag || 'N',
+              engineNo : req.body[i].engineNo || '',
+              cc : req.body[i].cc || null,
+              seat : req.body[i].seat || null,
+              gvw : req.body[i].gvw || null,
             },
             transaction: t,
             type: QueryTypes.SELECT
@@ -1011,9 +1022,9 @@ const draftPolicyList = async (req, res) => {
         req.body[i][`ovout2_amt`] = commov2[0].rateOVOut_1 * req.body[i][`netgrossprem`]/100
        }
        req.body[i][`commout_rate`] = req.body[i][`commout1_rate`] + req.body[i][`commout2_rate`] 
-        req.body[i][`commout_amt`] = req.body[i][`commout1_amt`] +req.body[i][`commout2_amt`]
+        req.body[i][`commout_amt`] = parseFloat(req.body[i][`commout1_amt`]) +parseFloat(req.body[i][`commout2_amt`])
         req.body[i][`ovout_rate`] = req.body[i][`ovout1_rate`] + req.body[i][`ovout2_rate`]
-        req.body[i][`ovout_amt`] = req.body[i][`ovout1_amt`] + req.body[i][`ovout2_amt`]
+        req.body[i][`ovout_amt`] = parseFloat(req.body[i][`ovout1_amt`]) + parseFloat(req.body[i][`ovout2_amt`])
         
       }else{
         req.body[i][`agentCode2`] = null
@@ -1051,7 +1062,7 @@ const draftPolicyList = async (req, res) => {
         ':agentCode, :agentCode2, (select "id" from static_data."InsureTypes" where "class" = :class and  "subClass" = :subClass), ' +
         ':actDate, :expDate, :grossprem, :duty, :tax, :totalprem, ' +
         ':commin_rate, :commin_amt, :ovin_rate, :ovin_amt, :commin_taxamt, :ovin_taxamt, :commout_rate, :commout_amt, :ovout_rate, :ovout_amt, :createusercode, :itemList ,\'I\', ' +
-        ' :commout1_rate, :commout1_amt, :ovout1_rate, :ovout1_amt,  :commout2_rate, :commout2_amt, :ovout2_rate, :ovout2_amt, :netgrossprem,  :specdiscrate, :specdiscamt, :cover_amt, withheld )',
+        ' :commout1_rate, :commout1_amt, :ovout1_rate, :ovout1_amt,  :commout2_rate, :commout2_amt, :ovout2_rate, :ovout2_amt, :netgrossprem,  :specdiscrate, :specdiscamt, :cover_amt, :withheld )',
         {
           replacements: {
             applicationNo: req.body[i].applicationNo,

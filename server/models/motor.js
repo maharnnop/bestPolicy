@@ -22,6 +22,14 @@ module.exports = (sequelize, DataTypes) => {
     motorprovinceID: DataTypes.INTEGER,
     chassisNo: DataTypes.STRING,
     modelYear: DataTypes.INTEGER,
+
+    compulsoryCode : DataTypes.STRING,
+    unregisterflag : DataTypes.STRING,
+    engineNo : DataTypes.STRING,
+    cc : DataTypes.INTEGER,
+    seat : DataTypes.INTEGER,
+    gvw :  DataTypes.INTEGER,
+
   }, {
     sequelize,
     modelName: 'Motor',
