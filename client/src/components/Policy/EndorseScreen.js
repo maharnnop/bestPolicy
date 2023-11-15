@@ -1378,8 +1378,8 @@ const EndorseScreen = (props) => {
           <input
             className="form-control"
             type="text"
-            value={formData.telNum_1}
-            name={`telNum_1`}
+            value={formData.telNum_2}
+            name={`telNum_2`}
             onChange={handleChange}
           />
         </div>

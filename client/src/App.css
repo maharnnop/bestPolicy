@@ -70,3 +70,16 @@ table .input{
 div.row {
   padding-bottom:10px ;
 }
+
+.checkbox-xl .form-check-input {
+  top: 1.5rem;
+  scale: 2.3;
+  margin-right: 0.8rem;
+  margin-top: 1.1rem;
+  }
+ 
+ .checkbox-xl .form-check-label {
+  font-size: 20px;
+  margin-left: 0.8rem;
+  margin-top: 0.7rem;
+  }

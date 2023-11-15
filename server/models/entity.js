@@ -43,6 +43,8 @@ module.exports = (sequelize, DataTypes) => {
     pk20: DataTypes.STRING,
     //ชื่อสาขา กรณี เป็น สาขาย่อย ,
     branch : DataTypes.STRING,
+    lastversion : DataTypes.STRING,
+    version : DataTypes.INTEGER,
   }, {
     sequelize,
     modelName: 'Entity',

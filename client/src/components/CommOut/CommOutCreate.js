@@ -307,19 +307,7 @@ const submitapcommout = async (e) => {
                     <Modal.Title >สรุปการจ่ายค่า Comm/Ov ให้กับผู้แนะนำ</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                    {/* <div class="row">
-                        <div class="col-6">
-                            <label class="col-form-label">เลขที่ใบวางบิล</label>
-                        </div>
-                        <div class="col-6"> {filterData.billadvisor}</div>
-                    </div>
-                    <div class="row">
-                        <div class="col-6">
-                            <label class="col-form-label">totalpremium</label>
-                            </div>
-                        <div class="col-6">
-                           <label class="col-form-label">{filterData.netprem}</label></div>
-                    </div> */}
+                    
                     <div class="row">
                         <div class="col-6">
                             <label class="col-form-label">Comm Out</label>

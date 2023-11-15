@@ -45,6 +45,7 @@ import ReportฺARAPDirect from "./components/Reports/ReportฺARAPDirect";
 import ReportฺARAPInsurer from "./components/Reports/ReportฺARAPInsurer";
 import ReportฺTax from "./components/Reports/ReportฺTax";
 import EndorseScreen from "./components/Policy/EndorseScreen";
+import FindPerson from "./components/Static/FindPerson";
 import { type } from "@testing-library/user-event/dist/type";
 
 
@@ -64,6 +65,9 @@ function App() {
           <Route path="/insurer" element={<Insurer />} />
           <Route path="/insuretype" element={<InsureType />} />
           <Route path="/agent" element={<Agent />} />
+          <Route path="/findperson" element={<FindPerson />} />
+          <Route path="/editagent/:agentCode" element={<Agent />} />
+          <Route path="/editinsurer/:insurerCode" element={<Insurer />} />
           {/* <Route path="/static" element={<Static />} /> */}
           <Route path="/bank" element={<Bank />} />
           {/* <Route path="/static/:name" element={<Static />} /> */}

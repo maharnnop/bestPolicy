@@ -55,7 +55,7 @@ const getbilldata = async (req, res) => {
         from static_data."Transactions" t 
         join static_data.b_jupgrs j on t.polid = j.polid and t."seqNo" = j."seqNo" 
         join static_data."Policies" p on p.id = j.polid
-        where t.billadvisor = :billadvisorno 
+        where t.billadvisorno = :billadvisorno 
         and t."transType" = 'PREM-IN' and j.installmenttype ='A' `,
     {
       replacements: {
@@ -95,28 +95,28 @@ const getARPremindata = async (req, res) => {
   if (req.body.billadvisorno  !== null && req.body.billadvisorno !== '') {
     cond = cond + ` and a.billadvisorno = '${req.body.billadvisorno}'`
   }
-  if (req.body.insurercode  !== null && req.body.billadvisorno !== '') {
+  if (req.body.insurercode  !== null && req.body.insurercode !== '') {
     cond = cond + ` and a.insurerno = (select id from static_data."Insurers" where "insurerCode" = '${req.body.insurercode}')`
   }
-  if (req.body.advisorcode   !== null && req.body.billadvisorno !== '' ) {
+  if (req.body.advisorcode   !== null && req.body.advisorcode !== '' ) {
     cond = cond + ` and a.advisorno = (select id from static_data."Agents" where "agentCode" = '${req.body.advisorcode}')`
   }
-  if (req.body.cashierreceiveno   !== null && req.body.billadvisorno !== '' ) {
+  if (req.body.cashierreceiveno   !== null && req.body.cashierreceiveno !== '' ) {
     cond = cond + ` and a.cashierreceiveno = '${req.body.cashierreceiveno}'`
   }
-  if (req.body.refno  !== null && req.body.billadvisorno !== '') {
+  if (req.body.refno  !== null && req.body.refno !== '') {
     cond = cond + ` and a.refno = '${req.body.refno}'`
   }
-  if (req.body.arno  !== null && req.body.billadvisorno !== '') {
+  if (req.body.arno  !== null && req.body.arno !== '') {
     cond = cond + ` and a.dfrpreferno = '${req.body.arno}'`
   }
-  if (req.body.ardatestart  !== null && req.body.billadvisorno !== '') {
+  if (req.body.ardatestart  !== null && req.body.ardatestart !== '') {
     cond = cond +` and a.rprefdate >= '${req.body.ardate}'`
   }
-  if (req.body.ardateend  !== null && req.body.billadvisorno !== '') {
+  if (req.body.ardateend  !== null && req.body.ardateend !== '') {
     cond = cond +` and a.rprefdate <= '${req.body.ardate}'`
   }
-  if (req.body.arcreateusercode  !== null && req.body.billadvisorno !== '') {
+  if (req.body.arcreateusercode  !== null && req.body.arcreateusercode !== '') {
     cond = cond +` and a.createusercode ='${req.body.arcreateusercode}'`
   }
   const records = await sequelize.query(
@@ -435,18 +435,18 @@ const getARtrans = async (req, res) => {
   
   let cond = ''
   if (req.body.billadvisorno  !== null && req.body.billadvisorno !== '') {
-    cond = cond + ` and t.billadvisor = ${req.body.billadvisorno}` 
+    cond = cond + ` and t.billadvisorno = ${req.body.billadvisorno}` 
   }
-  if (req.body.insurerCode  !== null && req.body.billadvisorno !== '') {
+  if (req.body.insurerCode  !== null && req.body.insurerCode !== '') {
     cond = cond + ` and t.insurerCode = ${req.body.insurerCode}` 
   }
-  if (req.body.agentCode  !== null && req.body.billadvisorno !== '') {
+  if (req.body.agentCode  !== null && req.body.agentCode !== '') {
     cond = cond + ` and t.agentCode = ${req.body.agentCode}` 
   }
-  if (req.body.cashierreceiveno  !== null && req.body.billadvisorno !== '') {
+  if (req.body.cashierreceiveno  !== null && req.body.cashierreceiveno !== '') {
     cond = cond + ` and t.receiptno = ${req.body.cashierreceiveno}` 
   }
-  if (req.body.arno  !== null && req.body.billadvisorno !== '') {
+  if (req.body.arno  !== null && req.body.arno !== '') {
     cond = cond + ` and t.premin-dfrpreferno = ${req.body.arno}` 
   }
   if (req.body.type === 'prem_out') {
@@ -494,28 +494,28 @@ const getARtrans = async (req, res) => {
 //ตัดหนี้ premin แบบ advisor มาจ่ายโดยตรงที่บริษัทประกัน (direct)
 const findARPremInDirect = async (req, res) => {
   let cond = ''
-  if (req.body.insurerCode  !== null && req.body.billadvisorno !== '') {
+  if (req.body.insurerCode  !== null && req.body.insurerCode !== '') {
     cond = cond + ` and t."insurerCode" = '${req.body.insurerCode}'`
   }
-  if (req.body.agentCode  !== null && req.body.billadvisorno !== '') {
+  if (req.body.agentCode  !== null && req.body.agentCode !== '') {
     cond = cond + ` and t."agentCode" = '${req.body.agentCode}'`
   }
-  if (req.body.policyNoStart  !== null && req.body.billadvisorno !== '') {
+  if (req.body.policyNoStart  !== null && req.body.policyNoStart !== '') {
     cond = cond + ` and t."policyNo" >= '${req.body.policyNoStart}'`
   }
-  if (req.body.policyNoEnd  !== null && req.body.billadvisorno !== '') {
+  if (req.body.policyNoEnd  !== null && req.body.policyNoEnd !== '') {
     cond = cond + ` and t."policyNo" <= '${req.body.policyNoEnd}'`
   }
-  if (req.body.endorseNoStart  !== null && req.body.billadvisorno !== '') {
+  if (req.body.endorseNoStart  !== null && req.body.endorseNoStart !== '') {
     cond = cond + ` and j."endorseNo" = '${req.body.endorseNoStart}'`
   }
-  if (req.body.endorseNoEnd  !== null && req.body.billadvisorno !== '') {
+  if (req.body.endorseNoEnd  !== null && req.body.endorseNoEnd !== '') {
     cond = cond + ` and j."endorseNo" = '${req.body.endorseNoEnd}'`
   }
-  if (req.body.invoiceNoStart  !== null && req.body.billadvisorno !== '') {
+  if (req.body.invoiceNoStart  !== null && req.body.invoiceNoStart !== '') {
     cond = cond + ` and j."invoiceNo" = '${req.body.invoiceNoStart}'`
   }
-  if (req.body.invoiceNoEnd  !== null && req.body.billadvisorno !== '') {
+  if (req.body.invoiceNoEnd  !== null && req.body.invoiceNoEnd !== '') {
     cond = cond + ` and j."invoiceNo" = '${req.body.invoiceNoEnd}'`
   }
   const trans = await sequelize.query(
@@ -726,10 +726,10 @@ const submitARPreminDirect = async (req, res) => {
    
     //update arno, refdate to transaction table
     let cond = ' and txtype2 in ( 1, 2, 3, 4, 5 ) and status = \'N\''
-    if (req.body.trans[i].endorseNo  !== null && req.body.billadvisorno !== '') {
+    if (req.body.trans[i].endorseNo  !== null && req.body.endorseNo !== '') {
       cond =cond + ' and "endorseNo"= ' + req.body.trans[i].endorseNo
     }
-    if (req.body.trans[i].seqNo  !== null && req.body.billadvisorno !== '') {
+    if (req.body.trans[i].seqNo  !== null && req.body.seqNo !== '') {
       cond = cond +' and "seqNo" = ' +req.body.trans[i].seqNo
     }
     await sequelize.query(
@@ -835,16 +835,16 @@ const submitARPreminDirect = async (req, res) => {
 //Account payment prem out
 const findAPPremOut = async (req, res) => {
   let cond = ''
-  if (req.body.insurerCode  !== null && req.body.billadvisorno !== '' ) {
+  if (req.body.insurerCode  !== null && req.body.insurerCode !== '' ) {
     cond = cond + ` and t."insurerCode" = '${req.body.insurerCode}'`
   }
-  if (req.body.agentCode  !== null && req.body.billadvisorno !== '' ) {
+  if (req.body.agentCode  !== null && req.body.agentCode !== '' ) {
     cond = cond + ` and t."agentCode" = '${req.body.agentCode}'`
   }
-  if (req.body.reconcileno  !== null && req.body.billadvisorno !== '' ) {
+  if (req.body.reconcileno  !== null && req.body.reconcileno !== '' ) {
     cond = cond + ` and r.reconcileno = '${req.body.reconcileno}'`
   }
-  if (req.body.dueDate  !== null && req.body.billadvisorno !== '' ) {
+  if (req.body.dueDate  !== null && req.body.dueDate !== '' ) {
     cond = cond + ` and  '${req.body.dueDate}' <= t."dueDate" `
   }
   
@@ -1032,10 +1032,10 @@ const submitAPPremOut = async (req, res) => {
    
     //update arno, refdate to transaction table
     let cond = ' and txtype2 in ( 1, 2, 3, 4, 5 ) and status = \'N\''
-    if (req.body.trans[i].endorseNo  !== null && req.body.billadvisorno !== '') {
+    if (req.body.trans[i].endorseNo  !== null && req.body.endorseNo !== '') {
       cond =cond + ' and "endorseNo"= ' + req.body.trans[i].endorseNo
     }
-    if (req.body.trans[i].seqNo  !== null && req.body.billadvisorno !== '') {
+    if (req.body.trans[i].seqNo  !== null && req.body.seqNo !== '') {
       cond = cond +' and "seqNo" = ' +req.body.trans[i].seqNo
     }
     await sequelize.query(
@@ -1123,16 +1123,16 @@ const findARCommIn = async (req, res) => {
   }
 
 
-  if (req.body.insurerCode  !== null && req.body.billadvisorno !== '') {
+  if (req.body.insurerCode  !== null && req.body.insurerCode !== '') {
     cond = cond + ` and t."insurerCode" = '${req.body.insurerCode}'`
   }
-  if (req.body.agentCode  !== null && req.body.billadvisorno !== '') {
+  if (req.body.agentCode  !== null && req.body.agentCode !== '') {
     cond = cond + ` and t."agentCode" = '${req.body.insurerCode}'`
   }
-  if (req.body.dfrpreferno  !== null && req.body.billadvisorno !== '') {
+  if (req.body.dfrpreferno  !== null && req.body.dfrpreferno !== '') {
     cond = cond + ` and a.dfrpreferno = '${req.body.dfrpreferno}'`
   }
-  if (req.body.cashierreceiveno  !== null && req.body.billadvisorno !== '') {
+  if (req.body.cashierreceiveno  !== null && req.body.cashierreceiveno !== '') {
     cond = cond + ` and  a.cashierreceiveno = '${req.body.cashierreceiveno}'`
   }
   
@@ -1448,10 +1448,10 @@ const submitARCommIn = async (req, res) => {
    
     //update arno, refdate to transaction table
     let cond = ' and txtype2 in ( 1, 2, 3, 4, 5 ) and status = \'N\''
-    if (req.body.trans[i].endorseNo  !== null && req.body.billadvisorno !== '') {
+    if (req.body.trans[i].endorseNo  !== null && req.body.endorseNo !== '') {
       cond =cond + ' and "endorseNo"= ' + req.body.trans[i].endorseNo
     }
-    if (req.body.trans[i].seqNo  !== null && req.body.billadvisorno !== '') {
+    if (req.body.trans[i].seqNo  !== null && req.body.seqNo !== '') {
       cond = cond +' and "seqNo" = ' +req.body.trans[i].seqNo
     }
     await sequelize.query(
@@ -1495,19 +1495,19 @@ const findAPCommOut = async (req, res) => {
 
   let cond = ` and (p."actDate" between '${req.body.effDatestart}' and '${req.body.effDateend}'   or p."expDate" between '${req.body.effDatestart}' and '${req.body.effDateend}')`
 
-  if (req.body.insurerCode  !== null && req.body.billadvisorno !== '') {
+  if (req.body.insurerCode  !== null && req.body.insurerCode !== '') {
     cond = cond + ` and t."insurerCode" = '${req.body.insurerCode}'`
   }
-  if (req.body.agentCode  !== null && req.body.billadvisorno !== '') {
+  if (req.body.agentCode  !== null && req.body.agentCode !== '') {
     cond = cond + ` and t."agentCode" = '${req.body.agentCode}'`
   }
-  if (req.body.policyNostart  !== null && req.body.billadvisorno !== '') {
+  if (req.body.policyNostart  !== null && req.body.policyNostart !== '') {
     cond = cond + ` and p."policyNo" >= '${req.body.policyNostart}'`
   }
-  if (req.body.policyNoend  !== null && req.body.billadvisorno !== '') {
+  if (req.body.policyNoend  !== null && req.body.policyNoend !== '') {
     cond = cond + ` and p."policyNo" <= '${req.body.policyNoend}'`
   }
-  if (req.body.dueDate  !== null && req.body.billadvisorno !== '') {
+  if (req.body.dueDate  !== null && req.body.dueDate !== '') {
     cond = cond + ` and  t."dueDate" = '${req.body.dueDate}'`
   }
   
@@ -1723,10 +1723,10 @@ const submitAPCommOut = async (req, res) => {
    
     //update arno, refdate to transaction table
     let cond = ' and txtype2 in ( 1, 2, 3, 4, 5 ) and status = \'N\''
-    if (req.body.trans[i].endorseNo  !== null && req.body.billadvisorno !== '') {
+    if (req.body.trans[i].endorseNo  !== null && req.body.endorseNo !== '') {
       cond =cond + ' and "endorseNo"= ' + req.body.trans[i].endorseNo
     }
-    if (req.body.trans[i].seqNo  !== null && req.body.billadvisorno !== '') {
+    if (req.body.trans[i].seqNo  !== null && req.body.seqNo !== '') {
       cond = cond +' and "seqNo" = ' +req.body.trans[i].seqNo
     }
     await sequelize.query(

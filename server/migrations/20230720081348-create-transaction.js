@@ -12,7 +12,7 @@ module.exports = {
       polid: {
         type: Sequelize.INTEGER
       },
-      billadvisor: {
+      billadvisorno: {
         type: Sequelize.STRING
       },
       netflag: {

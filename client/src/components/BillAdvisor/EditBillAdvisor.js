@@ -64,7 +64,7 @@ const EditBillAdvisor = (props) => {
         console.log(params.billno);
         // get pol in billno
         axios
-        .post(url + "/payments/findpolicybyBill",{billadvisor: params.billno}, headers)
+        .post(url + "/payments/findpolicybyBill",{billadvisorno: params.billno}, headers)
         .then((res) => {
             console.log(res.data);
             if (res.status === 201) {

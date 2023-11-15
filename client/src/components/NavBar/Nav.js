@@ -151,6 +151,7 @@ function Nav() {
             </a>
 
             <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+            <li><a class="dropdown-item" href="/findperson">ค้นหาบริษัทประกัน/ผู้แนะนำ</a></li>
               <li><a class="dropdown-item" href="/insurer">สร้างบริษัทรับประกัน</a></li>
               <li><a class="dropdown-item" href="/insureType">สร้างแผนประกัน</a></li>
               <li><a class="dropdown-item" href="/agent">สร้างผู้แนะนำ</a></li>
