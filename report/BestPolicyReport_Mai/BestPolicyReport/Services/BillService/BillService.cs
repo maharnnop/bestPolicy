@@ -46,8 +46,8 @@ namespace BestPolicyReport.Services.BillService
                          from static_data.b_jabilladvisors bj, static_data.b_jabilladvisordetails bjd, static_data.""Transactions"" t, static_data.""Insurees"" i,
                          static_data.""Entities"" e_i, static_data.""Titles"" t_i, static_data.""Policies"" p left join static_data.""Motors"" m on m.id = p.""itemList""
                          left join static_data.provinces pv on m.""motorprovinceID"" = pv.provinceid
-                         where bj.id = bjd.keyidm and bj.billadvisorno = t.billadvisor and bjd.polid = p.id and bjd.customerid = i.id and i.""entityID"" = e_i.id
-                         and e_i.""titleID"" = t_i.""TITLEID"" and t.billadvisor is not null) as query where true ";
+                         where bj.id = bjd.keyidm and bj.billadvisorno = t.billadvisorno and bjd.polid = p.id and bjd.customerid = i.id and i.""entityID"" = e_i.id
+                         and e_i.""titleID"" = t_i.""TITLEID"" and t.billadvisorno is not null) as query where true ";
             if (!string.IsNullOrEmpty(data.InsurerCode))
             {
                 sql += $@"and ""insurerCode"" = '{data.InsurerCode}' ";
