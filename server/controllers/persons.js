@@ -333,7 +333,7 @@ const findAgent = async (req, res) =>{
   //insert to deteil of jatw 
   let cond = ''
   if (req.body.agentCode !== '') {
-    cond = cond + ` and "agentCode" like '%${req.body.agentCode}%' `
+    cond = cond + ` and a."agentCode" like '%${req.body.agentCode}%' `
   }
   if (req.body.firstname !== '') {
     cond = cond + ` and (e."t_firstName" like '%${req.body.firstname}%' or e."t_ogName" like '%${req.body.firstname}%') `
@@ -344,13 +344,22 @@ const findAgent = async (req, res) =>{
     const agents = await sequelize.query(
       ` select a."agentCode" ,
       (case when e."personType" = 'O' then t."TITLETHAIBEGIN"||' '||e."t_ogName" else t."TITLETHAIBEGIN"||' '||e."t_firstName"||' '||e."t_lastName"  end) as "fullName" ,
-      e."personType"
+      e."personType",co."rateComOut", co."rateOVOut_1" , ci."rateComIn", ci."rateOVIn_1" 
       from static_data."Agents" a 
       join static_data."Entities" e on a."entityID"  = e.id 
       join static_data."Titles" t on t."TITLEID"  = e."titleID" 
-      where true ${cond} `,
+      join static_data."CommOVOuts" co on a."agentCode" = co."agentCode"
+      join static_data."CommOVIns" ci on ci."insurerCode" = co."insurerCode" and ci."insureID" = co."insureID"
+      where co."insurerCode" = :insurerCode
+      and co.lastversion  = 'Y'
+      and co."insureID" = (select id from static_data."InsureTypes" it where it."class" = :class and it."subClass" = :subClass )
+      ${cond} `,
       {
-        
+        replacements: {
+          insurerCode : req.body.insurerCode,
+          class : req.body.class,
+          subClass : req.body.subClass,
+        },
         type: QueryTypes.SELECT,
       }
       

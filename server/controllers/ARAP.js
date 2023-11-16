@@ -6,6 +6,7 @@ const b_jabilladvisor = require("../models").b_jabilladvisor;
 const b_jabilladvisordetail = require("../models").b_jabilladvisordetail;
 const process = require("process");
 const {getRunNo,getCurrentDate} = require("./lib/runningno");
+const {decode} = require('jsonwebtoken');
 require("dotenv").config();
 // const Package = require("../models").Package;
 // const User = require("../models").User;
@@ -143,6 +144,8 @@ const getARPremindata = async (req, res) => {
 };
 
 const submitARPremin = async (req, res) => {
+  const jwt = req.headers.authorization.split(' ')[1];
+  const usercode = decode(jwt).USERNAME;
   const t = await sequelize.transaction();
   try {
     //insert to master jaarap
@@ -171,11 +174,10 @@ const submitARPremin = async (req, res) => {
           actualvalue: req.body.master.actualvalue,
           diffamt: req.body.master.diffamt,
           status: "A",
-          createusercode: "kkk",
+          createusercode: usercode,
           dfrpreferno: req.body.master.arno,
           rprefdate: billdate,
           billdate: billdate,
-          createusercode: "kewn",
         },
         
         transaction: t,
@@ -329,6 +331,8 @@ const submitARPremin = async (req, res) => {
 };
 
 const saveARPremin = async (req, res) => {
+  const jwt = req.headers.authorization.split(' ')[1];
+  const usercode = decode(jwt).USERNAME;
   const t = await sequelize.transaction();
   try {
     //insert to master jaarap
@@ -352,10 +356,9 @@ const saveARPremin = async (req, res) => {
           actualvalue: req.body.master.actualvalue,
           diffamt: req.body.master.diffamt,
           status: "I",
-          createusercode: "kkk",
+          createusercode: usercode,
 
           billdate: billdate,
-          createusercode: "kewn",
         },
         transaction: t,
         type: QueryTypes.INSERT,
@@ -546,6 +549,8 @@ const findARPremInDirect = async (req, res) => {
 };
 
 const saveARPreminDirect = async (req, res) => {
+  const jwt = req.headers.authorization.split(' ')[1];
+  const usercode = decode(jwt).USERNAME;
   const t = await sequelize.transaction();
   try {
     const billdate = new Date().toISOString().split("T")[0];
@@ -566,9 +571,8 @@ const saveARPreminDirect = async (req, res) => {
           actualvalue: req.body.master.actualvalue,
           diffamt: 0,
           status: "I",
-          createusercode: "kkk",
+          createusercode: usercode,
           billdate: billdate,
-          createusercode: "kewn",
           netprem : req.body.master.netprem,
           commin :  req.body.master.commin,
           ovin :  req.body.master.ovin,
@@ -656,6 +660,8 @@ const saveARPreminDirect = async (req, res) => {
 };
 
 const submitARPreminDirect = async (req, res) => {
+  const jwt = req.headers.authorization.split(' ')[1];
+  const usercode = decode(jwt).USERNAME;
   const t = await sequelize.transaction();
   try {
     //insert to master jaarap
@@ -681,9 +687,8 @@ const submitARPreminDirect = async (req, res) => {
           actualvalue: req.body.master.actualvalue,
           diffamt: 0,
           status: "A",
-          createusercode: "kkk",
+          createusercode: usercode,
           billdate: billdate,
-          createusercode: "kewn",
           netprem : req.body.master.netprem,
           commin :  req.body.master.commin,
           ovin :  req.body.master.ovin,
@@ -891,6 +896,8 @@ const findAPPremOut = async (req, res) => {
 };
 
 const saveAPPremOut = async (req, res) => {
+  const jwt = req.headers.authorization.split(' ')[1];
+  const usercode = decode(jwt).USERNAME;
   const t = await sequelize.transaction();
   try {
     const billdate = new Date().toISOString().split("T")[0];
@@ -911,9 +918,8 @@ const saveAPPremOut = async (req, res) => {
           actualvalue: req.body.master.actualvalue,
           
           status: "I",
-          createusercode: "kkk",
+          createusercode: usercode,
           billdate: billdate,
-          createusercode: "kewn",
           netprem : req.body.master.netprem,
           commin :  req.body.master.commin,
           ovin :  req.body.master.ovin,
@@ -962,6 +968,8 @@ const saveAPPremOut = async (req, res) => {
 };
 
 const submitAPPremOut = async (req, res) => {
+  const jwt = req.headers.authorization.split(' ')[1];
+  const usercode = decode(jwt).USERNAME;
   const t = await sequelize.transaction();
   try {
     //insert to master jaarap
@@ -987,9 +995,8 @@ const submitAPPremOut = async (req, res) => {
           actualvalue: req.body.master.actualvalue,
           diffamt: 0,
           status: "A",
-          createusercode: "kkk",
+          createusercode: usercode,
           billdate: billdate,
-          createusercode: "kewn",
           netprem : req.body.master.netprem,
           commin :  req.body.master.commin,
           ovin :  req.body.master.ovin,
@@ -1192,6 +1199,8 @@ const findARCommIn = async (req, res) => {
 };
 
 const saveARCommIn = async (req, res) => {
+  const jwt = req.headers.authorization.split(' ')[1];
+  const usercode = decode(jwt).USERNAME;
   const t = await sequelize.transaction();
   try {
     const billdate = new Date().toISOString().split("T")[0];
@@ -1211,9 +1220,8 @@ const saveARCommIn = async (req, res) => {
           transactiontype: "COMM-IN",
           actualvalue: req.body.master.actualvalue,
           status: "I",
-          createusercode: "kkk",
+          createusercode: usercode,
           billdate: billdate,
-          createusercode: "kewn",
           // netprem : req.body.master.netprem,
           commin :  req.body.master.commin,
           ovin :  req.body.master.ovin,
@@ -1315,6 +1323,8 @@ const saveARCommIn = async (req, res) => {
 };
 
 const submitARCommIn = async (req, res) => {
+  const jwt = req.headers.authorization.split(' ')[1];
+  const usercode = decode(jwt).USERNAME;
   const t = await sequelize.transaction();
   try {
     //insert to master jaarap
@@ -1339,9 +1349,8 @@ const submitARCommIn = async (req, res) => {
           transactiontype: "COMM-IN",
           actualvalue: req.body.master.actualvalue,
           status: "A",
-          createusercode: "kkk",
+          createusercode: usercode,
           billdate: billdate,
-          createusercode: "kewn",
           // netprem : req.body.master.netprem,
           commin :  req.body.master.commin,
           ovin :  req.body.master.ovin,
@@ -1548,6 +1557,8 @@ const findAPCommOut = async (req, res) => {
 };
 
 const saveAPCommOut = async (req, res) => {
+  const jwt = req.headers.authorization.split(' ')[1];
+  const usercode = decode(jwt).USERNAME;
   const t = await sequelize.transaction();
   try {
     const billdate = new Date().toISOString().split("T")[0];
@@ -1567,9 +1578,8 @@ const saveAPCommOut = async (req, res) => {
           transactiontype: "COMM-OUT",
           actualvalue: req.body.master.actualvalue,
           status: "I",
-          createusercode: "kkk",
+          createusercode: usercode,
           billdate: billdate,
-          createusercode: "kewn",
           // netprem : req.body.master.netprem,
           commout :  req.body.master.commout,
           ovout :  req.body.master.ovout,
@@ -1623,6 +1633,8 @@ const saveAPCommOut = async (req, res) => {
 };
 
 const submitAPCommOut = async (req, res) => {
+  const jwt = req.headers.authorization.split(' ')[1];
+  const usercode = decode(jwt).USERNAME;
   const t = await sequelize.transaction();
   try {
     //insert to master jaarap
@@ -1647,9 +1659,8 @@ const submitAPCommOut = async (req, res) => {
           transactiontype: "COMM-OUT",
           actualvalue: req.body.master.actualvalue,
           status: "A",
-          createusercode: "kkk",
+          createusercode: usercode,
           billdate: billdate,
-          createusercode: "kewn",
           // netprem : req.body.master.netprem,
           commout :  req.body.master.commout,
           ovout :  req.body.master.ovout,

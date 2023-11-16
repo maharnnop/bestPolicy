@@ -8,6 +8,7 @@ const config = require("../config.json");
 const process = require('process');
 const {getRunNo,getCurrentDate} = require("./lib/runningno");
 const account =require('./lib/runningaccount')
+const {decode} = require('jsonwebtoken'); // jwt-decode
 // const Package = require("../models").Package;
 // const User = require("../models").User;
 const { Op, QueryTypes, Sequelize } = require("sequelize");
@@ -553,7 +554,8 @@ const getTransactionByid = (req, res) => {
 
 
 const newPolicyList = async (req, res) => {
-
+  const jwt = req.headers.authorization.split(' ')[1];
+  const usercode = decode(jwt).USERNAME;
   for (let i = 0; i < req.body.length; i++) {
     //create entity 
     const t = await sequelize.transaction();
@@ -796,7 +798,7 @@ const newPolicyList = async (req, res) => {
             ovout2_rate: req.body[i][`ovout2_rate`],
             ovout2_amt: req.body[i][`ovout2_amt`],
             cover_amt:req.body[i][`cover_amt`],
-            createusercode: "kwanjai",
+            createusercode: usercode,
             itemList: cars[0].id,
             policyNo: req.body[i].policyNo,
             policyDate:  new Date().toJSON().slice(0, 10),
@@ -817,7 +819,7 @@ const newPolicyList = async (req, res) => {
     req.body[i].installment = {advisor:[], insurer:[]}
   }
   
-      await createjupgr(req.body[i],t)
+      await createjupgr(req.body[i],t,usercode)
       
       //insert transaction 
       await createTransection(req.body[i],t)
@@ -845,7 +847,8 @@ await res.json({ status: 'success' })
 };
 
 const draftPolicyList = async (req, res) => {
-
+  const jwt = req.headers.authorization.split(' ')[1];
+  const usercode = decode(jwt).USERNAME;
   for (let i = 0; i < req.body.length; i++) {
     //create entity 
     const t = await sequelize.transaction();
@@ -1103,7 +1106,7 @@ const draftPolicyList = async (req, res) => {
             ovout2_rate: req.body[i][`ovout2_rate`],
             ovout2_amt: req.body[i][`ovout2_amt`],
             cover_amt:req.body[i][`cover_amt`],
-            createusercode: "kwanjai",
+            createusercode: usercode,
             itemList: cars[0].id,
             withheld: req.body[i].withheld
             
@@ -1215,7 +1218,7 @@ if (!req.body[i].installment) {
   req.body[i].installment = {advisor:[], insurer:[]}
 }
 
-    await createjupgr(req.body[i],t)
+    await createjupgr(req.body[i],t,usercode)
     
     //insert transaction 
     await createTransection(req.body[i],t)
@@ -1243,7 +1246,7 @@ await res.json({ status: 'success' })
 
 };
 
-const createjupgr = async (policy,t) => {
+const createjupgr = async (policy,t,usercode) => {
 
   const advisor =  policy.installment.advisor
   const insurer =  policy.installment.insurer 
@@ -1301,7 +1304,7 @@ if (policy.installment.advisor.length === 0 ) {
        commout_amt: policy[`commout_amt`],
        ovout_rate: policy[`ovout_rate`],
        ovout_amt: policy[`ovout_amt`],
-       createusercode: "kwanjai",
+       createusercode: usercode,
        withheld : policy['withheld']
       },
       
@@ -1356,7 +1359,7 @@ if (policy.installment.insurer.length === 0 ) {
        commout_amt: policy[`commout_amt`],
        ovout_rate: policy[`ovout_rate`],
        ovout_amt: policy[`ovout_amt`],
-       createusercode: "kwanjai",
+       createusercode: usercode,
        withheld: policy['withheld']
       },
       
@@ -1419,7 +1422,7 @@ if (policy.installment.insurer.length === 0 ) {
           commout_amt: parseFloat((advisor[i].netgrossprem *policy[`commout_rate`]/100).toFixed(2)),
           ovout_rate: policy[`ovout_rate`],
           ovout_amt: parseFloat((advisor[i].netgrossprem *policy[`ovout_rate`]/100).toFixed(2)),
-          createusercode: "kwanjai",
+          createusercode: usercode,
           withheld : advisor[i]['withheld']
           
         },
@@ -1470,7 +1473,7 @@ if (policy.installment.insurer.length === 0 ) {
            ovin_taxamt: insurer[i][`ovin_taxamt`],
            agentCode: policy.agentCode,
            agentCode2: policy.agentCode2,
-           createusercode: "kwanjai",
+           createusercode: usercode,
            withheld : insurer[i]['withheld']
           
          },
@@ -1531,7 +1534,7 @@ if (policy.installment.insurer.length === 0 ) {
           commout_amt: policy[`commout_amt`],
           ovout_rate: policy[`ovout_rate`],
           ovout_amt: policy[`ovout_amt`],
-          createusercode: "kwanjai",
+          createusercode: usercode,
           withheld : 0
          },
          

@@ -6,6 +6,7 @@ const b_jabilladvisor = require('../models').b_jabilladvisor;
 const b_jabilladvisordetail = require('../models').b_jabilladvisordetail;
 const process = require('process');
 const {getRunNo,getCurrentDate} = require("./lib/runningno");
+const {decode} = require('jsonwebtoken');
 require('dotenv').config();
 // const Package = require("../models").Package;
 // const User = require("../models").User;
@@ -154,7 +155,8 @@ const findPolicyByBillno = async (req,res) => {
 
 }
 const createbilladvisor = async (req,res) =>{
-
+  const jwt = req.headers.authorization.split(' ')[1];
+  const usercode = decode(jwt).USERNAME;
   const t = await sequelize.transaction();
   try{
 
@@ -175,7 +177,7 @@ const createbilladvisor = async (req,res) =>{
                  billadvisorno: req.body.bill.billadvisorno,
                
                 billdate: billdate,
-                createusercode: "kewn",
+                createusercode: usercode,
                 amt:req.body.bill.amt,
                 cashierreceiptno:null,
               },
@@ -206,7 +208,7 @@ const createbilladvisor = async (req,res) =>{
                     ovout_amt: req.body.detail[i].ovout_amt,
                     netflag: req.body.detail[i].statementtype,
                     billpremium: req.body.detail[i].billpremium,
-                    updateusercode: "kewn",
+                    updateusercode: usercode,
                     seqno: req.body.detail[i].seqNo,
                   },
                   transaction: t ,
@@ -289,6 +291,9 @@ const getbilladvisordetail =async (req,res) =>{
 
 const editbilladvisor = async (req,res) =>{
   //insert new bill to master jabilladvisor
+  const jwt = req.headers.authorization.split(' ')[1];
+    const usercode = decode(jwt).USERNAME;
+
   const t = await sequelize.transaction();
   try{
     const currentdate = getCurrentDate()
@@ -304,7 +309,7 @@ const editbilladvisor = async (req,res) =>{
             agentCode:req.body.bill.agentCode,
             billadvisorno: req.body.bill.billadvisorno,
             billdate: new Date(),
-            createusercode: "kewn",
+            createusercode: usercode,
             amt:req.body.bill.amt,
             cashierreceiptno:null,
             old_keyid: req.body.bill.old_keyid,
@@ -405,6 +410,8 @@ const editbilladvisor = async (req,res) =>{
 }
 
 const createcashier = async (req,res) =>{
+  const jwt = req.headers.authorization.split(' ')[1];
+    const usercode = decode(jwt).USERNAME;
   //deaw ma tum tor
   const cashier = await sequelize.query(
     'insert into static_data.b_jacashiers (billadvisorno, cashierreceiven, cashierdate, dfrpreferno, transactiontype, insurercode,advisorcode, customerid, '+
@@ -416,7 +423,7 @@ const createcashier = async (req,res) =>{
             agentID:req.body.bill.agentID,
             billadvisorno: req.body.bill.billadvisorno,
             billdate: Date.now(),
-            createusercode: "kewn",
+            createusercode: usercode,
             amt:req.body.bill.amt,
             cashierreceiptno:null,
           },

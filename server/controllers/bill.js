@@ -5,6 +5,7 @@ const CommOVOut = require("../models").CommOVOut;
 const b_jabilladvisor = require('../models').b_jabilladvisor;
 const b_jabilladvisordetail = require('../models').b_jabilladvisordetail;
 const process = require('process');
+const {decode} = require('jsonwebtoken');
 require('dotenv').config();
 // const Package = require("../models").Package;
 // const User = require("../models").User;
@@ -29,6 +30,8 @@ const test = (req, res) => {
 };
 
 const createCashier = async (req, res) => {
+    const jwt = req.headers.authorization.split(' ')[1];
+    const usercode = decode(jwt).USERNAME;
     let joidata = {
         keyid: Joi.string().required(),
         billadvisorno: Joi.string().required(),
@@ -120,7 +123,7 @@ const createCashier = async (req, res) => {
             Amt: req.body.Amt,
             createdate: new Date(),
             createtime: req.body.createtime,
-            createusercode: req.body.createusercode,
+            createusercode: usercode,
             updatedate: new Date(),
             updatetime: req.body.updatetime,
             updateusercode: req.body.updateusercode,
@@ -241,6 +244,8 @@ const findbill = async (req, res) => {
 };
 
 const submitCashier = async (req, res) => {
+    const jwt = req.headers.authorization.split(' ')[1];
+    const usercode = decode(jwt).USERNAME;
     let joidata = {
         // keyid: Joi.string().required(),
         Amt: Joi.number().required(),
@@ -331,10 +336,10 @@ const submitCashier = async (req, res) => {
          Amt: req.body.Amt,
          createdate: new Date(),
          createtime: new Date(),
-         createusercode: "testUser",
+         createusercode: usercode,
          updatedate: new Date(),
          updatetime: new Date(),
-         updateusercode: "test1234",
+         updateusercode: usercode,
          status: 'I',
          dfrpreferno:req.body.dfrpreferno
     }
@@ -373,6 +378,8 @@ const submitCashier = async (req, res) => {
     
 }
 const saveCashier = async (req, res) => {
+    const jwt = req.headers.authorization.split(' ')[1];
+    const usercode = decode(jwt).USERNAME;
     let joidata = {
         keyid: Joi.string().required(),
         billadvisorno: Joi.string().required(),
@@ -457,7 +464,7 @@ const saveCashier = async (req, res) => {
             Amt: req.body.Amt,
             createdate: new Date(),
             createtime: req.body.createtime,
-            createusercode: "testUser",
+            createusercode: usercode,
             updatedate: new Date(),
             updatetime: req.body.updatetime,
             updateusercode: req.body.updateusercode,
