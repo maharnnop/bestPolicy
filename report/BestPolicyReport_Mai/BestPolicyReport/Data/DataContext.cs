@@ -24,6 +24,7 @@ namespace BestPolicyReport.Data
             modelBuilder.Entity<OutputVatOvInReportResult>().HasNoKey();
             modelBuilder.Entity<CommOutOvOutReportResult>().HasNoKey();
             modelBuilder.Entity<PremOutReportResult>().HasNoKey();
+            modelBuilder.Entity<PolicyGroupBillReportResult>().HasNoKey();
         }
 
         public DbSet<DailyPolicyReportResult> DailyPolicyReportResults { get; set; }
@@ -33,5 +34,6 @@ namespace BestPolicyReport.Data
         public DbSet<OutputVatOvInReportResult> OutputVatOvInReportResults { get; set; }
         public DbSet<CommOutOvOutReportResult> CommOutOvOutReportResults { get; set; }
         public DbSet<PremOutReportResult> PremOutReportResults { get; set; }
+        public DbSet<PolicyGroupBillReportResult> PolicyGroupBillReportResults { get; set; }
     }
 }

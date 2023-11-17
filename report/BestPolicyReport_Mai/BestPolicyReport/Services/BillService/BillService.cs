@@ -81,5 +81,111 @@ namespace BestPolicyReport.Services.BillService
             var json = await _dataContext.BillReportResults.FromSqlRaw(sql).ToListAsync();
             return json;
         }
+
+        public async Task<List<PolicyGroupBillReportResult>?> GetPolicyGroupBillReportJson(PolicyGroupBillReportInput data)
+        {
+            var sql = $@"select * from (
+                         select 
+                         case 
+                         	when p.""itemList"" is not null then m.""licenseNo""
+                         	else null
+                         end	
+                         as ""licenseNo"",
+                         case 
+                         	when p.""itemList"" is not null then m.brand
+                         	else null
+                         end	
+                         as ""brand"",
+                         case 
+                         	when p.""itemList"" is not null then m.model
+                         	else null
+                         end	
+                         as ""model"",
+                         case 
+                         	when e_i.""personType"" = 'O' then concat(t_i.""TITLETHAIBEGIN"", ' ', e_i.""t_ogName"", ' ', t_i.""TITLETHAIEND"") 
+                         	when e_i.""personType"" = 'P' then concat(t_i.""TITLETHAIBEGIN"", ' ', e_i.""t_firstName"", ' ', e_i.""t_lastName"", ' ', t_i.""TITLETHAIEND"") 
+                         	else null
+                         end	
+                         as ""insureeName"",
+                         case 
+                         	when p.""itemList"" is not null then m.""modelYear"" 
+                         	else null
+                         end	
+                         as ""modelYear"",
+                         case 
+                         	when p.""itemList"" is not null then m.""chassisNo""
+                         	else null
+                         end	
+                         as ""chassisNo"",
+                         p.cover_amt as ""coverAmt"",
+                         p.""policyNo"",
+                         p.""actDate"",
+                         p.""expDate"",
+                         sum(p.netgrossprem) as ""netGrossPrem"",
+                         sum(bad.duty) as ""duty"",
+                         sum(p.netgrossprem) + sum(bad.duty) as ""netGrossPremBeforeTax"",
+                         sum(bad.tax) as ""tax"",
+                         sum(bad.totalprem) as ""totalPrem"",
+                         sum(bad.withheld) as ""withHeld"",
+                         sum(bad.billpremium) as ""billPremium"",
+                         bad.netflag as ""netFlag"",
+                         ba.billadvisorno as ""billAdvisorNo"",
+                         ba.createusercode as ""createUserCode"",
+                         ba.billdate as ""billDate""
+                         from static_data.b_jabilladvisors ba
+                         left join static_data.b_jabilladvisordetails bad on ba.id = bad.keyidm  
+                         left join static_data.""Policies"" p on bad.polid = p.id
+                         left join static_data.""Insurees"" i on p.""insureeCode"" = i.""insureeCode""
+                         left join static_data.""Entities"" e_i on i.""entityID"" = e_i.id
+                         left join static_data.""Titles"" t_i on e_i.""titleID"" = t_i.""TITLEID""
+                         left join static_data.""Motors"" m on m.id = p.""itemList""
+                         where ba.active = 'Y'
+                         group by p.""policyNo"", 
+                         p.""itemList"", 
+                         m.""licenseNo"", 
+                         m.brand, 
+                         m.model, 
+                         m.""modelYear"", 
+                         e_i.""personType"", 
+                         t_i.""TITLETHAIBEGIN"", 
+                         e_i.""t_ogName"", 
+                         t_i.""TITLETHAIEND"", 
+                         e_i.""t_firstName"", 
+                         e_i.""t_lastName"", 
+                         m.""chassisNo"",
+                         p.cover_amt,
+                         p.""policyNo"",
+                         p.""actDate"",
+                         p.""expDate"",
+                         bad.netflag,
+                         ba.billadvisorno,
+                         ba.createusercode,
+                         ba.billdate
+                         order by p.""policyNo"" asc) as query
+                         where true ";
+            if (!string.IsNullOrEmpty(data.ListBillAdvisorNo))
+            {
+                sql += $@"and ""billAdvisorNo"" in ({data.ListBillAdvisorNo}) ";
+            }
+            if (!string.IsNullOrEmpty(data.CreateUserCode))
+            {
+                sql += $@"and ""createUserCode"" = '{data.CreateUserCode}' ";
+            }
+            string currentDate = DateTime.Now.ToString("yyyy-MM-dd", new System.Globalization.CultureInfo("en-US"));
+            if (!string.IsNullOrEmpty(data.StartBillDate?.ToString()))
+            {
+                if (!string.IsNullOrEmpty(data.EndBillDate?.ToString()))
+                {
+                    sql += $@"and ""billDate"" between '{data.StartBillDate}' and '{data.EndBillDate}' ";
+                }
+                else
+                {
+                    sql += $@"and ""billDate"" between '{data.StartBillDate}' and '{currentDate}' ";
+                }
+            }
+            sql += $@"order by ""insureeName"";";
+            var json = await _dataContext.PolicyGroupBillReportResults.FromSqlRaw(sql).ToListAsync();
+            return json;
+        }
     }
 }
