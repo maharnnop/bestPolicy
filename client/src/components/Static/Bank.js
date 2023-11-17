@@ -5,9 +5,7 @@ import { useParams, useNavigate, Link, redirect } from "react-router-dom";
 // import PackagesDetails from "./PackagesDetails";
 import jwt_decode from "jwt-decode";
 // import "./Admin.css";
-import NavStatic from "./NavStatic"
-import Insurer  from "./Insurer";
-import Insuree  from "./Insuree";
+import Select from 'react-select';
 import InsureType from "./insureType";
 import Agent from "./Agent";
 import CommOv from "./CommOv"
@@ -25,10 +23,47 @@ const Bank = () => {
                     'Authorization': `Bearer ${cookies["jwt"]}` }
   };
     const [bankBrand, setBankBrand] = useState('')
+    const [bankBrandDD, setBankBrandDD] = useState([])
     const [bankBranch, setBankBranch] = useState('')
+    const [bankBranchDD, setBankBranchDD] = useState([])
     const [bankNo, setBankNo] = useState('')
     const [bankOf, setBankOf] = useState('M')
-    const [bankOfCode, setBankOfCode] = useState('')
+    const [bankOfCode, setBankOfCode] = useState('Amity')
+    const url = window.globalConfig.BEST_POLICY_V1_BASE_URL;
+
+    useEffect(() =>{
+      //get brankbrand
+      axios
+        .get(url + "/bills/getbankbrand/all", headers)
+        .then((brand) => {
+          const array = [];
+          brand.data.forEach((ele) => {
+            array.push(
+              { label: ele.bankName, value: ele.bankCode }
+            );
+          });
+        //   console.log(array);
+          setBankBrandDD(array);
+        })
+    },[])
+
+    const changeBankBrand = (e) =>{
+        setBankBrand(e.value)
+        axios
+        .post(url + "/bills/getbankbranchinbrand",{bankCode:e.value}, headers)
+        .then((branch) => {
+            // console.log(branch);
+          const array = [];
+          branch.data.forEach((ele) => {
+            array.push(
+              { label: ele.branchName, value: ele.branchCode }
+            );
+          });
+        //   console.log(array);
+          setBankBranchDD(array);
+        })
+    } 
+
     const handleSubmit=(e)=>{
         e.preventDefault()
 
@@ -39,7 +74,7 @@ const Bank = () => {
             "type":bankOf,
             "code":bankOfCode
         });
-        axios.post(window.globalConfig.BEST_POLICY_V1_BASE_URL+"/static/bank/bank", data, headers)
+        axios.post(url +"/static/bank/Bank", data, headers)
             .then((response) => {
                 console.log(JSON.stringify(response.data));
             })
@@ -57,27 +92,45 @@ const Bank = () => {
                         {/* Bank Brand */}
                         <div className="row mb-3">
                             <div className="col-4">
-                                <label htmlFor="bankBrand" className="form-label">Bank Brand</label>
+                                <label htmlFor="bankBrand" className="form-label">ธนาคาร</label>
                             </div>
                             <div className="col-7">
-                                <input type="text" id="bankBrand" value={bankBrand} onChange={(e) => setBankBrand(e.target.value)} className="form-control"/>
+                                {/* <input type="text" id="bankBrand"  onChange={(e) => setBankBrand(e.target.value)} className="form-control"/> */}
+                                <Select
+                                id="bankBrand"
+                                className="form-control"
+                                name={`bankBrand`}
+                                value={bankBrandDD.filter(({ value }) => value === bankBrand)}
+                                onChange={(e) => changeBankBrand(e)}
+                                options={bankBrandDD}
+                                styles={{ zIndex: 2000 }}
+                      />
                             </div>
                         </div>
 
                         {/* Bank Branch */}
                         <div className="row mb-3">
                             <div className="col-4">
-                                <label htmlFor="bankBranch" className="form-label">Bank Branch</label>
+                                <label htmlFor="bankBranch" className="form-label">สาขา</label>
                             </div>
                             <div className="col-7">
-                                <input type="text" id="bankBranch" value={bankBranch} onChange={(e) => setBankBranch(e.target.value)} className="form-control"/>
+                                {/* <input type="text" id="bankBranch" value={bankBranch} onChange={(e) => setBankBranch(e.target.value)} className="form-control"/> */}
+                                <Select
+                                id="bankBranch"
+                                className="form-control"
+                                value={bankBranchDD.filter(({ value }) => value === bankBranch)}
+                                name={`bankBranch`}
+                                onChange={(e) => setBankBranch(e.value)}
+                                options={bankBranchDD}
+                                styles={{ zIndex: 2000 }}
+                      />
                             </div>
                         </div>
 
                         {/* Bank No */}
                         <div className="row mb-3">
                             <div className="col-4">
-                                <label htmlFor="bankNo" className="form-label">Bank No</label>
+                                <label htmlFor="bankNo" className="form-label">เลขที่บัญชี</label>
                             </div>
                             <div className="col-7">
                                 <input type="text" id="bankNo" value={bankNo} onChange={(e) => setBankNo(e.target.value)} className="form-control"/>
@@ -104,7 +157,7 @@ const Bank = () => {
                                 <label htmlFor="bankOfCode" className="form-label">Bank Of Code</label>
                             </div>
                             <div className="col-7">
-                                <input type="text" id="bankOfCode" value={bankOfCode} onChange={(e) => setBankOfCode(e.target.value)} className="form-control"/>
+                                <input type="text" id="bankOfCode" value={bankOfCode} disabled={bankOf === 'M'} onChange={(e) => setBankOfCode(e.target.value)} className="form-control"/>
                             </div>
                         </div>
                         <div className="row" style={{ marginTop: '20px' }}>

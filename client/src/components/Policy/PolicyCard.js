@@ -1962,12 +1962,6 @@ const handleClose = (e) => {
                     <Modal.Title >Confirm</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                    {/* <div class="row">
-                        <div class="col-2">
-                            <label class="col-form-label">เลขที่ใบวางบิล</label>
-                        </div>
-                        <div class="col-2"> {filterData.billadvisor}</div>
-                    </div> */}
                     <div class="row">
                         <div class="col-4">
                             <label class="col-form-label">ใบคำขอเลขที่</label>

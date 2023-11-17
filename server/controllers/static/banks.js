@@ -251,6 +251,68 @@ const findBankPartneryNo = async (req, res) => {
             res.status(500).json(error);
         });
 };
+const findBankbyPersonCode = async (req, res ) =>{
+    try {
+        let jointable = ''
+        let cond = ''
+        if(req.body.type === 'insurer'){
+          jointable = ` JOIN static_data."Insurers" a ON e.id = a."entityID"  
+                        join static_data."Bank" b on a."insurerCode"  = b.code `
+          if (req.body.insurerCode !== '' && req.body.insurerCode !== null ) {
+            cond = cond + ` and a."insurerCode" like '%${req.body.insurerCode}%' `
+          }
+        }else{
+          jointable = ` JOIN static_data."Agents" a ON e.id = a."entityID"  
+                        join static_data."Bank" b on a."agentCode"  = b.code `
+          if (req.body.agentCode !== '' && req.body.agentCode !== null ) {
+            cond = cond + ` and a."agentCode" like '%${req.body.agentCode}%' `
+          }
+        }
+    
+        
+        
+       
+    
+        if (req.body.firstname !== '' && req.body.personType === 'P') {
+          cond = cond + ` and e."t_firstName" like '%${req.body.firstname}%' `
+        }
+        if (req.body.lastname !== '' && req.body.personType === 'P') {
+          cond = cond + ` and  e."t_lastName"  like '%${req.body.lastname}%' `
+        }
+        if (req.body.ogname !== '' && req.body.personType === 'O') {
+          cond = cond + ` and e."t_ogName"  like '%${req.body.ogname}%' `
+        }
+          const persons = await sequelize.query(
+            `select 
+            '${req.body.type}' as type,
+            e."personType",
+            (case when e."personType" = 'O' then  t."TITLETHAIBEGIN" ||' '|| e."t_ogName" || ' ' ||  t."TITLETHAIEND" 
+            else t."TITLETHAIBEGIN" ||' '|| e."t_firstName"|| ' ' || e."t_lastName"  || ' ' ||  t."TITLETHAIEND"  end) as fullname,
+            b.code
+            ,bb."bankName" 
+            ,bb2."branchName" 
+           * from static_data."Entities" e 
+           ${jointable}
+           join static_data."Titles" t on t."TITLEID" = e."titleID" 
+           join static_data.bank_brands bb on bb."bankCode" = b."bankBrand"
+            join static_data.bank_branches bb2  on bb2."branchCode" = b."bankBranch" and bb2."bankCode" =b."bankBrand" 
+           where a.lastversion ='Y'
+           and b.lastversion ='Y'
+           ${cond}`,
+            {
+              
+              type: QueryTypes.SELECT,
+            }
+            
+          ); 
+         
+          await res.json(persons);
+        } catch (error) {
+          console.log(error);
+          await res.status(500).json({ msg: "internal server error" });
+        }
+   
+}
 module.exports = {
     createBank,
     findBanksByType,
@@ -261,5 +323,6 @@ module.exports = {
     findBankAmityNo,
     findBankPartnerBranch,
     findBankPartnerBrand,
-    findBankPartneryNo
+    findBankPartneryNo,
+    findBankbyPersonCode
 };

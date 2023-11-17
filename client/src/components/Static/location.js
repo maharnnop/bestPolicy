@@ -112,7 +112,7 @@
                         />
                     </div>
                     <div class="col">
-                        <h6>เบอร์โทรศัพท์</h6>
+                        <h6>เบอร์มือถือ</h6>
                     </div>
                     <div class="col">
                         <InputBtn
@@ -123,7 +123,7 @@
                         />
                     </div>
                     <div class="col">
-                        <h6>เบอร์มือถือ</h6>
+                        <h6>เบอร์โทรศัพท์</h6>
                     </div>
                     <div class="col">
                         <InputBtn

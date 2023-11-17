@@ -6,7 +6,7 @@ export const  numberWithCommas = (field) => {
     let amount = element.value.replace(/,/g, '');
 
     // Check if the amount contains (-) sign in the beginning
-    if(amount.charAt(0)=='-'){
+    if(amount.charAt(0)==='-'){
     // if amount contains (-) sign, remove first character then replace all
     // (-) signs from the amount with empty value & concate (-) in amount
         amount = '-'+amount.substring(1).replace(/-/g, '');

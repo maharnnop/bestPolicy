@@ -28,6 +28,8 @@ module.exports = (sequelize, DataTypes) => {
     contactPersonID : DataTypes.INTEGER,
     commovCreditUnit: DataTypes.STRING,
     premCreditUnit: DataTypes.STRING,
+    lastversion : DataTypes.STRING,
+    version : DataTypes.INTEGER
   }, {
     sequelize,
     modelName: 'Insurer',

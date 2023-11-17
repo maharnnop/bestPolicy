@@ -37,6 +37,7 @@ module.exports = (sequelize, DataTypes) => {
     // amountOVIn_4:  DataTypes.FLOAT,
     // rateOVIn_5:  DataTypes.FLOAT,
     // amountOVIn_5:  DataTypes.FLOAT,
+    lastversion: DataTypes.STRING,
   }, {
     sequelize,
     modelName: 'CommOVIn',

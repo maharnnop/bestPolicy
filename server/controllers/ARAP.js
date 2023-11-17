@@ -6,6 +6,7 @@ const b_jabilladvisor = require("../models").b_jabilladvisor;
 const b_jabilladvisordetail = require("../models").b_jabilladvisordetail;
 const process = require("process");
 const {getRunNo,getCurrentDate} = require("./lib/runningno");
+const {decode} = require('jsonwebtoken');
 require("dotenv").config();
 // const Package = require("../models").Package;
 // const User = require("../models").User;
@@ -55,7 +56,7 @@ const getbilldata = async (req, res) => {
         from static_data."Transactions" t 
         join static_data.b_jupgrs j on t.polid = j.polid and t."seqNo" = j."seqNo" 
         join static_data."Policies" p on p.id = j.polid
-        where t.billadvisor = :billadvisorno 
+        where t.billadvisorno = :billadvisorno 
         and t."transType" = 'PREM-IN' and j.installmenttype ='A' `,
     {
       replacements: {
@@ -95,28 +96,28 @@ const getARPremindata = async (req, res) => {
   if (req.body.billadvisorno  !== null && req.body.billadvisorno !== '') {
     cond = cond + ` and a.billadvisorno = '${req.body.billadvisorno}'`
   }
-  if (req.body.insurercode  !== null && req.body.billadvisorno !== '') {
+  if (req.body.insurercode  !== null && req.body.insurercode !== '') {
     cond = cond + ` and a.insurerno = (select id from static_data."Insurers" where "insurerCode" = '${req.body.insurercode}')`
   }
-  if (req.body.advisorcode   !== null && req.body.billadvisorno !== '' ) {
+  if (req.body.advisorcode   !== null && req.body.advisorcode !== '' ) {
     cond = cond + ` and a.advisorno = (select id from static_data."Agents" where "agentCode" = '${req.body.advisorcode}')`
   }
-  if (req.body.cashierreceiveno   !== null && req.body.billadvisorno !== '' ) {
+  if (req.body.cashierreceiveno   !== null && req.body.cashierreceiveno !== '' ) {
     cond = cond + ` and a.cashierreceiveno = '${req.body.cashierreceiveno}'`
   }
-  if (req.body.refno  !== null && req.body.billadvisorno !== '') {
+  if (req.body.refno  !== null && req.body.refno !== '') {
     cond = cond + ` and a.refno = '${req.body.refno}'`
   }
-  if (req.body.arno  !== null && req.body.billadvisorno !== '') {
+  if (req.body.arno  !== null && req.body.arno !== '') {
     cond = cond + ` and a.dfrpreferno = '${req.body.arno}'`
   }
-  if (req.body.ardatestart  !== null && req.body.billadvisorno !== '') {
+  if (req.body.ardatestart  !== null && req.body.ardatestart !== '') {
     cond = cond +` and a.rprefdate >= '${req.body.ardate}'`
   }
-  if (req.body.ardateend  !== null && req.body.billadvisorno !== '') {
+  if (req.body.ardateend  !== null && req.body.ardateend !== '') {
     cond = cond +` and a.rprefdate <= '${req.body.ardate}'`
   }
-  if (req.body.arcreateusercode  !== null && req.body.billadvisorno !== '') {
+  if (req.body.arcreateusercode  !== null && req.body.arcreateusercode !== '') {
     cond = cond +` and a.createusercode ='${req.body.arcreateusercode}'`
   }
   const records = await sequelize.query(
@@ -143,6 +144,8 @@ const getARPremindata = async (req, res) => {
 };
 
 const submitARPremin = async (req, res) => {
+  const jwt = req.headers.authorization.split(' ')[1];
+  const usercode = decode(jwt).USERNAME;
   const t = await sequelize.transaction();
   try {
     //insert to master jaarap
@@ -171,11 +174,10 @@ const submitARPremin = async (req, res) => {
           actualvalue: req.body.master.actualvalue,
           diffamt: req.body.master.diffamt,
           status: "A",
-          createusercode: "kkk",
+          createusercode: usercode,
           dfrpreferno: req.body.master.arno,
           rprefdate: billdate,
           billdate: billdate,
-          createusercode: "kewn",
         },
         
         transaction: t,
@@ -329,6 +331,8 @@ const submitARPremin = async (req, res) => {
 };
 
 const saveARPremin = async (req, res) => {
+  const jwt = req.headers.authorization.split(' ')[1];
+  const usercode = decode(jwt).USERNAME;
   const t = await sequelize.transaction();
   try {
     //insert to master jaarap
@@ -352,10 +356,9 @@ const saveARPremin = async (req, res) => {
           actualvalue: req.body.master.actualvalue,
           diffamt: req.body.master.diffamt,
           status: "I",
-          createusercode: "kkk",
+          createusercode: usercode,
 
           billdate: billdate,
-          createusercode: "kewn",
         },
         transaction: t,
         type: QueryTypes.INSERT,
@@ -435,18 +438,18 @@ const getARtrans = async (req, res) => {
   
   let cond = ''
   if (req.body.billadvisorno  !== null && req.body.billadvisorno !== '') {
-    cond = cond + ` and t.billadvisor = ${req.body.billadvisorno}` 
+    cond = cond + ` and t.billadvisorno = ${req.body.billadvisorno}` 
   }
-  if (req.body.insurerCode  !== null && req.body.billadvisorno !== '') {
+  if (req.body.insurerCode  !== null && req.body.insurerCode !== '') {
     cond = cond + ` and t.insurerCode = ${req.body.insurerCode}` 
   }
-  if (req.body.agentCode  !== null && req.body.billadvisorno !== '') {
+  if (req.body.agentCode  !== null && req.body.agentCode !== '') {
     cond = cond + ` and t.agentCode = ${req.body.agentCode}` 
   }
-  if (req.body.cashierreceiveno  !== null && req.body.billadvisorno !== '') {
+  if (req.body.cashierreceiveno  !== null && req.body.cashierreceiveno !== '') {
     cond = cond + ` and t.receiptno = ${req.body.cashierreceiveno}` 
   }
-  if (req.body.arno  !== null && req.body.billadvisorno !== '') {
+  if (req.body.arno  !== null && req.body.arno !== '') {
     cond = cond + ` and t.premin-dfrpreferno = ${req.body.arno}` 
   }
   if (req.body.type === 'prem_out') {
@@ -494,28 +497,28 @@ const getARtrans = async (req, res) => {
 //ตัดหนี้ premin แบบ advisor มาจ่ายโดยตรงที่บริษัทประกัน (direct)
 const findARPremInDirect = async (req, res) => {
   let cond = ''
-  if (req.body.insurerCode  !== null && req.body.billadvisorno !== '') {
+  if (req.body.insurerCode  !== null && req.body.insurerCode !== '') {
     cond = cond + ` and t."insurerCode" = '${req.body.insurerCode}'`
   }
-  if (req.body.agentCode  !== null && req.body.billadvisorno !== '') {
+  if (req.body.agentCode  !== null && req.body.agentCode !== '') {
     cond = cond + ` and t."agentCode" = '${req.body.agentCode}'`
   }
-  if (req.body.policyNoStart  !== null && req.body.billadvisorno !== '') {
+  if (req.body.policyNoStart  !== null && req.body.policyNoStart !== '') {
     cond = cond + ` and t."policyNo" >= '${req.body.policyNoStart}'`
   }
-  if (req.body.policyNoEnd  !== null && req.body.billadvisorno !== '') {
+  if (req.body.policyNoEnd  !== null && req.body.policyNoEnd !== '') {
     cond = cond + ` and t."policyNo" <= '${req.body.policyNoEnd}'`
   }
-  if (req.body.endorseNoStart  !== null && req.body.billadvisorno !== '') {
+  if (req.body.endorseNoStart  !== null && req.body.endorseNoStart !== '') {
     cond = cond + ` and j."endorseNo" = '${req.body.endorseNoStart}'`
   }
-  if (req.body.endorseNoEnd  !== null && req.body.billadvisorno !== '') {
+  if (req.body.endorseNoEnd  !== null && req.body.endorseNoEnd !== '') {
     cond = cond + ` and j."endorseNo" = '${req.body.endorseNoEnd}'`
   }
-  if (req.body.invoiceNoStart  !== null && req.body.billadvisorno !== '') {
+  if (req.body.invoiceNoStart  !== null && req.body.invoiceNoStart !== '') {
     cond = cond + ` and j."invoiceNo" = '${req.body.invoiceNoStart}'`
   }
-  if (req.body.invoiceNoEnd  !== null && req.body.billadvisorno !== '') {
+  if (req.body.invoiceNoEnd  !== null && req.body.invoiceNoEnd !== '') {
     cond = cond + ` and j."invoiceNo" = '${req.body.invoiceNoEnd}'`
   }
   const trans = await sequelize.query(
@@ -546,6 +549,8 @@ const findARPremInDirect = async (req, res) => {
 };
 
 const saveARPreminDirect = async (req, res) => {
+  const jwt = req.headers.authorization.split(' ')[1];
+  const usercode = decode(jwt).USERNAME;
   const t = await sequelize.transaction();
   try {
     const billdate = new Date().toISOString().split("T")[0];
@@ -566,9 +571,8 @@ const saveARPreminDirect = async (req, res) => {
           actualvalue: req.body.master.actualvalue,
           diffamt: 0,
           status: "I",
-          createusercode: "kkk",
+          createusercode: usercode,
           billdate: billdate,
-          createusercode: "kewn",
           netprem : req.body.master.netprem,
           commin :  req.body.master.commin,
           ovin :  req.body.master.ovin,
@@ -656,6 +660,8 @@ const saveARPreminDirect = async (req, res) => {
 };
 
 const submitARPreminDirect = async (req, res) => {
+  const jwt = req.headers.authorization.split(' ')[1];
+  const usercode = decode(jwt).USERNAME;
   const t = await sequelize.transaction();
   try {
     //insert to master jaarap
@@ -681,9 +687,8 @@ const submitARPreminDirect = async (req, res) => {
           actualvalue: req.body.master.actualvalue,
           diffamt: 0,
           status: "A",
-          createusercode: "kkk",
+          createusercode: usercode,
           billdate: billdate,
-          createusercode: "kewn",
           netprem : req.body.master.netprem,
           commin :  req.body.master.commin,
           ovin :  req.body.master.ovin,
@@ -726,10 +731,10 @@ const submitARPreminDirect = async (req, res) => {
    
     //update arno, refdate to transaction table
     let cond = ' and txtype2 in ( 1, 2, 3, 4, 5 ) and status = \'N\''
-    if (req.body.trans[i].endorseNo  !== null && req.body.billadvisorno !== '') {
+    if (req.body.trans[i].endorseNo  !== null && req.body.endorseNo !== '') {
       cond =cond + ' and "endorseNo"= ' + req.body.trans[i].endorseNo
     }
-    if (req.body.trans[i].seqNo  !== null && req.body.billadvisorno !== '') {
+    if (req.body.trans[i].seqNo  !== null && req.body.seqNo !== '') {
       cond = cond +' and "seqNo" = ' +req.body.trans[i].seqNo
     }
     await sequelize.query(
@@ -835,16 +840,16 @@ const submitARPreminDirect = async (req, res) => {
 //Account payment prem out
 const findAPPremOut = async (req, res) => {
   let cond = ''
-  if (req.body.insurerCode  !== null && req.body.billadvisorno !== '' ) {
+  if (req.body.insurerCode  !== null && req.body.insurerCode !== '' ) {
     cond = cond + ` and t."insurerCode" = '${req.body.insurerCode}'`
   }
-  if (req.body.agentCode  !== null && req.body.billadvisorno !== '' ) {
+  if (req.body.agentCode  !== null && req.body.agentCode !== '' ) {
     cond = cond + ` and t."agentCode" = '${req.body.agentCode}'`
   }
-  if (req.body.reconcileno  !== null && req.body.billadvisorno !== '' ) {
+  if (req.body.reconcileno  !== null && req.body.reconcileno !== '' ) {
     cond = cond + ` and r.reconcileno = '${req.body.reconcileno}'`
   }
-  if (req.body.dueDate  !== null && req.body.billadvisorno !== '' ) {
+  if (req.body.dueDate  !== null && req.body.dueDate !== '' ) {
     cond = cond + ` and  '${req.body.dueDate}' <= t."dueDate" `
   }
   
@@ -891,6 +896,8 @@ const findAPPremOut = async (req, res) => {
 };
 
 const saveAPPremOut = async (req, res) => {
+  const jwt = req.headers.authorization.split(' ')[1];
+  const usercode = decode(jwt).USERNAME;
   const t = await sequelize.transaction();
   try {
     const billdate = new Date().toISOString().split("T")[0];
@@ -911,9 +918,8 @@ const saveAPPremOut = async (req, res) => {
           actualvalue: req.body.master.actualvalue,
           
           status: "I",
-          createusercode: "kkk",
+          createusercode: usercode,
           billdate: billdate,
-          createusercode: "kewn",
           netprem : req.body.master.netprem,
           commin :  req.body.master.commin,
           ovin :  req.body.master.ovin,
@@ -962,6 +968,8 @@ const saveAPPremOut = async (req, res) => {
 };
 
 const submitAPPremOut = async (req, res) => {
+  const jwt = req.headers.authorization.split(' ')[1];
+  const usercode = decode(jwt).USERNAME;
   const t = await sequelize.transaction();
   try {
     //insert to master jaarap
@@ -987,9 +995,8 @@ const submitAPPremOut = async (req, res) => {
           actualvalue: req.body.master.actualvalue,
           diffamt: 0,
           status: "A",
-          createusercode: "kkk",
+          createusercode: usercode,
           billdate: billdate,
-          createusercode: "kewn",
           netprem : req.body.master.netprem,
           commin :  req.body.master.commin,
           ovin :  req.body.master.ovin,
@@ -1032,10 +1039,10 @@ const submitAPPremOut = async (req, res) => {
    
     //update arno, refdate to transaction table
     let cond = ' and txtype2 in ( 1, 2, 3, 4, 5 ) and status = \'N\''
-    if (req.body.trans[i].endorseNo  !== null && req.body.billadvisorno !== '') {
+    if (req.body.trans[i].endorseNo  !== null && req.body.endorseNo !== '') {
       cond =cond + ' and "endorseNo"= ' + req.body.trans[i].endorseNo
     }
-    if (req.body.trans[i].seqNo  !== null && req.body.billadvisorno !== '') {
+    if (req.body.trans[i].seqNo  !== null && req.body.seqNo !== '') {
       cond = cond +' and "seqNo" = ' +req.body.trans[i].seqNo
     }
     await sequelize.query(
@@ -1123,16 +1130,16 @@ const findARCommIn = async (req, res) => {
   }
 
 
-  if (req.body.insurerCode  !== null && req.body.billadvisorno !== '') {
+  if (req.body.insurerCode  !== null && req.body.insurerCode !== '') {
     cond = cond + ` and t."insurerCode" = '${req.body.insurerCode}'`
   }
-  if (req.body.agentCode  !== null && req.body.billadvisorno !== '') {
+  if (req.body.agentCode  !== null && req.body.agentCode !== '') {
     cond = cond + ` and t."agentCode" = '${req.body.insurerCode}'`
   }
-  if (req.body.dfrpreferno  !== null && req.body.billadvisorno !== '') {
+  if (req.body.dfrpreferno  !== null && req.body.dfrpreferno !== '') {
     cond = cond + ` and a.dfrpreferno = '${req.body.dfrpreferno}'`
   }
-  if (req.body.cashierreceiveno  !== null && req.body.billadvisorno !== '') {
+  if (req.body.cashierreceiveno  !== null && req.body.cashierreceiveno !== '') {
     cond = cond + ` and  a.cashierreceiveno = '${req.body.cashierreceiveno}'`
   }
   
@@ -1192,6 +1199,8 @@ const findARCommIn = async (req, res) => {
 };
 
 const saveARCommIn = async (req, res) => {
+  const jwt = req.headers.authorization.split(' ')[1];
+  const usercode = decode(jwt).USERNAME;
   const t = await sequelize.transaction();
   try {
     const billdate = new Date().toISOString().split("T")[0];
@@ -1211,9 +1220,8 @@ const saveARCommIn = async (req, res) => {
           transactiontype: "COMM-IN",
           actualvalue: req.body.master.actualvalue,
           status: "I",
-          createusercode: "kkk",
+          createusercode: usercode,
           billdate: billdate,
-          createusercode: "kewn",
           // netprem : req.body.master.netprem,
           commin :  req.body.master.commin,
           ovin :  req.body.master.ovin,
@@ -1315,6 +1323,8 @@ const saveARCommIn = async (req, res) => {
 };
 
 const submitARCommIn = async (req, res) => {
+  const jwt = req.headers.authorization.split(' ')[1];
+  const usercode = decode(jwt).USERNAME;
   const t = await sequelize.transaction();
   try {
     //insert to master jaarap
@@ -1339,9 +1349,8 @@ const submitARCommIn = async (req, res) => {
           transactiontype: "COMM-IN",
           actualvalue: req.body.master.actualvalue,
           status: "A",
-          createusercode: "kkk",
+          createusercode: usercode,
           billdate: billdate,
-          createusercode: "kewn",
           // netprem : req.body.master.netprem,
           commin :  req.body.master.commin,
           ovin :  req.body.master.ovin,
@@ -1448,10 +1457,10 @@ const submitARCommIn = async (req, res) => {
    
     //update arno, refdate to transaction table
     let cond = ' and txtype2 in ( 1, 2, 3, 4, 5 ) and status = \'N\''
-    if (req.body.trans[i].endorseNo  !== null && req.body.billadvisorno !== '') {
+    if (req.body.trans[i].endorseNo  !== null && req.body.endorseNo !== '') {
       cond =cond + ' and "endorseNo"= ' + req.body.trans[i].endorseNo
     }
-    if (req.body.trans[i].seqNo  !== null && req.body.billadvisorno !== '') {
+    if (req.body.trans[i].seqNo  !== null && req.body.seqNo !== '') {
       cond = cond +' and "seqNo" = ' +req.body.trans[i].seqNo
     }
     await sequelize.query(
@@ -1495,19 +1504,19 @@ const findAPCommOut = async (req, res) => {
 
   let cond = ` and (p."actDate" between '${req.body.effDatestart}' and '${req.body.effDateend}'   or p."expDate" between '${req.body.effDatestart}' and '${req.body.effDateend}')`
 
-  if (req.body.insurerCode  !== null && req.body.billadvisorno !== '') {
+  if (req.body.insurerCode  !== null && req.body.insurerCode !== '') {
     cond = cond + ` and t."insurerCode" = '${req.body.insurerCode}'`
   }
-  if (req.body.agentCode  !== null && req.body.billadvisorno !== '') {
+  if (req.body.agentCode  !== null && req.body.agentCode !== '') {
     cond = cond + ` and t."agentCode" = '${req.body.agentCode}'`
   }
-  if (req.body.policyNostart  !== null && req.body.billadvisorno !== '') {
+  if (req.body.policyNostart  !== null && req.body.policyNostart !== '') {
     cond = cond + ` and p."policyNo" >= '${req.body.policyNostart}'`
   }
-  if (req.body.policyNoend  !== null && req.body.billadvisorno !== '') {
+  if (req.body.policyNoend  !== null && req.body.policyNoend !== '') {
     cond = cond + ` and p."policyNo" <= '${req.body.policyNoend}'`
   }
-  if (req.body.dueDate  !== null && req.body.billadvisorno !== '') {
+  if (req.body.dueDate  !== null && req.body.dueDate !== '') {
     cond = cond + ` and  t."dueDate" = '${req.body.dueDate}'`
   }
   
@@ -1548,6 +1557,8 @@ const findAPCommOut = async (req, res) => {
 };
 
 const saveAPCommOut = async (req, res) => {
+  const jwt = req.headers.authorization.split(' ')[1];
+  const usercode = decode(jwt).USERNAME;
   const t = await sequelize.transaction();
   try {
     const billdate = new Date().toISOString().split("T")[0];
@@ -1567,9 +1578,8 @@ const saveAPCommOut = async (req, res) => {
           transactiontype: "COMM-OUT",
           actualvalue: req.body.master.actualvalue,
           status: "I",
-          createusercode: "kkk",
+          createusercode: usercode,
           billdate: billdate,
-          createusercode: "kewn",
           // netprem : req.body.master.netprem,
           commout :  req.body.master.commout,
           ovout :  req.body.master.ovout,
@@ -1623,6 +1633,8 @@ const saveAPCommOut = async (req, res) => {
 };
 
 const submitAPCommOut = async (req, res) => {
+  const jwt = req.headers.authorization.split(' ')[1];
+  const usercode = decode(jwt).USERNAME;
   const t = await sequelize.transaction();
   try {
     //insert to master jaarap
@@ -1647,9 +1659,8 @@ const submitAPCommOut = async (req, res) => {
           transactiontype: "COMM-OUT",
           actualvalue: req.body.master.actualvalue,
           status: "A",
-          createusercode: "kkk",
+          createusercode: usercode,
           billdate: billdate,
-          createusercode: "kewn",
           // netprem : req.body.master.netprem,
           commout :  req.body.master.commout,
           ovout :  req.body.master.ovout,
@@ -1723,10 +1734,10 @@ const submitAPCommOut = async (req, res) => {
    
     //update arno, refdate to transaction table
     let cond = ' and txtype2 in ( 1, 2, 3, 4, 5 ) and status = \'N\''
-    if (req.body.trans[i].endorseNo  !== null && req.body.billadvisorno !== '') {
+    if (req.body.trans[i].endorseNo  !== null && req.body.endorseNo !== '') {
       cond =cond + ' and "endorseNo"= ' + req.body.trans[i].endorseNo
     }
-    if (req.body.trans[i].seqNo  !== null && req.body.billadvisorno !== '') {
+    if (req.body.trans[i].seqNo  !== null && req.body.seqNo !== '') {
       cond = cond +' and "seqNo" = ' +req.body.trans[i].seqNo
     }
     await sequelize.query(

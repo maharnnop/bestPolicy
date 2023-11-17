@@ -47,7 +47,7 @@ const CreateBillAdvisor = () => {
             "policyNoStart": '000000',
             "policyNoEnd": '0000000',
             "agentCode": null,
-            "billadvisor":'B'+ Date.now(),
+            
 
         })
     const [policiesData, setPoliciesData] = useState([])
@@ -457,12 +457,7 @@ const CreateBillAdvisor = () => {
                     <Modal.Title >Confirm</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                    {/* <div class="row">
-                        <div class="col-2">
-                            <label class="col-form-label">เลขที่ใบวางบิล</label>
-                        </div>
-                        <div class="col-2"> {filterData.billadvisor}</div>
-                    </div> */}
+                    
                     <div class="row">
                         <div class="col-2">
                             <label class="col-form-label">จำนวนเงินสุทธิ</label>

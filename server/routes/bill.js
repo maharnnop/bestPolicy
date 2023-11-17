@@ -10,5 +10,8 @@ router.post("/saveCasheir",ctrl.bill.saveCashier);
 router.post("/submitCasheir",ctrl.bill.submitCashier);
 router.post("/editsaveCasheir",ctrl.bill.editSaveBill);
 router.post("/editsubmitCasheir",ctrl.bill.editSubmitBill);
+router.get("/getbankbrand/all", ctrl.bill.getBrandall)
+router.post("/getbankbranchinbrand", ctrl.bill.getBankBranchInBrand)
+
 
 module.exports = router;

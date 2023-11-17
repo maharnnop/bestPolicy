@@ -1,8 +1,10 @@
-
+const {decode} = require('jsonwebtoken');
 
 // Liveness probe
 const livenessProbe = (req, res) => {
-    res.send('OK');
+    const jwt = req.headers.authorization.split(' ')[1];
+    const usercode = decode(jwt).USERNAME;
+    res.send(decodedToken.USERNAME);
 };
 
 // Readiness probe

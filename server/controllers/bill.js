@@ -4,7 +4,10 @@ const CommOVIn = require("../models").CommOVIn; //imported fruits array
 const CommOVOut = require("../models").CommOVOut;
 const b_jabilladvisor = require('../models').b_jabilladvisor;
 const b_jabilladvisordetail = require('../models').b_jabilladvisordetail;
+const BankBrand =require('../models').bank_brand;
+const BankBranch =require('../models').bank_branch;
 const process = require('process');
+const {decode} = require('jsonwebtoken');
 require('dotenv').config();
 // const Package = require("../models").Package;
 // const User = require("../models").User;
@@ -29,6 +32,8 @@ const test = (req, res) => {
 };
 
 const createCashier = async (req, res) => {
+    const jwt = req.headers.authorization.split(' ')[1];
+    const usercode = decode(jwt).USERNAME;
     let joidata = {
         keyid: Joi.string().required(),
         billadvisorno: Joi.string().required(),
@@ -120,7 +125,7 @@ const createCashier = async (req, res) => {
             Amt: req.body.Amt,
             createdate: new Date(),
             createtime: req.body.createtime,
-            createusercode: req.body.createusercode,
+            createusercode: usercode,
             updatedate: new Date(),
             updatetime: req.body.updatetime,
             updateusercode: req.body.updateusercode,
@@ -241,6 +246,8 @@ const findbill = async (req, res) => {
 };
 
 const submitCashier = async (req, res) => {
+    const jwt = req.headers.authorization.split(' ')[1];
+    const usercode = decode(jwt).USERNAME;
     let joidata = {
         // keyid: Joi.string().required(),
         Amt: Joi.number().required(),
@@ -331,10 +338,10 @@ const submitCashier = async (req, res) => {
          Amt: req.body.Amt,
          createdate: new Date(),
          createtime: new Date(),
-         createusercode: "testUser",
+         createusercode: usercode,
          updatedate: new Date(),
          updatetime: new Date(),
-         updateusercode: "test1234",
+         updateusercode: usercode,
          status: 'I',
          dfrpreferno:req.body.dfrpreferno
     }
@@ -373,6 +380,8 @@ const submitCashier = async (req, res) => {
     
 }
 const saveCashier = async (req, res) => {
+    const jwt = req.headers.authorization.split(' ')[1];
+    const usercode = decode(jwt).USERNAME;
     let joidata = {
         keyid: Joi.string().required(),
         billadvisorno: Joi.string().required(),
@@ -457,7 +466,7 @@ const saveCashier = async (req, res) => {
             Amt: req.body.Amt,
             createdate: new Date(),
             createtime: req.body.createtime,
-            createusercode: "testUser",
+            createusercode: usercode,
             updatedate: new Date(),
             updatetime: req.body.updatetime,
             updateusercode: req.body.updateusercode,
@@ -709,6 +718,77 @@ const updateCashierReceiveNo = async (cashierreceiveno,billadvisorno) => {
         res.status(500).json(error);
     }
 };
+
+const getBrandall = (req,res) =>{
+    BankBrand.findAll().then((agent) => {
+        res.json(agent);
+      })
+}
+
+const getBankBranchInBrand = (req,res) =>{
+    BankBranch.findAll({
+        where: {
+          bankCode: req.body.bankCode
+        }
+      }).then((agent) => {
+        res.json(agent);
+      })
+}
+
+const getBankByPerson = async (req,res) =>{
+    try {
+        let jointable = ''
+        let cond = ''
+        if(req.body.type === 'insurer'){
+          jointable = ' JOIN static_data."Insurers" a ON e.id = a."entityID"  '
+          if (req.body.insurerCode !== '' && req.body.insurerCode !== null ) {
+            cond = cond + ` and a."insurerCode" like '%${req.body.insurerCode}%' `
+          }
+        }else{
+          jointable = ' JOIN static_data."Agents" a ON e.id = a."entityID"  '
+          if (req.body.agentCode !== '' && req.body.agentCode !== null ) {
+            cond = cond + ` and a."agentCode" like '%${req.body.agentCode}%' `
+          }
+        }
+        if (req.body.firstname !== '' && req.body.personType === 'P') {
+          cond = cond + ` and e."t_firstName" like '%${req.body.firstname}%' `
+        }
+        if (req.body.lastname !== '' && req.body.personType === 'P') {
+          cond = cond + ` and  e."t_lastName"  like '%${req.body.lastname}%' `
+        }
+        if (req.body.ogname !== '' && req.body.personType === 'O') {
+          cond = cond + ` and e."t_ogName"  like '%${req.body.ogname}%' `
+        }
+          const persons = await sequelize.query(
+            `select 
+            '${req.body.type}' as type,
+            e."personType",
+            (case when e."personType" = 'O' then  t."TITLETHAIBEGIN" ||' '|| e."t_ogName" || ' ' ||  t."TITLETHAIEND" 
+            else t."TITLETHAIBEGIN" ||' '|| e."t_firstName"|| ' ' || e."t_lastName"  || ' ' ||  t."TITLETHAIEND"  end) as fullname,
+            a."stamentType",
+            a."premCreditT"|| ' ' || a."premCreditUnit" as premCredit ,
+            a."commovCreditT" || ' ' || a."commovCreditUnit" as commCredit ,
+            e."vatRegis" ,
+            e.branch ,
+           * from static_data."Entities" e 
+           ${jointable}
+           join static_data."Titles" t on t."TITLEID" = e."titleID" 
+           where a.lastversion ='Y'
+           ${cond}`,
+            {
+              
+              type: QueryTypes.SELECT,
+            }
+            
+          ); 
+         
+          await res.json(persons);
+        } catch (error) {
+          console.log(error);
+          await res.status(500).json({ msg: "internal server error" });
+        }
+}
+
 module.exports = {
     test,
     createCashier,
@@ -717,5 +797,7 @@ module.exports = {
     submitCashier,
     saveCashier,
     editSaveBill,
-    editSubmitBill
+    editSubmitBill,
+    getBrandall,
+    getBankBranchInBrand
 };

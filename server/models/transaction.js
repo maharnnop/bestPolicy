@@ -15,7 +15,7 @@ module.exports = (sequelize, DataTypes) => {
   }
   Transaction.init({
     polid:  DataTypes.INTEGER,
-    billadvisor:  DataTypes.STRING,
+    billadvisorno:  DataTypes.STRING,
     netflag:  DataTypes.STRING,
     // prem comm ov1 ov2 ov3 disc
     transType:  DataTypes.STRING,

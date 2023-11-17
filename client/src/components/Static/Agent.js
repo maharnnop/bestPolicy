@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import Select from 'react-select';
 import axios from "axios";
 import jwt_decode from "jwt-decode";
@@ -28,67 +28,92 @@ const NormalText = {
 /* eslint-disable react-hooks/exhaustive-deps */
 
 const Agent = () => {
-  const [cookies] = useCookies(["jwt"]);
+  const params = useParams()
+  const [cookies, setCookie, removeCookie] = useCookies(["jwt"]);
   const headers = {
     headers: { Authorization: `Bearer ${cookies["jwt"]}` }
   };
   const url = window.globalConfig.BEST_POLICY_V1_BASE_URL;
   const navigate = useNavigate();
-  const [agentData, setAgentData] = useState({ entityID: null, commovCreditUnit: 'D', premCreditUnit: 'D' });
+  const [agentData, setAgentData] = useState({
+    entityID: null,
+    commovCreditUnit: 'D',
+    deductTaxRate: 3,
+    deductTaxType: "หักภาษี ณ ที่จ่ายค่านายหน้า",
+    premCreditUnit: 'D',
+    stamentType: 'Net'
+  });
   const [entityData, setEntityData] = useState({ personType: "P" });
   const [locationData, setLocationData] = useState({ entityID: null, locationType: 'A' });
+  const [contactData, setContactData] = useState({
+    entityID: null,
+    locationType: "A",
+    personType: "P"
+  });
   const [row, setRow] = useState(0);
-  const [comOvOutData, setComOvOutData] = useState([]);
+  const [comOvOutData, setComOvOutData] = useState([{ insureID: null, insurerCode: null }]);
   // dropdown
   const [provinceDD, setProvinceDD] = useState([])
   const [districDD, setDistricDD] = useState([])
   const [subDistricDD, setSubDistricDD] = useState([])
   const [zipcodeDD, setZipCodeDD] = useState([])
-  const [titleDD, setTitleDD] = useState([])
+  const [titlePDD, setTitlePDD] = useState([])
+  const [titleODD, setTitleODD] = useState([])
   const [insureTypeDD, setInsureTypeDD] = useState([])
   const [insurerDD, setInsurerDD] = useState([]);
+  // for contact person
+
+  const [districDD2, setDistricDD2] = useState([])
+  const [subDistricDD2, setSubDistricDD2] = useState([])
+  const [zipcodeDD2, setZipCodeDD2] = useState([])
 
   useEffect(() => {
+
+    //  get all title person && re-login if token expired
+    axios
+      .get(url + "/static/titles/person/all", headers)
+      .then((title) => {
+        const array2 = []
+        title.data.forEach(ele => {
+          array2.push(
+            // <option key={ele.TITLEID} value={ele.TITLEID}>{ele.TITLETHAIBEGIN}</option>
+            { label: ele.TITLETHAIBEGIN, value: ele.TITLEID, label2: ele.TITLETHAIEND || '' })
+        });
+
+
+        setTitlePDD(array2)
+      }).catch((err) => {
+
+        alert("token expired pls login again!!");
+        removeCookie('jwt');
+        navigate('/login')
+
+      });
+
+
+    //  get all title organization
+    axios
+      .get(url + "/static/titles/company/all", headers)
+      .then((title) => {
+        const array2 = []
+        title.data.forEach(ele => {
+          array2.push({ label: ele.TITLETHAIBEGIN, value: ele.TITLEID, label2: ele.TITLETHAIEND || '' })
+        });
+        setTitleODD(array2)
+      })
+
     //get province
     axios
       .get(url + "/static/provinces/all", headers)
       .then((province) => {
-        // let token = res.data.jwt;
-        // let decode = jwt_decode(token);
-        // navigate("/");
-        // window.location.reload();
-        // localStorage.setItem("jwt", token);
-
         const array = []
         province.data.forEach(ele => {
-          array.push( {label:ele.t_provincename, value:ele.provinceid })
+          array.push({ label: ele.t_provincename, value: ele.provinceid })
         });
         setProvinceDD(array)
 
-        axios
-          .get(url + "/static/titles/person/all", headers)
-          .then((title) => {
-            const array2 = []
-            title.data.forEach(ele => {
-              array2.push(
-                // <option key={ele.TITLEID} value={ele.TITLEID}>{ele.TITLETHAIBEGIN}</option>
-                { label: ele.TITLETHAIBEGIN, value: ele.TITLEID, label2: ele.TITLETHAIEND || '' })
-            });
-
-            setTitleDD(array2)
-          })
-          .catch((err) => {
-
-            // alert("cant get company");
-
-          });
       })
-      .catch((err) => {
 
-        // alert("cant get province");
-
-      });
-    // get title all of company type
 
     // get all insuretype
     axios
@@ -107,11 +132,6 @@ const Agent = () => {
         setInsureTypeDD(array)
 
       })
-      .catch((err) => {
-
-        // alert("cant get province");
-
-      });
 
     // get all insurer
     axios
@@ -125,23 +145,62 @@ const Agent = () => {
         });
         setInsurerDD(array)
 
+
       })
-      .catch((err) => {
 
-        // alert("cant get province");
+    // get defual data agent by agentCode
+    console.log(params.agentCode);
+    if (params.agentCode) {
 
-      });
+      // get agent data
+      axios
+        .post(url + "/persons/getagentbyagentcode", { agentCode: params.agentCode }, headers)
+        .then((data) => {
+          const person = data.data
+          //update version num
+          person.agent.version ++
+          person.entity.version ++
+
+          setAgentData(person.agent)
+          setEntityData(person.entity)
+          setLocationData(person.location)
+          setContactData({ ...person.contact, ...contactData, checkLocation: false })
+          setComOvOutData(person.commovouts)
+          console.log(person);
+          // set distirctDD
+          getDistrict(person.location.provinceID, 1)
+          // set subdistrictDD
+          getSubDistrict(person.location.districtID, 1)
+          // set zipcodeDD
+          setZipCodeDD([<option value={person.location.zipcode}>{person.location.zipcode}</option>])
+
+          //set commov data 
+          setRow(person.commovouts.length - 1)
+
+
+          // set dropdown for contact person
+          if (person.contact) {
+            // set distirctDD2
+            getDistrict(person.contact.provinceID, 2)
+            // set subdistrictDD2
+            getSubDistrict(person.contact.districtID, 2)
+            // set zipcodeDD2
+            setZipCodeDD2([<option value={person.contact.zipcode}>{person.contact.zipcode}</option>])
+          }
+
+        })
+        .catch((err) => {
+
+          alert("internal error");
+        });
+
+
+    }
+
+
 
   }, []);
 
-  const changeComOv = (e) => {
-    // console.log(entityData);
-    const index = e.target.name.split('-')[1];
-    const name = e.target.name.split('-')[0];
-    const data = { ...comOvOutData[index], [name]: e.target.value }
-    comOvOutData[index] = data
-    setComOvOutData(comOvOutData);
-  };
 
   const changeAgent = (e) => {
     setAgentData((prevState) => ({
@@ -152,70 +211,50 @@ const Agent = () => {
 
   const changeEntity = (e) => {
     e.preventDefault()
-    if (e.target.name === 'branch'){
+    if (e.target.name === 'branch') {
       const value = e.target.value;
-    // Check if the input is a number and has a length of 5 or less
-    if (/^\d+$/.test(value)  ) {
-      // Format the value with leading zeros
-      let formattedValue = value.padStart(5, "0");
-      if(value.length > 5){
-        formattedValue =value.substring(1)   
-      }       
-      setEntityData((prevState) => ({
-        ...prevState,
-        'branch': formattedValue,
-      }));
-      document.getElementsByName('branch')[0].value = formattedValue
-    } else{
-      document.getElementsByName('branch')[0].value = value.replace(/[^0-9]/g, '')
-    }
-    }else{
+      // Check if the input is a number and has a length of 5 or less
+      if (/^\d+$/.test(value)) {
+        // Format the value with leading zeros
+        let formattedValue = value.padStart(5, "0");
+        if (value.length > 5) {
+          formattedValue = value.substring(1)
+        }
+        setEntityData((prevState) => ({
+          ...prevState,
+          'branch': formattedValue,
+        }));
+        document.getElementsByName('branch')[0].value = formattedValue
+      } else {
+        document.getElementsByName('branch')[0].value = value.replace(/[^0-9]/g, '')
+      }
+    } else {
       setEntityData((prevState) => ({
         ...prevState,
         [e.target.name]: e.target.value,
       }));
     }
-    
-    if (e.target.name === 'personType') {
-      if (e.target.value === 'P') {
-
-        axios
-          .get(url + "/static/titles/person/all", headers)
-          .then((title) => {
-            const array2 = []
-            title.data.forEach(ele => {
-              array2.push(
-                // <option key={ele.TITLEID} value={ele.TITLEID}>{ele.TITLETHAIBEGIN}</option>
-                { label: ele.TITLETHAIBEGIN, value: ele.TITLEID, label2: ele.TITLETHAIEND || '' })
-            });
 
 
-            setTitleDD(array2)
-          })
-          .catch((err) => {
+  };
+  const changeContact = (e) => {
+    e.preventDefault()
 
-            // alert("cant get company");
+    setContactData((prevState) => ({
+      ...prevState,
+      [e.target.name]: e.target.value,
+    }));
 
-          });
-      } else {
-        axios
-          .get(url + "/static/titles/company/all", headers)
-          .then((title) => {
-            const array2 = []
-            title.data.forEach(ele => {
-              array2.push({ label: ele.TITLETHAIBEGIN, value: ele.TITLEID, label2: ele.TITLETHAIEND || '' })
-            });
-            setTitleDD(array2)
-          })
-          .catch((err) => {
 
-            // alert("cant get company");
 
-          });
-      }
-
-    }
-
+  };
+  const changeComOv = (e) => {
+    // console.log(entityData);
+    const index = e.target.name.split('-')[1];
+    const name = e.target.name.split('-')[0];
+    const data = { ...comOvOutData[index], [name]: e.target.value }
+    comOvOutData[index] = data
+    setComOvOutData(comOvOutData);
   };
 
   const changeLocation = (e) => {
@@ -223,64 +262,94 @@ const Agent = () => {
       ...prevState,
       [e.target.name]: e.target.value,
     }));
-    if (e.target.name === 'provinceID') {
-      getDistrict(e.target.value)
-    } else if ((e.target.name === 'districtID')) {
-      getSubDistrict(e.target.value)
-    };
+
   }
 
-  const changeProvince = (e) =>{
-    setLocationData((prevState) => ({
-      ...prevState,
-      provinceID: e.value,
-      districtID: null,
-      subDistrictID: null,
-      zipcode: null
-    }));
-   
-    setZipCodeDD([])
-    setSubDistricDD([])
-    setDistricDD([])
-      getDistrict(e.value);
-    
-    
+  const changeProvince = (e, i) => {
+    if (i === 1) {
+      setLocationData((prevState) => ({
+        ...prevState,
+        provinceID: e.value,
+        districtID: null,
+        subDistrictID: null,
+        zipcode: null
+      }));
+      setZipCodeDD([])
+      setSubDistricDD([])
+      setDistricDD([])
+    } else if (i === 2) {
+      setContactData((prevState) => ({
+        ...prevState,
+        provinceID: e.value,
+        districtID: null,
+        subDistrictID: null,
+        zipcode: null
+      }));
+      setZipCodeDD2([])
+      setSubDistricDD2([])
+      setDistricDD2([])
+    }
+
+    getDistrict(e.value, i);
+
+
   }
-  const changeDistrict = (e) =>{
-    setLocationData((prevState) => ({
-      ...prevState,
-      districtID: e.value,
-    }));
-      getSubDistrict(e.value);
+  const changeDistrict = (e, i) => {
+    if (i === 1) {
+      setLocationData((prevState) => ({
+        ...prevState,
+        districtID: e.value,
+        subDistrictID: null,
+        zipcode: null
+      }));
+      setZipCodeDD([])
+    } else if (i == 2) {
+      setContactData((prevState) => ({
+        ...prevState,
+        districtID: e.value,
+        subDistrictID: null,
+        zipcode: null
+      }));
+      setZipCodeDD2([])
+    }
+
+    getSubDistrict(e.value, i);
   }
-  const changeSubDistrict = (e) =>{
-    setLocationData((prevState) => ({
-      ...prevState,
-      subDistrictID: e.value,
-    }));
-    const postcode = subDistricDD.find(el => el.value === e.value).postcode;
-    
-    const arrayZip = postcode.map((zip, index) => (
-      <option key={index} value={zip}>
-        {zip}
-      </option>
-    ));
-    setZipCodeDD(arrayZip);
-        setLocationData((prevState) => ({
-          ...prevState,
-          zipcode: postcode[0]
-        }))
+  const changeSubDistrict = (e, i) => {
+    if (i === 1) {
+      setLocationData((prevState) => ({
+        ...prevState,
+        subDistrictID: e.value,
+        zipcode: null
+      }));
+      getZipCode(e.value, 1)
+
+    } else if (i === 2) {
+      setContactData((prevState) => ({
+        ...prevState,
+        subDistrictID: e.value,
+        zipcode: null
+      }));
+      getZipCode(e.value, 2)
+
+    }
+
   }
-  const getDistrict = (provinceID) => {
+  const getDistrict = (provinceID, i) => {
     //get distric in province selected
     axios
       .get(url + "/static/amphurs/" + provinceID, headers)
       .then((distric) => {
         const array = []
         distric.data.forEach(ele => {
-          array.push( {label: ele.t_amphurname, value: ele.amphurid})
+          array.push({ label: ele.t_amphurname, value: ele.amphurid })
         });
-        setDistricDD(array)
+        if (i === 1) {
+          setDistricDD(array)
+        } else if (i === 2) {
+          setDistricDD2(array)
+        }
+
       })
       .catch((err) => {
 
@@ -290,7 +359,7 @@ const Agent = () => {
   }
 
 
-  const getSubDistrict = (districID) => {
+  const getSubDistrict = (districID, i) => {
     //get tambons in distric selected
     axios
       .get(url + "/static/tambons/" + districID, headers)
@@ -298,13 +367,17 @@ const Agent = () => {
         const arraySub = []
         const zip = []
         subdistric.data.forEach(ele => {
-          arraySub.push({label: ele.t_tambonname, value: ele.tambonid, postcode: ele.postcodeall.split("/") })
-          
+          arraySub.push({ label: ele.t_tambonname, value: ele.tambonid, postcode: ele.postcodeall.split("/") })
+
         });
         // arrayZip[0].props.selected = true;
+        if (i === 1) {
+          setSubDistricDD(arraySub)
+        } else if (i === 2) {
+          setSubDistricDD2(arraySub)
+        }
 
-        setSubDistricDD(arraySub)
-        
+
       })
       .catch((err) => {
 
@@ -312,40 +385,95 @@ const Agent = () => {
 
       });
   }
+  const getZipCode = (subDistrictID, i) => {
+
+    if (i === 1) {
+
+      const postcode = subDistricDD.find(el => el.value === subDistrictID).postcode;
+
+      const arrayZip = postcode.map((zip, index) => (
+        <option key={index} value={zip}>
+          {zip}
+        </option>
+      ));
+      setZipCodeDD(arrayZip);
+      setLocationData((prevState) => ({
+        ...prevState,
+        zipcode: postcode[0]
+      }))
+    } else if (i === 2) {
+      const postcode = subDistricDD2.find(el => el.value === subDistrictID).postcode;
+
+      const arrayZip = postcode.map((zip, index) => (
+        <option key={index} value={zip}>
+          {zip}
+        </option>
+      ));
+      setZipCodeDD2(arrayZip);
+      setContactData((prevState) => ({
+        ...prevState,
+        zipcode: postcode[0]
+      }))
+    }
+  }
 
   const newRow = (e) => {
     e.preventDefault();
     setRow(row + 1);
+    const arr = comOvOutData
+    arr.push({ insureID: null, insurerCode: null })
+    setComOvOutData(arr)
 
   };
   const removeRow = (e) => {
     e.preventDefault();
     if (row > 0) {
       setRow(row - 1);
-
+      const arr = comOvOutData
+      arr.pop()
+      setComOvOutData(arr)
     }
 
   };
 
+  const checkLocation = (e) => {
+    // e.preventDefault()
+    console.log(e.target.checked);
+    setContactData((prevState) => ({
+      ...prevState,
+      checkLocation: e.target.checked,
+    }));
+  }
+
   const handleSubmit = (e) => {
-    e.preventDefault({
+    e.preventDefault();
+    let contactP = { ...contactData }
+    if (contactData.checkLocation) {
+      contactP = { ...contactP, 
+        t_location_1: locationData.t_location_1,
+        t_location_2: locationData.t_location_2,
+        t_location_3: locationData.t_location_3,
+        t_location_4: locationData.t_location_4,
+        t_location_5: locationData.t_location_5,
+        provinceID: locationData.provinceID,
+        districtID: locationData.districtID,
+        subDistrictID: locationData.subDistrictID,
+        zipcode: locationData.zipcode,}
+
+    } console.log({
       agent: agentData,
       entity: entityData,
       location: locationData,
-      commOVOut: comOvOutData
-    });
-    console.log({
-      agent: agentData,
-      entity: entityData,
-      location: locationData,
-      commOVOut: comOvOutData
+      commOVOut: comOvOutData,
+      contactPerson: contactP
     });
     axios
       .post(url + "/persons/agentnew", {
         agent: agentData,
         entity: entityData,
         location: locationData,
-        commOVOut: comOvOutData
+        commOVOut: comOvOutData,
+        contactPerson: contactP
       }, headers)
       .then((res) => {
         // let token = res.data.jwt;
@@ -363,10 +491,58 @@ const Agent = () => {
       });
   };
 
+  const handleUpdate = (e) => {
+    e.preventDefault();
+    let contactP = { ...contactData }
+    if (contactData.checkLocation) {
+      contactP = {
+        ...contactP,
+        t_location_1: locationData.t_location_1,
+        t_location_2: locationData.t_location_2,
+        t_location_3: locationData.t_location_3,
+        t_location_4: locationData.t_location_4,
+        t_location_5: locationData.t_location_5,
+        provinceID: locationData.provinceID,
+        districtID: locationData.districtID,
+        subDistrictID: locationData.subDistrictID,
+        zipcode: locationData.zipcode,
+      }
+    } console.log({
+      agent: agentData,
+      entity: entityData,
+      location: locationData,
+      commOVOut: comOvOutData,
+      contactPerson: contactP
+    });
+    axios
+      .post(url + "/persons/agentupdate", {
+        agent: agentData,
+        entity: entityData,
+        location: locationData,
+        commOVOut: comOvOutData,
+        contactPerson: contactP
+      }, headers)
+      .then((res) => {
+        // let token = res.data.jwt;
+        // let decode = jwt_decode(token);
+        // navigate("/");
+        // window.location.reload();
+        // localStorage.setItem("jwt", token);
+        console.log(res.data);
+        alert(`update agent  ${params.agentCode} success`)
+      })
+      .catch((err) => {
+
+        alert(`update agent ${params.agentCode} fail`);
+
+      });
+  };
+
+
   return (
     <CenterPage>
       {/* <BackdropBox1> */}
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={params.agentCode ? handleUpdate : handleSubmit}>
         {/* insurer table */}
         <h1 className="text-center" >ผู้แนะนำ</h1>
         <div class="row form-group form-inline">
@@ -378,6 +554,7 @@ const Agent = () => {
               type="text"
               required
               // placeholder="InsurerCode"
+              defaultValue={agentData.agentCode}
               name="agentCode"
               onChange={changeAgent}
             />
@@ -388,18 +565,20 @@ const Agent = () => {
               className="form-control"
               name={`stamentType`}
               onChange={changeAgent}
+              value={agentData.stamentType}
             >
               <option selected value="Net">Net</option>
               <option value="Gross">Gross</option>
             </select>
           </div>
 
-          <div class="col-1">
+          <div class="col-2">
             <label class="form-label ">เครดิตเทอมค่าเบี้ย <span class="text-danger"> *</span></label>
             <input
               className="form-control"
               type="number"
               required
+              defaultValue={agentData.premCreditT}
               // placeholder="InsurerCode"
               name="premCreditT"
               onChange={changeAgent}
@@ -412,18 +591,20 @@ const Agent = () => {
               className="form-control"
               name={`premCreditUnit`}
               onChange={changeAgent}
+              value={agentData.premCreditUnit}
             >
               <option selected value="D">วัน</option>
               <option value="M">เดือน</option>
               <option value="Y">ปี</option>
             </select>
           </div>
-          <div class="col-1">
+          <div class="col-2">
             <label class="form-label ">เครดิตเทอมค่าcom <span class="text-danger"> *</span></label>
             <input
               className="form-control"
               type="number"
               required
+              defaultValue={agentData.commovCreditT}
               // placeholder="InsurerCode"
               name="commovCreditT"
               onChange={changeAgent}
@@ -435,23 +616,14 @@ const Agent = () => {
               className="form-control"
               name={`commovCreditUnit`}
               onChange={changeAgent}
+              value={agentData.commovCreditUnit}
             >
               <option selected value="D">วัน</option>
               <option value="M">เดือน</option>
               <option value="Y">ปี</option>
             </select>
           </div>
-          <div class="col-2">
-            <label class="form-label ">Licenseno Sub-Broker <span class="text-danger"> *</span></label>
-            <input
-              className="form-control"
-              type="text"
-              required
-              // placeholder="InsurerCode"
-              name="licentNo"
-              onChange={changeAgent}
-            />
-          </div>
+
 
         </div>
 
@@ -464,25 +636,28 @@ const Agent = () => {
               className="form-control "
               name={`personType`}
               onChange={changeEntity}
+              value={entityData.personType.trim()}
             >
               <option selected value="P">บุคคล</option>
               <option value="O">นิติบุคคล</option>
             </select>
           </div>
           <div class="col-1"></div>
-          {entityData.personType === 'P' ?
+          {entityData.personType.trim() === 'P' ?
             <>
               <div class="col-2">
                 <label class="form-label ">คำนำหน้า<span class="text-danger"> *</span></label>
                 <Select
+                  value={titlePDD.filter(({ value }) => value === entityData.titleID)}
+                  // defaultValue={{label:`${entityData.TITLETHAIBEGIN}  ${entityData.TITLETHAIEND}`, value: entityData.titleID}}
                   formatOptionLabel={(option, { context }) => context === 'value' ? option.label : `${option.label}  ${option.label2}`}
                   name={`title`}
                   onChange={(e) => setEntityData((prevState) => ({
                     ...prevState,
                     titleID: e.value,
-                    suffix: titleDD.find((a) => a.value == e.value).label2
+                    suffix: titlePDD.find((a) => a.value == e.value).label2
                   }))}
-                  options={titleDD}
+                  options={titlePDD}
                 />
               </div>
 
@@ -492,6 +667,7 @@ const Agent = () => {
                   className="form-control"
                   type="text"
                   name="t_firstName"
+                  defaultValue={entityData.t_firstName}
                   onChange={changeEntity}
                 />
               </div>
@@ -501,6 +677,7 @@ const Agent = () => {
                   className="form-control"
                   type="text"
                   name="t_lastName"
+                  defaultValue={entityData.t_lastName}
                   onChange={changeEntity}
                 />
               </div>
@@ -515,14 +692,15 @@ const Agent = () => {
               <div class="col-2">
                 <label class="form-label ">คำนำหน้า<span class="text-danger"> *</span></label>
                 <Select
+                  value={titleODD.filter(({ value }) => value === entityData.titleID)}
                   formatOptionLabel={(option, { context }) => context === 'value' ? option.label : `${option.label} - ${option.label2}`}
-                  name={`title`}
+                  name={`titleID`}
                   onChange={(e) => setEntityData((prevState) => ({
                     ...prevState,
                     titleID: e.value,
-                    suffix: titleDD.find((a) => a.value == e.value).label2
+                    TITLETHAIEND: titleODD.find((a) => a.value == e.value).label2
                   }))}
-                  options={titleDD}
+                  options={titleODD}
                 />
               </div>
               <div class="col-2">
@@ -531,16 +709,28 @@ const Agent = () => {
                   className="form-control"
                   type="text"
                   name="t_ogName"
+                  defaultValue={entityData.t_ogName}
                   onChange={changeEntity}
                 />
               </div>
               <div class="col-2">
                 <label class="form-label ">คำลงท้าย<span class="text-danger"> *</span></label>
-                <input type="text" disabled className="form-control" value={entityData.suffix} />
+                <input type="text" disabled className="form-control" value={entityData.TITLETHAIEND} />
 
               </div>
             </>}
-
+          <div class="col-2">
+            <label class="form-label ">Licenseno Sub-Broker <span class="text-danger"> *</span></label>
+            <input
+              className="form-control"
+              type="text"
+              required
+              // placeholder="InsurerCode"
+              name="licentNo"
+              defaultValue={agentData.licentNo}
+              onChange={changeAgent}
+            />
+          </div>
 
         </div>
 
@@ -551,7 +741,8 @@ const Agent = () => {
               ประเภทภาษีหัก ณ ที่จ่าย
             </label>
             <select
-              className="form-control" name="provinceID" onChange={changeAgent}>
+              className="form-control" name="deductTaxType" onChange={changeAgent}
+              value={agentData.deductTaxType}>
               <option value="" selected disabled hidden></option>
               <option value="" >ภาษีเงินได้หัก ณ ที่จ่าย (เงินเดือน/เบี้ยประชุม/ค่านายหน้า)</option>
               <option value="" >ภาษีหัก ณ ที่จ่่าย นิติบุคคล (ปันผล)</option>
@@ -568,9 +759,10 @@ const Agent = () => {
             </label>
             <div class="input-group mb-3">
               <input
+                defaultValue={agentData.deductTaxRate || 3}
                 className="form-control"
                 type='number'
-                name="deducttaxrate"
+                name="deductTaxRate"
                 onChange={changeAgent}
               />
               <div class="input-group-append">
@@ -589,11 +781,12 @@ const Agent = () => {
             <input
               className="form-control"
               type="text"
-              name="taxno"
-              onChange={changeAgent}
+              name="taxNo"
+              defaultValue={entityData.taxNo}
+              onChange={changeEntity}
             />
           </div>
-          <div class="col-1">
+          <div class="col-2">
             <label class="form-label ">
               วันที่จดทะเบียน<span class="text-danger"> *</span>
             </label>
@@ -602,10 +795,11 @@ const Agent = () => {
               type="date"
               required
               name="taxActDate"
+              defaultValue={entityData.taxActDate}
               onChange={changeEntity}
             />
           </div>
-          <div class="col-1">
+          <div class="col-2">
             <label class="form-label ">
               วันที่หมดอายุ<span class="text-danger"> *</span>
             </label>
@@ -614,6 +808,7 @@ const Agent = () => {
               type="date"
               required
               name="taxExpDate"
+              defaultValue={entityData.taxExpDate}
               onChange={changeEntity}
             />
           </div>
@@ -626,6 +821,7 @@ const Agent = () => {
               อยู่ในระบบ VAT หรือไม่
             </label>
             <select
+              value={entityData.vatRegis}
               className="form-control" name="vatRegis" onChange={changeEntity}>
               <option value="" selected disabled hidden></option>
               <option value={true} >อยู่</option>
@@ -633,19 +829,14 @@ const Agent = () => {
 
 
             </select>
-            {/* <input
-              type="checkbox"
-              name="vatflag"
-              onChange={(e) =>
-                setAgentData({ ...agentData, vatflag: e.target.checked })
-              }
-            /> */}
+
           </div>
           <div class="col-2">
             <label class="form-label ">
               เลขที่ ภพ.20<span class="text-danger"> *</span>
             </label>
             <input
+              defaultValue={entityData.pk20}
               className="form-control"
               type="text"
               name="pk20"
@@ -657,6 +848,7 @@ const Agent = () => {
               สาขาที่<span class="text-danger"> *</span>
             </label>
             <input
+              defaultValue={entityData.branch}
               className="form-control"
               type="text"
               name="branch"
@@ -666,7 +858,7 @@ const Agent = () => {
         </div>
         {/* location table */}
         <div class="row">
-          <h5 className="text-center" >Location</h5>
+          <h5 className="text-center" >ที่อยู่</h5>
         </div>
 
         <div class="row">
@@ -674,6 +866,7 @@ const Agent = () => {
           <div class="col-2">
             <label class="form-label ">บ้านเลขที่<span class="text-danger"> *</span></label>
             <input
+              defaultValue={locationData.t_location_1}
               className="form-control"
               type="text"
               name="t_location_1"
@@ -683,6 +876,7 @@ const Agent = () => {
           <div class="col-2">
             <label class="form-label ">หมู่บ้านอาคาร<span class="text-danger"> *</span></label>
             <input
+              defaultValue={locationData.t_location_2}
               className="form-control"
               type="text"
               name="t_location_2"
@@ -692,6 +886,7 @@ const Agent = () => {
           <div class="col-2">
             <label class="form-label ">หมู่<span class="text-danger"> *</span></label>
             <input
+              defaultValue={locationData.t_location_3}
               className="form-control"
               type="text"
               name="t_location_3"
@@ -701,6 +896,7 @@ const Agent = () => {
           <div class="col-2">
             <label class="form-label ">ซอย<span class="text-danger"> *</span></label>
             <input
+              defaultValue={locationData.t_location_4}
               className="form-control"
               type="text"
               name="t_location_4"
@@ -710,6 +906,7 @@ const Agent = () => {
           <div class="col-2">
             <label class="form-label ">ถนน<span class="text-danger"> *</span></label>
             <input
+              defaultValue={locationData.t_location_5}
               className="form-control"
               type="text"
               name="t_location_5"
@@ -718,41 +915,45 @@ const Agent = () => {
           </div>
         </div>
 
+
         <div class="row">
           <div class="col-1 "></div>
 
           <div class="col-2">
             <label class="form-label ">จังหวัด<span class="text-danger"> *</span></label>
             <Select
-          // className="form-control"
-          name={`provinceID`}
-          onChange={ (e) =>changeProvince(e)}
-          options={provinceDD}
-          styles={{zIndex:2000}}
-          // onChange={opt => console.log(opt)}
-          />
+              // className="form-control"
+              value={provinceDD.filter(({ value }) => value === locationData.provinceID)}
+              name={`provinceID`}
+              onChange={(e) => changeProvince(e, 1)}
+              options={provinceDD}
+              styles={{ zIndex: 2000 }}
+            // onChange={opt => console.log(opt)}
+            />
           </div>
           <div class="col-2">
             <label class="form-label ">อำเภอ<span class="text-danger"> *</span></label>
             <Select
-          // className="form-control"
-          name={`districtID`}
-          onChange={ (e) =>changeDistrict(e)}
-          options={districDD}
-          />
+              // className="form-control"
+              value={districDD.filter(({ value }) => value === locationData.districtID)}
+              name={`districtID`}
+              onChange={(e) => changeDistrict(e, 1)}
+              options={districDD}
+            />
           </div>
           <div class="col-2">
             <label class="form-label ">ตำบล<span class="text-danger"> *</span></label>
             <Select
-          // className="form-control"
-          name={`subDistrictID`}
-          onChange={ (e) =>changeSubDistrict(e)}
-          options={subDistricDD}
-          />
+              value={subDistricDD.filter(({ value }) => value === locationData.subDistrictID)}
+              // className="form-control"
+              name={`subDistrictID`}
+              onChange={(e) => changeSubDistrict(e, 1)}
+              options={subDistricDD}
+            />
           </div>
           <div class="col-2">
             <label class="form-label ">รหัสไปรษณีย์<span class="text-danger"> *</span></label>
-            <select className="form-control" name="zipcode" onChange={changeLocation}>
+            <select className="form-control" name="zipcode" onChange={changeLocation} value={locationData.zipcode}>
               {/* <option value="" selected disabled hidden>เลือกรหัสไปรษณีย์</option> */}
               {zipcodeDD}
             </select>
@@ -765,6 +966,7 @@ const Agent = () => {
           <div class="col-2">
             <label class="form-label ">Email<span class="text-danger"> *</span></label>
             <input
+              defaultValue={entityData.email}
               className="form-control"
               type="text"
               name="email"
@@ -774,9 +976,10 @@ const Agent = () => {
           <div class="col-2">
             <label class="form-label ">เบอร์มือถือ<span class="text-danger"> *</span></label>
             <input
+              defaultValue={locationData.telNum_1}
               className="form-control"
               type="text"
-              name="telNum_2"
+              name="telNum_1"
               onChange={changeLocation}
             />
           </div>
@@ -784,15 +987,17 @@ const Agent = () => {
           <div class="col-2">
             <label class="form-label ">เบอร์โทรศัพท์<span class="text-danger"> *</span></label>
             <input
+              defaultValue={locationData.telNum_2}
               className="form-control"
               type="text"
-              name="telNum_1"
+              name="telNum_2"
               onChange={changeLocation}
             />
           </div>
           <div class="col-2">
             <label class="form-label ">เบอร์โทรสาร<span class="text-danger"> *</span></label>
             <input
+              defaultValue={locationData.telNum_3}
               className="form-control"
               type="text"
               name="telNum_3"
@@ -800,7 +1005,214 @@ const Agent = () => {
             />
           </div>
         </div>
+        {/* contact person */}
+        {entityData.personType.trim() === 'O' ?
+          <>
 
+            <div class="row">
+              <h5 className="text-center" >ผู้ติดต่อ</h5>
+            </div>
+
+            <div class="row">
+              <div class="col-1 "></div>
+
+
+
+              <div class="col-2">
+                <label class="form-label ">คำนำหน้า<span class="text-danger"> *</span></label>
+                <Select
+                  value={titlePDD.filter(({ value }) => value === contactData.titleID)}
+                  formatOptionLabel={(option, { context }) => context === 'value' ? option.label : `${option.label}  ${option.label2}`}
+                  name={`title`}
+                  onChange={(e) => setContactData((prevState) => ({
+                    ...prevState,
+                    titleID: e.value,
+                    // suffix: titleDD2.find((a) => a.value == e.value).label2
+                  }))}
+                  options={titlePDD}
+                />
+              </div>
+
+              <div class="col-2">
+                <label class="form-label ">ชื่อ<span class="text-danger"> *</span></label>
+                <input
+                  defaultValue={contactData.t_firstName}
+                  className="form-control"
+                  type="text"
+                  name="t_firstName"
+                  onChange={changeContact}
+                />
+              </div>
+              <div class="col-2">
+                <label class="form-label ">นามสกุล<span class="text-danger"> *</span></label>
+                <input
+                  defaultValue={contactData.t_lastName}
+                  className="form-control"
+                  type="text"
+                  name="t_lastName"
+                  onChange={changeContact}
+                />
+              </div>
+              <div class="col-2">
+                <label class="form-label "></label>
+                <div class="form-check  checkbox-xl">
+                  <input class="form-check-input" type="checkbox" id="flexSwitchCheckChecked" onClick={e => checkLocation(e)} />
+                  <label class="form-check-label" for="flexSwitchCheckChecked" >ที่อยู่ตามนิติบุคคล</label>
+                </div>
+
+              </div>
+
+
+            </div>
+            {!contactData.checkLocation ?
+              <>
+                <div class="row">
+                  <div class="col-1 "></div>
+                  <div class="col-2">
+                    <label class="form-label ">บ้านเลขที่<span class="text-danger"> *</span></label>
+                    <input
+                      defaultValue={contactData.t_location_1}
+                      className="form-control"
+                      type="text"
+                      name="t_location_1"
+                      onChange={changeContact}
+                    />
+                  </div>
+                  <div class="col-2">
+                    <label class="form-label ">หมู่บ้านอาคาร<span class="text-danger"> *</span></label>
+                    <input
+                      defaultValue={contactData.t_location_2}
+                      className="form-control"
+                      type="text"
+                      name="t_location_2"
+                      onChange={changeContact}
+                    />
+                  </div>
+                  <div class="col-2">
+                    <label class="form-label ">หมู่<span class="text-danger"> *</span></label>
+                    <input
+                      defaultValue={contactData.t_location_3}
+                      className="form-control"
+                      type="text"
+                      name="t_location_3"
+                      onChange={changeContact}
+                    />
+                  </div>
+                  <div class="col-2">
+                    <label class="form-label ">ซอย<span class="text-danger"> *</span></label>
+                    <input
+                      defaultValue={contactData.t_location_4}
+                      className="form-control"
+                      type="text"
+                      name="t_location_4"
+                      onChange={changeContact}
+                    />
+                  </div>
+                  <div class="col-2">
+                    <label class="form-label ">ถนน<span class="text-danger"> *</span></label>
+                    <input
+                      defaultValue={contactData.t_location_5}
+                      className="form-control"
+                      type="text"
+                      name="t_location_5"
+                      onChange={changeContact}
+                    />
+                  </div>
+                </div>
+
+
+                <div class="row">
+                  <div class="col-1 "></div>
+
+                  <div class="col-2">
+                    <label class="form-label ">จังหวัด<span class="text-danger"> *</span></label>
+                    <Select
+                      value={provinceDD.filter(({ value }) => value === contactData.provinceID)}
+                      // className="form-control"
+                      name={`provinceID`}
+                      onChange={(e) => changeProvince(e, 2)}
+                      options={provinceDD}
+                      styles={{ zIndex: 2000 }}
+                    // onChange={opt => console.log(opt)}
+                    />
+                  </div>
+                  <div class="col-2">
+                    <label class="form-label ">อำเภอ<span class="text-danger"> *</span></label>
+                    <Select
+                      value={districDD2.filter(({ value }) => value === contactData.districtID)}
+                      // className="form-control"
+                      name={`districtID`}
+                      onChange={(e) => changeDistrict(e, 2)}
+                      options={districDD2}
+                    />
+                  </div>
+                  <div class="col-2">
+                    <label class="form-label ">ตำบล<span class="text-danger"> *</span></label>
+                    <Select
+                      value={subDistricDD2.filter(({ value }) => value === contactData.subDistrictID)}
+                      // className="form-control"
+                      name={`subDistrictID`}
+                      onChange={(e) => changeSubDistrict(e, 2)}
+                      options={subDistricDD2}
+                    />
+                  </div>
+                  <div class="col-2">
+                    <label class="form-label ">รหัสไปรษณีย์<span class="text-danger"> *</span></label>
+                    <select className="form-control" name="zipcode" onChange={changeContact} value={contactData.zipcode}>
+                      {/* <option value="" selected disabled hidden>เลือกรหัสไปรษณีย์</option> */}
+                      {zipcodeDD2}
+                    </select>
+                  </div>
+                </div>
+              </>
+              : null}
+            <div class="row">
+              <div class="col-1 "></div>
+
+              <div class="col-2">
+                <label class="form-label ">Email<span class="text-danger"> *</span></label>
+                <input
+                  defaultValue={contactData.email}
+                  className="form-control"
+                  type="text"
+                  name="email"
+                  onChange={changeContact}
+                />
+              </div>
+              <div class="col-2">
+                <label class="form-label ">เบอร์มือถือ<span class="text-danger"> *</span></label>
+                <input
+                  defaultValue={contactData.telNum_1}
+                  className="form-control"
+                  type="text"
+                  name="telNum_1"
+                  onChange={changeContact}
+                />
+              </div>
+
+              <div class="col-2">
+                <label class="form-label ">เบอร์โทรศัพท์<span class="text-danger"> *</span></label>
+                <input
+                  defaultValue={contactData.telNum_2}
+                  className="form-control"
+                  type="text"
+                  name="telNum_2"
+                  onChange={changeContact}
+                />
+              </div>
+              <div class="col-2">
+                <label class="form-label ">เบอร์โทรสาร<span class="text-danger"> *</span></label>
+                <input
+                  defaultValue={contactData.telNum_3}
+                  className="form-control"
+                  type="text"
+                  name="telNum_3"
+                  onChange={changeContact}
+                />
+              </div>
+            </div>
+          </>
+          : null}
         {/* commission-ov-in table */}
         <div class="d-flex  justify-content-center">
           <div class="col-3">
@@ -839,22 +1251,22 @@ const Agent = () => {
           <div class="row">
             <div class="col-2"></div>
             <div class="col-2">
-              <select class="form-control" name={`insureID-${index}`} onChange={changeComOv} key={index}>
-                <option disabled selected hidden>class:subclass</option>
+              <select class="form-control" name={`insureID-${index}`} onChange={changeComOv} key={index} value={comOvOutData[index].insureID}>
+                <option hidden>class:subclass</option>
                 {insureTypeDD}
               </select>
             </div>
             <div class="col-2">
-              <select class="form-control" name={`insurerCode-${index}`} onChange={changeComOv} key={index}>
-                <option disabled selected hidden>บริษัทรับประกัน</option>
+              <select class="form-control" name={`insurerCode-${index}`} onChange={changeComOv} key={index} value={comOvOutData[index].insurerCode}>
+                <option hidden>บริษัทรับประกัน</option>
                 {insurerDD}
               </select>
             </div>
             <div class="col-2">
-              <input class="form-control" type="text" name={`rateComOut-${index}`} onChange={changeComOv} key={index} />
+              <input class="form-control" type="text" name={`rateComOut-${index}`} onChange={changeComOv} key={index} defaultValue={comOvOutData[index].rateComOut} />
             </div>
             <div class="col-2">
-              <input class="form-control" type="text" name={`rateOVOut_1-${index}`} onChange={changeComOv} key={index} />
+              <input class="form-control" type="text" name={`rateOVOut_1-${index}`} onChange={changeComOv} key={index} defaultValue={comOvOutData[index].rateOVOut_1} />
             </div>
 
 
@@ -862,7 +1274,9 @@ const Agent = () => {
         ))}
 
         <div className="d-flex justify-content-center">
-          <LoginBtn className="text-center" type="submit">Submit</LoginBtn>
+          {params.agentCode ? <LoginBtn className="text-center" type="submit">UPDATE</LoginBtn>
+            : <LoginBtn className="text-center" type="submit">SUBMIT</LoginBtn>}
+
         </div>
 
       </form>
