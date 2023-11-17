@@ -9,4 +9,5 @@ router.get('/BankAmityBrand', ctrl.bank.findBankAmityBrand);
 router.get('/BankAmityBranch', ctrl.bank.findBankAmityBranch);
 router.get('/BankPartnerBrand', ctrl.bank.findBankPartnerBrand);
 router.get('/BankPartnerBranch', ctrl.bank.findBankPartnerBranch);
+router.post('/findBankbyPersonCode', ctrl.bank.findBankbyPersonCode)
 module.exports = router;

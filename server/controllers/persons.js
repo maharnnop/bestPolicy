@@ -293,12 +293,13 @@ const updateAgent = async (req, res) => {
     const location = await Location.create(req.body.location, { transaction: t })
   
     // create new contact person 
+    if (req.body.entity.personType === 'O') {
     req.body.contactPerson.id = null
     const contact = await Entity.create(req.body.contactPerson, { transaction: t }) //entity contact person
     req.body.agent.contactPersonID = contact.id
     req.body.contactPerson.entityID = contact.id // for location
     const locationContact = await Location.create(req.body.contactPerson, { transaction: t }) // location contact person
-    
+  }
   const agent = await Agent.create(req.body.agent, { transaction: t })
 
     //update commovouts
@@ -351,8 +352,10 @@ const findAgent = async (req, res) =>{
       join static_data."CommOVOuts" co on a."agentCode" = co."agentCode"
       join static_data."CommOVIns" ci on ci."insurerCode" = co."insurerCode" and ci."insureID" = co."insureID"
       where co."insurerCode" = :insurerCode
-      and co.lastversion  = 'Y'
       and co."insureID" = (select id from static_data."InsureTypes" it where it."class" = :class and it."subClass" = :subClass )
+      and co.lastversion  = 'Y'
+      and ci.lastversion  ='Y'
+      and a.lastversion = 'Y'
       ${cond} `,
       {
         replacements: {

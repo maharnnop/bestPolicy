@@ -62,14 +62,19 @@ function App() {
           {/* <Route path="/admin" element={<Admin />} /> */}
           {/* <Route path="/signup" element={<SignUp />} /> */}
           {/* <Route path="/payment" element={<Payment />} /> */}
+          <Route path="/findperson" element={<FindPerson />} />
+
           <Route path="/insurer" element={<Insurer />} />
           <Route path="/insuretype" element={<InsureType />} />
           <Route path="/agent" element={<Agent />} />
-          <Route path="/findperson" element={<FindPerson />} />
+          <Route path="/bank" element={<Bank />} />
+          
           <Route path="/editagent/:agentCode" element={<Agent />} />
           <Route path="/editinsurer/:insurerCode" element={<Insurer />} />
+          <Route path="/editinsuretype/:id" element={<InsureType />} />
+          <Route path="/editbank/:id" element={<Bank />} />
           {/* <Route path="/static" element={<Static />} /> */}
-          <Route path="/bank" element={<Bank />} />
+          
           {/* <Route path="/static/:name" element={<Static />} /> */}
           <Route path="/findpolicy" element={<FindPolicy />} />
           <Route path="/policyexcel" element={<PolicyExcel />} />

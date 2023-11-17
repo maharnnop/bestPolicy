@@ -235,7 +235,7 @@ const createbilladvisor = async (req,res) =>{
               
             )
             await t.commit();
-            await res.json({msg:`created billadvisorNO : ${req.body.bill.billadvisor} success!!` })
+            await res.json({msg:`created billadvisorNO : ${req.body.bill.billadvisorno} success!!` })
         } catch (error) {
           console.log(error);
           await t.rollback();
@@ -400,13 +400,13 @@ const editbilladvisor = async (req,res) =>{
         )
 
         await t.commit();
+        await res.json({msg:"success!!"})
 
      } catch (error) {
       console.log(error);
       await t.rollback();
       await res.status(500).json(error);
       }
-    await res.json({msg:"success!!"})
 }
 
 const createcashier = async (req,res) =>{
