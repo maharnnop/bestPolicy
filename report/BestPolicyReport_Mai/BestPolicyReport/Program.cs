@@ -5,6 +5,7 @@ using BestPolicyReport.Services.BillService;
 using BestPolicyReport.Services.CashierService;
 using BestPolicyReport.Services.OutputVatCommInService;
 using BestPolicyReport.Services.OutputVatOvInService;
+using BestPolicyReport.Services.ArApService;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -29,6 +30,7 @@ builder.Services.AddScoped<IBillService, BillService>();
 builder.Services.AddScoped<ICashierService, CashierService>();
 builder.Services.AddScoped<IOutputVatCommInService, OutputVatCommInService>();
 builder.Services.AddScoped<IOutputVatOvInService, OutputVatOvInService>();
+builder.Services.AddScoped<IArApService, ArApService>();
 builder.Services.AddDbContext<DataContext>(options => options.UseNpgsql(builder.Configuration.GetConnectionString("Amitydb")));
 
 var app = builder.Build();
