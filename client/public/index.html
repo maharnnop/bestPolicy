@@ -48,38 +48,39 @@
    <script src="js/jquery.min.js"></script>
    <script>
    
-   function numberWithCommas(field) {
-           // Get the input field ID
-           let element = document.getElementById(field.id);
-           // Replace all the commas of input field value with empty value
-           // And assign it to amount variable
-           let amount = element.value.replace(/,/g, '');
+  //  function numberWithCommas(field) {
+  //          // Get the input field ID
+  //          let element = document.getElementById(field.id);
+  //          // Replace all the commas of input field value with empty value
+  //          // And assign it to amount variable
+  //          let amount = element.value.replace(/,/g, '');
    
-           // Check if the amount contains (-) sign in the beginning
-           if(amount.charAt(0)=='-'){
-           // if amount contains (-) sign, remove first character then replace all
-           // (-) signs from the amount with empty value & concate (-) in amount
-               amount = '-'+amount.substring(1).replace(/-/g, '');
-           }else{
-           // Replace all (-) signs from the amount with empty value
-               amount = amount.replace(/-/g, '');
-           }
-           // First add commas into the amount then update the input field value
-           element.value = 
-           amount.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",");
-   }
+  //          // Check if the amount contains (-) sign in the beginning
+  //          if(amount.charAt(0)=='-'){
+  //          // if amount contains (-) sign, remove first character then replace all
+  //          // (-) signs from the amount with empty value & concate (-) in amount
+  //              amount = '-'+amount.substring(1).replace(/-/g, '');
+  //          }else{
+  //          // Replace all (-) signs from the amount with empty value
+  //              amount = amount.replace(/-/g, '');
+  //          }
+  //          // First add commas into the amount then update the input field value
+  //          element.value = 
+  //          amount.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",");
+  //  }
    
-   $(document).ready(function(){  
-       // Accept Only Numbers, Commas & (-) Minus Sign
-       $(".numbers").on("keypress keyup blur",function (event) {    
-           $(this).val($(this).val().replace(/[^-\d,]+/g, ""));
-           if ((event.which < 48 || event.which > 57) && 
-                event.which!=44  && event.which!=45 ) {
-               event.preventDefault();
-               return false;
-           }
-       });
-   });
+  //  $(document).ready(function(){  
+  //      // Accept Only Numbers, Commas & (-) Minus Sign
+  //      $(".numbers").on("keypress keyup blur",function (event) {    
+  //          $(this).val($(this).val().replace(/[^-\d,]+/g, ""));
+  //          if ((event.which < 48 || event.which > 57) && 
+  //               event.which!=44  && event.which!=45 ) {
+  //              event.preventDefault();
+  //              return false;
+  //          }
+  //      });
+  //  });
+
    </script>
   </body>
 

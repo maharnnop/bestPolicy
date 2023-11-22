@@ -1,0 +1,45 @@
+{
+  "version": 2,
+  "dgSpecHash": "Ap7v0AZv/PwpLpixOSrXsyYNOuWzsdffc+zaC1v//Whn7K6TFqjObrOZN0rOjuJh1BCln6BbOH0jOr0U4nmC2Q==",
+  "success": false,
+  "projectFilePath": "C:\\Users\\maharnnops\\git\\bestPolicy\\report\\BestPolicyReport_Mai\\BestPolicyReport\\BestPolicyReport.csproj",
+  "expectedPackageFiles": [],
+  "logs": [
+    {
+      "code": "NU1301",
+      "level": "Error",
+      "message": "Failed to retrieve information about 'ClosedXML' from remote source 'https://www.nuget.org/api/v2/FindPackagesById()?id='ClosedXML'&semVerLevel=2.0.0'.",
+      "libraryId": "ClosedXML"
+    },
+    {
+      "code": "NU1301",
+      "level": "Error",
+      "message": "Failed to retrieve information about 'Npgsql.EntityFrameworkCore.PostgreSQL' from remote source 'https://www.nuget.org/api/v2/FindPackagesById()?id='Npgsql.EntityFrameworkCore.PostgreSQL'&semVerLevel=2.0.0'.",
+      "libraryId": "Npgsql.EntityFrameworkCore.PostgreSQL"
+    },
+    {
+      "code": "NU1301",
+      "level": "Error",
+      "message": "Failed to retrieve information about 'Microsoft.EntityFrameworkCore.SqlServer' from remote source 'https://www.nuget.org/api/v2/FindPackagesById()?id='Microsoft.EntityFrameworkCore.SqlServer'&semVerLevel=2.0.0'.",
+      "libraryId": "Microsoft.EntityFrameworkCore.SqlServer"
+    },
+    {
+      "code": "NU1301",
+      "level": "Error",
+      "message": "Failed to retrieve information about 'Microsoft.EntityFrameworkCore' from remote source 'https://www.nuget.org/api/v2/FindPackagesById()?id='Microsoft.EntityFrameworkCore'&semVerLevel=2.0.0'.",
+      "libraryId": "Microsoft.EntityFrameworkCore"
+    },
+    {
+      "code": "NU1301",
+      "level": "Error",
+      "message": "Failed to retrieve information about 'Microsoft.AspNet.Cors' from remote source 'https://www.nuget.org/api/v2/FindPackagesById()?id='Microsoft.AspNet.Cors'&semVerLevel=2.0.0'.",
+      "libraryId": "Microsoft.AspNet.Cors"
+    },
+    {
+      "code": "NU1301",
+      "level": "Error",
+      "message": "Failed to retrieve information about 'EPPlus' from remote source 'https://www.nuget.org/api/v2/FindPackagesById()?id='EPPlus'&semVerLevel=2.0.0'.",
+      "libraryId": "EPPlus"
+    }
+  ]
+}

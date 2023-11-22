@@ -5,7 +5,7 @@ const CommOVOut = require("../models").CommOVOut;
 const b_jabilladvisor = require('../models').b_jabilladvisor;
 const b_jabilladvisordetail = require('../models').b_jabilladvisordetail;
 const process = require('process');
-const {getRunNo,getCurrentDate} = require("./lib/runningno");
+const {getRunNo,getCurrentDate,getCurrentYYMM} = require("./lib/runningno");
 const {decode} = require('jsonwebtoken');
 require('dotenv').config();
 // const Package = require("../models").Package;
@@ -164,7 +164,7 @@ const createbilladvisor = async (req,res) =>{
       //insert to master jabilladvisor
       const billdate = new Date().toISOString().split('T')[0]
       const currentdate = getCurrentDate()
-      req.body.bill.billadvisorno = 'BILL' + await getRunNo('bill',null,null,'kw',currentdate,t);
+      req.body.bill.billadvisorno = getCurrentYYMM() +'/'+ String(await getRunNo('bill',null,null,'kw',currentdate,t)).padStart(4, '0');
       const billadvisors = await sequelize.query(
         'INSERT INTO static_data.b_jabilladvisors (insurerno, advisorno, billadvisorno, billdate, createusercode, amt, cashierreceiptno, active ) ' +
         'VALUES ((select id from static_data."Insurers" where "insurerCode" = :insurerCode limit 1), '+
@@ -260,8 +260,8 @@ const findbilladvisor =async (req,res) =>{
     'and (case when :billdate is null then true else billdate <= :billdate end) ',
         {
           replacements: {
-            insurerid: req.body.insurerid,
-            agentid:req.body.agentid,
+            insurerid: req.body.insurerId,
+            agentid:req.body.agentId,
             billadvisorno: req.body.billadvisorno,
             billdate: req.body.billdate,
           },
@@ -297,7 +297,8 @@ const editbilladvisor = async (req,res) =>{
   const t = await sequelize.transaction();
   try{
     const currentdate = getCurrentDate()
-    req.body.bill.billadvisorno = 'BILL' + await getRunNo('bill',null,null,'kw',currentdate,t);
+    // req.body.bill.billadvisorno = 'BILL' + await getRunNo('bill',null,null,'kw',currentdate,t);
+    req.body.bill.billadvisorno = getCurrentYYMM() +'/'+ String(await getRunNo('bill',null,null,'kw',currentdate,t)).padStart(4, '0');
   const billadvisors = await sequelize.query(
     'INSERT INTO static_data.b_jabilladvisors (insurerno, advisorno, billadvisorno, billdate, createusercode, amt, cashierreceiptno, active, old_keyid ) ' +
     'VALUES ((select id from static_data."Insurers" where "insurerCode" = :insurerCode), '+

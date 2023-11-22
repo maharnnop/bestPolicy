@@ -45,6 +45,7 @@ const PolicyScreen = (props) => {
     unregisterflag: 'Y',
     actTime: "16:30",
     expTime: "16:30",
+    cover_amt: null,
   });
   const [provinceDD, setProvinceDD] = useState([]);
   const [districDD, setDistricDD] = useState([]);
@@ -282,19 +283,22 @@ const PolicyScreen = (props) => {
     const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
     const email = document.getElementsByName("Email")[0].value
     // Use the test method of the regex to check if the email matches the pattern
-    if (!emailRegex.test(email)) {
+    if (!emailRegex.test(email) && email !== '') {
       alert('Email ไม่ถูกต้อง')
       document.getElementsByName("Email")[0].value = ''
+      return
     }
   }
   function isPhoneNumberValid(e) {
     // Regular expression for a Thai phone number format
     const phoneRegex = /^0\d{9}$/;
+    console.log(document.getElementsByName("telNum_1")[0].value);
     const phoneNumber = document.getElementsByName("telNum_1")[0].value
     // Use the test method of the regex to check if the phone number matches the pattern
-    if (!phoneRegex.test(phoneNumber)) {
+    if (!phoneRegex.test(phoneNumber) && phoneNumber !== '') {
       document.getElementsByName("telNum_1")[0].value = ''
       alert('หมายเลขมือถือผิด')
+      return
     }
   }
   const handleChangePrem = async (e) => {
@@ -563,9 +567,10 @@ const PolicyScreen = (props) => {
     console.log(data);
     e.preventDefault();
     await axios.post(url + "/policies/policydraft/batch", data, headers).then((res) => {
-      alert("policy batch Created");
-      window.location.reload(false);
-    }).catch((err) => { alert("Something went wrong, Try Again."); });
+      alert("policy batch Created AppNo : "+ res.data.appNo[0]);
+      console.log(res.data);
+      // window.location.reload(false);
+    }).catch((err) => { alert("Something went wrong, Try Again." +err.msg); });
   };
 
 

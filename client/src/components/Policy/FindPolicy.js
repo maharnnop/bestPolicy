@@ -137,7 +137,8 @@ const FindPolicy = () => {
         }));
     };
     const handleChangeCard = async (e,index,data) => {
-        e.preventDefault();
+        // e.preventDefault();
+        console.log(e.target.name);
         setHidecard([false,0])
         if (e.target.name === 'saveChange') {
           const array =    data

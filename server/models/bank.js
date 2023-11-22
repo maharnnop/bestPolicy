@@ -14,12 +14,17 @@ module.exports = (sequelize, DataTypes) => {
     }
   }
   Bank.init({
-    firstName: DataTypes.STRING,
-    lastName: DataTypes.STRING,
-    email: DataTypes.STRING
+    bankBrand: DataTypes.STRING,
+    bankBranch: DataTypes.STRING,
+    bankNo: DataTypes.STRING,
+    type: DataTypes.STRING,
+    code: DataTypes.STRING,
+    lastversion: DataTypes.STRING
   }, {
     sequelize,
     modelName: 'Bank',
+    schema: 'static_data',
+    tableName: 'Bank'
   });
   return Bank;
 };

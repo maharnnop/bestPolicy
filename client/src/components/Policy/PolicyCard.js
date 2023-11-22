@@ -37,6 +37,10 @@ const PolicyCard = (props) => {
   const handleChange = async (e) => {
     e.preventDefault();
 
+    setFormData((prevState) => ({
+      ...prevState,
+      [e.target.name]: e.target.value,
+    }));
     //set dropdown subclass when class change
     if (e.target.name === "class") {
       const array = [];
@@ -146,9 +150,7 @@ const PolicyCard = (props) => {
     }
     //get com/ov setup
 
-    console.log(formData.insurerCode !== null &&
-      formData.class !== null &&
-      formData.subClass !== null);
+  
   };
 
   const getDistrict = (provincename) => {
@@ -333,7 +335,9 @@ const PolicyCard = (props) => {
     setInstallment({ insurer: arrI, advisor: arrA })
   };
   const editCard = (e) => {
+    console.log(formData);
     setHidecard([true, 1])
+    
     setFormData((prevState) => ({
       ...prevState,
       updatedAt: new Date().toLocaleDateString(),
@@ -1994,7 +1998,8 @@ const handleClose = (e) => {
 
                 </Modal.Body>
                 <Modal.Footer>
-                    <button type="button" class="btn btn-primary" onClick={e => props.setFormData(e, props.index, { ...formData, installment: installment })}>Save changes</button>
+                    <button type="button" class="btn btn-primary" name="saveChange" onClick={e => props.setFormData(e, props.index, { ...formData, installment: installment })}>Save changes</button>
+                    {/* <button type="button" class="btn btn-primary" onClick={(e) => editCard(e)} >Save changes</button> */}
                     <button type="button" class="btn btn-secondary" data-dismiss="modal" onClick={handleClose}>Close</button>
                 </Modal.Footer>
             </Modal>

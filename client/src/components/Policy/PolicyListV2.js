@@ -55,6 +55,7 @@ const UserCarList = (props) => {
     chassisNo: null,
     carRegisYear: null,
     telNum_1: null,
+    cover_amt: null
   }]);
 
   //pagination

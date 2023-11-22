@@ -4,7 +4,7 @@ const CommOVOut = require("../models").CommOVOut;
 const process = require('process');
 require('dotenv').config();
 
-const { Op, QueryTypes, Sequelize } = require("sequelize");
+const { Op, QueryTypes, Sequelize, where } = require("sequelize");
 //handle index request
 
 // Replace 'your_database', 'your_username', 'your_password', and 'your_host' with your database credentials
@@ -37,6 +37,22 @@ const getInsureTypeAll = (req, res) => {
   InsureType.findAll ().then((insureType) => {
   res.json(insureType);
 });
+};
+const getInsureByClass =(req, res) => {
+  if (req.body.class ==='' ) {
+     InsureType.findAll ().then(async (insureType) =>   {
+     res.json(insureType);
+    });
+  }else{
+
+    InsureType.findAll(
+      {where:{
+        class : req.body.class
+      }}
+      ).then((insureType) => {
+   res.json(insureType);
+    });
+  }
 };
 
 const newInsureType = (req, res) => {
@@ -118,7 +134,8 @@ module.exports = {
   getCommOVInByid,
   newCommOVIn,  
   newCommOV,
-  getCommOV
+  getCommOV,
+  getInsureByClass
 
   // removeCar,AgentditCar,
 };

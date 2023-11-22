@@ -59,12 +59,15 @@ const ReportPolicy = () => {
         let data = JSON.stringify({
             "billadvisorno": billAdvisorNo
         });
-        axios.post(window.globalConfig.BEST_POLICY_V1_BASE_URL + "/bills/findDataByBillAdvisoryNo", data, {
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        })
+        axios.post('https://apiuat-cba-report.amityinsure.com/api/ArAp/commOutOvOutOpenItem/json', {}
+        // , {
+        //     headers: {
+        //         'Content-Type': 'application/json'
+        //     }
+        // }
+        )
             .then((response) => {
+                console.log(response);
                 // console.log(response.data);
                 if (response.data[0]) {
                     setInsurercode(response.data[0].insurerCode)

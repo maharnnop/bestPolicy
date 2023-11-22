@@ -24,7 +24,7 @@ const sequelize = new Sequelize(process.env.DB_NAME, process.env.DB_USERNAME, pr
     },
 });
 const Joi = require('joi');
-const {getRunNo,getCurrentDate} = require("./lib/runningno");
+const {getRunNo,getCurrentDate,getCurrentYY,getCurrentYYMM} = require("./lib/runningno");
 
 const test = (req, res) => {
 
@@ -313,8 +313,9 @@ const submitCashier = async (req, res) => {
         :Amt, :createdate, :createusercode, :status ,:refno,:dfrpreferno
     );
     `;
-    const cuurentdate = getCurrentDate()
-    let cashierreceiveno = await getRunNo('cash',null,null,'kw',cuurentdate,t)
+    const currentdate = getCurrentDate()
+    // let cashierreceiveno = await getRunNo('cash',null,null,'kw',currentdate,t)
+    let cashierreceiveno = getCurrentYYMM() +'/'+ String(await getRunNo('cash',null,null,'kw',currentdate,t)).padStart(5, '0')
     const replacevalue ={
          // keyid: req.body.keyid,
          billadvisorno: req.body.billadvisorno,
@@ -645,8 +646,8 @@ const editSubmitBill = async (req, res) => {
   WHERE
     id=:id
   `;
-  const cuurentdate = getRunNo.getCurrentDate()
-    let cashierreceiveno = await getRunNo('cash',null,null,'kw',cuurentdate,t)
+  const currentdate = getCurrentDate()
+    let cashierreceiveno = getCurrentYYMM() +'/'+ String(await getRunNo('cash',null,null,'kw',currentdate,t)).padStart(5, '0')
     await sequelize.query(updateQuery, {
         replacements: {
             id:req.body.id,
@@ -735,59 +736,7 @@ const getBankBranchInBrand = (req,res) =>{
       })
 }
 
-const getBankByPerson = async (req,res) =>{
-    try {
-        let jointable = ''
-        let cond = ''
-        if(req.body.type === 'insurer'){
-          jointable = ' JOIN static_data."Insurers" a ON e.id = a."entityID"  '
-          if (req.body.insurerCode !== '' && req.body.insurerCode !== null ) {
-            cond = cond + ` and a."insurerCode" like '%${req.body.insurerCode}%' `
-          }
-        }else{
-          jointable = ' JOIN static_data."Agents" a ON e.id = a."entityID"  '
-          if (req.body.agentCode !== '' && req.body.agentCode !== null ) {
-            cond = cond + ` and a."agentCode" like '%${req.body.agentCode}%' `
-          }
-        }
-        if (req.body.firstname !== '' && req.body.personType === 'P') {
-          cond = cond + ` and e."t_firstName" like '%${req.body.firstname}%' `
-        }
-        if (req.body.lastname !== '' && req.body.personType === 'P') {
-          cond = cond + ` and  e."t_lastName"  like '%${req.body.lastname}%' `
-        }
-        if (req.body.ogname !== '' && req.body.personType === 'O') {
-          cond = cond + ` and e."t_ogName"  like '%${req.body.ogname}%' `
-        }
-          const persons = await sequelize.query(
-            `select 
-            '${req.body.type}' as type,
-            e."personType",
-            (case when e."personType" = 'O' then  t."TITLETHAIBEGIN" ||' '|| e."t_ogName" || ' ' ||  t."TITLETHAIEND" 
-            else t."TITLETHAIBEGIN" ||' '|| e."t_firstName"|| ' ' || e."t_lastName"  || ' ' ||  t."TITLETHAIEND"  end) as fullname,
-            a."stamentType",
-            a."premCreditT"|| ' ' || a."premCreditUnit" as premCredit ,
-            a."commovCreditT" || ' ' || a."commovCreditUnit" as commCredit ,
-            e."vatRegis" ,
-            e.branch ,
-           * from static_data."Entities" e 
-           ${jointable}
-           join static_data."Titles" t on t."TITLEID" = e."titleID" 
-           where a.lastversion ='Y'
-           ${cond}`,
-            {
-              
-              type: QueryTypes.SELECT,
-            }
-            
-          ); 
-         
-          await res.json(persons);
-        } catch (error) {
-          console.log(error);
-          await res.status(500).json({ msg: "internal server error" });
-        }
-}
+
 
 module.exports = {
     test,
