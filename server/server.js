@@ -66,7 +66,7 @@ app.use(express.static("public"));
 app.use(express.urlencoded({ extended: true }));
 app.use(methodOverride("_method"));
 
-app.use(requestLogger);
+// app.use(requestLogger);
 
 
 
@@ -120,11 +120,11 @@ app.use("/v1/endorses",authenticateToken, routes.endorses);
 // });
 
 const options ={
-  cert: fs.readFileSync('./certssl/Certificate_amityinsure.com.crt'),
-   ca: fs.readFileSync("./certssl/intermediateCA_amityinsure.com.cer"),
-  key: fs.readFileSync("./certssl/PRIVATEKEY_amityinsure.com.key"),
-  // cert: fs.readFileSync('./certssl/server.cert'),
-  // key: fs.readFileSync("./certssl/server.key"),
+  // cert: fs.readFileSync('./certssl/Certificate_amityinsure.com.crt'),
+  //  ca: fs.readFileSync("./certssl/intermediateCA_amityinsure.com.cer"),
+  // key: fs.readFileSync("./certssl/PRIVATEKEY_amityinsure.com.key"),
+  cert: fs.readFileSync('./certssl/server.cert'),
+  key: fs.readFileSync("./certssl/server.key"),
 }
 
 const server = https.createServer(options, app);

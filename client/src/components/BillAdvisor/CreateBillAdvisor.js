@@ -34,6 +34,7 @@ const CreateBillAdvisor = () => {
     const url = window.globalConfig.BEST_POLICY_V1_BASE_URL;
     const wht = config.wht
     const navigate = useNavigate();
+    
     const [insureeData, setinsureeData] = useState({ entityID: null });
     const [entityData, setEntityData] = useState({ personType: 'P' });
     const [locationData, setLocationData] = useState({ entityID: null, locationType: 'A' });
@@ -462,7 +463,7 @@ const CreateBillAdvisor = () => {
                         <div class="col-2">
                             <label class="col-form-label">จำนวนเงินสุทธิ</label>
                         </div>
-                        <div class="col-2"> {policiesRender.total.prem.toLocaleString(undefined, { minimumFractionDigits: 2 })}</div>
+                        <div class="col-2">  <label class="col-form-label">{policiesRender.total.prem.toLocaleString(undefined, { minimumFractionDigits: 2 })}</label></div>
                     </div>
                     <div class="row">
                         <div class="col-2">
@@ -475,7 +476,7 @@ const CreateBillAdvisor = () => {
                             <label class="col-form-label">create by </label>
                         </div>
                         <div class="col-2">
-                            <label class="col-form-label">Kwanmhn</label>
+                            <label class="col-form-label">{jwt_decode(cookies["jwt"]).USERNAME}</label>
                         </div>
                     </div>
                     {/* <div class="row">
@@ -564,7 +565,7 @@ const CreateBillAdvisor = () => {
                         <div class="col-2">
                             <label class="col-form-label">Bill Payment</label>
                         </div>
-                        <div class="col-2"> {(policiesRender.total.prem + policiesRender.total.whtov + policiesRender.total.whtcom).toLocaleString(undefined, { minimumFractionDigits: 2 })}</div>
+                        <div class="col-2"> <label class="col-form-label">{(policiesRender.total.prem + policiesRender.total.whtov + policiesRender.total.whtcom).toLocaleString(undefined, { minimumFractionDigits: 2 })}</label></div>
                     </div>
 
                 </Modal.Body>

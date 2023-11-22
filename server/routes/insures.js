@@ -12,7 +12,7 @@ router.post('/commovoutnew', ctrl.insures.newCommOVOut);
 router.get('/commovoutget/:id', ctrl.insures.getCommOVOutByid);
 router.post('/commovnew', ctrl.insures.newCommOV);
 router.post('/getcommov', ctrl.insures.getCommOV);
-
+router.post('/getinsurebyclass', ctrl.insures.getInsureByClass);
 
 // router.post('/', ctrl.cars.postCar);
 // router.delete('/:index', ctrl.cars.removeCar);

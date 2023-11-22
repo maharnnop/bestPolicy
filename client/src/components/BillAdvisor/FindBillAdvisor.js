@@ -43,8 +43,8 @@ const FindBillAdvisor = () => {
 
     const [filterData, setFilterData] = useState(
         {
-            "insurerid": null,
-            "agentid":null,
+            "insurerId": null,
+            "agentId":null,
             "billadvisorno": null,
             "billdate": null
 
@@ -54,20 +54,7 @@ const FindBillAdvisor = () => {
     const [agentDD, setAgentDD] = useState([]);
 
     useEffect(() => {
-        //get province
-        axios
-            .get(url + "/static/provinces/all", headers)
-            .then((province) => {
-                const array = []
-                province.data.forEach(ele => {
-                    array.push(<option key={ele.provinceid} value={ele.provinceid}>{ele.t_provincename}</option>)
-                });
-                setProvinceDD(array)
-            })
-            .catch((err) => {
-                // alert("cant get province");
-            });
-
+        
         // get agent all
         axios
             .get(url + "/persons/agentall", headers)
@@ -106,6 +93,7 @@ const FindBillAdvisor = () => {
 
 
     const handleChange = (e) => {
+        console.log(typeof(e.target.value));
         setFilterData((prevState) => ({
             ...prevState,
             [e.target.name]: e.target.value,
@@ -134,6 +122,7 @@ const FindBillAdvisor = () => {
 
     const submitFilter = (e) => {
         e.preventDefault();
+        setPoliciesData([])
         console.log(filterData);
         axios
             .post(url + "/payments/findbill", filterData, headers)
@@ -198,8 +187,8 @@ const FindBillAdvisor = () => {
                     <div class="col-2 ">
                         <div class="input-group mb-3">
                             {/* <input type="text" class="form-control" placeholder="รหัสบริษัทประกัน" name="insurerCode" onChange={handleChange} /> */}
-                            <select  name="insurerID" class="form-control" onChange={handleChange} >
-                                <option value="" disabled selected hidden>รหัสบริษัทประกัน</option>
+                            <select  name="insurerId" class="form-control" onChange={handleChange} >
+                                <option  disabled selected hidden>รหัสบริษัทประกัน</option>
                                 {insurerDD}
                             </select>
 
@@ -234,7 +223,7 @@ const FindBillAdvisor = () => {
                     </div>
                     <div class="col-2 ">
                         <div class="input-group mb-3">
-                            <select  name="agentID" class="form-control" onChange={handleChange} >
+                            <select  name="agentId" class="form-control" onChange={handleChange} >
                                 <option value="" disabled selected hidden>รหัสผู้แนะนำ</option>
                                 {agentDD}
                             </select>

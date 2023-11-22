@@ -21,6 +21,7 @@ module.exports = (sequelize, DataTypes) => {
     subClass: DataTypes.STRING,
     planCode: DataTypes.STRING,
     insureName:  DataTypes.STRING,
+    invoiceCode: DataTypes.STRING,
   }, {
     sequelize,
     modelName: 'InsureType',

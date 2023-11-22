@@ -566,6 +566,7 @@ const Agent = () => {
               name={`stamentType`}
               onChange={changeAgent}
               value={agentData.stamentType}
+              required
             >
               <option selected value="Net">Net</option>
               <option value="Gross">Gross</option>
@@ -590,6 +591,7 @@ const Agent = () => {
             <select
               className="form-control"
               name={`premCreditUnit`}
+              required
               onChange={changeAgent}
               value={agentData.premCreditUnit}
             >
@@ -613,6 +615,7 @@ const Agent = () => {
           <div class="col-1">
             <label class="form-label ">หน่วย<span class="text-danger"> *</span></label>
             <select
+            required
               className="form-control"
               name={`commovCreditUnit`}
               onChange={changeAgent}
@@ -635,6 +638,7 @@ const Agent = () => {
             <select
               className="form-control "
               name={`personType`}
+              required
               onChange={changeEntity}
               value={entityData.personType.trim()}
             >
@@ -649,6 +653,7 @@ const Agent = () => {
                 <label class="form-label ">คำนำหน้า<span class="text-danger"> *</span></label>
                 <Select
                   value={titlePDD.filter(({ value }) => value === entityData.titleID)}
+                  required
                   // defaultValue={{label:`${entityData.TITLETHAIBEGIN}  ${entityData.TITLETHAIEND}`, value: entityData.titleID}}
                   formatOptionLabel={(option, { context }) => context === 'value' ? option.label : `${option.label}  ${option.label2}`}
                   name={`title`}
@@ -664,6 +669,7 @@ const Agent = () => {
               <div class="col-2">
                 <label class="form-label ">ชื่อ<span class="text-danger"> *</span></label>
                 <input
+                required
                   className="form-control"
                   type="text"
                   name="t_firstName"
@@ -674,6 +680,7 @@ const Agent = () => {
               <div class="col-2">
                 <label class="form-label ">นามสกุล<span class="text-danger"> *</span></label>
                 <input
+                required
                   className="form-control"
                   type="text"
                   name="t_lastName"
@@ -692,6 +699,7 @@ const Agent = () => {
               <div class="col-2">
                 <label class="form-label ">คำนำหน้า<span class="text-danger"> *</span></label>
                 <Select
+                required
                   value={titleODD.filter(({ value }) => value === entityData.titleID)}
                   formatOptionLabel={(option, { context }) => context === 'value' ? option.label : `${option.label} - ${option.label2}`}
                   name={`titleID`}
@@ -706,6 +714,7 @@ const Agent = () => {
               <div class="col-2">
                 <label class="form-label ">ชื่อ<span class="text-danger"> *</span></label>
                 <input
+                required
                   className="form-control"
                   type="text"
                   name="t_ogName"
@@ -741,6 +750,7 @@ const Agent = () => {
               ประเภทภาษีหัก ณ ที่จ่าย
             </label>
             <select
+            required={entityData.personType === 'O' ? true : false}
               className="form-control" name="deductTaxType" onChange={changeAgent}
               value={agentData.deductTaxType}>
               <option value="" selected disabled hidden></option>
@@ -759,6 +769,7 @@ const Agent = () => {
             </label>
             <div class="input-group mb-3">
               <input
+              required={entityData.personType === 'O' ? true : false}
                 defaultValue={agentData.deductTaxRate || 3}
                 className="form-control"
                 type='number'
@@ -779,6 +790,7 @@ const Agent = () => {
               เลขที่จดทะเบียน
             </label>
             <input
+            required={entityData.personType === 'O' ? true : false}
               className="form-control"
               type="text"
               name="taxNo"
@@ -791,9 +803,10 @@ const Agent = () => {
               วันที่จดทะเบียน<span class="text-danger"> *</span>
             </label>
             <input
+
               className="form-control"
               type="date"
-              required
+              required={entityData.personType === 'O' ? true : false}
               name="taxActDate"
               defaultValue={entityData.taxActDate}
               onChange={changeEntity}
@@ -806,7 +819,7 @@ const Agent = () => {
             <input
               className="form-control"
               type="date"
-              required
+              required={entityData.personType === 'O' ? true : false}
               name="taxExpDate"
               defaultValue={entityData.taxExpDate}
               onChange={changeEntity}
@@ -821,6 +834,7 @@ const Agent = () => {
               อยู่ในระบบ VAT หรือไม่
             </label>
             <select
+            required
               value={entityData.vatRegis}
               className="form-control" name="vatRegis" onChange={changeEntity}>
               <option value="" selected disabled hidden></option>
@@ -836,6 +850,7 @@ const Agent = () => {
               เลขที่ ภพ.20<span class="text-danger"> *</span>
             </label>
             <input
+            required={entityData.vatRegis ? true : false}
               defaultValue={entityData.pk20}
               className="form-control"
               type="text"
@@ -848,6 +863,7 @@ const Agent = () => {
               สาขาที่<span class="text-danger"> *</span>
             </label>
             <input
+            required={entityData.personType === 'O' ? true : false}
               defaultValue={entityData.branch}
               className="form-control"
               type="text"
@@ -866,6 +882,7 @@ const Agent = () => {
           <div class="col-2">
             <label class="form-label ">บ้านเลขที่<span class="text-danger"> *</span></label>
             <input
+            required
               defaultValue={locationData.t_location_1}
               className="form-control"
               type="text"
@@ -876,6 +893,7 @@ const Agent = () => {
           <div class="col-2">
             <label class="form-label ">หมู่บ้านอาคาร<span class="text-danger"> *</span></label>
             <input
+            required
               defaultValue={locationData.t_location_2}
               className="form-control"
               type="text"
@@ -886,6 +904,7 @@ const Agent = () => {
           <div class="col-2">
             <label class="form-label ">หมู่<span class="text-danger"> *</span></label>
             <input
+            required
               defaultValue={locationData.t_location_3}
               className="form-control"
               type="text"
@@ -896,6 +915,7 @@ const Agent = () => {
           <div class="col-2">
             <label class="form-label ">ซอย<span class="text-danger"> *</span></label>
             <input
+            required
               defaultValue={locationData.t_location_4}
               className="form-control"
               type="text"
@@ -906,6 +926,7 @@ const Agent = () => {
           <div class="col-2">
             <label class="form-label ">ถนน<span class="text-danger"> *</span></label>
             <input
+            required
               defaultValue={locationData.t_location_5}
               className="form-control"
               type="text"
@@ -922,6 +943,7 @@ const Agent = () => {
           <div class="col-2">
             <label class="form-label ">จังหวัด<span class="text-danger"> *</span></label>
             <Select
+            required
               // className="form-control"
               value={provinceDD.filter(({ value }) => value === locationData.provinceID)}
               name={`provinceID`}
@@ -934,6 +956,7 @@ const Agent = () => {
           <div class="col-2">
             <label class="form-label ">อำเภอ<span class="text-danger"> *</span></label>
             <Select
+            required
               // className="form-control"
               value={districDD.filter(({ value }) => value === locationData.districtID)}
               name={`districtID`}
@@ -944,6 +967,7 @@ const Agent = () => {
           <div class="col-2">
             <label class="form-label ">ตำบล<span class="text-danger"> *</span></label>
             <Select
+            required
               value={subDistricDD.filter(({ value }) => value === locationData.subDistrictID)}
               // className="form-control"
               name={`subDistrictID`}
@@ -953,7 +977,7 @@ const Agent = () => {
           </div>
           <div class="col-2">
             <label class="form-label ">รหัสไปรษณีย์<span class="text-danger"> *</span></label>
-            <select className="form-control" name="zipcode" onChange={changeLocation} value={locationData.zipcode}>
+            <select className="form-control" required name="zipcode" onChange={changeLocation} value={locationData.zipcode}>
               {/* <option value="" selected disabled hidden>เลือกรหัสไปรษณีย์</option> */}
               {zipcodeDD}
             </select>
@@ -966,6 +990,7 @@ const Agent = () => {
           <div class="col-2">
             <label class="form-label ">Email<span class="text-danger"> *</span></label>
             <input
+            required
               defaultValue={entityData.email}
               className="form-control"
               type="text"
@@ -976,6 +1001,7 @@ const Agent = () => {
           <div class="col-2">
             <label class="form-label ">เบอร์มือถือ<span class="text-danger"> *</span></label>
             <input
+            required
               defaultValue={locationData.telNum_1}
               className="form-control"
               type="text"
@@ -987,6 +1013,7 @@ const Agent = () => {
           <div class="col-2">
             <label class="form-label ">เบอร์โทรศัพท์<span class="text-danger"> *</span></label>
             <input
+            required
               defaultValue={locationData.telNum_2}
               className="form-control"
               type="text"
@@ -997,6 +1024,7 @@ const Agent = () => {
           <div class="col-2">
             <label class="form-label ">เบอร์โทรสาร<span class="text-danger"> *</span></label>
             <input
+            required
               defaultValue={locationData.telNum_3}
               className="form-control"
               type="text"
@@ -1021,6 +1049,7 @@ const Agent = () => {
               <div class="col-2">
                 <label class="form-label ">คำนำหน้า<span class="text-danger"> *</span></label>
                 <Select
+                required
                   value={titlePDD.filter(({ value }) => value === contactData.titleID)}
                   formatOptionLabel={(option, { context }) => context === 'value' ? option.label : `${option.label}  ${option.label2}`}
                   name={`title`}
@@ -1036,6 +1065,7 @@ const Agent = () => {
               <div class="col-2">
                 <label class="form-label ">ชื่อ<span class="text-danger"> *</span></label>
                 <input
+                required
                   defaultValue={contactData.t_firstName}
                   className="form-control"
                   type="text"
@@ -1046,6 +1076,7 @@ const Agent = () => {
               <div class="col-2">
                 <label class="form-label ">นามสกุล<span class="text-danger"> *</span></label>
                 <input
+                required
                   defaultValue={contactData.t_lastName}
                   className="form-control"
                   type="text"
@@ -1071,6 +1102,7 @@ const Agent = () => {
                   <div class="col-2">
                     <label class="form-label ">บ้านเลขที่<span class="text-danger"> *</span></label>
                     <input
+                    required
                       defaultValue={contactData.t_location_1}
                       className="form-control"
                       type="text"
@@ -1081,6 +1113,7 @@ const Agent = () => {
                   <div class="col-2">
                     <label class="form-label ">หมู่บ้านอาคาร<span class="text-danger"> *</span></label>
                     <input
+                    required
                       defaultValue={contactData.t_location_2}
                       className="form-control"
                       type="text"
@@ -1091,6 +1124,7 @@ const Agent = () => {
                   <div class="col-2">
                     <label class="form-label ">หมู่<span class="text-danger"> *</span></label>
                     <input
+                    required
                       defaultValue={contactData.t_location_3}
                       className="form-control"
                       type="text"
@@ -1101,6 +1135,7 @@ const Agent = () => {
                   <div class="col-2">
                     <label class="form-label ">ซอย<span class="text-danger"> *</span></label>
                     <input
+                    required
                       defaultValue={contactData.t_location_4}
                       className="form-control"
                       type="text"
@@ -1111,6 +1146,7 @@ const Agent = () => {
                   <div class="col-2">
                     <label class="form-label ">ถนน<span class="text-danger"> *</span></label>
                     <input
+                    required
                       defaultValue={contactData.t_location_5}
                       className="form-control"
                       type="text"
@@ -1127,6 +1163,7 @@ const Agent = () => {
                   <div class="col-2">
                     <label class="form-label ">จังหวัด<span class="text-danger"> *</span></label>
                     <Select
+                    required
                       value={provinceDD.filter(({ value }) => value === contactData.provinceID)}
                       // className="form-control"
                       name={`provinceID`}
@@ -1139,6 +1176,7 @@ const Agent = () => {
                   <div class="col-2">
                     <label class="form-label ">อำเภอ<span class="text-danger"> *</span></label>
                     <Select
+                    required
                       value={districDD2.filter(({ value }) => value === contactData.districtID)}
                       // className="form-control"
                       name={`districtID`}
@@ -1149,6 +1187,7 @@ const Agent = () => {
                   <div class="col-2">
                     <label class="form-label ">ตำบล<span class="text-danger"> *</span></label>
                     <Select
+                    required
                       value={subDistricDD2.filter(({ value }) => value === contactData.subDistrictID)}
                       // className="form-control"
                       name={`subDistrictID`}
@@ -1158,7 +1197,7 @@ const Agent = () => {
                   </div>
                   <div class="col-2">
                     <label class="form-label ">รหัสไปรษณีย์<span class="text-danger"> *</span></label>
-                    <select className="form-control" name="zipcode" onChange={changeContact} value={contactData.zipcode}>
+                    <select className="form-control" required name="zipcode" onChange={changeContact} value={contactData.zipcode}>
                       {/* <option value="" selected disabled hidden>เลือกรหัสไปรษณีย์</option> */}
                       {zipcodeDD2}
                     </select>
@@ -1172,6 +1211,7 @@ const Agent = () => {
               <div class="col-2">
                 <label class="form-label ">Email<span class="text-danger"> *</span></label>
                 <input
+                required
                   defaultValue={contactData.email}
                   className="form-control"
                   type="text"
@@ -1182,6 +1222,7 @@ const Agent = () => {
               <div class="col-2">
                 <label class="form-label ">เบอร์มือถือ<span class="text-danger"> *</span></label>
                 <input
+                required
                   defaultValue={contactData.telNum_1}
                   className="form-control"
                   type="text"
@@ -1193,6 +1234,7 @@ const Agent = () => {
               <div class="col-2">
                 <label class="form-label ">เบอร์โทรศัพท์<span class="text-danger"> *</span></label>
                 <input
+                required
                   defaultValue={contactData.telNum_2}
                   className="form-control"
                   type="text"
@@ -1203,6 +1245,7 @@ const Agent = () => {
               <div class="col-2">
                 <label class="form-label ">เบอร์โทรสาร<span class="text-danger"> *</span></label>
                 <input
+                required
                   defaultValue={contactData.telNum_3}
                   className="form-control"
                   type="text"
@@ -1251,22 +1294,22 @@ const Agent = () => {
           <div class="row">
             <div class="col-2"></div>
             <div class="col-2">
-              <select class="form-control" name={`insureID-${index}`} onChange={changeComOv} key={index} value={comOvOutData[index].insureID}>
+              <select required class="form-control" name={`insureID-${index}`} onChange={changeComOv} key={index} value={comOvOutData[index].insureID}>
                 <option hidden>class:subclass</option>
                 {insureTypeDD}
               </select>
             </div>
             <div class="col-2">
-              <select class="form-control" name={`insurerCode-${index}`} onChange={changeComOv} key={index} value={comOvOutData[index].insurerCode}>
+              <select required class="form-control" name={`insurerCode-${index}`} onChange={changeComOv} key={index} value={comOvOutData[index].insurerCode}>
                 <option hidden>บริษัทรับประกัน</option>
                 {insurerDD}
               </select>
             </div>
             <div class="col-2">
-              <input class="form-control" type="text" name={`rateComOut-${index}`} onChange={changeComOv} key={index} defaultValue={comOvOutData[index].rateComOut} />
+              <input required class="form-control" type="text" name={`rateComOut-${index}`} onChange={changeComOv} key={index} defaultValue={comOvOutData[index].rateComOut} />
             </div>
             <div class="col-2">
-              <input class="form-control" type="text" name={`rateOVOut_1-${index}`} onChange={changeComOv} key={index} defaultValue={comOvOutData[index].rateOVOut_1} />
+              <input required class="form-control" type="text" name={`rateOVOut_1-${index}`} onChange={changeComOv} key={index} defaultValue={comOvOutData[index].rateOVOut_1} />
             </div>
 
 

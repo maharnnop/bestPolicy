@@ -173,9 +173,27 @@ const  getCurrentDate = () => {
   let result = `${year}-${month}-${day}`
   return result.toString();
 }
+
+const  getCurrentYYMM = () => {
+  const today = new Date();
+  const year = String(today.getFullYear()).slice(-2);
+  const month = String(today.getMonth() + 1).padStart(2, '0'); // Month is 0-indexed
+  let result = `${year}${month}`
+  return result.toString();
+}
+
+const  getCurrentYY = () => {
+  const today = new Date();
+  const year = String(today.getFullYear()).slice(-2);
+  let result = `${year}`
+  return result.toString();
+}
+
 module.exports = {
 getRunNo,
 testRunno,
-getCurrentDate
+getCurrentDate,
+getCurrentYY,
+getCurrentYYMM
 
 };
