@@ -3,6 +3,8 @@ import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import jwt_decode from "jwt-decode";
 import Modal from 'react-bootstrap/Modal';
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
 import {
     BrowserRouter,
     Routes,
@@ -827,21 +829,47 @@ const EditCashierReceive = (props) => {
                             </div>
                             <div className="col-4">
                                 <label htmlFor="fromDate">จาก วันที่&nbsp;</label>
-                                <input
+                                {/* <input
                                     type="date"
                                     id="fromDate"
                                     value={fromDate}
                                     onChange={(e) => setFromDate(e.target.value)}
-                                />
+                                /> */}
+                                <DatePicker
+                            style={{textAlign: 'center'}}
+                            showIcon
+                            className="form-control"
+                            todayButton="Vandaag"
+                            // isClearable
+                            showYearDropdown
+                            dateFormat="dd/MM/yyyy"
+                            dropdownMode="select"
+                            id="fromDate"
+                            selected={fromDate}
+                            onChange={(date) => setFromDate(date)}
+                                 />
                             </div>
                             <div className="col-4">
                                 <label htmlFor="toDate">ถึง วันที่&nbsp;</label>
-                                <input
+                                {/* <input
                                     type="date"
                                     id="toDate"
                                     value={toDate}
                                     onChange={(e) => setToDate(e.target.value)}
-                                />
+                                /> */}
+                                <DatePicker
+                            style={{textAlign: 'center'}}
+                            showIcon
+                            className="form-control"
+                            todayButton="Vandaag"
+                            // isClearable
+                            showYearDropdown
+                            dateFormat="dd/MM/yyyy"
+                            dropdownMode="select"
+                            id="toDate"
+                            selected={toDate}
+                            onChange={(date) => setToDate(date)}
+                                 />
                             </div>
                         </div>
 

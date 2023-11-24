@@ -138,7 +138,11 @@ const FindPerson = () => {
             .then((res) => {
 
                 console.log(res.data);
-                alert("find data success")
+                if (res.data.length > 0) {
+                    alert("ค้นหาข้อมูล บัญชีธนาคาร สำเร็จ")
+                }else{
+                    alert("ไม่พบข้อมูล บัญชีธนาคาร ที่ค้นหา")
+                }
                 const array = []
                 setExportPolicyData(res.data)
 
@@ -156,11 +160,13 @@ const FindPerson = () => {
             .then((res) => {
 
                 console.log(res.data);
-                alert("find data success")
+                if (res.data.length > 0) {
+                    alert("ค้นหาข้อมูล แผนประกัน สำเร็จ")
+                }else{
+                    alert("ไม่พบข้อมูล แผนประกัน ที่ค้นหา")
+                }
                 const array = []
                 setExportPolicyData(res.data)
-
-
                 setPersonsData(res.data)
             })
             .catch((err) => {
@@ -174,7 +180,13 @@ const FindPerson = () => {
             .then((res) => {
 
                 console.log(res.data);
-                alert("find data success")
+                if (res.data.length > 0 && filterData.type === 'agent') {
+                    alert("ค้นหาข้อมูล ผู้แนะนำ สำเร็จ")
+                }else if(res.data.length > 0 && filterData.type === 'insurer'){
+                    alert("ค้นหาข้อมูล บริษัทรับประกัน สำเร็จ")
+                }else{
+                    alert("ไม่พบข้อมูลที่ค้นหา")
+                }
                 const array = []
                 setExportPolicyData(res.data)
 

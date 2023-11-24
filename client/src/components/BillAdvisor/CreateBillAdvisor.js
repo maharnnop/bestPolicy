@@ -3,6 +3,8 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import jwt_decode from "jwt-decode";
 import Modal from 'react-bootstrap/Modal';
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
 import {
     BrowserRouter,
     Routes,
@@ -44,10 +46,16 @@ const CreateBillAdvisor = () => {
     const [filterData, setFilterData] = useState(
         {
             "insurerCode": null,
-            "policyNoAll": true,
-            "policyNoStart": '000000',
-            "policyNoEnd": '0000000',
             "agentCode": null,
+            "dueDate": null,
+            "policyNoStart": null,
+            "policyNoEnd": null,
+            "createdDateStart": null,
+            "createdDateEnd": null,
+            insurerAll:true,
+            agentAll:true,
+            policyNoAll: true,
+            createDateAll:true,
             
 
         })
@@ -142,6 +150,13 @@ const CreateBillAdvisor = () => {
             [e.target.name]: e.target.value,
         }));
     };
+    const handleChangeCheckbox = (e) => {
+        setFilterData((prevState) => ({
+            ...prevState,
+            [e.target.name]: e.target.checked,
+        }));
+    };
+
 
     const changestatementtype = (e) => {
         // e.preventDefault();
@@ -175,13 +190,30 @@ const CreateBillAdvisor = () => {
 
     const submitFilter = (e) => {
         e.preventDefault();
+        setPoliciesData([])
+
+            const filter = filterData
+            if (filter.insurerAll) {
+                filter.insurerCode = null
+            }
+            if (filter.agentAll) {
+                filter.agentCode = null
+            }
+            if (filter.policyNoAll) {
+                filter.policyNoStart = null
+                filter.policyNoEnd = null
+            }
+            if (filter.createDateAll) {
+                filter.createdDateStart = null
+                filter.createdDateEnd = null
+            }
         console.log(filterData);
         axios
-            .post(url + "/payments/findpolicyinDue", filterData, headers)
+            .post(url + "/payments/findpolicyinDue", filter, headers)
             .then((res) => {
                 if (res.status === 201) {
                     console.log(res.data);
-                    alert("not found policy")
+                    alert("ไม่พบรายการ")
 
                 } else {
 
@@ -245,7 +277,7 @@ const CreateBillAdvisor = () => {
             {/* <BackdropBox1> */}
             <form className="container-fluid " onSubmit={submitFilter}>
                 {/* insurer table */}
-                <h1 className="text-center">ค้นหารายการเบี้ยค้างที่กำหนดชำระแล้ว</h1>
+                <h1 className="text-center">ค้นหารายการเบี้ยค้างที่ครบกำหนดชำระ</h1>
                 <div class="row">
                     <div class="col-1">
 
@@ -257,7 +289,7 @@ const CreateBillAdvisor = () => {
                     <div class="col-2 ">
                         <div class="input-group mb-3">
                             {/* <input type="text" class="form-control" placeholder="รหัสบริษัทประกัน" name="insurerCode" onChange={handleChange} /> */}
-                            <select required name="insurerCode" class="form-control" onChange={handleChange} >
+                            <select  name="insurerCode" class="form-control" onChange={handleChange} >
                                 <option value="" disabled selected hidden>รหัสบริษัทประกัน</option>
                                 {insurerDD}
                             </select>
@@ -265,7 +297,7 @@ const CreateBillAdvisor = () => {
                             <div class="input-group-append">
                                 <div class="input-group-text ">
                                     <div class="form-check checkbox-xl">
-                                        <input class="form-check-input" type="checkbox" value="" onChange={handleChange} />
+                                        <input class="form-check-input" type="checkbox" name="insurerAll" defaultChecked onChange={handleChangeCheckbox} />
                                         <label class="form-check-label" >All</label>
                                     </div>
                                 </div>
@@ -293,14 +325,14 @@ const CreateBillAdvisor = () => {
                     </div>
                     <div class="col-2 ">
                         <div class="input-group mb-3">
-                            <select required name="agentCode" class="form-control" onChange={handleChange} >
+                            <select name="agentCode" class="form-control" onChange={handleChange} >
                                 <option value="" disabled selected hidden>รหัสผู้แนะนำ</option>
                                 {agentDD}
                             </select>
                             <div class="input-group-append">
                                 <div class="input-group-text ">
                                     <div class="form-check checkbox-xl">
-                                        <input class="form-check-input" type="checkbox" value="" />
+                                        <input class="form-check-input" type="checkbox" name="agentAll" defaultChecked onChange={handleChangeCheckbox} />
                                         <label class="form-check-label" >All</label>
                                     </div>
                                 </div>
@@ -318,14 +350,28 @@ const CreateBillAdvisor = () => {
 
                     </div>
                     <div class="col-2">
-                        <label class="col-form-label">Duedate</label>
+                        <label class="col-form-label">DueDate</label>
 
                     </div>
                     <div class="col-2 ">
 
                         <div class="input-group mb-3">
-                            <input required type="date" class="form-control " name="dueDate" onChange={handleChange} />
-
+                            {/* <input required type="date" class="form-control " name="dueDate" onChange={handleChange} /> */}
+                            <DatePicker
+                            showIcon
+                            className="form-control"
+                            todayButton="Vandaag"
+                            // isClearable
+                            required
+                            showYearDropdown
+                            dateFormat="dd/MM/yyyy"
+                            dropdownMode="select"
+                            selected={filterData.dueDate}
+                            onChange={(date) => setFilterData((prevState) => ({
+                                ...prevState,
+                                dueDate: date,
+                            }))}
+                                 />
                         </div>
 
                     </div>
@@ -339,11 +385,11 @@ const CreateBillAdvisor = () => {
 
                     </div>
                     <div class="col-1">
-                        <label class="col-form-label">เลขกรมธรรม์</label>
+                        <label class="col-form-label">เลขที่กรมธรรม์</label>
 
                     </div>
                     <div class="col-1">
-                        <label class="col-form-label">จากวันที่</label>
+                        <label class="col-form-label">จาก</label>
                     </div>
                     <div class="col-2 ">
                         <div class="input-group mb-3">
@@ -352,7 +398,7 @@ const CreateBillAdvisor = () => {
                         </div>
                     </div>
                     <div class="col-1">
-                        <label class="col-form-label">ถึงวันที่</label>
+                        <label class="col-form-label">ถึง</label>
                     </div>
                     <div class="col-2 ">
                         <div class="input-group mb-3">
@@ -360,12 +406,7 @@ const CreateBillAdvisor = () => {
                             <div class="input-group-append">
                                 <div class="input-group-text ">
                                     <div class="form-check checkbox-xl">
-                                        <input class="form-check-input" type="checkbox" name="policyNoAll" onClick={(e) => {
-                                            setFilterData((prevState) => ({
-                                                ...prevState,
-                                                policyNoAll: e.target.checked,
-                                            }))
-                                        }} />
+                                        <input class="form-check-input" type="checkbox" name="policyNoAll"  defaultChecked onChange={handleChangeCheckbox} />
                                         <label class="form-check-label" >All</label>
                                     </div>
                                 </div>
@@ -375,6 +416,71 @@ const CreateBillAdvisor = () => {
 
 
                 </div>
+
+                <div class="row">
+                    <div class="col-1">
+
+                    </div>
+                    <div class="col-1">
+                        <label class="col-form-label">วันที่บันทึกกรมธรรม์</label>
+
+                    </div>
+                    <div class="col-1">
+                        <label class="col-form-label">จากวันที่</label>
+                    </div>
+                    <div class="col-2 ">
+                        <div class="input-group mb-3">
+                            {/* <input type="text" class="form-control " name="createdDateStart" onChange={handleChange} /> */}
+                            <DatePicker
+                            showIcon
+                            className="form-control"
+                            todayButton="Vandaag"
+                            // isClearable
+                            showYearDropdown
+                            dateFormat="dd/MM/yyyy"
+                            dropdownMode="select"
+                            selected={filterData.createdDateStart}
+                            onChange={(date) => setFilterData((prevState) => ({
+                                ...prevState,
+                                createdDateStart: date,
+                            }))}
+                            />
+                        </div>
+                    </div>
+                    <div class="col-1">
+                        <label class="col-form-label">ถึง</label>
+                    </div>
+                    <div class="col-2 ">
+                        <div class="input-group mb-3">
+                            {/* <input type="text" class="form-control" name="createdDateEnd" onChange={handleChange} /> */}
+                            <DatePicker
+                            showIcon
+                            className="form-control"
+                            todayButton="Vandaag"
+                            // isClearable
+                            showYearDropdown
+                            dateFormat="dd/MM/yyyy"
+                            dropdownMode="select"
+                            selected={filterData.createdDateEnd}
+                            onChange={(date) => setFilterData((prevState) => ({
+                                ...prevState,
+                                createdDateEnd: date,
+                            }))}
+                            />
+                            <div class="input-group-append">
+                                <div class="input-group-text ">
+                                    <div class="form-check checkbox-xl">
+                                        <input class="form-check-input" type="checkbox" name="createDateAll" defaultChecked onChange={handleChangeCheckbox} />
+                                        <label class="form-check-label" >All</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                </div>
+
             </form>
             <form className="container-fluid " >
             <div className="table-responsive overflow-scroll"  >

@@ -6,6 +6,8 @@ import PolicyCard from "./PolicyCard";
 import Modal from 'react-bootstrap/Modal';
 import * as XLSX from 'xlsx';
 import Select from 'react-select';
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
 import {
     BrowserRouter,
     Routes,
@@ -54,6 +56,7 @@ const FindPolicy = () => {
             "chassisNo" : null,
             "provinceID" : null,
             "status" : 'A',
+            "applicationNo" : null,
 
         })
     const [policiesData, setPoliciesData] = useState([])
@@ -130,12 +133,21 @@ const FindPolicy = () => {
         setPoliciesData(array)
 
     };
+
     const handleChange = (e) => {
         setFilterData((prevState) => ({
             ...prevState,
             [e.target.name]: e.target.value,
         }));
     };
+
+    const handleChangeDate = (date,name) => {
+        setFilterData((prevState) => ({
+            ...prevState,
+            [name]: date,
+        }));
+      }
+
     const handleChangeCard = async (e,index,data) => {
         // e.preventDefault();
         console.log(e.target.name);
@@ -163,7 +175,12 @@ const FindPolicy = () => {
                 // window.location.reload();
                 // localStorage.setItem("jwt", token);
                 console.log(res.data);
-                alert("find data success")
+                if (res.data.length > 0 ) {
+                    alert("ค้นหากรมธรรม์สำเร็จ")    
+                }else{
+                    alert("ไม่พบข้อมูลกรมธรรม์")
+                }
+                
                 const array = []
                 setExportPolicyData(res.data)
                 // for (let i = 0; i < res.data.length; i++) {
@@ -316,8 +333,8 @@ const FindPolicy = () => {
                     <div class="col-2 ">
                         <div class="input-group mb-3">
                             <select  class="form-control"  name="status" onChange={handleChange} >
-                            <option selected value='A'>Active</option>
-                            <option value='I'>Inactive</option>
+                            <option selected value='A'>(AA) กรมธรรม์</option>
+                            <option value='I'>(AI) ใบคำขอ</option>
                             </select>
                             
 
@@ -327,6 +344,36 @@ const FindPolicy = () => {
                     </div>
 
                 </div>
+
+                <div class="row">
+                    <div class="col-1">
+
+                    </div>
+                    <div class="col-1">
+                        <label class="col-form-label">เลขที่ใบคำขอ</label>
+
+                    </div>
+                    <div class="col-2 ">
+                        <div class="input-group mb-3">
+                            <input type="text" class="form-control" placeholder="เลขที่ใบคำขอ" name="applicationNo" onChange={handleChange} />
+                            <div class="input-group-append">
+                                <div class="input-group-text ">
+                                    <div class="form-check checkbox-xl">
+                                        <input class="form-check-input" type="checkbox" value="" />
+                                        <label class="form-check-label" >All</label>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                        </div>
+
+
+                    </div>
+                    
+
+                </div>
+
                 <div class="row">
                     <div class="col-1">
 
@@ -371,11 +418,37 @@ const FindPolicy = () => {
 
                     <div class="col-2 ">
                         <div class="input-group mb-3">
-                            <input type="date" class="form-control " name="createdate_start" onChange={handleChange} value={filterData.createdate_start} 
+                            {/* <input type="date" class="form-control " name="createdate_start" onChange={handleChange} value={filterData.createdate_start} 
                             onBlur={(e)=>{setFilterData((prevState) => ({
                                 ...prevState,
                                 createdate_end: e.target.value,
-                            }));}}/>
+                            }));}}
+                            /> */}
+                            <DatePicker
+                            style={{textAlign: 'center'}}
+                            showIcon
+                            className="form-control"
+                            todayButton="Vandaag"
+                            // isClearable
+                            name="effDatestart"
+                            showYearDropdown
+                            dateFormat="dd/MM/yyyy"
+                            dropdownMode="select"
+                            id="createdate_start"
+                            selected={filterData.createdate_start}
+                            onChange={(date) => {
+                                handleChangeDate(date,'createdate_start')
+                                handleChangeDate(date,'createdate_end')
+                        }}
+                        //     onBlur={(e)=>{
+                        //         setFilterData((prevState) => ({
+                        //         ...prevState,
+                        //         createdate_end: new Date (e.target.value),
+                        //     }))
+                        // }
+                        // }
+                                 />
+
 
                         </div>
                     </div>
@@ -384,7 +457,22 @@ const FindPolicy = () => {
                     </div>
                     <div class="col-2 ">
                         <div class="input-group mb-3">
-                            <input type="date" class="form-control" name="createdate_end" onChange={handleChange} value={filterData.createdate_end}/>
+                            {/* <input type="date" class="form-control" name="createdate_end" onChange={handleChange} value={filterData.createdate_end}/> */}
+                            <DatePicker
+                            style={{textAlign: 'center'}}
+                            showIcon
+                            className="form-control"
+                            todayButton="Vandaag"
+                            // isClearable
+                            name="effDatestart"
+                            showYearDropdown
+                            dateFormat="dd/MM/yyyy"
+                            dropdownMode="select"
+                            id="createdate_end"
+                            selected={filterData.createdate_end}
+                            onChange={(date) => handleChangeDate(date,'createdate_end')}
+                            
+                                 />
                             <div class="input-group-append">
                                 <div class="input-group-text ">
                                     <div class="form-check checkbox-xl">
@@ -409,19 +497,34 @@ const FindPolicy = () => {
                     </div>
                     <div class="col-2 ">
                         <div class="input-group mb-3">
-                            <input type="date" class="form-control " name="effdate_start" onChange={handleChange} value={filterData.effdate_start} 
+                            {/* <input type="date" class="form-control " name="effdate_start" onChange={handleChange} value={filterData.effdate_start} 
+                            
                             onBlur={(e)=>{setFilterData((prevState) => ({
                                 ...prevState,
                                 effdate_end: e.target.value,
-                            }));}}/>
-                            <div class="input-group-append">
-                                {/* <div class="input-group-text ">
-                                    <div class="form-check checkbox-xl">
-                                        <input class="form-check-input" type="checkbox" value="" />
-                                        <label class="form-check-label" >All</label>
-                                    </div>
-                                </div> */}
-                            </div>
+                            }));}}/> */}
+                            <DatePicker
+                            style={{textAlign: 'center'}}
+                            showIcon
+                            className="form-control"
+                            todayButton="Vandaag"
+                            // isClearable
+                            name="effDatestart"
+                            showYearDropdown
+                            dateFormat="dd/MM/yyyy"
+                            dropdownMode="select"
+                            id="effdate_start"
+                            selected={filterData.effdate_start}
+                            onChange={(date) =>{ 
+                                handleChangeDate(date,'effdate_start')
+                                handleChangeDate(date,'effdate_end')
+                            }}
+                            // onBlur={(e)=>{setFilterData((prevState) => ({
+                            //     ...prevState,
+                            //     effdate_end: new Date (e.target.value),
+                            // }));}}
+                                 />
+                            
                         </div>
                     </div>
                     <div class="col-1">
@@ -429,7 +532,22 @@ const FindPolicy = () => {
                     </div>
                     <div class="col-2 ">
                         <div class="input-group mb-3">
-                            <input type="date" class="form-control " name="effdate_end" onChange={handleChange} value={filterData.effdate_end}/>
+                            {/* <input type="date" class="form-control " name="effdate_end" onChange={handleChange} value={filterData.effdate_end}/> */}
+                            <DatePicker
+                            style={{textAlign: 'center'}}
+                            showIcon
+                            className="form-control"
+                            todayButton="Vandaag"
+                            // isClearable
+                            name="effDatestart"
+                            showYearDropdown
+                            dateFormat="dd/MM/yyyy"
+                            dropdownMode="select"
+                            id="effdate_end"
+                            selected={filterData.effdate_end}
+                            onChange={(date) => handleChangeDate(date,'effdate_end')}
+                        
+                                 />
                             <div class="input-group-append">
                                 <div class="input-group-text ">
                                     <div class="form-check checkbox-xl">

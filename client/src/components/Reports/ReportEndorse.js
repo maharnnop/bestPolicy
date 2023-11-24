@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import jwt_decode from "jwt-decode";
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
 
 import {
     BrowserRouter,
@@ -122,21 +124,43 @@ const ReportEndorse = () => {
                             </div>
                             <div className="col-4">
                                 <label htmlFor="fromDate">From &nbsp;</label>
-                                <input
+                                {/* <input
                                     type="date"
                                     id="fromDate"
                                     value={fromDate}
                                     onChange={(e) => setFromDate(e.target.value)}
-                                />
+                                /> */}
+                                <DatePicker
+                            showIcon
+                            className="form-control"
+                            todayButton="Vandaag"
+                            // isClearable
+                            showYearDropdown
+                            dateFormat="dd/MM/yyyy"
+                            dropdownMode="select"
+                            selected={fromDate}
+                            onChange={(date) =>setFromDate(date)}
+                                 />
                             </div>
                             <div className="col-4">
                                 <label htmlFor="toDate">To &nbsp;</label>
-                                <input
+                                {/* <input
                                     type="date"
                                     id="toDate"
                                     value={toDate}
                                     onChange={(e) => setToDate(e.target.value)}
-                                />
+                                /> */}
+                                <DatePicker
+                            showIcon
+                            className="form-control"
+                            todayButton="Vandaag"
+                            // isClearable
+                            showYearDropdown
+                            dateFormat="dd/MM/yyyy"
+                            dropdownMode="select"
+                            selected={toDate}
+                            onChange={(date) =>setToDate(date)}
+                                 />
                             </div>
                         </div>
 

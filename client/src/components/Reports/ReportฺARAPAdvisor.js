@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import jwt_decode from "jwt-decode";
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
 
 import {
     BrowserRouter,
@@ -167,25 +169,47 @@ const ReportฺARAPAdvisor = () => {
      {/* Date Select */}
      <div className="row">
                             <div className="col-2">
-                                <label htmlFor="Date Select" className="form-label">Policy Approve Date </label>
+                                <label htmlFor="Date Select" className="form-label">Date </label>
                             </div>
                             <div className="col-4">
                                 <label htmlFor="fromDate">From &nbsp;</label>
-                                <input
+                                {/* <input
                                     type="date"
                                     id="fromDate"
                                     value={fromDate}
                                     onChange={(e) => setFromDate(e.target.value)}
-                                />
+                                /> */}
+                                <DatePicker
+                            showIcon
+                            className="form-control"
+                            todayButton="Vandaag"
+                            // isClearable
+                            showYearDropdown
+                            dateFormat="dd/MM/yyyy"
+                            dropdownMode="select"
+                            selected={fromDate}
+                            onChange={(date) =>setFromDate(date)}
+                                 />
                             </div>
                             <div className="col-4">
                                 <label htmlFor="toDate">To &nbsp;</label>
-                                <input
+                                {/* <input
                                     type="date"
                                     id="toDate"
                                     value={toDate}
                                     onChange={(e) => setToDate(e.target.value)}
-                                />
+                                /> */}
+                                <DatePicker
+                            showIcon
+                            className="form-control"
+                            todayButton="Vandaag"
+                            // isClearable
+                            showYearDropdown
+                            dateFormat="dd/MM/yyyy"
+                            dropdownMode="select"
+                            selected={toDate}
+                            onChange={(date) =>setToDate(date)}
+                                 />
                             </div>
                         </div>
 
@@ -197,7 +221,18 @@ const ReportฺARAPAdvisor = () => {
                                 <label htmlFor="createusercode" className="form-label">As At Date</label>
                             </div>
                             <div className="col-4">
-                                <input type="date" id="atdate" value={atdate} onChange={(e) => setAtdate(e.target.value)} className="form-control" />
+                                {/* <input type="date" id="atdate" value={atdate} onChange={(e) => setAtdate(e.target.value)} className="form-control" /> */}
+                                <DatePicker
+                            showIcon
+                            className="form-control"
+                            todayButton="Vandaag"
+                            // isClearable
+                            showYearDropdown
+                            dateFormat="dd/MM/yyyy"
+                            dropdownMode="select"
+                            selected={atdate}
+                            onChange={(date) =>setAtdate(date)}
+                                 />
                             </div>
                             
                         </div>

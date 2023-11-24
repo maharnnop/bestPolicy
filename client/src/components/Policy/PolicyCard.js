@@ -7,6 +7,8 @@ import { async } from "q";
 import Modal from 'react-bootstrap/Modal';
 import jwt_decode from "jwt-decode";
 import { useCookies } from "react-cookie";
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
 
 const config = require("../../config.json");
 
@@ -152,6 +154,13 @@ const PolicyCard = (props) => {
 
   
   };
+
+  const handleChangeDate = (date,name) => {
+    setFormData((prevState) => ({
+        ...prevState,
+        [name]: date,
+    }));
+  }
 
   const getDistrict = (provincename) => {
     //get distric in province selected
@@ -691,13 +700,27 @@ const handleClose = (e) => {
                 name={`policyNo`}
                 onChange={handleChange}
               /></td>
-              <td><input
+              <td>
+                {/* <input
                 className="form-control"
                 type="date"
                 defaultValue={formData.issueDate || ''}
-                name={`npm star`}
+                name={`issueDate`}
                 onChange={handleChange}
-              /></td>
+              /> */}
+              <DatePicker
+                            showIcon
+                            className="form-control"
+                            todayButton="Vandaag"
+                            // isClearable
+                            name="effDatestart"
+                            showYearDropdown
+                            dateFormat="dd/MM/yyyy"
+                            dropdownMode="select"
+                            selected={formData.issueDate || null}
+                            onChange={(date) => handleChangeDate(date,'issueDate')}
+                                 />
+              </td>
               <td>{formData.insurerCode}</td>
               <td>{formData.applicationNo}</td>
               <td>{formData.agentCode}</td>
@@ -1441,13 +1464,27 @@ const handleClose = (e) => {
                 return (<tr>
                   <th scope="row">บริษัทประกัน</th>
                   <td scope="col-1">{i + 1}</td>
-                  <td scope="col-2"><input
+                  <td scope="col-2">
+                    {/* <input
                     className="form-control"
                     type="date"
                     defaultValue={ele.dueDate}
                     name={`dueDate-${i}`}
                     onChange={handleChange}
-                  /></td>
+                  /> */}
+                  <DatePicker
+                            showIcon
+                            className="form-control"
+                            todayButton="Vandaag"
+                            // isClearable
+                            name="effDatestart"
+                            showYearDropdown
+                            dateFormat="dd/MM/yyyy"
+                            dropdownMode="select"
+                            selected={formData[`dueDate`] || null}
+                            onChange={(date) => handleChangeDate(date,`dueDate-${i}`)}
+                                 />
+                  </td>
                   <td scope="col-2"><input
                     className="form-control"
                     type="text"

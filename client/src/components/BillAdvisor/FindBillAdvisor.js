@@ -1,8 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+
 import jwt_decode from "jwt-decode";
 import EditBillAdvisor from "./EditBillAdvisor";
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
 import {
     BrowserRouter,
     Routes,
@@ -17,6 +20,7 @@ import {
     BackdropBox1,
 } from "../StylesPages/LoginStyles";
 import { useCookies } from "react-cookie";
+
 
 const config = require("../../config.json");
 
@@ -89,7 +93,6 @@ const FindBillAdvisor = () => {
 
 
     }, []);
-
 
 
     const handleChange = (e) => {
@@ -282,8 +285,22 @@ const FindBillAdvisor = () => {
                     <div class="col-2 ">
 
                         <div class="input-group mb-3">
-                            <input  type="date" class="form-control " name="billdate" onChange={handleChange} />
-
+                            {/* <input  type="date" class="form-control " name="billdate"   onChange={handleChange}  /> */}
+                            <DatePicker
+                            style={{textAlign: 'center'}}
+                            showIcon
+                            className="form-control"
+                            todayButton="Vandaag"
+                            // isClearable
+                            showYearDropdown
+                            dateFormat="dd/MM/yyyy"
+                            dropdownMode="select"
+                            selected={filterData.billdate}
+                            onChange={(date) => setFilterData((prevState) => ({
+                                ...prevState,
+                                billdate: date,
+                            }))}
+                                 />
                         </div>
 
                     </div>

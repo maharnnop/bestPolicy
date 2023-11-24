@@ -4,6 +4,9 @@ import Select from 'react-select';
 import axios from "axios";
 import jwt_decode from "jwt-decode";
 import { CenterPage } from "../StylesPages/AdminStyles";
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
+
 import {
   BrowserRouter,
   Routes,
@@ -802,7 +805,7 @@ const Agent = () => {
             <label class="form-label ">
               วันที่จดทะเบียน<span class="text-danger"> *</span>
             </label>
-            <input
+            {/* <input
 
               className="form-control"
               type="date"
@@ -810,20 +813,53 @@ const Agent = () => {
               name="taxActDate"
               defaultValue={entityData.taxActDate}
               onChange={changeEntity}
-            />
+            /> */}
+            <DatePicker
+                            style={{textAlign: 'center'}}
+                            showIcon
+                            required={entityData.personType === 'O' ? true : false}
+                            className="form-control"
+                            todayButton="Vandaag"
+                            // isClearable
+                            showYearDropdown
+                            dateFormat="dd/MM/yyyy"
+                            dropdownMode="select"
+                            selected={entityData.taxActDate}
+                            onChange={(date) => setEntityData((prevState) => ({
+                                ...prevState,
+                                taxActDate: date,
+                            }))}
+                                 />
+
           </div>
           <div class="col-2">
             <label class="form-label ">
               วันที่หมดอายุ<span class="text-danger"> *</span>
             </label>
-            <input
+            {/* <input
               className="form-control"
               type="date"
               required={entityData.personType === 'O' ? true : false}
               name="taxExpDate"
               defaultValue={entityData.taxExpDate}
               onChange={changeEntity}
-            />
+            /> */}
+            <DatePicker
+                            style={{textAlign: 'center'}}
+                            showIcon
+                            required={entityData.personType === 'O' ? true : false}
+                            className="form-control"
+                            todayButton="Vandaag"
+                            // isClearable
+                            showYearDropdown
+                            dateFormat="dd/MM/yyyy"
+                            dropdownMode="select"
+                            selected={entityData.taxExpDate}
+                            onChange={(date) => setEntityData((prevState) => ({
+                                ...prevState,
+                                taxExpDate: date,
+                            }))}
+                                 />
           </div>
 
         </div>

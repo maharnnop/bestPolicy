@@ -3,6 +3,8 @@ import PremInTable from "./PremInTable";
 import axios from "axios";
 import { useCookies } from "react-cookie";
 import Modal from 'react-bootstrap/Modal';
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
 
 const config = require("../../config.json");
 
@@ -326,13 +328,27 @@ const submitarpremin = async (e) => {
             dueDate
           </label>
           <div className="col-4 ">
-            <input
+            {/* <input
               className="form-control"
               type="date"
               name="dueDate"
               id="dueDate"
               onChange={handleChange}
-              />
+              /> */}
+              <DatePicker
+                            showIcon
+                            className="form-control"
+                            todayButton="Vandaag"
+                            // isClearable
+                            showYearDropdown
+                            dateFormat="dd/MM/yyyy"
+                            dropdownMode="select"
+                            selected={filterData.dueDate}
+                            onChange={(date) => setFilterData((prevState) => ({
+                                ...prevState,
+                                dueDate: date,
+                            }))}
+                                 />
           </div>
         </div>
               {/* cashierreceiveno */}
