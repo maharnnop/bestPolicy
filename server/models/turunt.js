@@ -20,6 +20,7 @@ module.exports = (sequelize, DataTypes) => {
   }, {
     sequelize,
     modelName: 'TURUNT',
+    schema: 'static_data'
   });
   return TURUNT;
 };

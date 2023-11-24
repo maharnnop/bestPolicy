@@ -6,40 +6,49 @@
   "expectedPackageFiles": [],
   "logs": [
     {
-      "code": "NU1301",
+      "code": "Undefined",
       "level": "Error",
-      "message": "Failed to retrieve information about 'ClosedXML' from remote source 'https://www.nuget.org/api/v2/FindPackagesById()?id='ClosedXML'&semVerLevel=2.0.0'.",
-      "libraryId": "ClosedXML"
+      "message": "Failed to download package 'Microsoft.EntityFrameworkCore.SqlServer.7.0.13' from 'https://www.nuget.org/api/v2/package/Microsoft.EntityFrameworkCore.SqlServer/7.0.13'.\r\nResponse status code does not indicate success: 403 (URLBlocked)."
     },
     {
-      "code": "NU1301",
+      "code": "Undefined",
       "level": "Error",
-      "message": "Failed to retrieve information about 'Npgsql.EntityFrameworkCore.PostgreSQL' from remote source 'https://www.nuget.org/api/v2/FindPackagesById()?id='Npgsql.EntityFrameworkCore.PostgreSQL'&semVerLevel=2.0.0'.",
-      "libraryId": "Npgsql.EntityFrameworkCore.PostgreSQL"
+      "message": "Failed to download package 'Npgsql.EntityFrameworkCore.PostgreSQL.7.0.11' from 'https://www.nuget.org/api/v2/package/Npgsql.EntityFrameworkCore.PostgreSQL/7.0.11'.\r\nResponse status code does not indicate success: 403 (URLBlocked)."
     },
     {
-      "code": "NU1301",
+      "code": "Undefined",
       "level": "Error",
-      "message": "Failed to retrieve information about 'Microsoft.EntityFrameworkCore.SqlServer' from remote source 'https://www.nuget.org/api/v2/FindPackagesById()?id='Microsoft.EntityFrameworkCore.SqlServer'&semVerLevel=2.0.0'.",
-      "libraryId": "Microsoft.EntityFrameworkCore.SqlServer"
+      "message": "Failed to download package 'Microsoft.Extensions.Configuration.Json.6.0.0' from 'https://www.nuget.org/api/v2/package/Microsoft.Extensions.Configuration.Json/6.0.0'.\r\nResponse status code does not indicate success: 403 (URLBlocked)."
     },
     {
-      "code": "NU1301",
+      "code": "Undefined",
       "level": "Error",
-      "message": "Failed to retrieve information about 'Microsoft.EntityFrameworkCore' from remote source 'https://www.nuget.org/api/v2/FindPackagesById()?id='Microsoft.EntityFrameworkCore'&semVerLevel=2.0.0'.",
-      "libraryId": "Microsoft.EntityFrameworkCore"
+      "message": "Failed to download package 'ClosedXML.0.102.1' from 'https://www.nuget.org/api/v2/package/ClosedXML/0.102.1'.\r\nResponse status code does not indicate success: 403 (URLBlocked)."
     },
     {
-      "code": "NU1301",
+      "code": "Undefined",
       "level": "Error",
-      "message": "Failed to retrieve information about 'Microsoft.AspNet.Cors' from remote source 'https://www.nuget.org/api/v2/FindPackagesById()?id='Microsoft.AspNet.Cors'&semVerLevel=2.0.0'.",
-      "libraryId": "Microsoft.AspNet.Cors"
+      "message": "Failed to download package 'EPPlus.System.Drawing.6.1.1' from 'https://www.nuget.org/api/v2/package/EPPlus.System.Drawing/6.1.1'.\r\nResponse status code does not indicate success: 403 (URLBlocked)."
     },
     {
-      "code": "NU1301",
+      "code": "Undefined",
       "level": "Error",
-      "message": "Failed to retrieve information about 'EPPlus' from remote source 'https://www.nuget.org/api/v2/FindPackagesById()?id='EPPlus'&semVerLevel=2.0.0'.",
-      "libraryId": "EPPlus"
+      "message": "Failed to download package 'Microsoft.EntityFrameworkCore.7.0.13' from 'https://www.nuget.org/api/v2/package/Microsoft.EntityFrameworkCore/7.0.13'.\r\nResponse status code does not indicate success: 403 (URLBlocked)."
+    },
+    {
+      "code": "Undefined",
+      "level": "Error",
+      "message": "Failed to download package 'Microsoft.AspNet.Cors.5.3.0' from 'https://www.nuget.org/api/v2/package/Microsoft.AspNet.Cors/5.3.0'.\r\nResponse status code does not indicate success: 403 (URLBlocked)."
+    },
+    {
+      "code": "Undefined",
+      "level": "Error",
+      "message": "Failed to download package 'System.Security.Cryptography.Pkcs.6.0.3' from 'https://www.nuget.org/api/v2/package/System.Security.Cryptography.Pkcs/6.0.3'.\r\nResponse status code does not indicate success: 403 (URLBlocked)."
+    },
+    {
+      "code": "Undefined",
+      "level": "Error",
+      "message": "Failed to download package 'EPPlus.Interfaces.6.1.1' from 'https://www.nuget.org/api/v2/package/EPPlus.Interfaces/6.1.1'.\r\nResponse status code does not indicate success: 403 (URLBlocked)."
     }
   ]
 }

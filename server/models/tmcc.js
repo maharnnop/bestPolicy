@@ -2,8 +2,11 @@
 const {
   Model
 } = require('sequelize');
+
+
 module.exports = (sequelize, DataTypes) => {
-  class MT_Brand extends Model {
+  
+  class tmcc extends Model {
     /**
      * Helper method for defining associations.
      * This method is not a part of Sequelize lifecycle.
@@ -13,16 +16,16 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
     }
   }
-  MT_Brand.init({
-    BRANDCODE: DataTypes.INTEGER,
-    BRANDNAME: DataTypes.STRING,
-    BRANDNAMETH: DataTypes.STRING,
-    sortno: DataTypes.INTEGER,
-    activeflag: DataTypes.STRING,
+  tmcc.init({
+    newvoluntarycode: DataTypes.STRING,
+    t_description: DataTypes.STRING,
+    compulsorycode: DataTypes.STRING,
+    active: DataTypes.STRING
   }, {
     sequelize,
-    modelName: 'MT_Brand',
-    schema: 'static_data'
+    modelName: 'tmcc',
+    schema: 'static_data',
+    tableName: 'tmcc'
   });
-  return MT_Brand;
+  return tmcc;
 };

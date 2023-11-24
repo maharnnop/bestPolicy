@@ -1,51 +1,42 @@
 'use strict';
+const { NOW } = require('sequelize');
+
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('MT_Models', {
+    await queryInterface.createTable('tmcc', {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      MODELCODE: {
-        allowNull: false,
-        type: Sequelize.INTEGER
-      },
-      BRANDCODE: {
-        allowNull: false,
-        type: Sequelize.INTEGER
-      },
-      
-      MODELNAMETH: {
+      newvoluntarycode: {
         type: Sequelize.STRING
       },
-      MODELNAME: {
+      t_description: {
         type: Sequelize.STRING
       },
-      
-      activeflag: {
-        defaultValue: 'Y',
+      compulsorycode: {
         type: Sequelize.STRING
       },
-      sortno: {
-        
-        type: Sequelize.INTEGER
+      active: {
+        defaultValue:'Y',
+        type: Sequelize.STRING
       },
       createdAt: {
-        defaultValue: new Date(),
+        defaultValue: NOW,
         allowNull: false,
         type: Sequelize.DATE
       },
       updatedAt: {
-        defaultValue: new Date(),
+        defaultValue: NOW,
         allowNull: false,
         type: Sequelize.DATE
       }
     },{ schema: 'static_data'});
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('MT_Models',{ schema: 'static_data'});
+    await queryInterface.dropTable('tmcc',{ schema: 'static_data'});
   }
 };

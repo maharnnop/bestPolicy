@@ -1,51 +1,44 @@
 'use strict';
+const { NOW } = require('sequelize');
+
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('MT_Models', {
+    await queryInterface.createTable('MT_Specs', {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER
       },
+      SPECCODE: {
+        type: Sequelize.INTEGER
+      },
       MODELCODE: {
-        allowNull: false,
         type: Sequelize.INTEGER
       },
-      BRANDCODE: {
-        allowNull: false,
-        type: Sequelize.INTEGER
-      },
-      
-      MODELNAMETH: {
+      SPECNAMETH: {
         type: Sequelize.STRING
       },
-      MODELNAME: {
+      SPECNAME: {
         type: Sequelize.STRING
       },
-      
       activeflag: {
-        defaultValue: 'Y',
         type: Sequelize.STRING
-      },
-      sortno: {
-        
-        type: Sequelize.INTEGER
       },
       createdAt: {
-        defaultValue: new Date(),
+        defaultValue: NOW,
         allowNull: false,
         type: Sequelize.DATE
       },
       updatedAt: {
-        defaultValue: new Date(),
+        defaultValue: NOW,
         allowNull: false,
         type: Sequelize.DATE
       }
     },{ schema: 'static_data'});
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('MT_Models',{ schema: 'static_data'});
+    await queryInterface.dropTable('MT_Specs',{ schema: 'static_data'});
   }
 };

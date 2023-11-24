@@ -5,10 +5,27 @@ const { Op } = require("sequelize");
 //handle index request
 const showAllCompany = (req,res) =>{
     Title.findAll({
-        attributes: ['TITLEID','TITLETHAIBEGIN','TITLETHAIEND','DHIPTITLE'],
+        attributes: ['TITLEID','TITLETHAIBEGIN','TITLETHAIEND','DHIPTITLE','seqno'],
         where: {
-            TITLETYPE: "O"
-        }
+            TITLETYPE: "O",
+            [Op.or]: [
+              {
+                TITLETHAIBEGIN: {
+                  [Op.not]:""
+                }
+              },
+              {
+                TITLETHAIEND: {
+                  [Op.not]:""
+                }
+              }
+            ]
+
+        },
+        order:[['seqno',  'ASC'],
+        ['TITLETHAIBEGIN',  'ASC'],
+        ['TITLETHAIEND',  'ASC'],
+       ]
     }).then((tambon)=>{
         res.json(tambon);
     })
@@ -18,8 +35,15 @@ const showAllPerson = (req, res) => {
   Title.findAll ({
     attributes: ['TITLEID','TITLETHAIBEGIN','TITLETHAIEND','DHIPTITLE','GENDER'],
     where: {
-        TITLETYPE: "P"
-    }
+        TITLETYPE: "P",
+        TITLETHAIBEGIN: {
+          [Op.not]:""
+        },
+    },
+    order:[['seqno',  'ASC'],
+    ['TITLETHAIBEGIN',  'ASC'],
+    ['TITLETHAIEND',  'ASC'],
+   ]
   }).then((tambon) => {
     res.json(tambon);
   });

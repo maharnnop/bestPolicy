@@ -1,6 +1,17 @@
 'use strict';
-const data  = require('../rawdata/MT_MODEL.json')
+
 /** @type {import('sequelize-cli').Migration} */
+const rawdata  = require('../rawdata/tmsp_202311240951.json')
+
+const data = rawdata.value.map(function(item) {
+  return {
+    "SPECCODE": item.speccode,
+    "MODELCODE": item.modelcode,
+    "SPECNAMETH": item.specnameth,
+    "SPECNAME": item.specname,
+    "activeflag": item.activeflag
+  };
+});
 module.exports = {
   async up (queryInterface, Sequelize) {
     /**
@@ -12,7 +23,7 @@ module.exports = {
      *   isBetaMember: false
      * }], {});
     */
-    await   queryInterface.bulkInsert({ tableName: "MT_Models", schema: 'static_data' },data.value,{});
+    await   queryInterface.bulkInsert({ tableName: "MT_Specs", schema: 'static_data' },data,{});
   },
 
   async down (queryInterface, Sequelize) {
@@ -22,6 +33,7 @@ module.exports = {
      * Example:
      * await queryInterface.bulkDelete('People', null, {});
      */
-    await queryInterface.bulkDelete({ tableName: "MT_Models", schema: 'static_data' },null,{});
+    await queryInterface.bulkDelete({ tableName: "MT_Specs", schema: 'static_data' }, null, {});
+
   }
 };

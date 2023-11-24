@@ -89,6 +89,29 @@ const findTransaction = async (req,res) => {
 
 const findPolicyByPreminDue = async (req,res) => {
 
+  let cond =''
+  if(req.body.insurerCode !== null && req.body.insurerCode !== ''){
+    cond = `${cond} and t."insurerCode" = '${req.body.insurerCode}'`
+  }
+  if(req.body.agentCode !== null && req.body.agentCode !== ''){
+    cond = `${cond} and t."agentCode"  = '${req.body.agentCode}'`
+  }
+  if(req.body.dueDate !== null && req.body.dueDate !== ''){
+    cond = `${cond} and t."dueDate" <= '${req.body.dueDate}'`
+  }
+  if(req.body.policyNoStart !== null && req.body.policyNoStart !== ''){
+    cond = `${cond} and t."policyNo" >= '${req.body.policyNoStart}'`
+  }
+  if(req.body.policyNoEnd !== null && req.body.policyNoEnd !== ''){
+    cond = `${cond} and t."policyNo" <= '${req.body.policyNoEnd}'`
+  }
+  if(req.body.createdDateStart !== null && req.body.createdDateStart !== ''){
+    cond = `${cond} and p."createdAt" >= '${req.body.createdDateStart}'`
+  }
+  if(req.body.createdDateEnd !== null && req.body.createdDateEnd !== ''){
+    cond = `${cond} and p."createdAt" <= '${req.body.createdDateEnd}'`
+  }
+
     const records = await sequelize.query(
       `select t."agentCode", t."insurerCode",  t."withheld" ,
       t."dueDate", t."policyNo", t."endorseNo", j."invoiceNo", t."seqNo" ,
@@ -104,12 +127,13 @@ const findPolicyByPreminDue = async (req,res) => {
       join static_data."Policies" p on p.id = j.polid
      
       where "transType" = 'PREM-IN' 
-      and txtype2 = '1' and rprefdate isnull and t."agentCode" = :agentCode and t."insurerCode" = :insurerCode and t.billadvisorno isnull 
-      and "dueDate"<=:dueDate  and (case when :policyNoAll then true else t."policyNo" between :policyNoStart and :policyNoStart end)
-      and j.installmenttype ='A'`,
+      and txtype2 = '1' and rprefdate isnull 
+      and t.billadvisorno isnull 
+      and j.installmenttype ='A'
+      ${cond}`,
           {
             replacements: {
-              agentCode:req.body.agentCode,
+              // agentCode:req.body.agentCode,
               insurerCode:req.body.insurerCode,
               dueDate: req.body.dueDate,
               policyNoStart: req.body.policyNoStart,

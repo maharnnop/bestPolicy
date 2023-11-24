@@ -1,0 +1,207 @@
+{
+	"value": [
+	{
+		"newvoluntarycode" : "110  ",
+		"t_description" : "รถยนต์นั่ง                                        "
+	},
+	{
+		"newvoluntarycode" : "120  ",
+		"t_description" : "รถยนต์นั่ง                                        "
+	},
+	{
+		"newvoluntarycode" : "210  ",
+		"t_description" : "รถยนต์โดยสาร                                      "
+	},
+	{
+		"newvoluntarycode" : "220  ",
+		"t_description" : "รถยนต์โดยสาร                                      "
+	},
+	{
+		"newvoluntarycode" : "230  ",
+		"t_description" : "รถยนต์โดยสาร                                      "
+	},
+	{
+		"newvoluntarycode" : "320  ",
+		"t_description" : "รถยนต์บรรทุก                                      "
+	},
+	{
+		"newvoluntarycode" : "340  ",
+		"t_description" : "รถยนต์บรรทุก                                      "
+	},
+	{
+		"newvoluntarycode" : "420  ",
+		"t_description" : "รถยนต์ลากจูง                                      "
+	},
+	{
+		"newvoluntarycode" : "520  ",
+		"t_description" : "รถพ่วง                                            "
+	},
+	{
+		"newvoluntarycode" : "540  ",
+		"t_description" : "รถพ่วง                                            "
+	},
+	{
+		"newvoluntarycode" : "610  ",
+		"t_description" : "รถจักรยานยนต์                                     "
+	},
+	{
+		"newvoluntarycode" : "620  ",
+		"t_description" : "รถจักรยานยนต์                                     "
+	},
+	{
+		"newvoluntarycode" : "730  ",
+		"t_description" : "รถยนต์นั่งรับจ้างสาธารณะ                          "
+	},
+	{
+		"newvoluntarycode" : "801  ",
+		"t_description" : "รถยนต์ป้ายแดง                                     "
+	},
+	{
+		"newvoluntarycode" : "802  ",
+		"t_description" : "รถพยาบาล                                          "
+	},
+	{
+		"newvoluntarycode" : "803  ",
+		"t_description" : "รถดับเพลิง                                        "
+	},
+	{
+		"newvoluntarycode" : "804  ",
+		"t_description" : "รถใช้ในการเกษตร                                   "
+	},
+	{
+		"newvoluntarycode" : "805  ",
+		"t_description" : "รถใช้ในการก่อสร้าง                                "
+	},
+	{
+		"newvoluntarycode" : "806  ",
+		"t_description" : "รถอื่นๆ                                           "
+	},
+	{
+		"newvoluntarycode" : "630  ",
+		"t_description" : "รถจักรยานยนต์                                     "
+	},
+	{
+		"newvoluntarycode" : "310  ",
+		"t_description" : "รถยนต์บรรทุก                                      "
+	},
+	{
+		"newvoluntarycode" : "110E ",
+		"t_description" : "รถยนต์นั่ง                                        "
+	},
+	{
+		"newvoluntarycode" : "120E ",
+		"t_description" : "รถยนต์นั่ง                                        "
+	},
+	{
+		"newvoluntarycode" : "210E ",
+		"t_description" : "รถยนต์โดยสาร                                      "
+	},
+	{
+		"newvoluntarycode" : "220E ",
+		"t_description" : "รถยนต์โดยสาร                                      "
+	},
+	{
+		"newvoluntarycode" : "230E ",
+		"t_description" : "รถยนต์โดยสาร                                      "
+	},
+	{
+		"newvoluntarycode" : "310E ",
+		"t_description" : "รถยนต์บรรทุก                                      "
+	},
+	{
+		"newvoluntarycode" : "320E ",
+		"t_description" : "รถยนต์บรรทุก                                      "
+	},
+	{
+		"newvoluntarycode" : "327E ",
+		"t_description" : "รถยนต์บรรทุก                                      "
+	},
+	{
+		"newvoluntarycode" : "340E ",
+		"t_description" : "รถยนต์บรรทุก                                      "
+	},
+	{
+		"newvoluntarycode" : "347E ",
+		"t_description" : "รถยนต์บรรทุก                                      "
+	},
+	{
+		"newvoluntarycode" : "420E ",
+		"t_description" : "รถยนต์ลากจูง                                      "
+	},
+	{
+		"newvoluntarycode" : "610E ",
+		"t_description" : "รถจักรยานยนต์                                     "
+	},
+	{
+		"newvoluntarycode" : "620E ",
+		"t_description" : "รถจักรยานยนต์                                     "
+	},
+	{
+		"newvoluntarycode" : "630E ",
+		"t_description" : "รถจักรยานยนต์                                     "
+	},
+	{
+		"newvoluntarycode" : "730E ",
+		"t_description" : "รถยนต์นั่งรับจ้างสาธารณะ                          "
+	},
+	{
+		"newvoluntarycode" : "801E ",
+		"t_description" : "รถยนต์ป้ายแดง                                     "
+	},
+	{
+		"newvoluntarycode" : "802E ",
+		"t_description" : "รถพยาบาล                                          "
+	},
+	{
+		"newvoluntarycode" : "803E ",
+		"t_description" : "รถดับเพลิง                                        "
+	},
+	{
+		"newvoluntarycode" : "804E ",
+		"t_description" : "รถใช้ในการเกษตร                                   "
+	},
+	{
+		"newvoluntarycode" : "805E ",
+		"t_description" : "รถใช้ในการก่อสร้าง                                "
+	},
+	{
+		"newvoluntarycode" : "806E ",
+		"t_description" : "รถอื่นๆ                                           "
+	},
+	{
+		"newvoluntarycode" : "327  ",
+		"t_description" : "รถยนต์บรรทุก                                      "
+	},
+	{
+		"newvoluntarycode" : "347  ",
+		"t_description" : "รถยนต์บรรทุก                                      "
+	},
+	{
+		"newvoluntarycode" : "110D ",
+		"t_description" : "รถยนต์นั่ง                                        "
+	},
+	{
+		"newvoluntarycode" : "210D ",
+		"t_description" : "รถยนต์โดยสาร                                      "
+	},
+	{
+		"newvoluntarycode" : "320D ",
+		"t_description" : "รถยนต์บรรทุก                                      "
+	},
+	{
+		"newvoluntarycode" : "ALLD ",
+		"t_description" : "รถยนต์นั่ง,รถยนต์โดยสาร,รถยนต์บรรทุก              "
+	},
+	{
+		"newvoluntarycode" : "120D ",
+		"t_description" : "รถยนต์นั่ง                                        "
+	},
+	{
+		"newvoluntarycode" : "220D ",
+		"t_description" : "รถยนต์โดยสาร                                      "
+	},
+	{
+		"newvoluntarycode" : "340D ",
+		"t_description" : "รถยนต์บรรทุก                                      "
+	}
+]}

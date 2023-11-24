@@ -18,7 +18,7 @@ module.exports = (sequelize, DataTypes) => {
     TITLETHAIBEGIN: DataTypes.STRING,
     TITLETHAIEND: DataTypes.STRING,
     TITLETYPE: DataTypes.STRING,
-   
+    seqno:DataTypes.INTEGER,
     DHIPTITLE: DataTypes.INTEGER,
     GENDER: DataTypes.STRING
   }, {

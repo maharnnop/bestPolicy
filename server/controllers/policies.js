@@ -522,7 +522,10 @@ const getPolicyList = async (req, res) => {
     cond = `${cond} and pol."insurerCode" = '${req.body.insurerCode}'`
   }
   if(req.body.policyNo !== null && req.body.policyNo !== ''){
-    cond = `${cond} and pol."policyNo" = '${req.body.policyNo}'`
+    cond = `${cond} and pol."policyNo" like '%${req.body.policyNo}%'`
+  }
+  if(req.body.applicationNo !== null && req.body.applicationNo !== ''){
+    cond = `${cond} and pol."applicationNo" like '%${req.body.applicationNo}%'`
   }
   if(req.body.insureID !== null && req.body.insureID !== ''){
     cond = `${cond} and pol."insureID" = ${req.body.insureID}`
@@ -534,26 +537,28 @@ const getPolicyList = async (req, res) => {
     cond = `${cond} and  pol."actDate" between '${req.body.effdate_start}' and '${req.body.effdate_end}'`
   }
   if(req.body.createusercode !== null && req.body.createusercode !== ''){
-    cond = `${cond} and pol."createusercode" = '${req.body.createusercode}'`
+    cond = `${cond} and pol."createusercode" like '%${req.body.createusercode}%'`
   }
   if(req.body.agentCode !== null && req.body.agentCode !== ''){
-    cond = `${cond} and pol."agentCode" = '${req.body.agentCode}'`
+    cond = `${cond} and pol."agentCode" like '%${req.body.agentCode}%'`
   }
   if(req.body.carRegisNo !== null && req.body.carRegisNo !== ''){
-    cond = `${cond} and mt."licenseNo" = '${req.body.carRegisNo}'`
+    cond = `${cond} and mt."licenseNo" like '%${req.body.carRegisNo}%'`
   }
   if(req.body.chassisNo !== null && req.body.chassisNo !== ''){
-    cond = `${cond} and mt."chassisNo" = '${req.body.chassisNo}'`
+    cond = `${cond} and mt."chassisNo" like '%${req.body.chassisNo}%'`
   }
   if(req.body.provinceID !== null && req.body.provinceID !== ''){
     cond = `${cond} and mt."motorprovinceID" = ${req.body.provinceID}`
   }
+  
   const records = await sequelize.query(
     `select *, pol."createdAt" as "createdAt", pol."updatedAt" as "updatedAt"  
     from static_data."Policies" pol 
     
     left join static_data."Motors" mt on mt.id = pol."itemList"
-    where ${cond}`,
+    where ${cond}
+    order by pol."applicationNo" ASC `,
     {
      
       type: QueryTypes.SELECT

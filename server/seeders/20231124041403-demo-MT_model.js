@@ -1,12 +1,21 @@
 'use strict';
-const rawdata  = require('../rawdata/tmbr_202311240936.json')
+
 /** @type {import('sequelize-cli').Migration} */
+const rawdata  = require('../rawdata/tmmd_202311240949.json')
 const data = rawdata.value.map(function(item) {
+if (item.modelname !== null) {
+  item.modelname = item.modelname.trim()
+}
+if (item.modelnameth !== null) {
+  item.modelnameth = item.modelnameth.trim()
+}
+
   return {
+    "MODELCODE": item.modelcode,
     "BRANDCODE": item.brandcode,
-    "BRANDNAMETH": item.brandnameth.trim(),
-    "BRANDNAME": item.brandname.trim(),
-    "activeflag": item.activeflag.trim()
+    "MODELNAME": item.modelname,
+    "MODELNAMETH": item.modelnameth,
+    "activeflag": item.activeflag
   };
 });
 module.exports = {
@@ -20,7 +29,7 @@ module.exports = {
      *   isBetaMember: false
      * }], {});
     */
-    await   queryInterface.bulkInsert({ tableName: "MT_Brands", schema: 'static_data' },data,{});
+    await   queryInterface.bulkInsert({ tableName: "MT_Models", schema: 'static_data' },data,{});
   },
 
   async down (queryInterface, Sequelize) {
@@ -30,6 +39,6 @@ module.exports = {
      * Example:
      * await queryInterface.bulkDelete('People', null, {});
      */
-    await queryInterface.bulkDelete({ tableName: "MT_Brands", schema: 'static_data' },null,{});
+    await queryInterface.bulkDelete({ tableName: "MT_Models", schema: 'static_data' }, null, {});
   }
 };

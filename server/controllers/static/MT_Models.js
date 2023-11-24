@@ -17,7 +17,11 @@ const sequelize = new Sequelize(process.env.DB_NAME, process.env.DB_USERNAME, pr
 
 const showAll = (req,res) =>{
     MT_Model.findAll({
-      attributes: ['MODELCODE','BRANDCODE','MARKETTHAINAME','MARKETENGNAME']
+      attributes: ['MODELCODE','BRANDCODE','MODELNAMETH','MODELNAME'],
+      order:[['MODELNAME',  'ASC']],
+      where: {
+        'activeflag' : 'Y'
+      }
     }).then((models)=>{
         res.json(models);
     })
@@ -26,7 +30,12 @@ const showAll = (req,res) =>{
 const showAllinBrand = (req, res) => {
 
   sequelize.query(
-    'select * from static_data."MT_Models" m join static_data."MT_Brands" b on b."BRANDCODE" = m."BRANDCODE" where b."BRANDNAME" = :brandname ',
+    `select * from static_data."MT_Models" m  
+    where m."BRANDCODE" =(select "BRANDCODE" from static_data."MT_Brands" b where b."BRANDNAME" = :brandname and b.activeflag ='Y' )
+    and m.activeflag ='Y'
+    and m."MODELNAMETH" is not null
+    and m."MODELNAME" is not null
+    order by m."MODELNAMETH" ASC`,
     {
           replacements: {
             brandname:req.body.brandname,
@@ -42,9 +51,9 @@ const showAllinBrand = (req, res) => {
 const searchByinModel = (req,res)=>{
   if (req.params.para === 'EN') {
     MT_Model.findAll({
-      attributes: ['MODELCODE','BRANDCODE','MARKETTHAINAME','MARKETENGNAME'],
+      attributes: ['MODELCODE','BRANDCODE','MODELNAMETH','MODELNAME'],
       where: {
-        MARKETENGNAME :{
+        MODELNAME :{
           [Op.like]:'%'+ req.params.value +'%'
         }
       }
@@ -53,9 +62,9 @@ const searchByinModel = (req,res)=>{
     });
   } else if (req.params.para === 'TH') {
     MT_Brand.findAll({
-      attributes: ['MODELCODE','BRANDCODE','MARKETTHAINAME','MARKETENGNAME'],
+      attributes: ['MODELCODE','BRANDCODE','MODELNAMETH','MODELNAME'],
       where: {
-        MARKETTHAINAME :{
+        MODELNAMETH :{
           [Op.like]:'%'+ req.params.value +'%'
         }
       }
@@ -65,12 +74,32 @@ const searchByinModel = (req,res)=>{
   }
   
 }
+const showAllSpecinModel = (req, res) => {
 
+  sequelize.query(
+    `select * from static_data."MT_Specs" s
+    where s."MODELCODE"  =(select "MODELCODE"  from static_data."MT_Models" m  where m."MODELNAME"  = :modelname and m.activeflag ='Y' )
+    and s.activeflag ='Y'
+    and s."SPECNAMETH"  is not null
+    and s."SPECNAME"  is not null
+    order by s."SPECNAMETH"  asc `,
+    {
+          replacements: {
+            modelname:req.body.modelname,
+          },
+          type: QueryTypes.SELECT
+        }
+      ).then((tambon) => {
+    res.json(tambon);
+  });
+   
+};
 
 module.exports = {
   showAll,
   searchByinModel,
-  showAllinBrand
+  showAllinBrand,
+  showAllSpecinModel
   // postCar,
   // removeCar,
   // editCar,

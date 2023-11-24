@@ -26,6 +26,9 @@ module.exports = {
       DHIPTITLE: {
         type: Sequelize.INTEGER
       },
+      seqno: {
+        type: Sequelize.INTEGER
+      },
       GENDER: {
         type: Sequelize.STRING
       },

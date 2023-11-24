@@ -26,8 +26,12 @@ module.exports = {
       DHIPBRANDCODE: {
         type: Sequelize.STRING
       },
-      BRAND_SORT: {
+      sortno: {
         type: Sequelize.INTEGER
+      },
+      activeflag: {
+        defaultValue: 'Y',
+        type: Sequelize.STRING
       },
       createdAt: {
         defaultValue: new Date(),

@@ -1,0 +1,4251 @@
+{
+"value": [
+	{
+		"brandcode" : 6,
+		"brandname" : "DAIHATSU            ",
+		"brandnameth" : "DAIHATSU            ",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 7,
+		"brandname" : "FIAT                ",
+		"brandnameth" : "FIAT                ",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 8,
+		"brandname" : "FORD                ",
+		"brandnameth" : "FORD                ",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 9,
+		"brandname" : "HOLDEN              ",
+		"brandnameth" : "HOLDEN              ",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 12,
+		"brandname" : "HYUNDAI             ",
+		"brandnameth" : "HYUNDAI             ",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 13,
+		"brandname" : "ISUZU               ",
+		"brandnameth" : "ISUZU               ",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 14,
+		"brandname" : "JAGUAR              ",
+		"brandnameth" : "JAGUAR              ",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 15,
+		"brandname" : "KIA                 ",
+		"brandnameth" : "KIA                 ",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 16,
+		"brandname" : "MAZDA               ",
+		"brandnameth" : "MAZDA               ",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 18,
+		"brandname" : "MITSUBISHI          ",
+		"brandnameth" : "MITSUBISHI          ",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 19,
+		"brandname" : "NISSAN              ",
+		"brandnameth" : "NISSAN              ",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 20,
+		"brandname" : "OPEL                ",
+		"brandnameth" : "OPEL                ",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 21,
+		"brandname" : "PEUGEOT             ",
+		"brandnameth" : "PEUGEOT             ",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 22,
+		"brandname" : "SAAB                ",
+		"brandnameth" : "SAAB                ",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 23,
+		"brandname" : "SEAT                ",
+		"brandnameth" : "SEAT                ",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 24,
+		"brandname" : "SUBARU              ",
+		"brandnameth" : "SUBARU              ",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 25,
+		"brandname" : "SUZUKI              ",
+		"brandnameth" : "SUZUKI              ",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 26,
+		"brandname" : "TOYOTA              ",
+		"brandnameth" : "TOYOTA              ",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 28,
+		"brandname" : "VOLVO               ",
+		"brandnameth" : "VOLVO               ",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 29,
+		"brandname" : "JEEP                ",
+		"brandnameth" : "JEEP                ",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 30,
+		"brandname" : "YAMAHA              ",
+		"brandnameth" : "YAMAHA              ",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 31,
+		"brandname" : "LEXUS               ",
+		"brandnameth" : "LEXUS               ",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 32,
+		"brandname" : "ROVER               ",
+		"brandnameth" : "ROVER               ",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 33,
+		"brandname" : "KAWASAKI            ",
+		"brandnameth" : "KAWASAKI            ",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 35,
+		"brandname" : "KATO                ",
+		"brandnameth" : "KATO                ",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 36,
+		"brandname" : "DATSUN              ",
+		"brandnameth" : "DATSUN              ",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 37,
+		"brandname" : "TADANO              ",
+		"brandnameth" : "TADANO              ",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 38,
+		"brandname" : "DAIMLER             ",
+		"brandnameth" : "DAIMLER             ",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 39,
+		"brandname" : "HINO                ",
+		"brandnameth" : "HINO                ",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 42,
+		"brandname" : "SCANIA              ",
+		"brandnameth" : "SCANIA              ",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 47,
+		"brandname" : "SUMITOMO            ",
+		"brandnameth" : "SUMITOMO            ",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 49,
+		"brandname" : "PORSCHE             ",
+		"brandnameth" : "PORSCHE             ",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 50,
+		"brandname" : "TRAILER             ",
+		"brandnameth" : "TRAILER             ",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 52,
+		"brandname" : "RENAULT             ",
+		"brandnameth" : "RENAULT             ",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 53,
+		"brandname" : "VOLKSWAGEN          ",
+		"brandnameth" : "VOLKSWAGEN          ",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 54,
+		"brandname" : "MASERATI            ",
+		"brandnameth" : "MASERATI            ",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 55,
+		"brandname" : "SSANGYONG           ",
+		"brandnameth" : "SSANGYONG           ",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 57,
+		"brandname" : "FERRARI             ",
+		"brandnameth" : "FERRARI             ",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 64,
+		"brandname" : "TIGER               ",
+		"brandnameth" : "TIGER               ",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 67,
+		"brandname" : "SKODA               ",
+		"brandnameth" : "SKODA               ",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 69,
+		"brandname" : "ALFA                ",
+		"brandnameth" : "ALFA                ",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 71,
+		"brandname" : "AUSTIN              ",
+		"brandnameth" : "AUSTIN              ",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 72,
+		"brandname" : "DYNAPAC             ",
+		"brandnameth" : "DYNAPAC             ",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 73,
+		"brandname" : "SAKAI               ",
+		"brandnameth" : "SAKAI               ",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 74,
+		"brandname" : "JCB                 ",
+		"brandnameth" : "JCB                 ",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 79,
+		"brandname" : "CHEETAH             ",
+		"brandnameth" : "CHEETAH             ",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 81,
+		"brandname" : "VESPA               ",
+		"brandnameth" : "VESPA               ",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 86,
+		"brandname" : "MORRIS              ",
+		"brandnameth" : "MORRIS              ",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 87,
+		"brandname" : "KOMATSU             ",
+		"brandnameth" : "KOMATSU             ",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 88,
+		"brandname" : "CADILLAC            ",
+		"brandnameth" : "CADILLAC            ",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 89,
+		"brandname" : "LANCIA              ",
+		"brandnameth" : "LANCIA              ",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 90,
+		"brandname" : "HARLEY DAVIDSON     ",
+		"brandnameth" : "HARLEY DAVIDSON     ",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 91,
+		"brandname" : "TRACTOR             ",
+		"brandnameth" : "TRACTOR             ",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 95,
+		"brandname" : "FUSO                ",
+		"brandnameth" : "FUSO                ",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 103,
+		"brandname" : "LOTUS               ",
+		"brandnameth" : "LOTUS               ",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 105,
+		"brandname" : "PERODUA             ",
+		"brandnameth" : "PERODUA             ",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 106,
+		"brandname" : "DODGE               ",
+		"brandnameth" : "DODGE               ",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 107,
+		"brandname" : "KOBELCO             ",
+		"brandnameth" : "KOBELCO             ",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 109,
+		"brandname" : "SAMSUNG             ",
+		"brandnameth" : "SAMSUNG             ",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 3,
+		"brandname" : "CHRYSLER            ",
+		"brandnameth" : "CHRYSLER            ",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 4,
+		"brandname" : "CITROEN             ",
+		"brandnameth" : "CITROEN             ",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 58,
+		"brandname" : "PIAGGIO             ",
+		"brandnameth" : "PIAGGIO             ",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 121,
+		"brandname" : "ALLUS               ",
+		"brandnameth" : "ALLUS               ",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 122,
+		"brandname" : "ASTON MARTIN        ",
+		"brandnameth" : "ASTON MARTIN        ",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 130,
+		"brandname" : "BAJAJ               ",
+		"brandnameth" : "BAJAJ               ",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 134,
+		"brandname" : "BENTLEY             ",
+		"brandnameth" : "BENTLEY             ",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 135,
+		"brandname" : "BOMAG               ",
+		"brandnameth" : "BOMAG               ",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 139,
+		"brandname" : "CAGIVA              ",
+		"brandnameth" : "CAGIVA              ",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 140,
+		"brandname" : "CATERPILLAR         ",
+		"brandnameth" : "CATERPILLAR         ",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 141,
+		"brandname" : "CANTER              ",
+		"brandnameth" : "CANTER              ",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 143,
+		"brandname" : "CASE                ",
+		"brandnameth" : "CASE                ",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 173,
+		"brandname" : "DEUTZ               ",
+		"brandnameth" : "DEUTZ               ",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 178,
+		"brandname" : "DONGFENG            ",
+		"brandnameth" : "DONGFENG            ",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 188,
+		"brandname" : "อีแต๋น              ",
+		"brandnameth" : "อีแต๋น              ",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 198,
+		"brandname" : "FOCANE              ",
+		"brandnameth" : "FOCANE              ",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 217,
+		"brandname" : "GROVE               ",
+		"brandnameth" : "GROVE               ",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 218,
+		"brandname" : "HALLA               ",
+		"brandnameth" : "HALLA               ",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 222,
+		"brandname" : "HUMMER              ",
+		"brandnameth" : "HUMMER              ",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 231,
+		"brandname" : "INGERSOLL RAND      ",
+		"brandnameth" : "INGERSOLL RAND      ",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 232,
+		"brandname" : "INTERNATIONAL       ",
+		"brandnameth" : "INTERNATIONAL       ",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 233,
+		"brandname" : "IVECO               ",
+		"brandnameth" : "IVECO               ",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 238,
+		"brandname" : "KALMAR              ",
+		"brandnameth" : "KALMAR              ",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 242,
+		"brandname" : "รถกึ่งพ่วง          ",
+		"brandnameth" : "รถกึ่งพ่วง          ",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 245,
+		"brandname" : "KUBOTA              ",
+		"brandnameth" : "KUBOTA              ",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 272,
+		"brandname" : "MAN                 ",
+		"brandnameth" : "MAN                 ",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 289,
+		"brandname" : "OSHKOSH             ",
+		"brandnameth" : "OSHKOSH             ",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 292,
+		"brandname" : "P & H               ",
+		"brandnameth" : "P & H               ",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 294,
+		"brandname" : "PANUS               ",
+		"brandnameth" : "PANUS               ",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 306,
+		"brandname" : "รถพ่วง              ",
+		"brandnameth" : "รถพ่วง              ",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 307,
+		"brandname" : "UD                  ",
+		"brandnameth" : "UD                  ",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 311,
+		"brandname" : "WATANABE            ",
+		"brandnameth" : "WATANABE            ",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 313,
+		"brandname" : "WILLYS              ",
+		"brandnameth" : "WILLYS              ",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 314,
+		"brandname" : "WIRTGEN             ",
+		"brandnameth" : "WIRTGEN             ",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 332,
+		"brandname" : "REO                 ",
+		"brandnameth" : "REO                 ",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 334,
+		"brandname" : "ROLLS-ROYCE         ",
+		"brandnameth" : "ROLLS-ROYCE         ",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 368,
+		"brandname" : "TATA                ",
+		"brandnameth" : "TATA                ",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 381,
+		"brandname" : "VIBRATING ROLLER    ",
+		"brandnameth" : "VIBRATING ROLLER    ",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 383,
+		"brandname" : "VIBROMAX            ",
+		"brandnameth" : "VIBROMAX            ",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 386,
+		"brandname" : "V.M.C               ",
+		"brandnameth" : "V.M.C               ",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 391,
+		"brandname" : "TR                  ",
+		"brandnameth" : "TR                  ",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 396,
+		"brandname" : "DUCATI              ",
+		"brandnameth" : "DUCATI              ",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 398,
+		"brandname" : "GARUDA              ",
+		"brandnameth" : "GARUDA              ",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 401,
+		"brandname" : "ROSENBAUER          ",
+		"brandnameth" : "ROSENBAUER          ",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 405,
+		"brandname" : "กึ่งพ่วง            ",
+		"brandnameth" : "กึ่งพ่วง            ",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 412,
+		"brandname" : "WOLSELEY            ",
+		"brandnameth" : "WOLSELEY            ",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 421,
+		"brandname" : "BITELLI             ",
+		"brandnameth" : "BITELLI             ",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 423,
+		"brandname" : "GM                  ",
+		"brandnameth" : "GM                  ",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 427,
+		"brandname" : "LAMBRETTA           ",
+		"brandnameth" : "LAMBRETTA           ",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 428,
+		"brandname" : "CMI                 ",
+		"brandnameth" : "CMI                 ",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 430,
+		"brandname" : "DISTAR              ",
+		"brandnameth" : "DISTAR              ",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 432,
+		"brandname" : "MASSCYFERCUSON      ",
+		"brandnameth" : "MASSCYFERCUSON      ",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 436,
+		"brandname" : "HAMM                ",
+		"brandnameth" : "HAMM                ",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 437,
+		"brandname" : "NEW HOLLAND         ",
+		"brandnameth" : "NEW HOLLAND         ",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 450,
+		"brandname" : "PLATINUM            ",
+		"brandnameth" : "PLATINUM            ",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 452,
+		"brandname" : "LAND ROVER          ",
+		"brandnameth" : "LAND ROVER          ",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 458,
+		"brandname" : "EVT                 ",
+		"brandnameth" : "EVT                 ",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 462,
+		"brandname" : "MACK                ",
+		"brandnameth" : "MACK                ",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 483,
+		"brandname" : "LIFAN               ",
+		"brandnameth" : "LIFAN               ",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 484,
+		"brandname" : "TEREX               ",
+		"brandnameth" : "TEREX               ",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 496,
+		"brandname" : "STEYR               ",
+		"brandnameth" : "STEYR               ",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 499,
+		"brandname" : "YANMAR              ",
+		"brandnameth" : "YANMAR              ",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 505,
+		"brandname" : "WULING              ",
+		"brandnameth" : "WULING              ",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 521,
+		"brandname" : "GOLDEN DRAGON       ",
+		"brandnameth" : "GOLDEN DRAGON       ",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 522,
+		"brandname" : "HKMCO               ",
+		"brandnameth" : "HKMCO               ",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 524,
+		"brandname" : "RYUKA               ",
+		"brandnameth" : "RYUKA               ",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 529,
+		"brandname" : "SACHS               ",
+		"brandnameth" : "SACHS               ",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 530,
+		"brandname" : "TUK TUK             ",
+		"brandnameth" : "TUK TUK             ",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 544,
+		"brandname" : "HITACHI             ",
+		"brandnameth" : "HITACHI             ",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 550,
+		"brandname" : "THAILAND            ",
+		"brandnameth" : "THAILAND            ",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 557,
+		"brandname" : "THAIRUNG            ",
+		"brandnameth" : "THAIRUNG            ",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 560,
+		"brandname" : "FOTON               ",
+		"brandnameth" : "FOTON               ",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 568,
+		"brandname" : "NAZA                ",
+		"brandnameth" : "NAZA                ",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 570,
+		"brandname" : "STALLION            ",
+		"brandnameth" : "STALLION            ",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 571,
+		"brandname" : "DFM                 ",
+		"brandnameth" : "DFM                 ",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 625,
+		"brandname" : "SAMMITR             ",
+		"brandnameth" : "SAMMITR             ",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 592,
+		"brandname" : "CHERDCHAI           ",
+		"brandnameth" : "CHERDCHAI           ",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 601,
+		"brandname" : "DOOSAN              ",
+		"brandnameth" : "DOOSAN              ",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 602,
+		"brandname" : "CHAMP               ",
+		"brandnameth" : "CHAMP               ",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 603,
+		"brandname" : "TPM                 ",
+		"brandnameth" : "TPM                 ",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 606,
+		"brandname" : "BENELLI             ",
+		"brandnameth" : "BENELLI             ",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 627,
+		"brandname" : "ZHONGTONG           ",
+		"brandnameth" : "ZHONGTONG           ",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 610,
+		"brandname" : "HIDROMEK            ",
+		"brandnameth" : "HIDROMEK            ",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 615,
+		"brandname" : "CAMC                ",
+		"brandnameth" : "CAMC                ",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 616,
+		"brandname" : "EUROTRAC            ",
+		"brandnameth" : "EUROTRAC            ",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 618,
+		"brandname" : "MITSUOKA            ",
+		"brandnameth" : "MITSUOKA            ",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 629,
+		"brandname" : "SHACMAN             ",
+		"brandnameth" : "SHACMAN             ",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 619,
+		"brandname" : "KING LONG           ",
+		"brandnameth" : "KING LONG           ",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 620,
+		"brandname" : "CIMC                ",
+		"brandnameth" : "CIMC                ",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 621,
+		"brandname" : "ZOOMLION            ",
+		"brandnameth" : "ZOOMLION            ",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 622,
+		"brandname" : "SUNLONG             ",
+		"brandnameth" : "SUNLONG             ",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 632,
+		"brandname" : "JOYLONG             ",
+		"brandnameth" : "JOYLONG             ",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 635,
+		"brandname" : "HOWO                ",
+		"brandnameth" : "HOWO                ",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 636,
+		"brandname" : "SOKON               ",
+		"brandnameth" : "SOKON               ",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 637,
+		"brandname" : "DEVA                ",
+		"brandnameth" : "DEVA                ",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 638,
+		"brandname" : "BITTLLI             ",
+		"brandnameth" : "BITTLLI             ",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 639,
+		"brandname" : "DAYUN               ",
+		"brandnameth" : "DAYUN               ",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 647,
+		"brandname" : "MCLAREN             ",
+		"brandnameth" : "MCLAREN             ",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 649,
+		"brandname" : "MG                  ",
+		"brandnameth" : "MG                  ",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 650,
+		"brandname" : "NEWHOLLAND          ",
+		"brandnameth" : "NEWHOLLAND          ",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 653,
+		"brandname" : "JINBEI              ",
+		"brandnameth" : "JINBEI              ",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 657,
+		"brandname" : "ALOLUS              ",
+		"brandnameth" : "ALOLUS              ",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 665,
+		"brandname" : "SINOTRUCK           ",
+		"brandnameth" : "SINOTRUCK           ",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 666,
+		"brandname" : "DFSK                ",
+		"brandnameth" : "DFSK                ",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 668,
+		"brandname" : "AICHI               ",
+		"brandnameth" : "AICHI               ",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 699,
+		"brandname" : "RELY                ",
+		"brandnameth" : "RELY                ",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 701,
+		"brandname" : "FAW                 ",
+		"brandnameth" : "FAW                 ",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 158,
+		"brandname" : "COMBI               ",
+		"brandnameth" : "COMBI               ",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 474,
+		"brandname" : "LANDINI             ",
+		"brandnameth" : "LANDINI             ",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 702,
+		"brandname" : "PIERCE              ",
+		"brandnameth" : "PIERCE              ",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 2,
+		"brandname" : "BMW                 ",
+		"brandnameth" : "BMW                 ",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 673,
+		"brandname" : "ALFA ROMEO          ",
+		"brandnameth" : "ALFA ROMEO          ",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 675,
+		"brandname" : "YAXING              ",
+		"brandnameth" : "YAXING              ",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 676,
+		"brandname" : "MERCEDES-BENZ       ",
+		"brandnameth" : "MERCEDES-BENZ       ",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 677,
+		"brandname" : "VOGELE              ",
+		"brandnameth" : "VOGELE              ",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 572,
+		"brandname" : "MINI                ",
+		"brandnameth" : "MINI                ",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 683,
+		"brandname" : "LIEBHERR            ",
+		"brandnameth" : "LIEBHERR            ",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 302,
+		"brandname" : "PROTON              ",
+		"brandnameth" : "PROTON              ",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 685,
+		"brandname" : "SANY                ",
+		"brandnameth" : "SANY                ",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 70,
+		"brandname" : "RANGE ROVER         ",
+		"brandnameth" : "RANGE ROVER         ",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 687,
+		"brandname" : "FARM MAC            ",
+		"brandnameth" : "FARM MAC            ",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 608,
+		"brandname" : "YUTONG              ",
+		"brandnameth" : "YUTONG              ",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 253,
+		"brandname" : "LAMBORGHINI         ",
+		"brandnameth" : "LAMBORGHINI         ",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 694,
+		"brandname" : "XCMG                ",
+		"brandnameth" : "XCMG                ",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 704,
+		"brandname" : "CUMMINS             ",
+		"brandnameth" : "CUMMINS             ",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 706,
+		"brandname" : "DONGFONG            ",
+		"brandnameth" : "DONGFONG            ",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 710,
+		"brandname" : "KIOTI               ",
+		"brandnameth" : "KIOTI               ",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 717,
+		"brandname" : "BYD                 ",
+		"brandnameth" : "BYD                 ",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 725,
+		"brandname" : "SANIT               ",
+		"brandnameth" : "SANIT               ",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 729,
+		"brandname" : "SDLG                ",
+		"brandnameth" : "SDLG                ",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 10,
+		"brandname" : "HONDA               ",
+		"brandnameth" : "HONDA               ",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 739,
+		"brandname" : "SMART               ",
+		"brandnameth" : "SMART               ",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 740,
+		"brandname" : "LIUGONG             ",
+		"brandnameth" : "LIUGONG             ",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 741,
+		"brandname" : "MAXUS               ",
+		"brandnameth" : "MAXUS               ",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 745,
+		"brandname" : "POLARIS             ",
+		"brandnameth" : "POLARIS             ",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 748,
+		"brandname" : "POWERPLUS           ",
+		"brandnameth" : "POWERPLUS           ",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 750,
+		"brandname" : "GPX                 ",
+		"brandnameth" : "GPX                 ",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 752,
+		"brandname" : "TESLA               ",
+		"brandnameth" : "TESLA               ",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 753,
+		"brandname" : "BOBCAT              ",
+		"brandnameth" : "BOBCAT              ",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 756,
+		"brandname" : "STALLIONS           ",
+		"brandnameth" : "STALLIONS           ",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 760,
+		"brandname" : "GEELY               ",
+		"brandnameth" : "GEELY               ",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 763,
+		"brandname" : "CHERY               ",
+		"brandnameth" : "CHERY               ",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 764,
+		"brandname" : "POLARSUN            ",
+		"brandnameth" : "POLARSUN            ",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 765,
+		"brandname" : "SPYKER              ",
+		"brandnameth" : "SPYKER              ",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 767,
+		"brandname" : "MITSUBISHI FUSO     ",
+		"brandnameth" : "MITSUBISHI FUSO     ",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 768,
+		"brandname" : "TTF                 ",
+		"brandnameth" : "TTF                 ",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 769,
+		"brandname" : "SOKON               ",
+		"brandnameth" : "SOKON               ",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 770,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 843,
+		"brandname" : "UD TRUCK            ",
+		"brandnameth" : "UD TRUCK            ",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 862,
+		"brandname" : "THAINA              ",
+		"brandnameth" : "THAINA              ",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 863,
+		"brandname" : "DOUZ                ",
+		"brandnameth" : "DOUZ                ",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 864,
+		"brandname" : "FENDT               ",
+		"brandnameth" : "FENDT               ",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 865,
+		"brandname" : "GUANGZHOU           ",
+		"brandnameth" : "GUANGZHOU           ",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 866,
+		"brandname" : "H SEM               ",
+		"brandnameth" : "H SEM               ",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 867,
+		"brandname" : "CHENGLONG           ",
+		"brandnameth" : "CHENGLONG           ",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 868,
+		"brandname" : "ABG                 ",
+		"brandnameth" : "ABG                 ",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 869,
+		"brandname" : "999MOTOR            ",
+		"brandnameth" : "999MOTOR            ",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 870,
+		"brandname" : "SINGTHAI            ",
+		"brandnameth" : "SINGTHAI            ",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 871,
+		"brandname" : "ZIEGLER             ",
+		"brandnameth" : "ZIEGLER             ",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 872,
+		"brandname" : "PIERCE              ",
+		"brandnameth" : "PIERCE              ",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 874,
+		"brandname" : "AUTOMOTIVE          ",
+		"brandnameth" : "AUTOMOTIVE          ",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 875,
+		"brandname" : "MST                 ",
+		"brandnameth" : "MST                 ",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 876,
+		"brandname" : "NIU                 ",
+		"brandnameth" : "NIU                 ",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 877,
+		"brandname" : "JOHN DEERE          ",
+		"brandnameth" : "JOHN DEERE          ",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 878,
+		"brandname" : "TCM                 ",
+		"brandnameth" : "TCM                 ",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 879,
+		"brandname" : "SHANTUI             ",
+		"brandnameth" : "SHANTUI             ",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 880,
+		"brandname" : "TOEWONGWAI          ",
+		"brandnameth" : "TOEWONGWAI          ",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 881,
+		"brandname" : "SHINERAY            ",
+		"brandnameth" : "SHINERAY            ",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 882,
+		"brandname" : "ANKAI               ",
+		"brandnameth" : "ANKAI               ",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 883,
+		"brandname" : "NIPPON SHARYO       ",
+		"brandnameth" : "NIPPON SHARYO       ",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 884,
+		"brandname" : "BONLUCK             ",
+		"brandnameth" : "BONLUCK             ",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 885,
+		"brandname" : "JINMA               ",
+		"brandnameth" : "JINMA               ",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 886,
+		"brandname" : "MULTIONE            ",
+		"brandnameth" : "MULTIONE            ",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 887,
+		"brandname" : "YUCHAI              ",
+		"brandnameth" : "YUCHAI              ",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 888,
+		"brandname" : "SKYWELL             ",
+		"brandnameth" : "SKYWELL             ",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 889,
+		"brandname" : "COMMER              ",
+		"brandnameth" : "COMMER              ",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 890,
+		"brandname" : "GRAYHOUND           ",
+		"brandnameth" : "GRAYHOUND           ",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 891,
+		"brandname" : "SIAM                ",
+		"brandnameth" : "SIAM                ",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 892,
+		"brandname" : "ISEKI               ",
+		"brandnameth" : "ISEKI               ",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 893,
+		"brandname" : "IMIO                ",
+		"brandnameth" : "IMIO                ",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 894,
+		"brandname" : "MERCEDES-AMG        ",
+		"brandnameth" : "MERCEDES-AMG        ",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 895,
+		"brandname" : "FOMM                ",
+		"brandnameth" : "FOMM                ",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 896,
+		"brandname" : "APRILIA             ",
+		"brandnameth" : "APRILIA             ",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 897,
+		"brandname" : "KEEWAY              ",
+		"brandnameth" : "KEEWAY              ",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 898,
+		"brandname" : "KTM                 ",
+		"brandnameth" : "KTM                 ",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 899,
+		"brandname" : "SCOMADI             ",
+		"brandnameth" : "SCOMADI             ",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 900,
+		"brandname" : "SYM                 ",
+		"brandnameth" : "SYM                 ",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 901,
+		"brandname" : "BAJA                ",
+		"brandnameth" : "BAJA                ",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 902,
+		"brandname" : "BIGBULL             ",
+		"brandnameth" : "BIGBULL             ",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 903,
+		"brandname" : "EAGL                ",
+		"brandnameth" : "EAGL                ",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 904,
+		"brandname" : "LML                 ",
+		"brandnameth" : "LML                 ",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 905,
+		"brandname" : "WELTMEISTER         ",
+		"brandnameth" : "WELTMEISTER         ",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 906,
+		"brandname" : "GMC                 ",
+		"brandnameth" : "GMC                 ",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 907,
+		"brandname" : "EXCELSIOR           ",
+		"brandnameth" : "EXCELSIOR           ",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 908,
+		"brandname" : "DT MOTOR            ",
+		"brandnameth" : "DT MOTOR            ",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 909,
+		"brandname" : "FLYING STAR         ",
+		"brandnameth" : "FLYING STAR         ",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 910,
+		"brandname" : "MAHINDRA            ",
+		"brandnameth" : "MAHINDRA            ",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 911,
+		"brandname" : "TEST                ",
+		"brandnameth" : "TEST                ",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 912,
+		"brandname" : "MOLINKS             ",
+		"brandnameth" : "MOLINKS             ",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 913,
+		"brandname" : "BERKY               ",
+		"brandnameth" : "BERKY               ",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 914,
+		"brandname" : "SUMMIRT             ",
+		"brandnameth" : "SUMMIRT             ",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 915,
+		"brandname" : "ROYAL ENFIELD       ",
+		"brandnameth" : "ROYAL ENFIELD       ",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 916,
+		"brandname" : "SPA                 ",
+		"brandnameth" : "SPA                 ",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 917,
+		"brandname" : "XGMA                ",
+		"brandnameth" : "XGMA                ",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 918,
+		"brandname" : "TAKANO              ",
+		"brandnameth" : "TAKANO              ",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 919,
+		"brandname" : "SUMOTA              ",
+		"brandnameth" : "SUMOTA              ",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 920,
+		"brandname" : "LOVOL               ",
+		"brandnameth" : "LOVOL               ",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 921,
+		"brandname" : "SUPERIOR BROOM      ",
+		"brandnameth" : "SUPERIOR BROOM      ",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 922,
+		"brandname" : "SING THAI           ",
+		"brandnameth" : "SING THAI           ",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 923,
+		"brandname" : "LUYANG              ",
+		"brandnameth" : "LUYANG              ",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 924,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 925,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 926,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 927,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 928,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 929,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 930,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 931,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 932,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 933,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 934,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 935,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 936,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 937,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 938,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 939,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 940,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 941,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 942,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 943,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 944,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 945,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 946,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 947,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 948,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 949,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 950,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 951,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 952,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 953,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 954,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 955,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 956,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 957,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 958,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 959,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 960,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 961,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 962,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 963,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 964,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 965,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 966,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 967,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 968,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 969,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 970,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 971,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 972,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 973,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 974,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 975,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 976,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 977,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 978,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 979,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 980,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 981,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 982,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 983,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 984,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 985,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 986,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 987,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 988,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 989,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 990,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 991,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 992,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 993,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 994,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 995,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 996,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 997,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 998,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 999,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1000,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1001,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1002,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1003,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1004,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1005,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1006,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1007,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1008,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1009,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1010,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1011,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1012,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1013,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1014,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1015,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1016,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1017,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1018,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1019,
+		"brandname" : "ORA                 ",
+		"brandnameth" : "ORA                 ",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1020,
+		"brandname" : "SAKUN C             ",
+		"brandnameth" : "SAKUN C             ",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1022,
+		"brandname" : "JINYI               ",
+		"brandnameth" : "JINYI               ",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1023,
+		"brandname" : "AJ                  ",
+		"brandnameth" : "AJ                  ",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1024,
+		"brandname" : "SOOSAN              ",
+		"brandnameth" : "SOOSAN              ",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1025,
+		"brandname" : "KOVBEICO            ",
+		"brandnameth" : "KOVBEICO            ",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1026,
+		"brandname" : "NIWWON CROVE        ",
+		"brandnameth" : "NIWWON CROVE        ",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1027,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1028,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1029,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1030,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1031,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1032,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1033,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1034,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1035,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1036,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1037,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1038,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1039,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1040,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1041,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1042,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1043,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1044,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1045,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1046,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1047,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1048,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1049,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1050,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1051,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1052,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1053,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1054,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1055,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1056,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1057,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1058,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1059,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1060,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1061,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1062,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1063,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1064,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1065,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1066,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1067,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1068,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1069,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1070,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1071,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1072,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1073,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1074,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1075,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1076,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1077,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1078,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1079,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1080,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1081,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1082,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1083,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1084,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1085,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1086,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1087,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1088,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1089,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1090,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1091,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1092,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1093,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1094,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1095,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1096,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1097,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1098,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1099,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1100,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1101,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1102,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1103,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1104,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1105,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1106,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1107,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1108,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1109,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1110,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1111,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1112,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1113,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1114,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1115,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1116,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1117,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1118,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1119,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1120,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1121,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1122,
+		"brandname" : "HONGYANG            ",
+		"brandnameth" : "HONGYANG            ",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1123,
+		"brandname" : "AGRITRUCK           ",
+		"brandnameth" : "AGRITRUCK           ",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1124,
+		"brandname" : "DECO                ",
+		"brandnameth" : "DECO                ",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1125,
+		"brandname" : "GWM                 ",
+		"brandnameth" : "GWM                 ",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 5,
+		"brandname" : "DAEWOO              ",
+		"brandnameth" : "DAEWOO              ",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1,
+		"brandname" : "AUDI                ",
+		"brandnameth" : "AUDI                ",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 165,
+		"brandname" : "DACIA               ",
+		"brandnameth" : "DACIA               ",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 262,
+		"brandname" : "LOCATELLI           ",
+		"brandnameth" : "LOCATELLI           ",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 43,
+		"brandname" : "CHEVROLET           ",
+		"brandnameth" : "CHEVROLET           ",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 722,
+		"brandname" : "CHANGAN             ",
+		"brandnameth" : "CHANGAN             ",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 842,
+		"brandname" : "BEIBEN              ",
+		"brandnameth" : "BEIBEN              ",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 873,
+		"brandname" : "SBY                 ",
+		"brandnameth" : "SBY                 ",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1021,
+		"brandname" : "ASIA CAB            ",
+		"brandnameth" : "ASIA CAB            ",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1126,
+		"brandname" : "CHANGFA             ",
+		"brandnameth" : "CHANGFA             ",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1127,
+		"brandname" : "SDLS                ",
+		"brandnameth" : "SDLS                ",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1128,
+		"brandname" : "BATON               ",
+		"brandnameth" : "BATON               ",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1129,
+		"brandname" : "PDK                 ",
+		"brandnameth" : "PDK                 ",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1130,
+		"brandname" : "LUYUAN              ",
+		"brandnameth" : "LUYUAN              ",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1131,
+		"brandname" : "JACINTO             ",
+		"brandnameth" : "JACINTO             ",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1132,
+		"brandname" : "HAVAL               ",
+		"brandnameth" : "HAVAL               ",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1133,
+		"brandname" : "CTV CHO             ",
+		"brandnameth" : "CTV CHO             ",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1134,
+		"brandname" : "SITRAK              ",
+		"brandnameth" : "SITRAK              ",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1135,
+		"brandname" : "SUPER SOCO          ",
+		"brandnameth" : "SUPER SOCO          ",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1136,
+		"brandname" : "GARUDA              ",
+		"brandnameth" : "GARUDA              ",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1137,
+		"brandname" : "STA                 ",
+		"brandnameth" : "STA                 ",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1138,
+		"brandname" : "NETA                ",
+		"brandnameth" : "NETA                ",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1139,
+		"brandname" : "KASETCHA            ",
+		"brandnameth" : "KASETCHA            ",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1140,
+		"brandname" : "FORZA               ",
+		"brandnameth" : "FORZA               ",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1141,
+		"brandname" : "SHANGCHI            ",
+		"brandnameth" : "SHANGCHI            ",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1142,
+		"brandname" : "JAC                 ",
+		"brandnameth" : "JAC                 ",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1143,
+		"brandname" : "SOLIS               ",
+		"brandnameth" : "SOLIS               ",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1144,
+		"brandname" : "GAC                 ",
+		"brandnameth" : "GAC                 ",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1145,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1146,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1147,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1148,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1149,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1150,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1151,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1152,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1153,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1154,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1155,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1156,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1157,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1158,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1159,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1160,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1161,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1162,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1163,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1164,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1165,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1166,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1167,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1168,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1169,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1170,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1171,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1172,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1173,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1174,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1175,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1176,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1177,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1178,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1179,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1180,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1181,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1182,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1183,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1184,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1185,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1186,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1187,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1188,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1189,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1190,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1191,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1192,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1193,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1194,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1195,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1196,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1197,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1198,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1199,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1200,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1201,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1202,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1203,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1204,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1205,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1206,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1207,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1208,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1209,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1210,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1211,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1212,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1213,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1214,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1215,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1216,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1217,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1218,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1219,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1220,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1221,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1222,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1223,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1224,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1225,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1226,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1227,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1228,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1229,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1230,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1231,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1232,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1233,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1234,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1235,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1236,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1237,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1238,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1239,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1240,
+		"brandname" : "AMMANN              ",
+		"brandnameth" : "AMMANN              ",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1241,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1242,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1243,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1244,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1245,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1246,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1247,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1248,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1249,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1250,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1251,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1252,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1253,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1254,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1255,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1256,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1257,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1258,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1259,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1260,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1261,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1262,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1263,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1264,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1265,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1266,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1267,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1268,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1269,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1270,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1271,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1272,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1273,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1274,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1275,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1276,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1277,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1278,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1279,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1280,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1281,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1282,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1283,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1284,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1285,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1286,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1287,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1288,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1289,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1290,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1291,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1292,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1293,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1294,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1295,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1296,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1297,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1298,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1299,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1300,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1301,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1302,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1303,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1304,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1305,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1306,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1307,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1308,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1309,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1310,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1311,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1312,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1313,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1314,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1315,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1316,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1317,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1318,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1319,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1320,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1321,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1322,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1323,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1324,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1325,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1326,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1327,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1328,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1329,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1330,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1331,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1332,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1333,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1334,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1335,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1336,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1337,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1338,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1339,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1340,
+		"brandname" : "SINOTRUK HOYUN SERIE",
+		"brandnameth" : "SINOTRUK HOYUN SERIE",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1341,
+		"brandname" : "ARUN PLUS           ",
+		"brandnameth" : "ARUN PLUS           ",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1342,
+		"brandname" : "CLAAS               ",
+		"brandnameth" : "CLAAS               ",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1343,
+		"brandname" : "JINGONG             ",
+		"brandnameth" : "JINGONG             ",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1344,
+		"brandname" : "LANDWIND            ",
+		"brandnameth" : "LANDWIND            ",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1345,
+		"brandname" : "MARCHETTI           ",
+		"brandnameth" : "MARCHETTI           ",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1346,
+		"brandname" : "GLADIATOR           ",
+		"brandnameth" : "GLADIATOR           ",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1347,
+		"brandname" : "POCCO               ",
+		"brandnameth" : "POCCO               ",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1348,
+		"brandname" : "LEAD                ",
+		"brandnameth" : "LEAD                ",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1349,
+		"brandname" : "LINCOLN             ",
+		"brandnameth" : "LINCOLN             ",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1351,
+		"brandname" : "FARIZON             ",
+		"brandnameth" : "FARIZON             ",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1352,
+		"brandname" : "WEICHAI LOVOL       ",
+		"brandnameth" : "WEICHAI LOVOL       ",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1353,
+		"brandname" : "NA                  ",
+		"brandnameth" : "NA                  ",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1354,
+		"brandname" : "AION                ",
+		"brandnameth" : "AION                ",
+		"activeflag" : "Y"
+	},
+	{
+		"brandcode" : 1355,
+		"brandname" : "ALLD                ",
+		"brandnameth" : "ALLD                ",
+		"activeflag" : "Y"
+	}
+]}
