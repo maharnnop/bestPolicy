@@ -78,7 +78,7 @@ const showAllSpecinModel = (req, res) => {
 
   sequelize.query(
     `select * from static_data."MT_Specs" s
-    where s."MODELCODE"  =(select "MODELCODE"  from static_data."MT_Models" m  where m."MODELNAME"  = :modelname and m.activeflag ='Y' )
+    where s."MODELCODE"  =(select "MODELCODE"  from static_data."MT_Models" m  where m."MODELNAME"  = :modelname and m.activeflag ='Y' limit 1)
     and s.activeflag ='Y'
     and s."SPECNAMETH"  is not null
     and s."SPECNAME"  is not null

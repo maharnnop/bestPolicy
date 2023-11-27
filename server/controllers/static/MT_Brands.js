@@ -16,7 +16,7 @@ const showAll = (req,res) =>{
           [Op.not]:null
         }
       },
-      order:[['seqno',  'ASC'],['BRANDNAMETH',  'ASC']],
+      order:[['sortno',  'ASC'],['BRANDNAMETH',  'ASC']],
 
     }).then((brand)=>{
         res.json(brand);
