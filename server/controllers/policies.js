@@ -553,11 +553,22 @@ const getPolicyList = async (req, res) => {
   }
   
   const records = await sequelize.query(
-    `select *, pol."createdAt" as "createdAt", pol."updatedAt" as "updatedAt"  
+    `select *,
+    TO_CHAR(pol."createdAt", 'dd/MM/yyyy HH24:MI:SS') AS "polcreatedAt",
+    TO_CHAR(pol."updatedAt", 'dd/MM/yyyy HH24:MI:SS') AS "polupdatedAt",
+     inst.class as class, inst."subClass" as "subClass",
+    ent."personType" as "insureePT",
+    (tt."TITLETHAIBEGIN" ||' '||
+    (case when trim(ent."personType") = 'O' then ent."t_ogName" else ent."t_firstName" || ' ' || ent."t_lastName" end)
+    || '  ' || tt."TITLETHAIEND" ) as "fullName"
     from static_data."Policies" pol 
-    
+    join static_data."InsureTypes" inst on inst.id = pol."insureID"
     left join static_data."Motors" mt on mt.id = pol."itemList"
+    join static_data."Insurees" ine on ine."insureeCode" = pol."insureeCode"
+    join static_data."Entities" ent on ent.id = ine."entityID"
+    join static_data."Titles" tt on tt."TITLEID" = ent."titleID"
     where ${cond}
+    and ent.lastversion ='Y'
     order by pol."applicationNo" ASC `,
     {
      

@@ -74,6 +74,7 @@ const PolicyScreen = (props) => {
   const [insurerDD, setInsurerDD] = useState([]);
   const [motorbrandDD, setMotorbrandDD] = useState([]);
   const [motormodelDD, setMotormodelDD] = useState([]);
+  const [motorspecDD, setMotorspecDD] = useState([]);
   const [vcDD, setVcDD] = useState([]);
   const [ccDD, setCcDD] = useState([]);
   const [hidecard, setHidecard] = useState([false, 0]);
@@ -464,6 +465,13 @@ if (name === 'actDate') {
     }));
     getMotormodel(e.value);
   }
+  const changeMotorModel = (e) => {
+    setFormData((prevState) => ({
+      ...prevState,
+      modelname: e.value,
+    }));
+    getMotorspec(e.value);
+  }
   const changeVoluntaryCode = (e) => {
     setFormData((prevState) => ({
       ...prevState,
@@ -521,7 +529,7 @@ if (name === 'actDate') {
         const array = [];
         model.data.forEach((ele) => {
           
-          array.push({ label: ele.MODEL, value: ele.MODEL })
+          array.push({ label: ele.MODELNAME, value: ele.MODELNAME })
         });
         setMotormodelDD(array);
       })
@@ -529,6 +537,23 @@ if (name === 'actDate') {
         // alert("cant get aumphur");
       });
   };
+  const getMotorspec = (modelname) => {
+    //get distric in province selected
+    axios
+      .post(url + "/static/mt_models/showallspecinmodel", { modelname: modelname }, headers)
+      .then((model) => {
+        const array = [];
+        model.data.forEach((ele) => {
+          
+          array.push({ label: ele.SPECNAME, value: ele.SPECNAME })
+        });
+        setMotorspecDD(array);
+      })
+      .catch((err) => {
+        // alert("cant get aumphur");
+      });
+  };
+
   const getSubDistrict = (amphurname) => {
     //get tambons in distric selected
     axios
@@ -2033,10 +2058,8 @@ if (name === 'actDate') {
                 // className="form-control"
                 styles={customStyles}
                 name={`modelname`}
-                onChange={(e) => setFormData((prevState) => ({
-                  ...prevState,
-                  modelname: e.value,
-                }))}
+                onChange={(e) => changeMotorModel(e)}
+      
                 options={motormodelDD}
               />
 
@@ -2045,13 +2068,23 @@ if (name === 'actDate') {
               <label class="form-label ">
                 รุ่นย่อย<span class="text-danger"> </span>
               </label>
-              <input
+              <Select
+                // className="form-control"
+                styles={customStyles}
+                name={`specname`}
+                onChange={(e) => setFormData((prevState) => ({
+                  ...prevState,
+                  specname: e.value,
+                }))}
+                options={motorspecDD}
+              />
+              {/* <input
                 className="form-control"
                 type="text"
                 name={`specname`}
                 defaultValue={formData.specname}
                 onChange={handleChange}
-              />
+              /> */}
             </div>
 
 

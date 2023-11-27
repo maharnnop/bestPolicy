@@ -36,6 +36,13 @@ const PolicyCard = (props) => {
   const [installment, setInstallment] = useState({ insurer: [], advisor: [] })
   const [hidecard, setHidecard] = useState([false, 0]);
 
+  function formatDate(dateString) {
+    // Assuming dateString is in the format dd/mm/yyyy
+    const parts = dateString.split('/');
+    const formattedDate = new Date(parts[2], parts[1] - 1, parts[0]);
+    return formattedDate;
+}
+
   const handleChange = async (e) => {
     e.preventDefault();
 
@@ -530,17 +537,27 @@ const handleClose = (e) => {
     const seqNoinstime = parseInt(document.getElementsByName("seqNoinstime")[0].value)
     const seqNoinstype = document.getElementsByName("seqNoinstype")[0].value
     const flagallowduty = document.getElementsByName("flagallowduty")[0].checked
+    const seqNoinsStart = document.getElementsByName("seqNoinsStart")[0].value
 
     const installA = document.getElementsByName("installmentAdvisor")[0].checked
     const seqNoagt = parseInt(document.getElementsByName("seqNoagt")[0].value)
     const seqNoagttime = parseInt(document.getElementsByName("seqNoagttime")[0].value)
     const seqNoagttype = document.getElementsByName("seqNoagttype")[0].value
+    const seqNoagtStart = document.getElementsByName("seqNoagtStart")[0].value
 
     const arrI = []
     if (installI) {
       let premperseq = parseFloat((formData.netgrossprem / seqNoins).toFixed(2))
       console.log(formData.netgrossprem - premperseq * (seqNoins - 1));
-      let dueDate = new Date()
+      
+      let dueDate 
+      if (seqNoinsStart  === "") {
+        dueDate = new Date()
+        
+      }else {
+        dueDate = formatDate(seqNoinsStart)
+      }
+      console.log('seqNoinsStart : ' + dueDate);
       for (let i = 1; i <= seqNoins; i++) {
         let dutyseq = 0
 
@@ -566,9 +583,14 @@ const handleClose = (e) => {
         let withheldseq = parseFloat((withheld * (premperseq + dutyseq)).toFixed(2))
 
         // cal duedate
-        if (seqNoinstype === 'M') {
-          dueDate.setMonth(dueDate.getMonth() + seqNoinstime)
-        } else { dueDate.setDate(dueDate.getDate() + seqNoinstime) }
+        let seqDueDate 
+        if (seqNoinstype === 'M' && i !== 1 ) {
+          seqDueDate =  dueDate.setMonth(dueDate.getMonth() + seqNoinstime)
+        } else if (seqNoinstype === 'D' && i !== 1 ){
+          seqDueDate = dueDate.setDate(dueDate.getDate() + seqNoinstime) 
+        }else if (i === 1 ){
+          seqDueDate = dueDate.setMonth(dueDate.getMonth())
+        }
 
         //cal comm-ov in
         let comminseq = parseFloat((formData.commin_rate * premperseq / 100).toFixed(2))
@@ -578,7 +600,8 @@ const handleClose = (e) => {
           tax: taxseq,
           duty: dutyseq,
           totalprem: parseFloat((premperseq + taxseq + dutyseq).toFixed(2)),
-          dueDate: dueDate.toISOString().split('T')[0],
+          // dueDate: dueDate.toISOString().split('T')[0],
+          dueDate: seqDueDate,
           commin_amt: comminseq,
           commin_taxamt: parseFloat((comminseq * tax).toFixed(2)),
           ovin_amt: ovinseq,
@@ -594,7 +617,14 @@ const handleClose = (e) => {
     if (installA) {
       let premperseq = parseFloat((formData.netgrossprem / seqNoagt).toFixed(2))
       console.log(formData.netgrossprem - premperseq * (seqNoagt - 1));
-      let dueDate = new Date()
+      let dueDate 
+      if (seqNoagtStart  === "") {
+        dueDate = new Date()
+        
+      }else {
+        dueDate = formatDate(seqNoagtStart)
+      }
+      console.log('seqNoagtStart : ' + dueDate);
       for (let i = 1; i <= seqNoagt; i++) {
         let dutyseq = 0
 
@@ -620,10 +650,14 @@ const handleClose = (e) => {
         let withheldseq = parseFloat((withheld * (premperseq + dutyseq)).toFixed(2))
 
         // cal duedate
-        if (seqNoagttype === 'M') {
-          dueDate.setMonth(dueDate.getMonth() + seqNoagttime)
-        } else { dueDate.setDate(dueDate.getDate() + seqNoagttime) }
-
+        console.log(seqNoagttype === 'M');
+        let seqDueDate 
+        if (seqNoagttype === 'M' && i !== 1 ) {
+          seqDueDate = dueDate.setMonth(dueDate.getMonth() + seqNoagttime)
+        } else if (seqNoagttype === 'D' && i !== 1 ){ seqDueDate = dueDate.setDate(dueDate.getDate() + seqNoagttime) }
+        else if (i === 1){
+          seqDueDate = dueDate.setMonth(dueDate.getMonth())
+        }
         //cal comm-ov in
         let comminseq = parseFloat((formData.commin_rate * premperseq / 100).toFixed(2))
         let ovinseq = parseFloat((formData.ovin_rate * premperseq / 100).toFixed(2))
@@ -635,7 +669,8 @@ const handleClose = (e) => {
           tax: taxseq,
           duty: dutyseq,
           totalprem: premperseq + taxseq + dutyseq,
-          dueDate: dueDate.toISOString().split('T')[0],
+          // dueDate: dueDate.toISOString().split('T')[0],
+          dueDate: seqDueDate,
           commin_amt: comminseq,
           commin_taxamt: comminseq * tax,
           ovin_amt: ovinseq,
@@ -662,6 +697,8 @@ const handleClose = (e) => {
           <thead>
             <tr>
               <th scope="col" className="input"> เลขที่กรมธรรม์ </th>
+              <th scope="col" > เลขที่ใบแจ้งหนี้ </th>
+              <th scope="col" > เลขที่ใบกำกับภาษี </th>
               <th scope="col" className="input">วันที่ทำสัญญา</th>
               <th scope="col">บริษัทรับประกัน</th>
               <th scope="col">เลขที่ใบคำขอ</th>
@@ -700,6 +737,20 @@ const handleClose = (e) => {
                 name={`policyNo`}
                 onChange={handleChange}
               /></td>
+              <td><input
+                className="form-control"
+                type="text"
+                defaultValue={formData.invoiceNo || ''}
+                name={`invoiceNo`}
+                onChange={handleChange}
+              /></td>
+              <td><input
+                className="form-control"
+                type="text"
+                defaultValue={formData.taxInvoiceNo || ''}
+                name={`taxInvoiceNo`}
+                onChange={handleChange}
+              /></td>
               <td>
                 {/* <input
                 className="form-control"
@@ -709,7 +760,7 @@ const handleClose = (e) => {
                 onChange={handleChange}
               /> */}
               <DatePicker
-                            showIcon
+                            // showIcon
                             className="form-control"
                             todayButton="Vandaag"
                             // isClearable
@@ -727,9 +778,9 @@ const handleClose = (e) => {
               <td>{formData.agentCode2 || '-'}</td>
               <td>{formData.class}</td>
               <td>{formData.subClass}</td>
-              <td>{formData.createdAt}</td>
+              <td>{formData.polcreatedAt}</td>
               <td>{formData.actDate} - {formData.expDate}</td>
-              <td>{formData.insureeCode}</td>
+              <td>{formData.fullName}</td>
               <td>{formData.licenseNo || '-'}</td>
               <td>{formData.chassisNo || '-'}</td>
               <td>{formData.endorseNo || '-'}</td>
@@ -1321,6 +1372,10 @@ const handleClose = (e) => {
             defaultValue={formData.seqNoins}
             name={`seqNoins`}
             onChange={handleChange}
+            onBlur={(e) =>{setFormData((prevState) => ({
+              ...prevState,
+              'seqNoagt': e.target.value,
+            }));}}
           />
         </div>
         <div class="col-1">
@@ -1348,7 +1403,7 @@ const handleClose = (e) => {
           <input
             className="form-control"
             type="number"
-            defaultValue={formData.seqNoagt}
+            value={formData.seqNoagt}
             name={`seqNoagt`}
             onChange={handleChange}
           />
@@ -1383,9 +1438,13 @@ const handleClose = (e) => {
           <input
             className="form-control"
             type="number"
-            defaultValue={formData.seqNoinstime}
+            value={formData.seqNoinstime}
             name={`seqNoinstime`}
             onChange={handleChange}
+            onBlur={(e) =>{setFormData((prevState) => ({
+              ...prevState,
+              'seqNoagttime': e.target.value,
+            }));}}
           />
         </div>
         <div className="col-1">
@@ -1394,6 +1453,10 @@ const handleClose = (e) => {
             className="form-control"
             name={`seqNoinstype`}
             onChange={handleChange}
+            onBlur={(e) =>{setFormData((prevState) => ({
+              ...prevState,
+              'seqNoagttype': e.target.value.trim(),
+            }));}}
           >
             <option value={formData.seqNoinstype} disabled selected hidden>
               {formData.seqNoinstype}
@@ -1413,7 +1476,7 @@ const handleClose = (e) => {
           <input
             className="form-control"
             type="number"
-            defaultValue={formData.seqNoagttime}
+            value={formData.seqNoagttime}
             name={`seqNoagttime`}
             onChange={handleChange}
           />
@@ -1424,6 +1487,7 @@ const handleClose = (e) => {
             className="form-control"
             name={`seqNoagttype`}
             onChange={handleChange}
+            // value={formData.seqNoagttype }
           >
             <option value={formData.seqNoagttype} disabled selected hidden>
               {formData.seqNoagttype}
@@ -1432,6 +1496,55 @@ const handleClose = (e) => {
             <option value="M" selected>เดือน</option>
           </select>
         </div>
+      </div>
+
+      <div class="row">
+        <div className="col-3"></div>
+        
+        <div class="col-1">
+
+          <label class="form-label ">
+            วันที่เริ่มต้น (งวดแรก)
+          </label>
+        </div>
+        <div class="col-2">
+        <DatePicker
+                            showIcon
+                            className="form-control"
+                            todayButton="Vandaag"
+                            // isClearable
+                            name="seqNoinsStart"
+                            showYearDropdown
+                            placeholder ='dd/mm/yyyy'
+                            dateFormat="dd/MM/yyyy"
+                            dropdownMode="select"
+                            selected={formData.seqNoinsStart || null}
+                            onChange={(date) => handleChangeDate(date,'seqNoinsStart')}
+                                 />
+        </div>
+        
+        <div className="col-2 border-left"></div>
+        <div class="col-1">
+
+        <label class="form-label ">
+            วันที่เริ่มต้น (งวดแรก)
+          </label>
+        </div>
+        <div class="col-2">
+        <DatePicker
+                            showIcon
+                            className="form-control"
+                            todayButton="Vandaag"
+                            // isClearable
+                            name="seqNoagtStart"
+                            showYearDropdown
+                            dateFormat="dd/MM/yyyy"
+                            dropdownMode="select"
+                            selected={formData.seqNoagtStart || null}
+                            onChange={(date) => handleChangeDate(date,'seqNoagtStart')}
+                                 />
+        </div>
+       
       </div>
 
       <div class="d-flex justify-content-center "  style={{padding:`20px`}}>
@@ -1473,7 +1586,7 @@ const handleClose = (e) => {
                     onChange={handleChange}
                   /> */}
                   <DatePicker
-                            showIcon
+                            // showIcon
                             className="form-control"
                             todayButton="Vandaag"
                             // isClearable
@@ -1481,7 +1594,7 @@ const handleClose = (e) => {
                             showYearDropdown
                             dateFormat="dd/MM/yyyy"
                             dropdownMode="select"
-                            selected={formData[`dueDate`] || null}
+                            selected={ele.dueDate || null}
                             onChange={(date) => handleChangeDate(date,`dueDate-${i}`)}
                                  />
                   </td>
@@ -1557,13 +1670,28 @@ const handleClose = (e) => {
                 return (<tr>
                   <th scope="row">ผู้แนะนำ</th>
                   <td>{i + 1}</td>
-                  <td scope="col-2"><input
+                  {/* <td scope="col-2"><input
                     className="form-control"
                     type="date"
                     defaultValue={ele.dueDate}
                     name={`dueDate-${i}`}
                     onChange={handleChange}
-                  /></td>
+                  /></td> */}
+                  <td>
+                   <DatePicker
+                            // showIcon
+                            className="form-control"
+                            todayButton="Vandaag"
+                            // isClearable
+                            name="effDatestart"
+                            showYearDropdown
+                            placeholder ='dd/mm/yyyy'
+                            dateFormat="dd/MM/yyyy"
+                            dropdownMode="select"
+                            selected={ele.dueDate || null}
+                            onChange={(date) => handleChangeDate(date,`dueDate-${i}`)}
+                                 />
+                                 </td>
                   <td scope="col-2"><input
                     className="form-control"
                     type="text"
