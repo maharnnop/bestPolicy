@@ -29,6 +29,7 @@ const NormalText = {
 
 const ReportฺARAPDirect = () => {
     const url = window.globalConfig.BEST_POLICY_V1_BASE_URL;
+    const url_report = window.globalConfig.REPORT_BEST_POLICY_V1_BASE_URL;
     const navigate = useNavigate();
 
     const [tableData, setTableData] = useState([])

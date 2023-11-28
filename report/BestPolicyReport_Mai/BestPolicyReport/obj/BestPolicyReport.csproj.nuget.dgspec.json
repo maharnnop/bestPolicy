@@ -1,28 +1,29 @@
 {
   "format": 1,
   "restore": {
-    "/Users/asd1122/Desktop/dhipaya/bestPolicy/report/BestPolicyReport_Mai/BestPolicyReport/BestPolicyReport.csproj": {}
+    "C:\\Users\\maharnnops\\git\\bestPolicy\\report\\BestPolicyReport_Mai\\BestPolicyReport\\BestPolicyReport.csproj": {}
   },
   "projects": {
-    "/Users/asd1122/Desktop/dhipaya/bestPolicy/report/BestPolicyReport_Mai/BestPolicyReport/BestPolicyReport.csproj": {
+    "C:\\Users\\maharnnops\\git\\bestPolicy\\report\\BestPolicyReport_Mai\\BestPolicyReport\\BestPolicyReport.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/Users/asd1122/Desktop/dhipaya/bestPolicy/report/BestPolicyReport_Mai/BestPolicyReport/BestPolicyReport.csproj",
+        "projectUniqueName": "C:\\Users\\maharnnops\\git\\bestPolicy\\report\\BestPolicyReport_Mai\\BestPolicyReport\\BestPolicyReport.csproj",
         "projectName": "BestPolicyReport",
-        "projectPath": "/Users/asd1122/Desktop/dhipaya/bestPolicy/report/BestPolicyReport_Mai/BestPolicyReport/BestPolicyReport.csproj",
-        "packagesPath": "/Users/asd1122/.nuget/packages/",
-        "outputPath": "/Users/asd1122/Desktop/dhipaya/bestPolicy/report/BestPolicyReport_Mai/BestPolicyReport/obj/",
+        "projectPath": "C:\\Users\\maharnnops\\git\\bestPolicy\\report\\BestPolicyReport_Mai\\BestPolicyReport\\BestPolicyReport.csproj",
+        "packagesPath": "C:\\Users\\maharnnops\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\maharnnops\\git\\bestPolicy\\report\\BestPolicyReport_Mai\\BestPolicyReport\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "/Users/asd1122/.nuget/NuGet/NuGet.Config"
+          "C:\\Users\\maharnnops\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
           "net6.0"
         ],
         "sources": {
-          "/usr/local/share/dotnet/library-packs": {},
-          "/usr/local/share/dotnet/sdk/7.0.306/Sdks/Microsoft.NET.Sdk.Web/library-packs": {},
-          "https://api.nuget.org/v3/index.json": {}
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "C:\\Program Files\\dotnet\\sdk\\7.0.306\\Sdks\\Microsoft.NET.Sdk.Web\\library-packs": {},
+          "https://www.nuget.org/api/v2/": {}
         },
         "frameworks": {
           "net6.0": {
@@ -88,7 +89,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/7.0.306/RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.306\\RuntimeIdentifierGraph.json"
         }
       }
     }

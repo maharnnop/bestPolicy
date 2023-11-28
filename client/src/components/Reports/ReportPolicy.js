@@ -1,9 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useCookies } from "react-cookie";
 import axios from "axios";
 import jwt_decode from "jwt-decode";
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
+import ReportTable from "./ReportTable";
+import convertDateFormat from "../lib/convertdateformat";
 
 import {
     BrowserRouter,
@@ -29,57 +32,144 @@ const NormalText = {
 
 const ReportPolicy = () => {
     const url = window.globalConfig.BEST_POLICY_V1_BASE_URL;
+    const url_report = window.globalConfig.REPORT_BEST_POLICY_V1_BASE_URL;
     const navigate = useNavigate();
-
-    const [tableData, setTableData] = useState([])
-    const [billAdvisorNo, setBillAdvisorNo] = useState("")
-    const [insurercode, setInsurercode] = useState("");
-    const [advisorcode, setAdvisorcode] = useState("")
-    const [refno, setRefno] = useState("");
-    const [cashierReceiptNo, setCashierReceiptNo] = useState("");
-    const [transactionType, setTransactionType] = useState({});
-    const [checkboxValue, setCheckboxValue] = useState();
-    const [createUserCode, setCreateUserCode] = useState();
+    const [cookies, setCookie, removeCookie] = useCookies(["jwt"]);
+    const headers = {
+        headers: { Authorization: `Bearer ${cookies["jwt"]}` }
+      };
     const [fromDate, setFromDate] = useState('');
     const [toDate, setToDate] = useState('');
-    const [dfrpreferno, setDfrpreferno] = useState();
-    const [createusercode, setCreateusercode] = useState();
-    const [employeecode, setEmployeecode] = useState();
-    const [status, setStatus] = useState();
+    const [createusercode, setCreateusercode] = useState("");
+    
+    const [employeecode, setEmployeecode] = useState("");
+    
+    const [insurercode, setInsurercode] = useState("");
+    
+    const [advisorcode, setAdvisorcode] = useState("")
+    
+    const [status, setStatus] = useState('I'); // I or A
+
+    const [insureTypeDD, setInsureTypeDD] = useState([]);
+    const [insureClassDD, setInsureClassDD] = useState([]);
+  const [insureSubClassDD, setInsureSubClassDD] = useState([]);
+    
     const [orderby, setOrderby] = useState();
-    const [advisoryReadOnly, setAdvisoryReadOnly] = useState(false)
-    const [insurerReadOnly, setInsurerReadOnly] = useState(false)
-    const [transactionTypeReadOnly, setTransactionTypeReadOnly] = useState(false)
+    const [filterData, setFilterData] = useState({
+        "startPolicyDate": "",
+        "endPolicyDate": "",
+        "createUserCode": "",
+        "contactPersonId1": "",
+        "contactPersonId2": "",
+        "agentCode1": "",
+        "agentCode2": "",
+        "insurerCode": "",
+        "status": "",
+        "class": "",
+        "subClass": "",
+        "orderBy": ""
+      }
+      )
+      const [reportData, setReportData] = useState([])
+      const colData = {
+        "applicationNo": "ApplicationNo",
+    "policyNo": "หมายเลขกรมธรรม์",
+    "policyDate": "วันที่นำข้อมูลเข้า",
+    "actDate": "วันที่เริ่มคุ้มครอง",
+    "expDate": "วันที่สิ้นสุดคุ้มครอง",
+    "issueDate": "วันที่ทำสัญญา",
+    "createUserCode": "รหัสผู้บันทึก",
+    "username": "Username ผู้บันทึก",
+    "contactPersonId1": "รหัสผู้ดูแล 1",
+    "contactPersonName1": "ชื่อผู้ดูแล 1",
+    "contactPersonId2": "รหัสผู้ดูแล 2",
+    "contactPersonName2": "ชื่อผู้ดูแล 2",
+    "agentCode1": "รหัสผู้แนะนำ 1",
+    "agentName1": "ชื่อผู้แนะนำ 1",
+    "agentCode2": "รหัสผู้แนะนำ 2",
+    "agentName2": "ชื่อผู้แนะนำ 2",
+    "insureeCode": "รหัสผู้เอาประกัน",
+    "insureeName": "ชื่อผู้เอาประกัน",
+    "class": "ประเภทประกัน",
+    "subClass": "ประเภทย่อยประกัน",
+    "licenseNo": "ทะเบียนรถ",
+    "province": "จังหวัด",
+    "chassisNo": "เลขตัวถัง",
+    "grossPrem": "เบี้ยรวม",
+    "specDiscRate": "อัตราส่วนลด",
+    "specDiscAmt": "มูลค่าส่วนลด",
+    "netGrossPrem": "เบี้ยสุทธิ",
+    "duty": "อากร",
+    "tax": "ภาษี",
+    "totalPrem": "เบี้ยประกันรับรวม",
+    "commInRate": "อัตราคอมมิชชั่นรับ",
+    "commInAmt": "ยอดคอมมิชชั่นรับ",
+    "commInTaxAmt": "ยอดภาษีคอมมิชชั่นรับ",
+    "ovInRate": "อัตรา OV รับ",
+    "ovInAmt": "ยอด OV รับ",
+    "ovInTaxAmt": "ยอดภาษี OV รับ",
+    "commOutRate": "อัตราคอมมิชชั่นจ่าย",
+    "commOutAmt": "ยอดคอมมิชชั่นจ่าย",
+    "ovOutRate":  "อัตรา OV จ่าย",
+    "ovOutAmt": "ยอด OV จ่าย",
+    "insurerCode": "บริษัทประกัน"
+    
+    };
 
     useEffect(() => {
+//get insureType
+axios
+.get(url + "/insures/insuretypeall", headers)
+.then((insuretype) => {
+  
+  const uniqueClasses = [...new Set(insuretype.data.map(ele => ele.class))];
 
-    }, [billAdvisorNo]);
+  const array = uniqueClasses.map((className, index) => (
+    <option key={index} value={className}>
+      {className}
+    </option>
+  ));
 
+  setInsureTypeDD(insuretype.data);
+  setInsureClassDD(array);
+})
+.catch((err) => { });
 
-    const searchBill = (e) => {
+    }, []);
+
+ const handleChange =  (e) => {
+    e.preventDefault();
+   
+    //set dropdown subclass when class change
+    if (e.target.name === "class") {
+      const array = [];
+      insureTypeDD.forEach((ele) => {
+        if (e.target.value === ele.class) {
+          array.push(
+            <option key={ele.id} value={ele.subClass}>
+              {ele.subClass}
+            </option>
+          );
+        }
+      });
+      setInsureSubClassDD(array);
+    }
+    setFilterData((prevState) => ({
+        ...prevState,
+        [e.target.name]: e.target.value,    
+      }))
+
+  };
+    
+    const exportExcel =(e) => {
         e.preventDefault()
-        let data = JSON.stringify({
-            "billadvisorno": billAdvisorNo
-        });
-        axios.post('https://apiuat-cba-report.amityinsure.com/api/ArAp/commOutOvOutOpenItem/json', {}
-        // , {
-        //     headers: {
-        //         'Content-Type': 'application/json'
-        //     }
-        // }
-        )
+        axios.post(url_report + "/DailyPolicy/excel", filterData, {
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
             .then((response) => {
-                console.log(response);
-                // console.log(response.data);
-                if (response.data[0]) {
-                    setInsurercode(response.data[0].insurerCode)
-                    setAdvisorcode(response.data[0].agentCode)
-                    setTransactionType("PREM-IN")
-                    setInsurerReadOnly(true)
-                    setAdvisoryReadOnly(true)
-                    setTransactionTypeReadOnly(true)
-                }
-
+                
             })
             .catch((error) => {
                 console.log(error);
@@ -87,26 +177,63 @@ const ReportPolicy = () => {
     }
     const searchdata = (e) => {
         e.preventDefault()
-        let data = JSON.stringify({
-            "billadvisorno": billAdvisorNo,
-            "insurercode": insurercode,
-            "advisorcode": advisorcode,
-            "refno": refno,
-            "cashierReceiptNo": cashierReceiptNo,
-            "transactionType": transactionType,
-            "createUserCode": createUserCode,
-            "fromDate": fromDate,
-            "toDate": toDate,
-            "dfrpreferno": dfrpreferno
-        });
-        axios.post(window.globalConfig.BEST_POLICY_V1_BASE_URL + "/bills/findbill", data, {
+        const data = 
+        {
+            "startPolicyDate": fromDate,
+            "endPolicyDate": toDate,
+            "createUserCode": createusercode,
+            "contactPersonId1": employeecode,
+            "contactPersonId2": "",
+            "agentCode1": advisorcode,
+            "agentCode2": "",
+            "insurerCode": insurercode,
+            "status": status,
+            "class": filterData.class,
+            "subClass": filterData.subClass,
+            "orderBy": orderby
+          }
+          
+          if (document.getElementsByName("createusercodeCB")[0].checked) {
+            data.createUserCode = ''
+         }
+         if (document.getElementsByName ("employeecodeCB")[0].checked) {
+            data.contactPersonId1 = ''
+         }
+         if (document.getElementsByName ("advisorcodeCB")[0].checked) {
+            data.agentCode1 = ''
+         }
+         if (document.getElementsByName ("insurercodeCB")[0].checked) {
+            data.insurerCode = ''
+         }
+
+        axios.post(url_report + "/DailyPolicy/json", data, {
             headers: {
                 'Content-Type': 'application/json'
             }
         })
             .then((response) => {
-                // console.log(response.data);
-                setTableData(response.data)
+                console.log(response);
+                // setTableData(response.data)
+                if (response.data.length < 1) {
+                    alert('ไม่พบข้อมูล')
+                    return
+                }
+                const rawdata = response.data.map((ele,index)=>{
+                    if (ele.policyDate) {
+                        ele.policyDate =  convertDateFormat(ele.policyDate)
+                    }
+                    if (ele.actDate) {
+                        ele.actDate =  convertDateFormat(ele.actDate)
+                    }
+                    if (ele.expDate) {
+                        ele.expDate =  convertDateFormat(ele.expDate)
+                    }
+                    if (ele.issueDate) {
+                        ele.issueDate =  convertDateFormat(ele.issueDate)
+                    }
+                    return ele
+                })
+                setReportData(response.data)
             })
             .catch((error) => {
                 console.log(error);
@@ -123,16 +250,10 @@ const ReportPolicy = () => {
                         {/* Date Select */}
                         <div className="row">
                             <div className="col-2">
-                                <label htmlFor="Date Select" className="form-label">Date </label>
+                                <label htmlFor="Date Select" className="form-label">วันที่เอาเข้าระบบ จาก </label>
                             </div>
                             <div className="col-4">
-                                <label htmlFor="fromDate">From &nbsp;</label>
-                                {/* <input
-                                    type="date"
-                                    id="fromDate"
-                                    value={fromDate}
-                                    onChange={(e) => setFromDate(e.target.value)}
-                                /> */}
+                               
                                 <DatePicker
                             showIcon
                             className="form-control"
@@ -146,7 +267,7 @@ const ReportPolicy = () => {
                                  />
                             </div>
                             <div className="col-4">
-                                <label htmlFor="toDate">To &nbsp;</label>
+                                <label htmlFor="toDate">ถึง &nbsp;</label>
                                 {/* <input
                                     type="date"
                                     id="toDate"
@@ -175,8 +296,9 @@ const ReportPolicy = () => {
                             <div className="col-7">
                                 <input type="text" id="createusercode" value={createusercode} onChange={(e) => setCreateusercode(e.target.value)} className="form-control" />
                             </div>
-                            <div className="col-1 text-center">
-                                <button type="submit" className="btn btn-primary" onClick={searchBill}>Search</button>
+                            <div className="col-1">
+                                <input type="checkbox" name="createusercodeCB"   className="form-check-input" />
+                                <label htmlFor="cashierReceiptCheckbox" className="form-check-label">&nbsp;ALL</label>
                             </div>
                         </div>
 
@@ -189,7 +311,7 @@ const ReportPolicy = () => {
                                 <input type="text" id="employeecode" value={employeecode} onChange={(e) => setEmployeecode(e.target.value)} className="form-control" />
                             </div>
                             <div className="col-1">
-                                <input type="checkbox" id="cashierReceiptCheckbox" value={checkboxValue} onChange={(e) => setCheckboxValue(e.target.checked)} className="form-check-input" />
+                                <input type="checkbox" name="employeecodeCB"  className="form-check-input" />
                                 <label htmlFor="cashierReceiptCheckbox" className="form-check-label">&nbsp;ALL</label>
                             </div>
                         </div>
@@ -199,10 +321,10 @@ const ReportPolicy = () => {
                                 <label htmlFor="Advisor" className="form-label">Advisor Code</label>
                             </div>
                             <div className="col-7">
-                                <input type="text" id="Advisor" value={advisorcode} readOnly={advisoryReadOnly} onChange={(e) => setAdvisorcode(e.target.value)} className="form-control" />
+                                <input type="text" id="Advisor" value={advisorcode}  onChange={(e) => setAdvisorcode(e.target.value)} className="form-control" />
                             </div>
                             <div className="col-1">
-                                <input type="checkbox" id="cashierReceiptCheckbox" value={checkboxValue} onChange={(e) => setCheckboxValue(e.target.checked)} className="form-check-input" />
+                                <input type="checkbox" name="advisorcodeCB"  className="form-check-input" />
                                 <label htmlFor="cashierReceiptCheckbox" className="form-check-label">&nbsp;ALL</label>
                             </div>
                         </div>
@@ -213,10 +335,10 @@ const ReportPolicy = () => {
                                 <label htmlFor="Insurer" className="form-label">InsurerCode</label>
                             </div>
                             <div className="col-7">
-                                <input type="text" id="InsurerCode" value={insurercode} readOnly={insurerReadOnly} onChange={(e) => setInsurercode(e.target.value)} className="form-control" />
+                                <input type="text" id="InsurerCode" value={insurercode}  onChange={(e) => setInsurercode(e.target.value)} className="form-control" />
                             </div>
                             <div className="col-1">
-                                <input type="checkbox" id="cashierReceiptCheckbox" value={checkboxValue} onChange={(e) => setCheckboxValue(e.target.checked)} className="form-check-input" />
+                                <input type="checkbox" name="insurercodeCB"  className="form-check-input" />
                                 <label htmlFor="cashierReceiptCheckbox" className="form-check-label">&nbsp;ALL</label>
                             </div>
                         </div>
@@ -232,13 +354,13 @@ const ReportPolicy = () => {
                             <div class="form-check col-2">
                                 <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1" defaultChecked onChange={(e) => setStatus('I')} />
                                 <label class="form-check-label" for="flexRadioDefault1">
-                                    (I) ใบคำขอ
+                                    (AI) ใบคำขอ
                                 </label>
                             </div>
                             <div class="form-check col-2">
                                 <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault2" onChange={(e) => setStatus('A')} />
                                 <label class="form-check-label" for="flexRadioDefault2">
-                                    (A) กรมธรรม์
+                                    (AA) กรมธรรม์
                                 </label>
                             </div>
                         </div>
@@ -253,17 +375,14 @@ const ReportPolicy = () => {
                             <div className="col-2">
                                 <select
                                     id="transactionType"
-                                    value={transactionType}
-                                    onChange={(e) => setTransactionType(e.target.value)}
+                                    name="class"
+                                    onChange={handleChange}
                                     className="form-control"
-                                    disabled={transactionTypeReadOnly}
-                                    style={{ backgroundColor: transactionTypeReadOnly ? 'white' : '' }}
                                 >
-                                    <option value="" disabled>Select Transaction Type</option>
-                                    <option value="PREM-IN">PREM-IN</option>
-                                    <option value="PREM-OUT">PREM-OUT</option>
-                                    <option value="COMM-OUT">COMM-OUT</option>
-                                    <option value="COMM-IN">COMM-IN</option>
+                                    <option value="" selected  hidden>Select Class</option>
+
+                                    {insureClassDD}
+              
                                 </select>
                             </div>
                             <div className="col-2">
@@ -272,17 +391,13 @@ const ReportPolicy = () => {
                             <div className="col-2">
                                 <select
                                     id="transactionType"
-                                    value={transactionType}
-                                    onChange={(e) => setTransactionType(e.target.value)}
+                                    name="subClass"
+                                    onChange={handleChange}
                                     className="form-control"
-                                    disabled={transactionTypeReadOnly}
-                                    style={{ backgroundColor: transactionTypeReadOnly ? 'white' : '' }}
                                 >
-                                    <option value="" disabled>Select Transaction Type</option>
-                                    <option value="PREM-IN">PREM-IN</option>
-                                    <option value="PREM-OUT">PREM-OUT</option>
-                                    <option value="COMM-OUT">COMM-OUT</option>
-                                    <option value="COMM-IN">COMM-IN</option>
+                                   <option value="" selected  hidden>Select SubClass</option>
+
+                                {insureSubClassDD}
                                 </select>
                             </div>
                         </div>
@@ -338,58 +453,15 @@ const ReportPolicy = () => {
                 </div>
                 <div className="col-lg-12">
                     <div style={{ overflowY: 'auto', height: '400px', marginTop: "50px" }}>
-                        {tableData.length != 0 ? <table className="table table-striped table-bordered">
-                            <thead>
-                                <tr>
-                                    <th>Bill Advisor No</th>
-                                    <th>DFR Preder No</th>
-                                    <th>Insurer Code</th>
-                                    <th>Advisor Code</th>
-                                    <th>Cashier Receipt No</th>
-                                    <th>Cashier Date</th>
-                                    <th>ARNO</th>
-                                    <th>Receive From</th>
-                                    <th>Receive Name</th>
-                                    <th>User Code</th>
-                                    <th>Create Date</th>
-                                    <th>Amt</th>
-                                    <th>Receive Type</th>
-                                    <th>Amity Account No</th>
-                                    <th>Amity Bank</th>
-                                    <th>Amity Bank Branch</th>
-                                    <th>Ref No</th>
-                                    <th>Bank</th>
-                                    <th>Bank Branch</th>
-                                    <th>Status</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {tableData.map((row, index) => (
-                                    <tr key={index}>
-                                        <td>{row.billadvisorno}</td>
-                                        <td>{row.dfrprederno ? row.dfrprederno : 'N/A'}</td>
-                                        <td>{row.insurercode}</td>
-                                        <td>{row.advisorcode}</td>
-                                        <td>{row.cashierreceiveno ? row.cashierreceiveno : 'N/A'}</td>
-                                        <td>{row.cashierdate ? row.cashierdate : 'N/A'}</td>
-                                        <td>{row.ARNO ? row.ARNO : 'N/A'}</td>
-                                        <td>{row.receivefrom}</td>
-                                        <td>{row.receivename}</td>
-                                        <td>{row.createusercode}</td>
-                                        <td>{row.createdAt}</td>
-                                        <td>{row.amt}</td>
-                                        <td>{row.receivetype}</td>
-                                        <td>{row.amityAccountno}</td>
-                                        <td>{row.amityBank}</td>
-                                        <td>{row.amityBankbranch}</td>
-                                        <td>{row.partnerAccountno ? row.partnerAccountno : 'N/A'}</td>
-                                        <td>{row.partnerBank}</td>
-                                        <td>{row.partnerBankbranch}</td>
-                                        <td>{row.status}</td>
-                                    </tr>
-                                ))}
-                            </tbody>
-                        </table> :
+                        {reportData.length > 0 ?
+                        
+                        <div>
+        <ReportTable cols={colData} rows={reportData} />
+        <button className="btn btn-primary" onClick={exportExcel}>Export To Excel</button>
+        {/* <button className="btn btn-warning" onClick={(e)=>saveapcommin(e)}>save</button>
+        <button className="btn btn-success" onClick={(e)=>submitapcommin(e)}>submit</button> */}
+      </div>
+                        :
                             <div className="container" style={{ marginTop: "30px" }}>
                                 <div className="row justify-content-center">
                                     <h2 className={"text-center"}>No Data</h2>

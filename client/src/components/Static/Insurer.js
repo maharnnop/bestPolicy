@@ -97,9 +97,9 @@ const Insurer = () => {
         setTitlePDD(array2)
       }).catch((err) => {
 
-        alert("token expired pls login again!!");
-        removeCookie('jwt');
-        navigate('/login')
+        // alert("token expired pls login again!!");
+        // removeCookie('jwt');
+        // navigate('/login')
 
       });
 
