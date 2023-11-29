@@ -1,0 +1,1093 @@
+{
+	"value": [
+	{
+		"compulsorycode" : "1.20A",
+		"t_description" : "รถยนต์นั่งโดยสาร ไม่เกิน 15 ที่นั่ง                                                                 ",
+		"newvoluntarycode" : "1.10 "
+	},
+	{
+		"compulsorycode" : "1.20A",
+		"t_description" : "รถยนต์นั่งโดยสาร ไม่เกิน 15 ที่นั่ง                                                                 ",
+		"newvoluntarycode" : "210  "
+	},
+	{
+		"compulsorycode" : "1.20A",
+		"t_description" : "รถยนต์นั่งโดยสาร ไม่เกิน 15 ที่นั่ง                                                                 ",
+		"newvoluntarycode" : "210E "
+	},
+	{
+		"compulsorycode" : "1.20A",
+		"t_description" : "รถยนต์นั่งโดยสาร ไม่เกิน 15 ที่นั่ง                                                                 ",
+		"newvoluntarycode" : "220  "
+	},
+	{
+		"compulsorycode" : "1.20A",
+		"t_description" : "รถยนต์นั่งโดยสาร ไม่เกิน 15 ที่นั่ง                                                                 ",
+		"newvoluntarycode" : "802  "
+	},
+	{
+		"compulsorycode" : "1.20A",
+		"t_description" : "รถยนต์นั่งโดยสาร ไม่เกิน 15 ที่นั่ง                                                                 ",
+		"newvoluntarycode" : "220E "
+	},
+	{
+		"compulsorycode" : "1.20A",
+		"t_description" : "รถยนต์นั่งโดยสาร ไม่เกิน 15 ที่นั่ง                                                                 ",
+		"newvoluntarycode" : "210D "
+	},
+	{
+		"compulsorycode" : "1.20A",
+		"t_description" : "รถยนต์นั่งโดยสาร ไม่เกิน 15 ที่นั่ง                                                                 ",
+		"newvoluntarycode" : "220D "
+	},
+	{
+		"compulsorycode" : "1.30A",
+		"t_description" : "รถจักรยานยนตื ไม่เกิน 75 CC                                                                         ",
+		"newvoluntarycode" : "610  "
+	},
+	{
+		"compulsorycode" : "1.30A",
+		"t_description" : "รถจักรยานยนตื ไม่เกิน 75 CC                                                                         ",
+		"newvoluntarycode" : "620  "
+	},
+	{
+		"compulsorycode" : "1.20B",
+		"t_description" : "รถยนต์นั่งโดยสาร เกิน 15 ที่นั่งถึง 20 ที่นั่ง                                                      ",
+		"newvoluntarycode" : "210  "
+	},
+	{
+		"compulsorycode" : "1.20B",
+		"t_description" : "รถยนต์นั่งโดยสาร เกิน 15 ที่นั่งถึง 20 ที่นั่ง                                                      ",
+		"newvoluntarycode" : "220  "
+	},
+	{
+		"compulsorycode" : "1.20B",
+		"t_description" : "รถยนต์นั่งโดยสาร เกิน 15 ที่นั่งถึง 20 ที่นั่ง                                                      ",
+		"newvoluntarycode" : "210E "
+	},
+	{
+		"compulsorycode" : "1.20B",
+		"t_description" : "รถยนต์นั่งโดยสาร เกิน 15 ที่นั่งถึง 20 ที่นั่ง                                                      ",
+		"newvoluntarycode" : "220E "
+	},
+	{
+		"compulsorycode" : "1.20B",
+		"t_description" : "รถยนต์นั่งโดยสาร เกิน 15 ที่นั่งถึง 20 ที่นั่ง                                                      ",
+		"newvoluntarycode" : "210D "
+	},
+	{
+		"compulsorycode" : "1.20B",
+		"t_description" : "รถยนต์นั่งโดยสาร เกิน 15 ที่นั่งถึง 20 ที่นั่ง                                                      ",
+		"newvoluntarycode" : "220D "
+	},
+	{
+		"compulsorycode" : "1.20C",
+		"t_description" : "รถยนต์นั่งโดยสารเกิน 20 ถึง 40 ที่นั่ง                                                              ",
+		"newvoluntarycode" : "210  "
+	},
+	{
+		"compulsorycode" : "1.20C",
+		"t_description" : "รถยนต์นั่งโดยสารเกิน 20 ถึง 40 ที่นั่ง                                                              ",
+		"newvoluntarycode" : "220  "
+	},
+	{
+		"compulsorycode" : "1.20C",
+		"t_description" : "รถยนต์นั่งโดยสารเกิน 20 ถึง 40 ที่นั่ง                                                              ",
+		"newvoluntarycode" : "210E "
+	},
+	{
+		"compulsorycode" : "1.20C",
+		"t_description" : "รถยนต์นั่งโดยสารเกิน 20 ถึง 40 ที่นั่ง                                                              ",
+		"newvoluntarycode" : "220E "
+	},
+	{
+		"compulsorycode" : "1.20C",
+		"t_description" : "รถยนต์นั่งโดยสารเกิน 20 ถึง 40 ที่นั่ง                                                              ",
+		"newvoluntarycode" : "210D "
+	},
+	{
+		"compulsorycode" : "1.20C",
+		"t_description" : "รถยนต์นั่งโดยสารเกิน 20 ถึง 40 ที่นั่ง                                                              ",
+		"newvoluntarycode" : "220D "
+	},
+	{
+		"compulsorycode" : "1.20D",
+		"t_description" : "รถยนต์นั่งโดยสาร เกิน 40 ที่นั่ง                                                                    ",
+		"newvoluntarycode" : "210  "
+	},
+	{
+		"compulsorycode" : "1.20D",
+		"t_description" : "รถยนต์นั่งโดยสาร เกิน 40 ที่นั่ง                                                                    ",
+		"newvoluntarycode" : "220  "
+	},
+	{
+		"compulsorycode" : "1.20D",
+		"t_description" : "รถยนต์นั่งโดยสาร เกิน 40 ที่นั่ง                                                                    ",
+		"newvoluntarycode" : "210E "
+	},
+	{
+		"compulsorycode" : "1.20D",
+		"t_description" : "รถยนต์นั่งโดยสาร เกิน 40 ที่นั่ง                                                                    ",
+		"newvoluntarycode" : "220E "
+	},
+	{
+		"compulsorycode" : "1.20D",
+		"t_description" : "รถยนต์นั่งโดยสาร เกิน 40 ที่นั่ง                                                                    ",
+		"newvoluntarycode" : "210D "
+	},
+	{
+		"compulsorycode" : "1.20D",
+		"t_description" : "รถยนต์นั่งโดยสาร เกิน 40 ที่นั่ง                                                                    ",
+		"newvoluntarycode" : "220D "
+	},
+	{
+		"compulsorycode" : "1.30B",
+		"t_description" : "รถจักรยานยนต์ เกิน 75 ถึง 125CC                                                                     ",
+		"newvoluntarycode" : "610  "
+	},
+	{
+		"compulsorycode" : "1.30B",
+		"t_description" : "รถจักรยานยนต์ เกิน 75 ถึง 125CC                                                                     ",
+		"newvoluntarycode" : "620  "
+	},
+	{
+		"compulsorycode" : "1.30C",
+		"t_description" : "รถจักรยานยนต์ เกิน 125 ถึง 150 CC                                                                   ",
+		"newvoluntarycode" : "610  "
+	},
+	{
+		"compulsorycode" : "1.30C",
+		"t_description" : "รถจักรยานยนต์ เกิน 125 ถึง 150 CC                                                                   ",
+		"newvoluntarycode" : "620  "
+	},
+	{
+		"compulsorycode" : "1.30D",
+		"t_description" : "รถจักรยานยนต์ เกิน 150 CC                                                                           ",
+		"newvoluntarycode" : "610  "
+	},
+	{
+		"compulsorycode" : "1.30D",
+		"t_description" : "รถจักรยานยนต์ เกิน 150 CC                                                                           ",
+		"newvoluntarycode" : "620  "
+	},
+	{
+		"compulsorycode" : "1.40A",
+		"t_description" : "รถยนต์บรรทุก ไม่เกิน 3 ตัน                                                                          ",
+		"newvoluntarycode" : "320  "
+	},
+	{
+		"compulsorycode" : "1.40A",
+		"t_description" : "รถยนต์บรรทุก ไม่เกิน 3 ตัน                                                                          ",
+		"newvoluntarycode" : "327  "
+	},
+	{
+		"compulsorycode" : "1.40A",
+		"t_description" : "รถยนต์บรรทุก ไม่เกิน 3 ตัน                                                                          ",
+		"newvoluntarycode" : "803  "
+	},
+	{
+		"compulsorycode" : "1.40A",
+		"t_description" : "รถยนต์บรรทุก ไม่เกิน 3 ตัน                                                                          ",
+		"newvoluntarycode" : "320E "
+	},
+	{
+		"compulsorycode" : "1.40A",
+		"t_description" : "รถยนต์บรรทุก ไม่เกิน 3 ตัน                                                                          ",
+		"newvoluntarycode" : "320D "
+	},
+	{
+		"compulsorycode" : "1.40B",
+		"t_description" : "รถยนต์บรรทุก เกิน 3 ถึง 6 ตัน                                                                       ",
+		"newvoluntarycode" : "320  "
+	},
+	{
+		"compulsorycode" : "1.40B",
+		"t_description" : "รถยนต์บรรทุก เกิน 3 ถึง 6 ตัน                                                                       ",
+		"newvoluntarycode" : "327  "
+	},
+	{
+		"compulsorycode" : "1.40B",
+		"t_description" : "รถยนต์บรรทุก เกิน 3 ถึง 6 ตัน                                                                       ",
+		"newvoluntarycode" : "803  "
+	},
+	{
+		"compulsorycode" : "1.40B",
+		"t_description" : "รถยนต์บรรทุก เกิน 3 ถึง 6 ตัน                                                                       ",
+		"newvoluntarycode" : "320D "
+	},
+	{
+		"compulsorycode" : "1.40C",
+		"t_description" : "รถยนต์บรรทุกเกิน 6 ตัน ถึง 12 ตัน                                                                   ",
+		"newvoluntarycode" : "320  "
+	},
+	{
+		"compulsorycode" : "1.40C",
+		"t_description" : "รถยนต์บรรทุกเกิน 6 ตัน ถึง 12 ตัน                                                                   ",
+		"newvoluntarycode" : "327  "
+	},
+	{
+		"compulsorycode" : "1.40C",
+		"t_description" : "รถยนต์บรรทุกเกิน 6 ตัน ถึง 12 ตัน                                                                   ",
+		"newvoluntarycode" : "803  "
+	},
+	{
+		"compulsorycode" : "1.40C",
+		"t_description" : "รถยนต์บรรทุกเกิน 6 ตัน ถึง 12 ตัน                                                                   ",
+		"newvoluntarycode" : "805  "
+	},
+	{
+		"compulsorycode" : "1.40C",
+		"t_description" : "รถยนต์บรรทุกเกิน 6 ตัน ถึง 12 ตัน                                                                   ",
+		"newvoluntarycode" : "320D "
+	},
+	{
+		"compulsorycode" : "1.40D",
+		"t_description" : "รถยนต์บรรทุก เกิน 12 ตัน                                                                            ",
+		"newvoluntarycode" : "320  "
+	},
+	{
+		"compulsorycode" : "1.40D",
+		"t_description" : "รถยนต์บรรทุก เกิน 12 ตัน                                                                            ",
+		"newvoluntarycode" : "327  "
+	},
+	{
+		"compulsorycode" : "1.40D",
+		"t_description" : "รถยนต์บรรทุก เกิน 12 ตัน                                                                            ",
+		"newvoluntarycode" : "803  "
+	},
+	{
+		"compulsorycode" : "1.40D",
+		"t_description" : "รถยนต์บรรทุก เกิน 12 ตัน                                                                            ",
+		"newvoluntarycode" : "320D "
+	},
+	{
+		"compulsorycode" : "1.70A",
+		"t_description" : "รถสามล้อเครื่อง ในเขตกรุงเทพฯ                                                                       ",
+		"newvoluntarycode" : "110  "
+	},
+	{
+		"compulsorycode" : "1.70A",
+		"t_description" : "รถสามล้อเครื่อง ในเขตกรุงเทพฯ                                                                       ",
+		"newvoluntarycode" : "120  "
+	},
+	{
+		"compulsorycode" : "1.70A",
+		"t_description" : "รถสามล้อเครื่อง ในเขตกรุงเทพฯ                                                                       ",
+		"newvoluntarycode" : "110D "
+	},
+	{
+		"compulsorycode" : "1.70A",
+		"t_description" : "รถสามล้อเครื่อง ในเขตกรุงเทพฯ                                                                       ",
+		"newvoluntarycode" : "120D "
+	},
+	{
+		"compulsorycode" : "1.70B",
+		"t_description" : "รถสามล้อเครื่อง นอกเขตกรุงเทพฯ                                                                      ",
+		"newvoluntarycode" : "110  "
+	},
+	{
+		"compulsorycode" : "1.70B",
+		"t_description" : "รถสามล้อเครื่อง นอกเขตกรุงเทพฯ                                                                      ",
+		"newvoluntarycode" : "110D "
+	},
+	{
+		"compulsorycode" : "1.71 ",
+		"t_description" : "รถยนต์สามล้อที่แปรสภาพมาจากรถจักรยานยนต์ (สกายแลป)                                                  ",
+		"newvoluntarycode" : "110  "
+	},
+	{
+		"compulsorycode" : "1.71 ",
+		"t_description" : "รถยนต์สามล้อที่แปรสภาพมาจากรถจักรยานยนต์ (สกายแลป)                                                  ",
+		"newvoluntarycode" : "110D "
+	},
+	{
+		"compulsorycode" : "1.42A",
+		"t_description" : "รถยนต์บรรทุกน้ำมันเชื้อเพลิงแก๊ส ไม่เกิน 12 ตัน                                                     ",
+		"newvoluntarycode" : "347  "
+	},
+	{
+		"compulsorycode" : "1.42A",
+		"t_description" : "รถยนต์บรรทุกน้ำมันเชื้อเพลิงแก๊ส ไม่เกิน 12 ตัน                                                     ",
+		"newvoluntarycode" : "340  "
+	},
+	{
+		"compulsorycode" : "1.42A",
+		"t_description" : "รถยนต์บรรทุกน้ำมันเชื้อเพลิงแก๊ส ไม่เกิน 12 ตัน                                                     ",
+		"newvoluntarycode" : "340D "
+	},
+	{
+		"compulsorycode" : "1.42B",
+		"t_description" : "รถยนต์บรรทุกน้ำมันเชื้อเพลิงแก๊ส เกิน 12 ตัน                                                        ",
+		"newvoluntarycode" : "347  "
+	},
+	{
+		"compulsorycode" : "1.42B",
+		"t_description" : "รถยนต์บรรทุกน้ำมันเชื้อเพลิงแก๊ส เกิน 12 ตัน                                                        ",
+		"newvoluntarycode" : "340  "
+	},
+	{
+		"compulsorycode" : "1.42B",
+		"t_description" : "รถยนต์บรรทุกน้ำมันเชื้อเพลิงแก๊ส เกิน 12 ตัน                                                        ",
+		"newvoluntarycode" : "340D "
+	},
+	{
+		"compulsorycode" : "1.50 ",
+		"t_description" : "หัวรถลากจูง                                                                                         ",
+		"newvoluntarycode" : "420  "
+	},
+	{
+		"compulsorycode" : "1.60 ",
+		"t_description" : "รถพ่วง                                                                                              ",
+		"newvoluntarycode" : "520  "
+	},
+	{
+		"compulsorycode" : "1.60 ",
+		"t_description" : "รถพ่วง                                                                                              ",
+		"newvoluntarycode" : "540  "
+	},
+	{
+		"compulsorycode" : "4.01 ",
+		"t_description" : "รถยนต์ป้ายแดง (การค้ารถยนต์)                                                                        ",
+		"newvoluntarycode" : "801  "
+	},
+	{
+		"compulsorycode" : "4.01 ",
+		"t_description" : "รถยนต์ป้ายแดง (การค้ารถยนต์)                                                                        ",
+		"newvoluntarycode" : "801E "
+	},
+	{
+		"compulsorycode" : "4.07 ",
+		"t_description" : "รถยนต์ประเภทอื่น ๆ                                                                                  ",
+		"newvoluntarycode" : "802  "
+	},
+	{
+		"compulsorycode" : "4.07 ",
+		"t_description" : "รถยนต์ประเภทอื่น ๆ                                                                                  ",
+		"newvoluntarycode" : "803  "
+	},
+	{
+		"compulsorycode" : "4.07 ",
+		"t_description" : "รถยนต์ประเภทอื่น ๆ                                                                                  ",
+		"newvoluntarycode" : "805  "
+	},
+	{
+		"compulsorycode" : "4.07 ",
+		"t_description" : "รถยนต์ประเภทอื่น ๆ                                                                                  ",
+		"newvoluntarycode" : "806  "
+	},
+	{
+		"compulsorycode" : "4.07 ",
+		"t_description" : "รถยนต์ประเภทอื่น ๆ                                                                                  ",
+		"newvoluntarycode" : "804  "
+	},
+	{
+		"compulsorycode" : "4.07 ",
+		"t_description" : "รถยนต์ประเภทอื่น ๆ                                                                                  ",
+		"newvoluntarycode" : "230E "
+	},
+	{
+		"compulsorycode" : "4.07 ",
+		"t_description" : "รถยนต์ประเภทอื่น ๆ                                                                                  ",
+		"newvoluntarycode" : "802E "
+	},
+	{
+		"compulsorycode" : "4.07 ",
+		"t_description" : "รถยนต์ประเภทอื่น ๆ                                                                                  ",
+		"newvoluntarycode" : "803E "
+	},
+	{
+		"compulsorycode" : "4.07 ",
+		"t_description" : "รถยนต์ประเภทอื่น ๆ                                                                                  ",
+		"newvoluntarycode" : "804E "
+	},
+	{
+		"compulsorycode" : "4.07 ",
+		"t_description" : "รถยนต์ประเภทอื่น ๆ                                                                                  ",
+		"newvoluntarycode" : "805E "
+	},
+	{
+		"compulsorycode" : "4.07 ",
+		"t_description" : "รถยนต์ประเภทอื่น ๆ                                                                                  ",
+		"newvoluntarycode" : "806E "
+	},
+	{
+		"compulsorycode" : "1.10 ",
+		"t_description" : "รถยนต์นั่งไม่เกิน 7 คน                                                                              ",
+		"newvoluntarycode" : "1.024"
+	},
+	{
+		"compulsorycode" : "1.10 ",
+		"t_description" : "รถยนต์นั่งไม่เกิน 7 คน                                                                              ",
+		"newvoluntarycode" : "1.10 "
+	},
+	{
+		"compulsorycode" : "1.10 ",
+		"t_description" : "รถยนต์นั่งไม่เกิน 7 คน                                                                              ",
+		"newvoluntarycode" : "3.10 "
+	},
+	{
+		"compulsorycode" : "1.10 ",
+		"t_description" : "รถยนต์นั่งไม่เกิน 7 คน                                                                              ",
+		"newvoluntarycode" : "110  "
+	},
+	{
+		"compulsorycode" : "1.10 ",
+		"t_description" : "รถยนต์นั่งไม่เกิน 7 คน                                                                              ",
+		"newvoluntarycode" : "120  "
+	},
+	{
+		"compulsorycode" : "1.10 ",
+		"t_description" : "รถยนต์นั่งไม่เกิน 7 คน                                                                              ",
+		"newvoluntarycode" : "802  "
+	},
+	{
+		"compulsorycode" : "1.10 ",
+		"t_description" : "รถยนต์นั่งไม่เกิน 7 คน                                                                              ",
+		"newvoluntarycode" : "110D "
+	},
+	{
+		"compulsorycode" : "1.10 ",
+		"t_description" : "รถยนต์นั่งไม่เกิน 7 คน                                                                              ",
+		"newvoluntarycode" : "120D "
+	},
+	{
+		"compulsorycode" : "2.20A",
+		"t_description" : "รถยนต์นั่งโดยสารไม่เกิน 15 ที่นั่ง                                                                  ",
+		"newvoluntarycode" : "220  "
+	},
+	{
+		"compulsorycode" : "2.20A",
+		"t_description" : "รถยนต์นั่งโดยสารไม่เกิน 15 ที่นั่ง                                                                  ",
+		"newvoluntarycode" : "220E "
+	},
+	{
+		"compulsorycode" : "2.20A",
+		"t_description" : "รถยนต์นั่งโดยสารไม่เกิน 15 ที่นั่ง                                                                  ",
+		"newvoluntarycode" : "220D "
+	},
+	{
+		"compulsorycode" : "2.20B",
+		"t_description" : "รถยนต์นั่งโดยสารเกิน 15 ที่นั่ง ถึง 20 ที่นั่ง                                                      ",
+		"newvoluntarycode" : "220  "
+	},
+	{
+		"compulsorycode" : "2.20B",
+		"t_description" : "รถยนต์นั่งโดยสารเกิน 15 ที่นั่ง ถึง 20 ที่นั่ง                                                      ",
+		"newvoluntarycode" : "220E "
+	},
+	{
+		"compulsorycode" : "2.20B",
+		"t_description" : "รถยนต์นั่งโดยสารเกิน 15 ที่นั่ง ถึง 20 ที่นั่ง                                                      ",
+		"newvoluntarycode" : "220D "
+	},
+	{
+		"compulsorycode" : "2.20C",
+		"t_description" : "รถยนต์นั่งโดยสารเกิน 20 ที่นั่ง ถึง 40 ที่นั่ง                                                      ",
+		"newvoluntarycode" : "220  "
+	},
+	{
+		"compulsorycode" : "2.20C",
+		"t_description" : "รถยนต์นั่งโดยสารเกิน 20 ที่นั่ง ถึง 40 ที่นั่ง                                                      ",
+		"newvoluntarycode" : "220E "
+	},
+	{
+		"compulsorycode" : "2.20C",
+		"t_description" : "รถยนต์นั่งโดยสารเกิน 20 ที่นั่ง ถึง 40 ที่นั่ง                                                      ",
+		"newvoluntarycode" : "220D "
+	},
+	{
+		"compulsorycode" : "2.20D",
+		"t_description" : "รถยนต์นั่งโดยสารเกิน 40 ที่นั่ง                                                                     ",
+		"newvoluntarycode" : "220  "
+	},
+	{
+		"compulsorycode" : "2.20D",
+		"t_description" : "รถยนต์นั่งโดยสารเกิน 40 ที่นั่ง                                                                     ",
+		"newvoluntarycode" : "220E "
+	},
+	{
+		"compulsorycode" : "2.20D",
+		"t_description" : "รถยนต์นั่งโดยสารเกิน 40 ที่นั่ง                                                                     ",
+		"newvoluntarycode" : "220D "
+	},
+	{
+		"compulsorycode" : "2.30A",
+		"t_description" : "รถจักรยานยนต์ ไม่เกิน 75 ซีซี                                                                       ",
+		"newvoluntarycode" : "620  "
+	},
+	{
+		"compulsorycode" : "2.30A",
+		"t_description" : "รถจักรยานยนต์ ไม่เกิน 75 ซีซี                                                                       ",
+		"newvoluntarycode" : "630  "
+	},
+	{
+		"compulsorycode" : "2.30B",
+		"t_description" : "รถจักรยานยนต์ เกิน 75 ซีซี ถึง 125 ซีซี                                                             ",
+		"newvoluntarycode" : "620  "
+	},
+	{
+		"compulsorycode" : "2.30B",
+		"t_description" : "รถจักรยานยนต์ เกิน 75 ซีซี ถึง 125 ซีซี                                                             ",
+		"newvoluntarycode" : "630  "
+	},
+	{
+		"compulsorycode" : "2.30C",
+		"t_description" : "รถจักรยานยนต์ เกิน 125 ซีซี ถึง 150 ซีซี                                                            ",
+		"newvoluntarycode" : "620  "
+	},
+	{
+		"compulsorycode" : "2.30C",
+		"t_description" : "รถจักรยานยนต์ เกิน 125 ซีซี ถึง 150 ซีซี                                                            ",
+		"newvoluntarycode" : "630  "
+	},
+	{
+		"compulsorycode" : "2.30D",
+		"t_description" : "รถจักรยานยนต์ เกิน 150 ซีซี                                                                         ",
+		"newvoluntarycode" : "620  "
+	},
+	{
+		"compulsorycode" : "2.30D",
+		"t_description" : "รถจักรยานยนต์ เกิน 150 ซีซี                                                                         ",
+		"newvoluntarycode" : "630  "
+	},
+	{
+		"compulsorycode" : "3.30A",
+		"t_description" : "รถจักรยานยนต์ ไม่เกิน 75 ซีซี                                                                       ",
+		"newvoluntarycode" : "620  "
+	},
+	{
+		"compulsorycode" : "3.30A",
+		"t_description" : "รถจักรยานยนต์ ไม่เกิน 75 ซีซี                                                                       ",
+		"newvoluntarycode" : "630  "
+	},
+	{
+		"compulsorycode" : "3.30B",
+		"t_description" : "รถจักรยานยนต์เกิน 75 ซีซี ถึง 125 ซีซี                                                              ",
+		"newvoluntarycode" : "620  "
+	},
+	{
+		"compulsorycode" : "3.30B",
+		"t_description" : "รถจักรยานยนต์เกิน 75 ซีซี ถึง 125 ซีซี                                                              ",
+		"newvoluntarycode" : "630  "
+	},
+	{
+		"compulsorycode" : "3.30D",
+		"t_description" : "รถจักรยานยนต์ เกิน 150 ซีซี                                                                         ",
+		"newvoluntarycode" : "620  "
+	},
+	{
+		"compulsorycode" : "3.30D",
+		"t_description" : "รถจักรยานยนต์ เกิน 150 ซีซี                                                                         ",
+		"newvoluntarycode" : "630  "
+	},
+	{
+		"compulsorycode" : "3.30C",
+		"t_description" : "รถจักรยานยนต์เกิน 125 ซีซี ถึง 150 ซีซี                                                             ",
+		"newvoluntarycode" : "620  "
+	},
+	{
+		"compulsorycode" : "3.30C",
+		"t_description" : "รถจักรยานยนต์เกิน 125 ซีซี ถึง 150 ซีซี                                                             ",
+		"newvoluntarycode" : "630  "
+	},
+	{
+		"compulsorycode" : "2.42A",
+		"t_description" : "รถยนต์บรรทุกน้ำมันเชื้อเพลิงแก๊ส ไม่เกิน 12 ตัน                                                     ",
+		"newvoluntarycode" : "340  "
+	},
+	{
+		"compulsorycode" : "2.42A",
+		"t_description" : "รถยนต์บรรทุกน้ำมันเชื้อเพลิงแก๊ส ไม่เกิน 12 ตัน                                                     ",
+		"newvoluntarycode" : "347  "
+	},
+	{
+		"compulsorycode" : "2.42A",
+		"t_description" : "รถยนต์บรรทุกน้ำมันเชื้อเพลิงแก๊ส ไม่เกิน 12 ตัน                                                     ",
+		"newvoluntarycode" : "340D "
+	},
+	{
+		"compulsorycode" : "2.42B",
+		"t_description" : "รถยนต์บรรทุกน้ำมันเชื้อเพลิงแก๊ส เกิน 12 ตัน                                                        ",
+		"newvoluntarycode" : "340  "
+	},
+	{
+		"compulsorycode" : "2.42B",
+		"t_description" : "รถยนต์บรรทุกน้ำมันเชื้อเพลิงแก๊ส เกิน 12 ตัน                                                        ",
+		"newvoluntarycode" : "347  "
+	},
+	{
+		"compulsorycode" : "2.42B",
+		"t_description" : "รถยนต์บรรทุกน้ำมันเชื้อเพลิงแก๊ส เกิน 12 ตัน                                                        ",
+		"newvoluntarycode" : "340D "
+	},
+	{
+		"compulsorycode" : "3.42A",
+		"t_description" : "รถยนต์บรรทุกน้ำมันเชื้อเพลิงแก๊ส ไม่เกิน 12 ตัน                                                     ",
+		"newvoluntarycode" : "347  "
+	},
+	{
+		"compulsorycode" : "3.42A",
+		"t_description" : "รถยนต์บรรทุกน้ำมันเชื้อเพลิงแก๊ส ไม่เกิน 12 ตัน                                                     ",
+		"newvoluntarycode" : "340  "
+	},
+	{
+		"compulsorycode" : "3.42A",
+		"t_description" : "รถยนต์บรรทุกน้ำมันเชื้อเพลิงแก๊ส ไม่เกิน 12 ตัน                                                     ",
+		"newvoluntarycode" : "340D "
+	},
+	{
+		"compulsorycode" : "3.42B",
+		"t_description" : "รถยนต์บรรทุกน้ำมันเชื้อเพลิงแก๊ส เกิน 12 ตัน                                                        ",
+		"newvoluntarycode" : "347  "
+	},
+	{
+		"compulsorycode" : "3.42B",
+		"t_description" : "รถยนต์บรรทุกน้ำมันเชื้อเพลิงแก๊ส เกิน 12 ตัน                                                        ",
+		"newvoluntarycode" : "340  "
+	},
+	{
+		"compulsorycode" : "3.42B",
+		"t_description" : "รถยนต์บรรทุกน้ำมันเชื้อเพลิงแก๊ส เกิน 12 ตัน                                                        ",
+		"newvoluntarycode" : "340D "
+	},
+	{
+		"compulsorycode" : "2.50 ",
+		"t_description" : "หัวรถลากจูง                                                                                         ",
+		"newvoluntarycode" : "420  "
+	},
+	{
+		"compulsorycode" : "3.50 ",
+		"t_description" : "หัวรถลากจูง                                                                                         ",
+		"newvoluntarycode" : "420  "
+	},
+	{
+		"compulsorycode" : "2.60 ",
+		"t_description" : "รถพ่วง                                                                                              ",
+		"newvoluntarycode" : "520  "
+	},
+	{
+		"compulsorycode" : "2.60 ",
+		"t_description" : "รถพ่วง                                                                                              ",
+		"newvoluntarycode" : "540  "
+	},
+	{
+		"compulsorycode" : "3.60 ",
+		"t_description" : "รถพ่วง                                                                                              ",
+		"newvoluntarycode" : "520  "
+	},
+	{
+		"compulsorycode" : "3.60 ",
+		"t_description" : "รถพ่วง                                                                                              ",
+		"newvoluntarycode" : "540  "
+	},
+	{
+		"compulsorycode" : "2.10 ",
+		"t_description" : "รถยนต์นั่งไม่เกิน7 คน                                                                               ",
+		"newvoluntarycode" : "120  "
+	},
+	{
+		"compulsorycode" : "2.10 ",
+		"t_description" : "รถยนต์นั่งไม่เกิน7 คน                                                                               ",
+		"newvoluntarycode" : "120D "
+	},
+	{
+		"compulsorycode" : "3.10 ",
+		"t_description" : "รถยนต์นั่งไม่เกิน 7 คน                                                                              ",
+		"newvoluntarycode" : "730  "
+	},
+	{
+		"compulsorycode" : "2.70A",
+		"t_description" : "รถสามล้อเครื่องในเขตกรุงเทพฯ                                                                        ",
+		"newvoluntarycode" : "730  "
+	},
+	{
+		"compulsorycode" : "2.70B",
+		"t_description" : "รถสามล้อเครื่องนอกเขตกรุงเทพฯ                                                                       ",
+		"newvoluntarycode" : "730  "
+	},
+	{
+		"compulsorycode" : "3.70A",
+		"t_description" : "รถสามล้อเครื่องในเขตกรุงเทพฯ                                                                        ",
+		"newvoluntarycode" : "730  "
+	},
+	{
+		"compulsorycode" : "3.70B",
+		"t_description" : "รถสามล้อเครื่องนอกเขตกรุงเทพฯ                                                                       ",
+		"newvoluntarycode" : "730  "
+	},
+	{
+		"compulsorycode" : "3.20A",
+		"t_description" : "รถยนต์นั่งโดยสารไม่เกิน 15 ที่นั่ง                                                                  ",
+		"newvoluntarycode" : "230  "
+	},
+	{
+		"compulsorycode" : "3.20A",
+		"t_description" : "รถยนต์นั่งโดยสารไม่เกิน 15 ที่นั่ง                                                                  ",
+		"newvoluntarycode" : "230E "
+	},
+	{
+		"compulsorycode" : "3.20B",
+		"t_description" : "รถยนต์นั่งโดยสารเกิน 15 ที่นั่ง ถึง 20 ที่นั่ง                                                      ",
+		"newvoluntarycode" : "230  "
+	},
+	{
+		"compulsorycode" : "3.20B",
+		"t_description" : "รถยนต์นั่งโดยสารเกิน 15 ที่นั่ง ถึง 20 ที่นั่ง                                                      ",
+		"newvoluntarycode" : "230E "
+	},
+	{
+		"compulsorycode" : "3.20C",
+		"t_description" : "รถยนต์นั่งโดยสารเกิน 20 ถึง 40 ที่นั่ง                                                              ",
+		"newvoluntarycode" : "230  "
+	},
+	{
+		"compulsorycode" : "3.20C",
+		"t_description" : "รถยนต์นั่งโดยสารเกิน 20 ถึง 40 ที่นั่ง                                                              ",
+		"newvoluntarycode" : "230E "
+	},
+	{
+		"compulsorycode" : "3.20D",
+		"t_description" : "รถยนต์นั่งโดยสารเกิน 40 ที่นั่ง                                                                     ",
+		"newvoluntarycode" : "230  "
+	},
+	{
+		"compulsorycode" : "3.20D",
+		"t_description" : "รถยนต์นั่งโดยสารเกิน 40 ที่นั่ง                                                                     ",
+		"newvoluntarycode" : "230E "
+	},
+	{
+		"compulsorycode" : "2.40A",
+		"t_description" : "รถยนต์บรรทุกไม่เกิน 3 ตัน                                                                           ",
+		"newvoluntarycode" : "320  "
+	},
+	{
+		"compulsorycode" : "2.40A",
+		"t_description" : "รถยนต์บรรทุกไม่เกิน 3 ตัน                                                                           ",
+		"newvoluntarycode" : "327  "
+	},
+	{
+		"compulsorycode" : "2.40A",
+		"t_description" : "รถยนต์บรรทุกไม่เกิน 3 ตัน                                                                           ",
+		"newvoluntarycode" : "320D "
+	},
+	{
+		"compulsorycode" : "2.40B",
+		"t_description" : "รถยนต์บรรทุกเกิน 3 ตัน ถึง 6 ตัน                                                                    ",
+		"newvoluntarycode" : "320  "
+	},
+	{
+		"compulsorycode" : "2.40B",
+		"t_description" : "รถยนต์บรรทุกเกิน 3 ตัน ถึง 6 ตัน                                                                    ",
+		"newvoluntarycode" : "327  "
+	},
+	{
+		"compulsorycode" : "2.40B",
+		"t_description" : "รถยนต์บรรทุกเกิน 3 ตัน ถึง 6 ตัน                                                                    ",
+		"newvoluntarycode" : "320D "
+	},
+	{
+		"compulsorycode" : "2.40C",
+		"t_description" : "รถยนต์บรรทุกเกิน 6 ตัน ถึง 12 ตัน                                                                   ",
+		"newvoluntarycode" : "320  "
+	},
+	{
+		"compulsorycode" : "2.40C",
+		"t_description" : "รถยนต์บรรทุกเกิน 6 ตัน ถึง 12 ตัน                                                                   ",
+		"newvoluntarycode" : "327  "
+	},
+	{
+		"compulsorycode" : "2.40C",
+		"t_description" : "รถยนต์บรรทุกเกิน 6 ตัน ถึง 12 ตัน                                                                   ",
+		"newvoluntarycode" : "320D "
+	},
+	{
+		"compulsorycode" : "2.40D",
+		"t_description" : "รถยนต์บรรทุกเกิน 12 ตัน                                                                             ",
+		"newvoluntarycode" : "320  "
+	},
+	{
+		"compulsorycode" : "2.40D",
+		"t_description" : "รถยนต์บรรทุกเกิน 12 ตัน                                                                             ",
+		"newvoluntarycode" : "327  "
+	},
+	{
+		"compulsorycode" : "2.40D",
+		"t_description" : "รถยนต์บรรทุกเกิน 12 ตัน                                                                             ",
+		"newvoluntarycode" : "320D "
+	},
+	{
+		"compulsorycode" : "3.40A",
+		"t_description" : "รถยนต์บรรทุกไม่เกิน 3 ตัน                                                                           ",
+		"newvoluntarycode" : "327  "
+	},
+	{
+		"compulsorycode" : "3.40A",
+		"t_description" : "รถยนต์บรรทุกไม่เกิน 3 ตัน                                                                           ",
+		"newvoluntarycode" : "320  "
+	},
+	{
+		"compulsorycode" : "3.40A",
+		"t_description" : "รถยนต์บรรทุกไม่เกิน 3 ตัน                                                                           ",
+		"newvoluntarycode" : "805  "
+	},
+	{
+		"compulsorycode" : "3.40A",
+		"t_description" : "รถยนต์บรรทุกไม่เกิน 3 ตัน                                                                           ",
+		"newvoluntarycode" : "320D "
+	},
+	{
+		"compulsorycode" : "3.40A",
+		"t_description" : "รถยนต์บรรทุกไม่เกิน 3 ตัน                                                                           ",
+		"newvoluntarycode" : "ALLD "
+	},
+	{
+		"compulsorycode" : "3.40B",
+		"t_description" : "รถยนต์บรรทุกเกิน 3 ตัน ถึง 6 ตัน                                                                    ",
+		"newvoluntarycode" : "320  "
+	},
+	{
+		"compulsorycode" : "3.40B",
+		"t_description" : "รถยนต์บรรทุกเกิน 3 ตัน ถึง 6 ตัน                                                                    ",
+		"newvoluntarycode" : "327  "
+	},
+	{
+		"compulsorycode" : "3.40B",
+		"t_description" : "รถยนต์บรรทุกเกิน 3 ตัน ถึง 6 ตัน                                                                    ",
+		"newvoluntarycode" : "805  "
+	},
+	{
+		"compulsorycode" : "3.40B",
+		"t_description" : "รถยนต์บรรทุกเกิน 3 ตัน ถึง 6 ตัน                                                                    ",
+		"newvoluntarycode" : "320D "
+	},
+	{
+		"compulsorycode" : "3.40D",
+		"t_description" : "รถยนต์บรรทุกเกิน 12 ตัน                                                                             ",
+		"newvoluntarycode" : "320  "
+	},
+	{
+		"compulsorycode" : "3.40D",
+		"t_description" : "รถยนต์บรรทุกเกิน 12 ตัน                                                                             ",
+		"newvoluntarycode" : "327  "
+	},
+	{
+		"compulsorycode" : "3.40D",
+		"t_description" : "รถยนต์บรรทุกเกิน 12 ตัน                                                                             ",
+		"newvoluntarycode" : "805  "
+	},
+	{
+		"compulsorycode" : "3.40D",
+		"t_description" : "รถยนต์บรรทุกเกิน 12 ตัน                                                                             ",
+		"newvoluntarycode" : "320D "
+	},
+	{
+		"compulsorycode" : "4.06 ",
+		"t_description" : "รถใช้งานเกษตรกรรม                                                                                   ",
+		"newvoluntarycode" : "804  "
+	},
+	{
+		"compulsorycode" : "3.20H",
+		"t_description" : "รถยนต์นั่งโดยสาร(ระหว่างอำเภอ)เกิน 40 ที่นั่ง                                                       ",
+		"newvoluntarycode" : "230  "
+	},
+	{
+		"compulsorycode" : "3.20H",
+		"t_description" : "รถยนต์นั่งโดยสาร(ระหว่างอำเภอ)เกิน 40 ที่นั่ง                                                       ",
+		"newvoluntarycode" : "230E "
+	},
+	{
+		"compulsorycode" : "2.20E",
+		"t_description" : "รถโดยสารไม่เกิน 15ที่นั่ง                                                                           ",
+		"newvoluntarycode" : "220  "
+	},
+	{
+		"compulsorycode" : "2.20E",
+		"t_description" : "รถโดยสารไม่เกิน 15ที่นั่ง                                                                           ",
+		"newvoluntarycode" : "220D "
+	},
+	{
+		"compulsorycode" : "3.40C",
+		"t_description" : "รถบรรทุกน้ำหนักไม่เกิน 12 ตัน                                                                       ",
+		"newvoluntarycode" : "320  "
+	},
+	{
+		"compulsorycode" : "3.40C",
+		"t_description" : "รถบรรทุกน้ำหนักไม่เกิน 12 ตัน                                                                       ",
+		"newvoluntarycode" : "327  "
+	},
+	{
+		"compulsorycode" : "3.40C",
+		"t_description" : "รถบรรทุกน้ำหนักไม่เกิน 12 ตัน                                                                       ",
+		"newvoluntarycode" : "805  "
+	},
+	{
+		"compulsorycode" : "3.40C",
+		"t_description" : "รถบรรทุกน้ำหนักไม่เกิน 12 ตัน                                                                       ",
+		"newvoluntarycode" : "320D "
+	},
+	{
+		"compulsorycode" : "3.20E",
+		"t_description" : "รถยนต์นั่งโดยสาร(ระหว่างอำเภอ)ไม่เกิน15ที่นั่ง                                                      ",
+		"newvoluntarycode" : "230  "
+	},
+	{
+		"compulsorycode" : "3.20E",
+		"t_description" : "รถยนต์นั่งโดยสาร(ระหว่างอำเภอ)ไม่เกิน15ที่นั่ง                                                      ",
+		"newvoluntarycode" : "230E "
+	},
+	{
+		"compulsorycode" : "3.20F",
+		"t_description" : "รถยนต์นั่งโดยสาร(ระหว่างอำเภอ)เกิน15ที่นั่ง ถึง 20ที่นั่ง                                           ",
+		"newvoluntarycode" : "230  "
+	},
+	{
+		"compulsorycode" : "3.20F",
+		"t_description" : "รถยนต์นั่งโดยสาร(ระหว่างอำเภอ)เกิน15ที่นั่ง ถึง 20ที่นั่ง                                           ",
+		"newvoluntarycode" : "230E "
+	},
+	{
+		"compulsorycode" : "3.20G",
+		"t_description" : "รถยนต์นั่งโดยสาร(ระหว่างอำเภอ)เกิน20 ถึง 40 ที่นั่ง                                                 ",
+		"newvoluntarycode" : "230  "
+	},
+	{
+		"compulsorycode" : "3.20G",
+		"t_description" : "รถยนต์นั่งโดยสาร(ระหว่างอำเภอ)เกิน20 ถึง 40 ที่นั่ง                                                 ",
+		"newvoluntarycode" : "230E "
+	},
+	{
+		"compulsorycode" : "1.30E",
+		"t_description" : "รถจักรยานยนต์ขับเคลื่อนด้วยพลังงานไฟฟ้า                                                             ",
+		"newvoluntarycode" : "610  "
+	},
+	{
+		"compulsorycode" : "1.30E",
+		"t_description" : "รถจักรยานยนต์ขับเคลื่อนด้วยพลังงานไฟฟ้า                                                             ",
+		"newvoluntarycode" : "620  "
+	},
+	{
+		"compulsorycode" : "1.30E",
+		"t_description" : "รถจักรยานยนต์ขับเคลื่อนด้วยพลังงานไฟฟ้า                                                             ",
+		"newvoluntarycode" : "610E "
+	},
+	{
+		"compulsorycode" : "1.30E",
+		"t_description" : "รถจักรยานยนต์ขับเคลื่อนด้วยพลังงานไฟฟ้า                                                             ",
+		"newvoluntarycode" : "620E "
+	},
+	{
+		"compulsorycode" : "1.30E",
+		"t_description" : "รถจักรยานยนต์ขับเคลื่อนด้วยพลังงานไฟฟ้า                                                             ",
+		"newvoluntarycode" : "630E "
+	},
+	{
+		"compulsorycode" : "2.30E",
+		"t_description" : "รถจักรยานยนต์ขับเคลื่อนด้วยพลังงานไฟฟ้า                                                             ",
+		"newvoluntarycode" : "620E "
+	},
+	{
+		"compulsorycode" : "2.30E",
+		"t_description" : "รถจักรยานยนต์ขับเคลื่อนด้วยพลังงานไฟฟ้า                                                             ",
+		"newvoluntarycode" : "630E "
+	},
+	{
+		"compulsorycode" : "3.30E",
+		"t_description" : "รถจักรยานยนต์ขับเคลื่อนด้วยพลังงานไฟฟ้า                                                             ",
+		"newvoluntarycode" : "620E "
+	},
+	{
+		"compulsorycode" : "3.30E",
+		"t_description" : "รถจักรยานยนต์ขับเคลื่อนด้วยพลังงานไฟฟ้า                                                             ",
+		"newvoluntarycode" : "630E "
+	},
+	{
+		"compulsorycode" : "1.70E",
+		"t_description" : "รถสามล้อขับเคลื่อนด้วยพลังงานไฟฟ้า                                                                  ",
+		"newvoluntarycode" : "110  "
+	},
+	{
+		"compulsorycode" : "1.70E",
+		"t_description" : "รถสามล้อขับเคลื่อนด้วยพลังงานไฟฟ้า                                                                  ",
+		"newvoluntarycode" : "110D "
+	},
+	{
+		"compulsorycode" : "1.10E",
+		"t_description" : "รถยนต์นั่งไม่เกิน 7 คน ขับเคลื่อนด้วยพลังงานไฟฟ้า                                                   ",
+		"newvoluntarycode" : "110E "
+	},
+	{
+		"compulsorycode" : "1.10E",
+		"t_description" : "รถยนต์นั่งไม่เกิน 7 คน ขับเคลื่อนด้วยพลังงานไฟฟ้า                                                   ",
+		"newvoluntarycode" : "120E "
+	},
+	{
+		"compulsorycode" : "1.10E",
+		"t_description" : "รถยนต์นั่งไม่เกิน 7 คน ขับเคลื่อนด้วยพลังงานไฟฟ้า                                                   ",
+		"newvoluntarycode" : "110  "
+	},
+	{
+		"compulsorycode" : "1.10E",
+		"t_description" : "รถยนต์นั่งไม่เกิน 7 คน ขับเคลื่อนด้วยพลังงานไฟฟ้า                                                   ",
+		"newvoluntarycode" : "120  "
+	},
+	{
+		"compulsorycode" : "1.10E",
+		"t_description" : "รถยนต์นั่งไม่เกิน 7 คน ขับเคลื่อนด้วยพลังงานไฟฟ้า                                                   ",
+		"newvoluntarycode" : "110D "
+	},
+	{
+		"compulsorycode" : "1.10E",
+		"t_description" : "รถยนต์นั่งไม่เกิน 7 คน ขับเคลื่อนด้วยพลังงานไฟฟ้า                                                   ",
+		"newvoluntarycode" : "120D "
+	},
+	{
+		"compulsorycode" : "2.10E",
+		"t_description" : "รถยนต์นั่งไม่เกิน 7 ที่นั่ง ขับเคลื่อนด้วยพลังงานไฟฟ้า                                              ",
+		"newvoluntarycode" : "120E "
+	},
+	{
+		"compulsorycode" : "2.20F",
+		"t_description" : "รถโดยสารเกิน 15 ที่นั่ง ถึง 20 ที่นั่ง                                                              ",
+		"newvoluntarycode" : "220  "
+	},
+	{
+		"compulsorycode" : "2.20F",
+		"t_description" : "รถโดยสารเกิน 15 ที่นั่ง ถึง 20 ที่นั่ง                                                              ",
+		"newvoluntarycode" : "220D "
+	},
+	{
+		"compulsorycode" : "2.20G",
+		"t_description" : "รถโดยสารเกิน 20 ที่นั่ง ถึง 40 ที่นั่ง                                                              ",
+		"newvoluntarycode" : "220  "
+	},
+	{
+		"compulsorycode" : "2.20G",
+		"t_description" : "รถโดยสารเกิน 20 ที่นั่ง ถึง 40 ที่นั่ง                                                              ",
+		"newvoluntarycode" : "220D "
+	},
+	{
+		"compulsorycode" : "2.20H",
+		"t_description" : "รถโดยสารเกิน 40 ที่นั่ง                                                                             ",
+		"newvoluntarycode" : "220  "
+	},
+	{
+		"compulsorycode" : "2.20H",
+		"t_description" : "รถโดยสารเกิน 40 ที่นั่ง                                                                             ",
+		"newvoluntarycode" : "220D "
+	},
+	{
+		"compulsorycode" : "3.10E",
+		"t_description" : "รถยนต์นั่งไม่เกิน 7 คน ขับเคลื่อนด้วยพลังงานไฟฟ้า                                                   ",
+		"newvoluntarycode" : "730E "
+	},
+	{
+		"compulsorycode" : "2.71 ",
+		"t_description" : "รถยนต์สามล้อที่แปรสภาพมาจากรถจักรยานยนต์(สกายแลป)                                                   ",
+		"newvoluntarycode" : "120  "
+	},
+	{
+		"compulsorycode" : "2.71 ",
+		"t_description" : "รถยนต์สามล้อที่แปรสภาพมาจากรถจักรยานยนต์(สกายแลป)                                                   ",
+		"newvoluntarycode" : "120D "
+	}
+]}

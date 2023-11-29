@@ -30,6 +30,21 @@ const PolicyScreen = (props) => {
   let datenow = new Date()
   datenow = datenow.toISOString().substring(0, 10);
 
+  //style react-select
+  const customStyles = {
+    // control: (provided) => ({
+    //   ...provided,
+    //   width: '300px', // Set the desired width for the select control
+    // }),
+    menu: (provided) => ({
+      ...provided,
+      width: 'auto',
+      zIndex: 2000 ,
+      whiteSpace: 'nowrap', // Prevent line breaks in dropdown options
+    }),
+  };
+
+
   //import excel
   const [formData, setFormData] = useState({
     grossprem: 0,
@@ -45,7 +60,9 @@ const PolicyScreen = (props) => {
     unregisterflag: 'Y',
     actTime: "16:30",
     expTime: "16:30",
+    cover_amt: null,
   });
+  const [alertflag, setAlertflag] = useState(false)
   const [provinceDD, setProvinceDD] = useState([]);
   const [districDD, setDistricDD] = useState([]);
   const [subDistricDD, setSubDistricDD] = useState([]);
@@ -57,6 +74,9 @@ const PolicyScreen = (props) => {
   const [insurerDD, setInsurerDD] = useState([]);
   const [motorbrandDD, setMotorbrandDD] = useState([]);
   const [motormodelDD, setMotormodelDD] = useState([]);
+  const [motorspecDD, setMotorspecDD] = useState([]);
+  const [vcDD, setVcDD] = useState([]);
+  const [ccDD, setCcDD] = useState([]);
   const [hidecard, setHidecard] = useState([false, 0]);
   const [showMotorData, setShowMotorData] = useState(false);
 
@@ -181,66 +201,100 @@ const PolicyScreen = (props) => {
 
   };
 
-  const handleChangeActdate = (e) => {
-    e.preventDefault();
-    console.log(e.target.value);
-    console.log(typeof (e.target.value));
-    const originalDate = new Date(e.target.value);
+  const handleChangeActdate = (value,name) => {
+    
+   
+    const originalDate = new Date(value);
+    // const originalDate = new Date(value.split('T'));
 
     // Add one year (365 days) to the date
     originalDate.setFullYear(originalDate.getFullYear() + 1);
 
     // Convert the updated Date object back to a string
-    const updatedDateString = originalDate.toISOString().substring(0, 10);
+    // const updatedDateString = originalDate.toISOString().substring(0, 10);
+    const updatedDateString = originalDate;
+if (name === 'actDate') {
+  setFormData((prevState) => ({
+    ...prevState,
+    actDate: value,
+    expDate: updatedDateString
+  }));
+}else{
+  setFormData((prevState) => ({
+    ...prevState,
+    expDate: value
+  }));
+}
 
-
-    setFormData((prevState) => ({
-      ...prevState,
-      actDate: e.target.value,
-      expDate: updatedDateString
-    }));
+    
 
 
   };
 
   function validateDate(e) {
-    e.preventDefault();
+    // e.preventDefault();
+    const name = e.target.name
+    const value = e.target.value
+    console.log("value : " + value);
+    console.log("name : " + name);
     let mindate = new Date()
     let maxdate = new Date()
-    if (e.target.name === 'actDate') {
+    if (name === 'actDate') {
       mindate.setFullYear(mindate.getFullYear() - 3)
       maxdate.setFullYear(maxdate.getFullYear() + 3)
-    } else if (e.target.name === 'expDate') {
+    } else if (name === 'expDate') {
       mindate.setFullYear(mindate.getFullYear() - 4)
       maxdate.setFullYear(maxdate.getFullYear() + 4)
     }
 
-    const inputDate = new Date(e.target.value);
+    let inputDate ;
+
+    if (new Date(value)) {
+      inputDate = new Date(value)
+    }else{
+      return
+    }
+    console.log("inputDate : " + inputDate);
+    // const inputDate = value;
     let actdate = ''
     let expdate = ''
 
     if (inputDate < mindate) {
-      actdate = mindate.toISOString().substring(0, 10)
+      console.log('input < min');
+      // actdate = mindate.toISOString().substring(0, 10)
+      actdate = mindate
+      console.log('actdate : ' +actdate);
       mindate.setFullYear(mindate.getFullYear() + 1)
-      expdate = mindate.toISOString().substring(0, 10)
+      // expdate = mindate.toISOString().substring(0, 10)
+      expdate = mindate
+      console.log('expdate : ' +expdate)
     } else if (inputDate > maxdate) {
-      actdate = maxdate.toISOString().substring(0, 10)
+      console.log('input > max');
+      // actdate = maxdate.toISOString().substring(0, 10)
+      actdate = maxdate
       maxdate.setFullYear(maxdate.getFullYear() + 1)
-      expdate = maxdate.toISOString().substring(0, 10)
+      // expdate = maxdate.toISOString().substring(0, 10)
+      expdate = maxdate
     } else {
-      actdate = e.target.value
+      console.log('else');
+      actdate = new Date(value)
       inputDate.setFullYear(inputDate.getFullYear() + 1)
-      expdate = inputDate.toISOString().substring(0, 10)
+      // expdate = inputDate.toISOString().substring(0, 10)
+      expdate = inputDate
     }
 
-    if (e.target.name === 'actDate') {
+    if (name === 'actDate') {
+
+      console.log('actDate');
       setFormData((prevState) => ({
         ...prevState,
         actDate: actdate,
         expDate: expdate
       }));
       // document.getElementsByName("actDate")[0].value = actdate
-    } else if (e.target.name === 'expDate') {
+    } else if (name === 'expDate') {
+
+      console.log('expDate');
       setFormData((prevState) => ({
         ...prevState,
         expDate: actdate
@@ -282,19 +336,22 @@ const PolicyScreen = (props) => {
     const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
     const email = document.getElementsByName("Email")[0].value
     // Use the test method of the regex to check if the email matches the pattern
-    if (!emailRegex.test(email)) {
+    if (!emailRegex.test(email) && email !== '') {
       alert('Email ไม่ถูกต้อง')
       document.getElementsByName("Email")[0].value = ''
+      return
     }
   }
   function isPhoneNumberValid(e) {
     // Regular expression for a Thai phone number format
     const phoneRegex = /^0\d{9}$/;
+    console.log(document.getElementsByName("telNum_1")[0].value);
     const phoneNumber = document.getElementsByName("telNum_1")[0].value
     // Use the test method of the regex to check if the phone number matches the pattern
-    if (!phoneRegex.test(phoneNumber)) {
+    if (!phoneRegex.test(phoneNumber) && phoneNumber !== '') {
       document.getElementsByName("telNum_1")[0].value = ''
       alert('หมายเลขมือถือผิด')
+      return
     }
   }
   const handleChangePrem = async (e) => {
@@ -408,6 +465,20 @@ const PolicyScreen = (props) => {
     }));
     getMotormodel(e.value);
   }
+  const changeMotorModel = (e) => {
+    setFormData((prevState) => ({
+      ...prevState,
+      modelname: e.value,
+    }));
+    getMotorspec(e.value);
+  }
+  const changeVoluntaryCode = (e) => {
+    setFormData((prevState) => ({
+      ...prevState,
+      voluntaryCode: e.value,
+    }));
+    getCompulsoryCode(e.value);
+  }
 
   const getDistrict = (provincename) => {
     //get distric in province selected
@@ -430,6 +501,26 @@ const PolicyScreen = (props) => {
       });
   };
 
+  const getCompulsoryCode = (voluntarycode) => {
+    //get compulsory code in voluntary code
+    axios
+      .post(url + "/static/mt_brands/getccbyvc", { voluntarycode: voluntarycode }, headers)
+      .then((cc) => {
+        const array = [];
+        cc.data.forEach((ele) => {
+          // array.push(
+          //   <option value={ele.MODEL} >
+          //     {ele.MODEL}
+          //   </option>
+          // );
+          array.push({ label: ele.compulsorycode +' : ' + ele.t_description, value: ele.compulsorycode })
+        });
+        setCcDD(array);
+      })
+      .catch((err) => {
+        // alert("cant get aumphur");
+      });
+  };
   const getMotormodel = (brandname) => {
     //get distric in province selected
     axios
@@ -437,12 +528,8 @@ const PolicyScreen = (props) => {
       .then((model) => {
         const array = [];
         model.data.forEach((ele) => {
-          // array.push(
-          //   <option value={ele.MODEL} >
-          //     {ele.MODEL}
-          //   </option>
-          // );
-          array.push({ label: ele.MODEL, value: ele.MODEL })
+          
+          array.push({ label: ele.MODELNAME, value: ele.MODELNAME })
         });
         setMotormodelDD(array);
       })
@@ -450,6 +537,23 @@ const PolicyScreen = (props) => {
         // alert("cant get aumphur");
       });
   };
+  const getMotorspec = (modelname) => {
+    //get distric in province selected
+    axios
+      .post(url + "/static/mt_models/showallspecinmodel", { modelname: modelname }, headers)
+      .then((model) => {
+        const array = [];
+        model.data.forEach((ele) => {
+          
+          array.push({ label: ele.SPECNAME, value: ele.SPECNAME })
+        });
+        setMotorspecDD(array);
+      })
+      .catch((err) => {
+        // alert("cant get aumphur");
+      });
+  };
+
   const getSubDistrict = (amphurname) => {
     //get tambons in distric selected
     axios
@@ -472,30 +576,55 @@ const PolicyScreen = (props) => {
   };
 
   const getcommov = (e) => {
-    e.preventDefault();
+    // e.preventDefault();
+ 
+    //check insurer class subclass 
+    if (!formData.class  || !formData.subClass  || !formData.insurerCode  ) {
+      alert('กรุณากรอกข้อมูล class/subclass/บริษัทประกัน ให้ครบถ้วน')
+      e.target.value = null
+      setFormData((prevState) => ({
+        ...prevState,
+        [e.target.name] : e.target.value,
+
+      }));
+      return
+    }
+  
     //get comm  ov setup
     let i = 1
-    if (e.target.name === 'btn_comm1') {
+    if (e.target.name === 'agentCode') {
       i = 1
-    } else if (e.target.name === 'btn_comm2') {
+    } else if (e.target.name === 'agentCode2') {
       i = 2
     }
     axios
-      .post(url + "/insures/getcommov", formData, headers)
+      .post(url + "/insures/getcommov", {...formData, [e.target.name]: e.target.value }, headers)
       .then((res) => {
         console.log(res.data);
-        setFormData((prevState) => ({
-          ...prevState,
-          [`commin_rate`]: res.data[0].rateComIn,
-          [`ovin_rate`]: res.data[0].rateOVIn_1,
-          [`commout${i}_rate`]: res.data[0].rateComOut,
-          [`ovout${i}_rate`]: res.data[0].rateOVOut_1,
-          [`commin_amt`]: res.data[0].rateComIn * formData[`grossprem`] / 100,
-          [`ovin_amt`]: res.data[0].rateOVIn_1 * formData[`grossprem`] / 100,
-          [`commout${i}_amt`]: res.data[0].rateComOut * formData[`grossprem`] / 100,
-          [`ovout${i}_amt`]: res.data[0].rateOVOut_1 * formData[`grossprem`] / 100,
-
-        }));
+        if (res.data.length >0) {
+          setFormData((prevState) => ({
+            ...prevState,
+            [e.target.name] : e.target.value,
+            [`commin_rate`]: res.data[0].rateComIn,
+            [`ovin_rate`]: res.data[0].rateOVIn_1,
+            [`commout${i}_rate`]: res.data[0].rateComOut,
+            [`ovout${i}_rate`]: res.data[0].rateOVOut_1,
+            // [`commin_amt`]: res.data[0].rateComIn * formData[`grossprem`] / 100,
+            // [`ovin_amt`]: res.data[0].rateOVIn_1 * formData[`grossprem`] / 100,
+            // [`commout${i}_amt`]: res.data[0].rateComOut * formData[`grossprem`] / 100,
+            // [`ovout${i}_amt`]: res.data[0].rateOVOut_1 * formData[`grossprem`] / 100,
+  
+          }));
+        }else{
+          alert('ไม่พบข้อมูล Comm OV ของผู้แนะนำ ตามเงื่อนไข class/subclass/บริษัทประกัน นี้')
+          e.target.value = null
+          setFormData((prevState) => ({
+            ...prevState,
+            [e.target.name] : e.target.value,
+    
+          }));
+        }
+       
       })
       .catch((err) => {
         alert("Something went wrong, Try Again.");
@@ -563,9 +692,10 @@ const PolicyScreen = (props) => {
     console.log(data);
     e.preventDefault();
     await axios.post(url + "/policies/policydraft/batch", data, headers).then((res) => {
-      alert("policy batch Created");
+      alert("policy batch Created AppNo : "+ res.data.appNo[0]);
+      console.log(res.data);
       window.location.reload(false);
-    }).catch((err) => { alert("Something went wrong, Try Again."); });
+    }).catch((err) => { alert("Something went wrong, Try Again." +err.msg); });
   };
 
 
@@ -690,6 +820,18 @@ const PolicyScreen = (props) => {
       })
       .catch((err) => { });
 
+    //get voluntary code motor
+    axios
+    .get(url + "/static/mt_brands/getallvc", headers)
+    .then((vcs) => {
+      const array = [];
+      vcs.data.forEach((ele) => {
+        array.push({ label: ele.newvoluntarycode +' : '+ele.t_description , value: ele.newvoluntarycode })
+      });
+      setVcDD(array);
+    })
+    .catch((err) => { });
+
   }, []);
 
   return (
@@ -726,7 +868,7 @@ const PolicyScreen = (props) => {
           <label class="form-label">
             วันที่เริ่มคุ้มครอง<span class="text-danger"> *</span>
           </label>
-          <input
+          {/* <input
 
             className="form-control"
             type="date"
@@ -735,7 +877,20 @@ const PolicyScreen = (props) => {
             name={`actDate`}
             onChange={handleChangeActdate}
             onBlur={(e) => validateDate(e)}
-          />
+          /> */}
+            <DatePicker
+                            showIcon
+                            className="form-control"
+                            todayButton="Vandaag"
+                            // isClearable
+                            name="actDate"
+                            showYearDropdown
+                            dateFormat="dd/MM/yyyy"
+                            dropdownMode="select"
+                            selected={formData.actDate}
+                            onChange={(date) => handleChangeActdate(date,'actDate')}
+                            // onBlur={(e) => validateDate(e)}
+                                 />
 
         </div>
         <div class="col-2 form-group ">
@@ -746,11 +901,9 @@ const PolicyScreen = (props) => {
 
             className="form-control"
             type="time"
-            format="dd/MM/yyyy"
             defaultValue={"16:30"}
             name={`actTime`}
-            onChange={handleChangeActdate}
-            onBlur={(e) => validateDate(e)}
+            onChange={handleChange}
           />
 
         </div>
@@ -758,7 +911,7 @@ const PolicyScreen = (props) => {
           <label class="form-label ">
             วันที่สิ้นสุด<span class="text-danger"> *</span>
           </label>
-          <input
+          {/* <input
             className="form-control"
             type="date"
 
@@ -766,7 +919,20 @@ const PolicyScreen = (props) => {
             name={`expDate`}
             onChange={handleChange}
             onBlur={(e) => validateDate(e)}
-          />
+          /> */}
+          <DatePicker
+                            showIcon
+                            className="form-control"
+                            todayButton="Vandaag"
+                            // isClearable
+                            name="expDate"
+                            showYearDropdown
+                            dateFormat="dd/MM/yyyy"
+                            dropdownMode="select"
+                            selected={formData.expDate}
+                            onChange={(date) => handleChangeActdate(date,'expDate')}
+                            // onBlur={(e) => validateDate(e)}
+                                 />
         </div>
         <div class="col-2 form-group ">
           <label class="form-label ">
@@ -778,8 +944,9 @@ const PolicyScreen = (props) => {
             defaultValue={"16:30"}
             name={`expTime`}
             onChange={handleChange}
-            onBlur={(e) => validateDate(e)}
+            
           />
+          
         </div>
         <div class="col-2 form-group ">
           <label class="form-label px-3">
@@ -802,44 +969,6 @@ const PolicyScreen = (props) => {
 
       <div class="row">
         <div className="col-1"></div>
-
-
-        <div class="col-2 form-group ">
-          <label class="form-label px-3">
-            รหัสผู้แนะนำ 1<span class="text-danger"> *</span>
-          </label>
-          <div class="input-group mb-3">
-            <input
-              className="form-control"
-              type="text"
-              value={formData.agentCode}
-              name={`agentCode`}
-              onChange={handleChange}
-            />
-            <div class="input-group-append">
-              <button class="btn btn-primary" type="button" name="btn-agent1" onClick={(e) => editCard(e, 'agentCode')}><BiSearchAlt style={{ fontSize: "30px", color: "white" }} /></button>
-            </div>
-          </div>
-        </div>
-
-        <div class="col-2 form-group ">
-          <label class="form-label px-3">
-            รหัสผู้แนะนำ 2
-          </label>
-          <div class="input-group mb-3">
-            <input
-              className="form-control"
-              type="text"
-              value={formData.agentCode2}
-              name={`agentCode2`}
-              onChange={handleChange}
-            />
-            <div class="input-group-append">
-              <button class="btn btn-primary" type="button" name="btn-agent2" onClick={(e) => editCard(e, "agentCode2")}><BiSearchAlt style={{ fontSize: "30px", color: "white" }} /></button>
-            </div>
-          </div>
-
-        </div>
         <div class="col-2 form-group ">
           <div className="row">
 
@@ -877,6 +1006,47 @@ const PolicyScreen = (props) => {
           </div>
 
         </div>
+
+        <div class="col-2 form-group ">
+          <label class="form-label px-3">
+            รหัสผู้แนะนำ 1<span class="text-danger"> *</span>
+          </label>
+          <div class="input-group mb-3">
+            <input
+              className="form-control"
+              type="text"
+              value={formData.agentCode}
+              name={`agentCode`}
+              onChange={handleChange}
+              onBlur={getcommov}
+            />
+            <div class="input-group-append">
+              <button class="btn btn-primary" type="button" name="btn-agent1" onClick={(e) => editCard(e, 'agentCode')}><BiSearchAlt style={{ fontSize: "30px", color: "white" }} /></button>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-2 form-group ">
+          <label class="form-label px-3">
+            รหัสผู้แนะนำ 2
+          </label>
+          <div class="input-group mb-3">
+            <input
+              className="form-control"
+              type="text"
+              value={formData.agentCode2}
+              name={`agentCode2`}
+              onChange={handleChange}
+              disabled={formData.agentCode === '' ? true:false}
+              onBlur={getcommov}
+            />
+            <div class="input-group-append">
+              <button class="btn btn-primary" type="button" name="btn-agent2" onClick={(e) => editCard(e, "agentCode2")}><BiSearchAlt style={{ fontSize: "30px", color: "white" }} /></button>
+            </div>
+          </div>
+
+        </div>
+        
         <div class="col-2 form-group ">
           <label class="form-label px-3">
             ทุนประกัน<span class="text-danger"> *</span>
@@ -1028,11 +1198,21 @@ const PolicyScreen = (props) => {
           </label>
         </div>
         <div class="col-3">
-          <label class="form-label ">
-            Comm Rate/Amt<span class="text-danger"> *</span>
+        <div className="row">
+        <div className="col">
+        <label class="form-label ">
+            Comm Rate(%)
           </label>
+          </div>
+          <div className="col-5">
+          <label class="form-label ">
+            Amt<span class="text-danger"> *</span>
+          </label>
+          </div>
+        </div>
+          
           <div className="row">
-            <div className="input-group  col">
+            <div className="col">
               <input
                 className="form-control"
                 type="number"
@@ -1041,12 +1221,7 @@ const PolicyScreen = (props) => {
                 name={`commin_rate`}
                 onChange={(e) => handleChange(e)}
               />
-              <div class="input-group-append">
-                <div class="input-group-text ">
-                  <label class="form-check-label" >%</label>
-
-                </div>
-              </div>
+              
             </div> 
             
             <div className="col-8">
@@ -1066,9 +1241,19 @@ const PolicyScreen = (props) => {
 
 
         <div class="col-3">
-          <label class="form-label ">
-            OV Rate/Amt<span class="text-danger"> *</span>
+         
+          <div className="row">
+        <div className="col">
+        <label class="form-label ">
+        OV Rate(%)
           </label>
+          </div>
+          <div className="col-5">
+          <label class="form-label ">
+            Amt<span class="text-danger"> *</span>
+          </label>
+          </div>
+        </div>
           <div className="row">
             <div className="col input-group">
               <input
@@ -1079,12 +1264,7 @@ const PolicyScreen = (props) => {
                 name={`ovin_rate`}
                 onChange={handleChange}
               />
-              <div class="input-group-append">
-                <div class="input-group-text ">
-                  <label class="form-check-label" >%</label>
-
-                </div>
-              </div>
+              
             </div>
             <div className="col-8">
               <input
@@ -1123,12 +1303,7 @@ const PolicyScreen = (props) => {
                 name={`commout1_rate`}
                 onChange={handleChange}
               />
-              <div class="input-group-append">
-                <div class="input-group-text ">
-                  <label class="form-check-label" >%</label>
-
-                </div>
-              </div>
+              
             </div>
             <div className="col-8">
               <input
@@ -1159,12 +1334,7 @@ const PolicyScreen = (props) => {
                 name={`ovout1_rate`}
                 onChange={handleChange}
               />
-              <div class="input-group-append">
-                <div class="input-group-text ">
-                  <label class="form-check-label" >%</label>
-
-                </div>
-              </div>
+              
             </div>
             <div className="col-8">
               <input
@@ -1212,12 +1382,7 @@ const PolicyScreen = (props) => {
                 name={`commout2_rate`}
                 onChange={(e) => handleChange(e)}
               />
-              <div class="input-group-append">
-                <div class="input-group-text ">
-                  <label class="form-check-label" >%</label>
-
-                </div>
-              </div>
+            
             </div>
             <div className="col-8">
               <input
@@ -1301,12 +1466,7 @@ const PolicyScreen = (props) => {
                 name={`commout_rate`}
                 onChange={handleChange}
               />
-              <div class="input-group-append">
-                <div class="input-group-text ">
-                  <label class="form-check-label" >%</label>
-
-                </div>
-              </div>
+              
             </div>
             <div className="col-8">
               <input
@@ -1338,12 +1498,7 @@ const PolicyScreen = (props) => {
                 name={`ovout_rate`}
                 onChange={handleChange}
               />
-              <div class="input-group-append">
-                <div class="input-group-text ">
-                  <label class="form-check-label" >%</label>
-
-                </div>
-              </div>
+              
             </div>
             <div className="col-8">
               <input
@@ -1445,6 +1600,7 @@ const PolicyScreen = (props) => {
             <div class="col-1">
               <label class="form-label ">คำนำหน้า<span class="text-danger"> *</span></label>
               <Select
+              styles={customStyles}
                 formatOptionLabel={(option, { context }) => context === 'value' ? option.label : `${option.label}  ${option.label2}`}
                 name={`title`}
                 onChange={(e) => setFormData((prevState) => ({
@@ -1492,6 +1648,7 @@ const PolicyScreen = (props) => {
             <div class="col-1">
               <label class="form-label ">คำนำหน้า<span class="text-danger"> *</span></label>
               <Select
+                styles={customStyles}
                 formatOptionLabel={(option, { context }) => context === 'value' ? option.label : `${option.label} - ${option.label2}`}
                 name={`title`}
                 onChange={(e) => setFormData((prevState) => ({
@@ -1618,11 +1775,12 @@ const PolicyScreen = (props) => {
             search
           /> */}
           <Select
+          styles={customStyles}
             // className="form-control"
             name={`province`}
             onChange={(e) => changeProvince(e)}
             options={provinceDD}
-            styles={{ zIndex: 2000 }}
+            
           // onChange={opt => console.log(opt)}
           />
           {/* <option value={formData.province} disabled selected hidden>
@@ -1649,6 +1807,7 @@ const PolicyScreen = (props) => {
 
           <Select
             // className="form-control"
+            styles={customStyles}
             name={`district`}
             onChange={(e) => changeDistrict(e)}
             options={districDD}
@@ -1663,6 +1822,7 @@ const PolicyScreen = (props) => {
 
           <Select
             // className="form-control"
+            styles={customStyles}
             name={`subdistrict`}
             onChange={ (e) =>changeSubDistrict(e)}
             options={subDistricDD}
@@ -1746,13 +1906,10 @@ const PolicyScreen = (props) => {
               </label>
               <Select
                 // className="form-control"
+                styles={customStyles}
                 name={`voluntaryCode`}
-                onChange={(e) => setFormData((prevState) => ({
-                  ...prevState,
-                  voluntaryCode: e.value,
-                }))}
-                options={motorcode}
-                styles={{ zIndex: 2000 }}
+                onChange={(e) => changeVoluntaryCode(e)}
+                options={vcDD}
               // onChange={opt => console.log(opt)}
               />
             </div>
@@ -1762,13 +1919,14 @@ const PolicyScreen = (props) => {
               </label>
               <Select
                 // className="form-control"
+                styles={customStyles}
                 name={`compulsoryCode`}
                 onChange={(e) => setFormData((prevState) => ({
                   ...prevState,
                   compulsoryCode: e.value,
                 }))}
-                options={motorcode}
-                styles={{ zIndex: 2000 }}
+                options={ccDD}
+                
               // onChange={opt => console.log(opt)}
               />
             </div>
@@ -1812,7 +1970,7 @@ const PolicyScreen = (props) => {
                   motorprovinceID: e.value,
                 }))}
                 options={provinceDD}
-                styles={{ zIndex: 2000 }}
+                styles={customStyles}
               // onChange={opt => console.log(opt)}
               />
               {/* <option value={formData.province} disabled selected hidden>
@@ -1876,6 +2034,7 @@ const PolicyScreen = (props) => {
                 name={`brandname`}
                 onChange={(e) => changeMotorBrand(e)}
                 options={motorbrandDD}
+                styles={customStyles}
               />
 
             </div>
@@ -1897,11 +2056,10 @@ const PolicyScreen = (props) => {
 
               <Select
                 // className="form-control"
+                styles={customStyles}
                 name={`modelname`}
-                onChange={(e) => setFormData((prevState) => ({
-                  ...prevState,
-                  modelname: e.value,
-                }))}
+                onChange={(e) => changeMotorModel(e)}
+      
                 options={motormodelDD}
               />
 
@@ -1910,13 +2068,23 @@ const PolicyScreen = (props) => {
               <label class="form-label ">
                 รุ่นย่อย<span class="text-danger"> </span>
               </label>
-              <input
+              <Select
+                // className="form-control"
+                styles={customStyles}
+                name={`specname`}
+                onChange={(e) => setFormData((prevState) => ({
+                  ...prevState,
+                  specname: e.value,
+                }))}
+                options={motorspecDD}
+              />
+              {/* <input
                 className="form-control"
                 type="text"
                 name={`specname`}
                 defaultValue={formData.specname}
                 onChange={handleChange}
-              />
+              /> */}
             </div>
 
 

@@ -11,13 +11,13 @@
   "profiles": {
     "BestPolicyReport": {
       "commandName": "Project",
-      "dotnetRunMessages": true,
       "launchBrowser": true,
       "launchUrl": "swagger",
       "applicationUrl": "https://localhost:7218;http://localhost:5104",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
-      }
+      },
+      "dotnetRunMessages": true
     },
     "IIS Express": {
       "commandName": "IISExpress",

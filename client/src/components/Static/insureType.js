@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import jwt_decode from "jwt-decode";
 import {
@@ -25,6 +25,7 @@ const NormalText = {
 /* eslint-disable react-hooks/exhaustive-deps */
 
 const InsureType = () => {
+  const params = useParams()
   const url = window.globalConfig.BEST_POLICY_V1_BASE_URL;
   const navigate = useNavigate();
   const [insureData, setInsureData] = useState({});
@@ -58,7 +59,28 @@ const InsureType = () => {
         alert("create new insure fail");
       });
   };
-
+  
+  useEffect(() =>{
+  
+      //get defualt insureType detail
+      if (params.id) {
+          axios
+          .get(url + "/insures/insuretypeget/" +  params.id , headers)
+          .then((data) => {
+              console.log(data.data);
+              const insureType = data.data
+              setInsureData(insureType)
+            
+            })
+  
+            .catch((err) => {
+              
+              alert("internal error");
+            });
+         
+  
+      }
+  },[])
   return (
     <div>
       {/* <BackdropBox1> */}
@@ -74,17 +96,14 @@ const InsureType = () => {
 
           </div>
           <div class="col-2 ">
-            <select
+          <input
+              type="text"
+              required
+              value={insureData.class}
               class="form-control"
               name="class"
-              onChange={(e) =>
-                setInsureData({ ...insureData, insureType: e.target.value })
-              }
-            >
-              <option value="Motor">Motor</option>
-              <option value="PA">PA</option>
-              <option value="FR">FR</option>
-            </select>
+              onChange={changeInsurer}
+            />
           </div>
           <div class="col-1">
             <label class="col-form-label">subclass</label>
@@ -93,6 +112,7 @@ const InsureType = () => {
             <input
               type="text"
               required
+              value={insureData.subClass}
               class="form-control"
               name="subClass"
               onChange={changeInsurer}
@@ -110,6 +130,7 @@ const InsureType = () => {
           <div class="col-2">
             <input
               type="text"
+              defaultValue={insureData.plancode}
               class="form-control"
               name="planCode"
               onChange={changeInsurer}
@@ -122,6 +143,7 @@ const InsureType = () => {
             <input
               type="text"
               required
+              defaultValue={insureData.insureName}
               class="form-control"
               name="insureName"
               onChange={changeInsurer}

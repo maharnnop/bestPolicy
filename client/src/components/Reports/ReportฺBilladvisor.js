@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import jwt_decode from "jwt-decode";
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
 
 import {
     BrowserRouter,
@@ -27,6 +29,7 @@ const NormalText = {
 
 const ReportฺBilladvisor = () => {
     const url = window.globalConfig.BEST_POLICY_V1_BASE_URL;
+    const url_report = window.globalConfig.REPORT_BEST_POLICY_V1_BASE_URL;
     const navigate = useNavigate();
 
     const [tableData, setTableData] = useState([])
@@ -175,27 +178,50 @@ const ReportฺBilladvisor = () => {
                         </div>
                         
                              {/*  billdate */}
-                     <div className="row">
+                    
+                        <div className="row">
                             <div className="col-2">
-                                <label htmlFor="Date Select" className="form-label">Bill Date </label>
+                                <label htmlFor="Date Select" className="form-label">Bill Date  </label>
                             </div>
                             <div className="col-4">
                                 <label htmlFor="fromDate">From &nbsp;</label>
-                                <input
+                                {/* <input
                                     type="date"
                                     id="fromDate"
                                     value={fromDate}
                                     onChange={(e) => setFromDate(e.target.value)}
-                                />
+                                /> */}
+                                <DatePicker
+                            showIcon
+                            className="form-control"
+                            todayButton="Vandaag"
+                            // isClearable
+                            showYearDropdown
+                            dateFormat="dd/MM/yyyy"
+                            dropdownMode="select"
+                            selected={fromDate}
+                            onChange={(date) =>setFromDate(date)}
+                                 />
                             </div>
                             <div className="col-4">
                                 <label htmlFor="toDate">To &nbsp;</label>
-                                <input
+                                {/* <input
                                     type="date"
                                     id="toDate"
                                     value={toDate}
                                     onChange={(e) => setToDate(e.target.value)}
-                                />
+                                /> */}
+                                <DatePicker
+                            showIcon
+                            className="form-control"
+                            todayButton="Vandaag"
+                            // isClearable
+                            showYearDropdown
+                            dateFormat="dd/MM/yyyy"
+                            dropdownMode="select"
+                            selected={toDate}
+                            onChange={(date) =>setToDate(date)}
+                                 />
                             </div>
                         </div>
 

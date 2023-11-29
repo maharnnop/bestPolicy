@@ -2,6 +2,10 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import jwt_decode from "jwt-decode";
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
+import ReportTable from "./ReportTable";
+import convertDateFormat from "../lib/convertdateformat";
 
 import {
     BrowserRouter,
@@ -27,59 +31,71 @@ const NormalText = {
 
 const ReportฺTax = () => {
     const url = window.globalConfig.BEST_POLICY_V1_BASE_URL;
+    const url_report = window.globalConfig.REPORT_BEST_POLICY_V1_BASE_URL;
     const navigate = useNavigate();
 
     const [tableData, setTableData] = useState([])
     const [billAdvisorNo, setBillAdvisorNo] = useState("")
     const [insurercode, setInsurercode] = useState("");
     const [advisorcode, setAdvisorcode] = useState("")
-    const [refno, setRefno] = useState("");
-    const [atdate, setAtdate] = useState("");
     const [type, setType] = useState("");
-    const [cashierReceiptNo, setCashierReceiptNo] = useState("");
-    const [transactionType, setTransactionType] = useState({});
-    const [checkboxValue, setCheckboxValue] = useState();
+    const [advisorAll, setAdvisorAll] = useState();
+    const [insurerAll, setInsurerAll] = useState(false);
+    
     const [createUserCode, setCreateUserCode] = useState();
     const [fromDate, setFromDate] = useState('');
-    const [reporttype, setReporttype] = useState('');
+    const [reporttype, setReporttype] = useState('SellTax');
     const [toDate, setToDate] = useState('');
-    const [fromCashierno, setFromCashierno] = useState('');
-    const [toCashierno, setToCashierno] = useState('');
-    const [dfrpreferno, setDfrpreferno] = useState();
-    const [createusercode, setCreateusercode] = useState();
-    const [employeecode, setEmployeecode] = useState();
-    const [status, setStatus] = useState();
-    const [transtype, setTranstype] = useState();
+    
     const [advisoryReadOnly, setAdvisoryReadOnly] = useState(false)
     const [insurerReadOnly, setInsurerReadOnly] = useState(false)
-    const [transactionTypeReadOnly, setTransactionTypeReadOnly] = useState(false)
+    
+    const [filterData, setFilterData] = useState(
+        {
+            "insurerCode": "",
+            "advisorCode": "",
+            "startRpRefDate": "",
+            "endRpRefDate": ""
+          }
+      )
+      const [reportData, setReportData] = useState([])
+      const colData =
+      
+      {
+        "dfRpReferNo": "เลขที่ตัดรับ",
+        "rpRefDate": "วันที่ตัดรับ",
+        "insurerCode": "รหัสบริษัทประกัน",
+        "insurerName": "ชื่อบริษัทประกัน",
+        "commInAmt": "ยอดคอมมิสชั่นรับ",
+        "vatCommInAmt": "ยอดภาษีขายคอมมิสชั่นรับ",
+        "ovInAmt": "ยอด OV รับ",
+        "vatOvInAmt": "ยอดภาษีขาย OV รับ",
+        "transactionStatus": "สถานะรายการ",
+        // "transactionType": "COMM-IN",
+        // "policyStatus": "A"
+      }
+      
 
     useEffect(() => {
 
     }, [billAdvisorNo]);
 
-
-    const searchBill = (e) => {
+    const handleChange = async (e) => {
+        e.preventDefault();
+          setFilterData((prevState) => ({
+            ...prevState,
+            [e.target.name]: e.target.value,
+          }));
+      };
+    const exportExcel =(e) => {
         e.preventDefault()
-        let data = JSON.stringify({
-            "billadvisorno": billAdvisorNo
-        });
-        axios.post(window.globalConfig.BEST_POLICY_V1_BASE_URL + "/bills/findDataByBillAdvisoryNo", data, {
+        axios.post(url_report + "/Cashier/excel", filterData, {
             headers: {
                 'Content-Type': 'application/json'
             }
         })
             .then((response) => {
-                // console.log(response.data);
-                if (response.data[0]) {
-                    setInsurercode(response.data[0].insurerCode)
-                    setAdvisorcode(response.data[0].agentCode)
-                    setTransactionType("PREM-IN")
-                    setInsurerReadOnly(true)
-                    setAdvisoryReadOnly(true)
-                    setTransactionTypeReadOnly(true)
-                }
-
+                
             })
             .catch((error) => {
                 console.log(error);
@@ -87,26 +103,51 @@ const ReportฺTax = () => {
     }
     const searchdata = (e) => {
         e.preventDefault()
-        let data = JSON.stringify({
-            "billadvisorno": billAdvisorNo,
-            "insurercode": insurercode,
-            "advisorcode": advisorcode,
-            "refno": refno,
-            "cashierReceiptNo": cashierReceiptNo,
-            "transactionType": transactionType,
-            "createUserCode": createUserCode,
-            "fromDate": fromDate,
-            "toDate": toDate,
-            "dfrpreferno": dfrpreferno
-        });
-        axios.post(window.globalConfig.BEST_POLICY_V1_BASE_URL + "/bills/findbill", data, {
+        let url_type
+        const data = filterData
+        if (reporttype === 'SellTax') {
+         if (type === 'COMM-IN') {
+            url_type =  'OutputVatCommIn'
+         }else if(type === 'OV-IN') {
+            url_type =  'OutputVatOvIn'
+         }
+         
+         if (document.getElementsByName ("insurerAll")[0].checked) {
+            data.insurerCode = ''
+         }
+        }else if (reporttype === 'BuyTax'){
+            if (type === 'COMM-OUT') {
+             
+            }else if(type === 'OV-OUT') {
+    
+            }
+            if (document.getElementsByName ("advisorAll")[0].checked) {
+                data.advisorCode = ''
+             }
+        }
+        
+        axios.post(url_report + `/${url_type}/json`, data, {
             headers: {
                 'Content-Type': 'application/json'
             }
         })
             .then((response) => {
+                if (response.data.length < 1) {
+                    alert('ไม่พบข้อมูล')
+                    return
+                }
+                const rawdata = response.data.map((ele,index)=>{
+                    if (ele.rpRefDate) {
+                        ele.rpRefDate =  convertDateFormat(ele.rpRefDate)
+                    }
+                   
+                    
+                    return ele
+                })
                 // console.log(response.data);
-                setTableData(response.data)
+               
+                setReportData(response.data)
+
             })
             .catch((error) => {
                 console.log(error);
@@ -126,36 +167,36 @@ const ReportฺTax = () => {
                             </label>
 
                             <div class="form-check col-2">
-                                <input class="form-check-input" type="radio" name="reporttype" id="reporttype1" defaultChecked onChange={(e) => setReporttype('1')} />
+                                <input class="form-check-input" type="radio" name="reporttype" id="reporttype1" defaultChecked onChange={(e) => setReporttype('SellTax')} />
                                 <label class="form-check-label" for="reporttype1">
-                                    ภาษีขาย
+                                    ภาษีซื้อ
                                 </label>
                             </div>
                             <div class="form-check col-2">
-                                <input class="form-check-input" type="radio" name="reporttype" id="reporttype2" onChange={(e) => setReporttype('2')} />
+                                <input class="form-check-input" type="radio" name="reporttype" id="reporttype2" onChange={(e) => setReporttype('BuyTax')} />
                                 <label class="form-check-label" for="reporttype2">
-                                ภาษีซื้อ
+                                ภาษีขาย
                                 </label>
                             </div>
-                            <div class="form-check col-2">
-                                <input class="form-check-input" type="radio" name="reporttype" id="reporttype3" onChange={(e) => setReporttype('3')} />
+                            {/* <div class="form-check col-2">
+                                <input class="form-check-input" type="radio" name="reporttype" id="reporttype3" onChange={(e) => setReporttype('WHT')} />
                                 <label class="form-check-label" for="reporttype3">
                                 WHT 3%
                                 </label>
-                            </div>
-                            <div className="col-1 text-center">
+                            </div> */}
+                            {/* <div className="col-1 text-center">
                                 <button type="submit" className="btn btn-primary" onClick={searchBill}>Search</button>
-                            </div>
+                            </div> */}
                         </div>
 
-                        {reporttype === '1' ? 
+                        {reporttype === 'SellTax' ? 
                           <div className="row my-3">
                           <label class="col-sm-2 col-form-label" htmlFor="type">
                               
                           </label>
 
                           <div class="form-check col-2">
-                              <input class="form-check-input" type="radio" name="type" id="type1" defaultChecked onChange={(e) => setType('COMM-IN')} />
+                              <input class="form-check-input" type="radio" name="type" id="type1"  onChange={(e) => setType('COMM-IN')} />
                               <label class="form-check-label" for="type1">
                               COMM-IN
                               </label>
@@ -168,14 +209,14 @@ const ReportฺTax = () => {
                           </div>
                           
                       </div>
-                      : reporttype === '3' ? 
+                      : reporttype === 'BuyTax' ? 
                       <div className="row my-3">
                       <label class="col-sm-2 col-form-label" htmlFor="type">
                           
                       </label>
 
                       <div class="form-check col-2">
-                          <input class="form-check-input" type="radio" name="type" id="type1" defaultChecked onChange={(e) => setType('COMM-OUT')} />
+                          <input class="form-check-input" type="radio" name="type" id="type1"  onChange={(e) => setType('COMM-OUT')} />
                           <label class="form-check-label" for="type1">
                           COMM-OUT
                           </label>
@@ -192,48 +233,79 @@ const ReportฺTax = () => {
                       
 
      {/* Date Select */}
-     <div className="row">
+
+                        <div className="row">
                             <div className="col-2">
-                                <label htmlFor="Date Select" className="form-label">rprefdate </label>
+                                <label htmlFor="Date Select" className="form-label">rprefdate Date  </label>
                             </div>
                             <div className="col-4">
                                 <label htmlFor="fromDate">From &nbsp;</label>
-                                <input
+                                {/* <input
                                     type="date"
                                     id="fromDate"
                                     value={fromDate}
                                     onChange={(e) => setFromDate(e.target.value)}
-                                />
+                                /> */}
+                                <DatePicker
+                            showIcon
+                            className="form-control"
+                            todayButton="Vandaag"
+                            // isClearable
+                            showYearDropdown
+                            dateFormat="dd/MM/yyyy"
+                            dropdownMode="select"
+                            selected={filterData.startRpRefDate}
+                            onChange={(date) =>setFilterData((prevState) => ({
+                                ...prevState,
+                                startRpRefDate: date,    
+                              }))
+                            }
+                                 />
                             </div>
                             <div className="col-4">
                                 <label htmlFor="toDate">To &nbsp;</label>
-                                <input
+                                {/* <input
                                     type="date"
                                     id="toDate"
                                     value={toDate}
                                     onChange={(e) => setToDate(e.target.value)}
-                                />
+                                /> */}
+                                <DatePicker
+                            showIcon
+                            className="form-control"
+                            todayButton="Vandaag"
+                            // isClearable
+                            showYearDropdown
+                            dateFormat="dd/MM/yyyy"
+                            dropdownMode="select"
+                            selected={filterData.endRpRefDate}
+                            onChange={(date) =>setFilterData((prevState) => ({
+                                ...prevState,
+                               endRpRefDate: date,    
+                              }))
+                            }
+                                 />
                             </div>
                         </div>
 
 
                         {/* advisorcode */}
-                        {reporttype === '3' ?                         
+                        {reporttype === 'BuyTax' ?                         
                         <div className="row mb-3">
                             <div className="col-2">
                                 <label htmlFor="Advisor" className="form-label">Advisor Code</label>
                             </div>
                             <div className="col-7">
-                                <input type="text" id="Advisor" value={advisorcode} readOnly={advisoryReadOnly} onChange={(e) => setAdvisorcode(e.target.value)} className="form-control" />
+                                <input type="text" name="advisorCode" value={filterData.advisorCode} onChange={handleChange} className="form-control" />
                             </div>
                             <div className="col-1">
-                                <input type="checkbox" id="cashierReceiptCheckbox" value={checkboxValue} onChange={(e) => setCheckboxValue(e.target.checked)} className="form-check-input" />
+                                <input type="checkbox" name="advisorAll" value={advisorAll} onChange={(e) => setAdvisorAll(e.target.checked)} className="form-check-input" />
                                 <label htmlFor="cashierReceiptCheckbox" className="form-check-label">&nbsp;ALL</label>
                             </div>
                         </div>
                         : null}
 {/* insurercode */}
-{reporttype === '1' ? 
+{reporttype === 'SellTax' ? 
 
 
                         
@@ -242,16 +314,16 @@ const ReportฺTax = () => {
                                 <label htmlFor="Insurer" className="form-label">InsurerCode</label>
                             </div>
                             <div className="col-7">
-                                <input type="text" id="InsurerCode" value={insurercode} readOnly={insurerReadOnly} onChange={(e) => setInsurercode(e.target.value)} className="form-control" />
+                                <input type="text" name="insurerCode" value={filterData.insurerCode} onChange={handleChange} className="form-control" />
                             </div>
                             <div className="col-1">
-                                <input type="checkbox" id="cashierReceiptCheckbox" value={checkboxValue} onChange={(e) => setCheckboxValue(e.target.checked)} className="form-check-input" />
+                                <input type="checkbox" name="insurerAll" value={insurerAll} onChange={(e) => setInsurerAll(e.target.checked)} className="form-check-input" />
                                 <label htmlFor="cashierReceiptCheckbox" className="form-check-label">&nbsp;ALL</label>
                             </div>
                         </div>
 : null}
                         {/* status  */}
-                        <div className="row my-3">
+                        {/* <div className="row my-3">
                             <label class="col-sm-2 col-form-label" htmlFor="insurerCode">
                                 สถานะ
                             </label>
@@ -268,10 +340,10 @@ const ReportฺTax = () => {
                                     (A) กรมธรรม์
                                 </label>
                             </div>
-                        </div>
+                        </div> */}
 
                         {/* insuranceclass */}
-                        <div className="row mb-3">
+                        {/* <div className="row mb-3">
                             <div className="col-2">
                                 <label htmlFor="transactionType" className="form-label">Insurance Class</label>
                             </div>
@@ -310,37 +382,9 @@ const ReportฺTax = () => {
                                     <option value="COMM-IN">COMM-IN</option>
                                 </select>
                             </div>
-                        </div>
+                        </div> */}
 
-                        {/* transaction type  */}
-                {type === '1'? 
-                <div className="row my-3">
-                            <label class="col-sm-2 col-form-label" htmlFor="transtype">
-                            Transaction Type
-                            </label>
-                            
-                            <div class="form-check col-2">
-                    <input class="form-check-input" type="radio" name="transtype" id="transtyperadio1" defaultChecked onChange={(e)=>setTranstype('COMM-IN')}/>
-                    <label class="form-check-label" for="transtyperadio1">
-                        COMM-IN
-                    </label>
-                    </div>
-
-                    <div class="form-check col-2">
-                    <input class="form-check-input" type="radio" name="transtype" id="transtyperadio2" onChange={(e)=>setTranstype('OV-IN')}/>
-                    <label class="form-check-label" for="transtyperadio2">
-                        OV-IN
-                    </label>
-                    </div>
-                    <div class="form-check col-2">
-                    <input class="form-check-input" type="radio" name="transtype" id="transtyperadio3" onChange={(e)=>setTranstype('ALL')}/>
-                    <label class="form-check-label" for="transtyperadio3">
-                        ALL
-                    </label>
-                    </div>
-                    
-                            </div>
-                    : null}
+                      
                         <div className="row" style={{ marginTop: '20px' }}>
                             <div className="col-12 text-center">
                                 <button type="submit" className="btn btn-primary btn-lg" onClick={searchdata} >Search</button>
@@ -352,58 +396,13 @@ const ReportฺTax = () => {
                 </div>
                 <div className="col-lg-12">
                     <div style={{ overflowY: 'auto', height: '400px' , marginTop:"50px" }}>
-                        {tableData.length!=0?<table className="table table-striped table-bordered">
-                            <thead>
-                            <tr>
-                                <th>Bill Advisor No</th>
-                                <th>DFR Preder No</th>
-                                <th>Insurer Code</th>
-                                <th>Advisor Code</th>
-                                <th>Cashier Receipt No</th>
-                                <th>Cashier Date</th>
-                                <th>ARNO</th>
-                                <th>Receive From</th>
-                                <th>Receive Name</th>
-                                <th>User Code</th>
-                                <th>Create Date</th>
-                                <th>Amt</th>
-                                <th>Receive Type</th>
-                                <th>Amity Account No</th>
-                                <th>Amity Bank</th>
-                                <th>Amity Bank Branch</th>
-                                <th>Ref No</th>
-                                <th>Bank</th>
-                                <th>Bank Branch</th>
-                                <th>Status</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            {tableData.map((row, index) => (
-                                <tr key={index}>
-                                    <td>{row.billadvisorno}</td>
-                                    <td>{row.dfrprederno ? row.dfrprederno : 'N/A'}</td>
-                                    <td>{row.insurercode}</td>
-                                    <td>{row.advisorcode}</td>
-                                    <td>{row.cashierreceiveno ? row.cashierreceiveno : 'N/A'}</td>
-                                    <td>{row.cashierdate ? row.cashierdate : 'N/A'}</td>
-                                    <td>{row.ARNO ? row.ARNO : 'N/A'}</td>
-                                    <td>{row.receivefrom}</td>
-                                    <td>{row.receivename}</td>
-                                    <td>{row.createusercode}</td>
-                                    <td>{row.createdAt}</td>
-                                    <td>{row.amt}</td>
-                                    <td>{row.receivetype}</td>
-                                    <td>{row.amityAccountno}</td>
-                                    <td>{row.amityBank}</td>
-                                    <td>{row.amityBankbranch}</td>
-                                    <td>{row.partnerAccountno ? row.partnerAccountno : 'N/A'}</td>
-                                    <td>{row.partnerBank}</td>
-                                    <td>{row.partnerBankbranch}</td>
-                                    <td>{row.status}</td>
-                                </tr>
-                            ))}
-                            </tbody>
-                        </table>:
+                        {reportData.length!=0?
+                        <div>
+                        <ReportTable cols={colData} rows={reportData} />
+                        <button className="btn btn-primary" onClick={exportExcel}>Export To Excel</button>
+                        {/* <button className="btn btn-warning" onClick={(e)=>saveapcommin(e)}>save</button>
+                        <button className="btn btn-success" onClick={(e)=>submitapcommin(e)}>submit</button> */}
+                      </div>:
                             <div className="container" style={{marginTop:"30px"}}>
                                 <div className="row justify-content-center">
                                     <h2 className={"text-center"}>No Data</h2>

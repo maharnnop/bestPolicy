@@ -17,83 +17,20 @@ module.exports = {
         allowNull: false,
         type: Sequelize.INTEGER
       },
-      MOTORTYPE: {
+      
+      MODELNAMETH: {
         type: Sequelize.STRING
       },
-      MODEL: {
+      MODELNAME: {
         type: Sequelize.STRING
       },
-      BODYTYPE: {
+      
+      activeflag: {
+        defaultValue: 'Y',
         type: Sequelize.STRING
       },
-      CC: {
-        type: Sequelize.STRING
-      },
-      SEAT: {
-        type: Sequelize.INTEGER
-      },
-      WEIGHT: {
-        type: Sequelize.INTEGER
-      },
-      WEIGHTUNIT: {
-        type: Sequelize.STRING
-      },
-      MARKETTHAINAME: {
-        type: Sequelize.STRING
-      },
-      MARKETENGNAME: {
-        type: Sequelize.STRING
-      },
-      MARKETSHORTTHAINAME: {
-        type: Sequelize.STRING
-      },
-      MARKETSHORTENGNAME: {
-        type: Sequelize.STRING
-      },
-      INSURECOST: {
-        type: Sequelize.INTEGER
-      },
-      GROUPCAR: {
-        type: Sequelize.INTEGER
-      },
-      FLAGDELETE: {
-        allowNull: false,
-        type: Sequelize.STRING
-      },
-      MODELTYPE: {
-        type: Sequelize.STRING
-      },
-      MODELCODETEXT: {
-        type: Sequelize.STRING
-      },
-      MODELFIRSTNAME: {
-        type: Sequelize.STRING
-      },
-      MODELSECONDNAME: {
-        type: Sequelize.STRING
-      },
-      SIZETYPE: {
-        type: Sequelize.STRING
-      },
-      TYPEOFCAR: {
-        type: Sequelize.STRING
-      },
-      DHIPBRANDCODE: {
-        type: Sequelize.INTEGER
-      },
-      DHIPMODELCODE: {
-        type: Sequelize.INTEGER
-      },
-      DHIPSPECCODE: {
-        type: Sequelize.INTEGER
-      },
-      CARSIZECODE: {
-        type: Sequelize.INTEGER
-      },
-      DEFAULT_FLAG: {
-        type: Sequelize.STRING
-      },
-      MODEL_SORT: {
+      sortno: {
+        
         type: Sequelize.INTEGER
       },
       createdAt: {

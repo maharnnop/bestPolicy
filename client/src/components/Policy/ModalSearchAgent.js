@@ -46,6 +46,9 @@ const PolicyCard = (props) => {
     axios.post(url + "/persons/findagent",filterData,headers)
           .then((agents) => {    
             setAgentList(agents.data)
+            if (agents.data.length === 0) {
+              alert('ไม่พบผู้แนะนำ สำหรับกรมธรรม์ ตามเงื่อนไข class/subclass/บริษัทประกันนี้')
+            }
           })
           .catch((err) => { 
             alert(err.data)

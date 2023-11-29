@@ -93,3 +93,4 @@ D:\Onedrive-Dhipaya\OneDrive - Dhipaya Insurance Public Company Limited\Best Pol
 D:\Onedrive-Dhipaya\OneDrive - Dhipaya Insurance Public Company Limited\Best Policy\bestPolicy\report\BestPolicyReport_Mai\BestPolicyReport\obj\Release\net6.0\BestPolicyReport.pdb
 D:\Onedrive-Dhipaya\OneDrive - Dhipaya Insurance Public Company Limited\Best Policy\bestPolicy\report\BestPolicyReport_Mai\BestPolicyReport\obj\Release\net6.0\BestPolicyReport.genruntimeconfig.cache
 D:\Onedrive-Dhipaya\OneDrive - Dhipaya Insurance Public Company Limited\Best Policy\bestPolicy\report\BestPolicyReport_Mai\BestPolicyReport\obj\Release\net6.0\ref\BestPolicyReport.dll
+D:\Onedrive-Dhipaya\OneDrive - Dhipaya Insurance Public Company Limited\Best Policy\bestPolicy\report\BestPolicyReport_Mai\BestPolicyReport\bin\Release\net6.0\libman.json

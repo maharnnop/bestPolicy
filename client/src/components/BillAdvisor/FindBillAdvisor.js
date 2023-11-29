@@ -1,8 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+
 import jwt_decode from "jwt-decode";
 import EditBillAdvisor from "./EditBillAdvisor";
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
 import {
     BrowserRouter,
     Routes,
@@ -17,6 +20,7 @@ import {
     BackdropBox1,
 } from "../StylesPages/LoginStyles";
 import { useCookies } from "react-cookie";
+
 
 const config = require("../../config.json");
 
@@ -43,8 +47,8 @@ const FindBillAdvisor = () => {
 
     const [filterData, setFilterData] = useState(
         {
-            "insurerid": null,
-            "agentid":null,
+            "insurerId": null,
+            "agentId":null,
             "billadvisorno": null,
             "billdate": null
 
@@ -54,20 +58,7 @@ const FindBillAdvisor = () => {
     const [agentDD, setAgentDD] = useState([]);
 
     useEffect(() => {
-        //get province
-        axios
-            .get(url + "/static/provinces/all", headers)
-            .then((province) => {
-                const array = []
-                province.data.forEach(ele => {
-                    array.push(<option key={ele.provinceid} value={ele.provinceid}>{ele.t_provincename}</option>)
-                });
-                setProvinceDD(array)
-            })
-            .catch((err) => {
-                // alert("cant get province");
-            });
-
+        
         // get agent all
         axios
             .get(url + "/persons/agentall", headers)
@@ -104,8 +95,8 @@ const FindBillAdvisor = () => {
     }, []);
 
 
-
     const handleChange = (e) => {
+        console.log(typeof(e.target.value));
         setFilterData((prevState) => ({
             ...prevState,
             [e.target.name]: e.target.value,
@@ -134,6 +125,7 @@ const FindBillAdvisor = () => {
 
     const submitFilter = (e) => {
         e.preventDefault();
+        setPoliciesData([])
         console.log(filterData);
         axios
             .post(url + "/payments/findbill", filterData, headers)
@@ -198,8 +190,8 @@ const FindBillAdvisor = () => {
                     <div class="col-2 ">
                         <div class="input-group mb-3">
                             {/* <input type="text" class="form-control" placeholder="รหัสบริษัทประกัน" name="insurerCode" onChange={handleChange} /> */}
-                            <select  name="insurerID" class="form-control" onChange={handleChange} >
-                                <option value="" disabled selected hidden>รหัสบริษัทประกัน</option>
+                            <select  name="insurerId" class="form-control" onChange={handleChange} >
+                                <option  disabled selected hidden>รหัสบริษัทประกัน</option>
                                 {insurerDD}
                             </select>
 
@@ -234,7 +226,7 @@ const FindBillAdvisor = () => {
                     </div>
                     <div class="col-2 ">
                         <div class="input-group mb-3">
-                            <select  name="agentID" class="form-control" onChange={handleChange} >
+                            <select  name="agentId" class="form-control" onChange={handleChange} >
                                 <option value="" disabled selected hidden>รหัสผู้แนะนำ</option>
                                 {agentDD}
                             </select>
@@ -293,8 +285,22 @@ const FindBillAdvisor = () => {
                     <div class="col-2 ">
 
                         <div class="input-group mb-3">
-                            <input  type="date" class="form-control " name="billdate" onChange={handleChange} />
-
+                            {/* <input  type="date" class="form-control " name="billdate"   onChange={handleChange}  /> */}
+                            <DatePicker
+                            style={{textAlign: 'center'}}
+                            showIcon
+                            className="form-control"
+                            todayButton="Vandaag"
+                            // isClearable
+                            showYearDropdown
+                            dateFormat="dd/MM/yyyy"
+                            dropdownMode="select"
+                            selected={filterData.billdate}
+                            onChange={(date) => setFilterData((prevState) => ({
+                                ...prevState,
+                                billdate: date,
+                            }))}
+                                 />
                         </div>
 
                     </div>

@@ -49,7 +49,9 @@ const FindPerson = () => {
             "agentCode": '',
             "firstname": '',
             "lastname": '',
-            "ogname": ''
+            "ogname": '',
+            "bankOf" : 'M',
+            "class" : '',
         })
     const [personsData, setPersonsData] = useState([])
     const [insureTypeDD, setInsureTypeDD] = useState([]);
@@ -86,14 +88,13 @@ const FindPerson = () => {
         axios
             .get(url + "/insures/insuretypeall", headers)
             .then((insuretype) => {
-                const array = [];
-                insuretype.data.forEach((ele) => {
-                    array.push(
-                        <option key={ele.id} value={ele.id}>
-                            {ele.class} : {ele.subClass}
-                        </option>
-                    );
-                });
+                const uniqueClasses = [...new Set(insuretype.data.map(ele => ele.class))];
+
+                const array = uniqueClasses.map((className, index) => (
+                  <option key={index} value={className}>
+                    {className}
+                  </option>
+                ));
                 setInsureTypeDD(array);
             })
             .catch((err) => { });
@@ -133,15 +134,39 @@ const FindPerson = () => {
         console.log(filterData);
         if (filterData.type === 'bank') {
             axios
-            .post(url + "/persons/findagentinsurer", filterData, headers)
+            .post(url + "/static/bank/findBankbyPersonCode", filterData, headers)
             .then((res) => {
 
                 console.log(res.data);
-                alert("find data success")
+                if (res.data.length > 0) {
+                    alert("ค้นหาข้อมูล บัญชีธนาคาร สำเร็จ")
+                }else{
+                    alert("ไม่พบข้อมูล บัญชีธนาคาร ที่ค้นหา")
+                }
                 const array = []
                 setExportPolicyData(res.data)
 
 
+                setPersonsData(res.data)
+            })
+            .catch((err) => {
+
+                alert("Something went wrong, Try Again.");
+
+            });
+        }else if (filterData.type === 'insureType'){
+            axios
+            .post(url + "/insures/getinsurebyclass", filterData, headers)
+            .then((res) => {
+
+                console.log(res.data);
+                if (res.data.length > 0) {
+                    alert("ค้นหาข้อมูล แผนประกัน สำเร็จ")
+                }else{
+                    alert("ไม่พบข้อมูล แผนประกัน ที่ค้นหา")
+                }
+                const array = []
+                setExportPolicyData(res.data)
                 setPersonsData(res.data)
             })
             .catch((err) => {
@@ -155,7 +180,13 @@ const FindPerson = () => {
             .then((res) => {
 
                 console.log(res.data);
-                alert("find data success")
+                if (res.data.length > 0 && filterData.type === 'agent') {
+                    alert("ค้นหาข้อมูล ผู้แนะนำ สำเร็จ")
+                }else if(res.data.length > 0 && filterData.type === 'insurer'){
+                    alert("ค้นหาข้อมูล บริษัทรับประกัน สำเร็จ")
+                }else{
+                    alert("ไม่พบข้อมูลที่ค้นหา")
+                }
                 const array = []
                 setExportPolicyData(res.data)
 
@@ -166,12 +197,13 @@ const FindPerson = () => {
 
                 alert("Something went wrong, Try Again.");
 
-            });
+            }); 
         }
         
     };
 
     const editperson = (e) => {
+        console.log(e.target.id);
         const type = e.target.id.split(':')[0]
         const code = e.target.id.split(':')[1]
         navigate(`/edit${type}/${code}`) // redirect to edit page
@@ -202,6 +234,7 @@ const FindPerson = () => {
                             <option value={'insurer'}>บริษัทประกัน</option>
                             <option value={'agent'}>ผู้แนะนำ</option>
                             <option value={'bank'}>บัญชีธนาคาร</option>
+                            <option value={'insureType'}>แผนประกัน</option>
                         </select>
 
 
@@ -457,8 +490,31 @@ const FindPerson = () => {
 
         </div>
     </> : null}</>
-                    :
-                        null}
+                    : filterData.type === 'insureType' ?
+                    <>
+                            <div class="row">
+                                <div class="col-1">
+
+                                </div>
+                                <div class="col-1">
+                                    <label class="col-form-label">Class</label>
+
+                                </div>
+                                <div class="col-2 ">
+                                    <div class="input-group mb-3">
+                                    <select  class="form-control" name="class"  onChange={handleChange} >
+                                        <option value={''}>Select All</option>
+                                        {insureTypeDD}
+                                    </select>
+                                    </div>
+
+
+                                </div>
+
+                            </div>
+                        </>
+                        :null
+                        }
 
 
 
@@ -469,49 +525,118 @@ const FindPerson = () => {
 
 
 
-
+                {filterData.type === 'insurer' || filterData.type === 'agent' ? 
                 <div className="table-responsive overflow-scroll"  >
-                    <table class="table  table-striped " >
-                        <thead>
-                            <tr>
-                                <th scope="col">ลำดับ</th>
+                <table class="table  table-striped " >
+                    <thead>
+                        <tr>
+                            <th scope="col">ลำดับ</th>
 
-                                <th scope="col">แก้ไข</th>
-                                <th scope="col">ประเภท</th>
-                                <th scope="col">รหัส</th>
-                                <th scope="col">ประเภทบุคคล</th>
-                                <th scope="col">ชื่อเต็ม</th>
-                                <th scope="col">ประเภทการชำระ</th>
-                                <th scope="col">เครดิตเทอมค่าเบี้ย</th>
-                                <th scope="col">เครดิตเทอมค่า Comm/OV</th>
-                                <th scope="col">อยู่ในระบบ VAT</th>
-                                <th scope="col">สาขาที่</th>
+                            <th scope="col">แก้ไข</th>
+                            <th scope="col">ประเภท</th>
+                            <th scope="col">รหัส</th>
+                            <th scope="col">ประเภทบุคคล</th>
+                            <th scope="col">ชื่อเต็ม</th>
+                            <th scope="col">ประเภทการชำระ</th>
+                            <th scope="col">เครดิตเทอมค่าเบี้ย</th>
+                            <th scope="col">เครดิตเทอมค่า Comm/OV</th>
+                            <th scope="col">อยู่ในระบบ VAT</th>
+                            <th scope="col">สาขาที่</th>
 
 
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {personsData.map((ele, i) => {
-                                return (<tr>
-                                    <th scope="row">{i + 1}</th>
-                                    <td scope="row"><button type="button" class="btn btn-secondary " id={ele.type === 'insurer' ? ele.type + ':' + ele.insurerCode : ele.type + ':' + ele.agentCode} onClick={e => editperson(e)}>Edit</button></td>
-                                    <td>{ele.type}</td>
-                                    <td>{ele.type === 'insurer' ? ele.insurerCode : ele.agentCode}</td>
-                                    <td>{ele.personType}</td>
-                                    <td>{ele.fullname}</td>
-                                    <td>{ele.stamentType}</td>
-                                    <td>{ele.premCreditT}  {ele.premCreditUnit === 'D' ? 'วัน' : ele.premCreditUnit === 'M' ? 'เดือน' : 'ปี'}</td>
-                                    <td>{ele.commovCreditT}  {ele.commovCreditUnit === 'D' ? 'วัน' : ele.commovCreditUnit === 'M' ? 'เดือน' : 'ปี'}</td>
-                                    <td>{ele.vatRegis}</td>
-                                    <td>{ele.branch}</td>
-                                </tr>)
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {personsData.map((ele, i) => {
+                            return (<tr>
+                                <th scope="row">{i + 1}</th>
+                                <td scope="row"><button type="button" class="btn btn-secondary " id={ele.type === 'insurer' ? ele.type + ':' + ele.insurerCode : ele.type + ':' + ele.agentCode} onClick={e => editperson(e)}>Edit</button></td>
+                                <td>{ele.type}</td>
+                                <td>{ele.type === 'insurer' ? ele.insurerCode : ele.agentCode}</td>
+                                <td>{ele.personType}</td>
+                                <td>{ele.fullname}</td>
+                                <td>{ele.stamentType}</td>
+                                <td>{ele.premCreditT}  {ele.premCreditUnit === 'D' ? 'วัน' : ele.premCreditUnit === 'M' ? 'เดือน' : 'ปี'}</td>
+                                <td>{ele.commovCreditT}  {ele.commovCreditUnit === 'D' ? 'วัน' : ele.commovCreditUnit === 'M' ? 'เดือน' : 'ปี'}</td>
+                                <td>{ele.vatRegis}</td>
+                                <td>{ele.branch}</td>
+                            </tr>)
 
-                            })}
+                        })}
 
-                        </tbody>
-                    </table>
-                </div>
+                    </tbody>
+                </table>
+            </div>
 
+
+                : filterData.type === 'bank' ? 
+                <div className="table-responsive overflow-scroll"  >
+                <table class="table  table-striped " >
+                    <thead>
+                        <tr>
+                            <th scope="col">ลำดับ</th>
+                            <th scope="col">แก้ไข</th>
+                            <th scope="col">ประเภท</th>
+                            <th scope="col">ชื่อเต็ม</th>
+                            <th scope="col">Code</th>
+                            <th scope="col">ธนาคาร</th>
+                            <th scope="col">สาขา</th>
+                            <th scope="col">เลขที่บัญชี</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {personsData.map((ele, i) => {
+                            return (<tr>
+                                <th scope="row">{i + 1}</th>
+                                <td scope="row"><button type="button" class="btn btn-secondary " id={ele.type === 'insurer' ? ele.type + ':' + ele.insurerCode : ele.type === 'agent' ?ele.type + ':' + ele.agentCode : ele.type +':'+ele.id} onClick={e => editperson(e)}>Edit</button></td>
+                                <td>{ele.type}</td>
+                                <td>{ele.fullname}</td>
+                                <td>{ele.code}</td>
+                                <td>{ele.bankName}</td>
+                                <td>{ele.branchName}  </td>
+                                <td>{ele.bankNo}  </td>
+                            </tr>)
+
+                        })}
+
+                    </tbody>
+                </table>
+            </div>
+                
+                : filterData.type === 'insureType' ? 
+                <div className="table-responsive overflow-scroll"  >
+                <table class="table  table-striped " >
+                    <thead>
+                        <tr>
+                            <th scope="col">ลำดับ</th>
+                            <th scope="col">แก้ไข</th>
+                            <th scope="col">Class</th>
+                            <th scope="col">Subclass</th>
+                            <th scope="col">ชื่อแผนประกัน</th>
+                            <th scope="col">Invoice Code</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {personsData.map((ele, i) => {
+                            return (<tr>
+                                <th scope="row">{i + 1}</th>
+                                <td scope="row"><button type="button" class="btn btn-secondary " id={
+                                    ele.type === 'insurer' ? ele.type + ':' + ele.insurerCode : 
+                                    ele.type === 'agent' ? ele.type + ':' + ele.agentCode : 
+                                    ele.type === 'bank' ? ele.type +':'+ele.id : 'insureType:'+ ele.id} onClick={e => editperson(e)}>Edit</button></td>
+                                <td>{ele.class}</td>
+                                <td>{ele.subClass}</td>
+                                <td>{ele.insureName}</td>
+                                <td>{ele.invoiceCode}</td>
+                            </tr>)
+
+                        })}
+
+                    </tbody>
+                </table>
+            </div>
+                :null}
+                
 
 
             </form>

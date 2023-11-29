@@ -3,6 +3,8 @@ import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import jwt_decode from "jwt-decode";
 import Modal from 'react-bootstrap/Modal';
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
 import {
     BrowserRouter,
     Routes,
@@ -366,8 +368,22 @@ const EditBillAdvisor = (props) => {
                     <div class="col-2 ">
 
                         <div class="input-group mb-3">
-                            <input required type="date" class="form-control " name="dueDate" onChange={handleChange} />
-
+                            {/* <input required type="date" class="form-control " name="dueDate" onChange={handleChange} /> */}
+                            <DatePicker
+                            style={{textAlign: 'center'}}
+                            showIcon
+                            className="form-control"
+                            todayButton="Vandaag"
+                            // isClearable
+                            showYearDropdown
+                            dateFormat="dd/MM/yyyy"
+                            dropdownMode="select"
+                            selected={filterData.dueDate}
+                            onChange={(date) => setFilterData((prevState) => ({
+                                ...prevState,
+                                dueDate: date,
+                            }))}
+                                 />
                         </div>
 
                     </div>

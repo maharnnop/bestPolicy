@@ -20,6 +20,10 @@ module.exports = {
         allowNull: false,
         type: Sequelize.STRING
       },
+      invoiceCode: {
+        allowNull: false,
+        type: Sequelize.STRING
+      },
       // รูปแบบการหักภาษี
       deductTaxType: {
         allowNull: false,

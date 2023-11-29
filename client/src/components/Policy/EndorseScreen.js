@@ -8,6 +8,8 @@ import Select from 'react-select';
 import { useCookies } from "react-cookie";
 import { number } from "joi";
 import { numberWithCommas} from '../lib/number';
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
 
 const config = require("../../config.json");
 
@@ -104,7 +106,12 @@ const EndorseScreen = (props) => {
     //get com/ov setup
 
   };
-
+  const handleChangeDate = (date,name) => {
+    setFormData((prevState) => ({
+        ...prevState,
+        [name]: date,
+    }));
+  }
 
   const NumberInputWithCommas =  ({ value, name ,onChange, e}) =>{
     // Remove commas when displaying the value
@@ -525,26 +532,54 @@ const EndorseScreen = (props) => {
           <label class="form-label">
             วันที่เริ่มคุ้มครอง<span class="text-danger"> *</span>
           </label>
-          <input
+          {/* <input
             className="form-control"
             type="date"
             value={formData.actDate}
             name={`actDate`}
             onChange={handleChange}
-          />
+          /> */}
+          <DatePicker
+                            style={{textAlign: 'center'}}
+                            showIcon
+                            className="form-control"
+                            todayButton="Vandaag"
+                            // isClearable
+                            name="effDatestart"
+                            showYearDropdown
+                            dateFormat="dd/MM/yyyy"
+                            dropdownMode="select"
+                            id="actDate"
+                            selected={formData.actDate}
+                            onChange={(date) => handleChangeDate(date,'actDate')}
+                                 />
         </div>
 
         <div class="col-2 form-group ">
           <label class="form-label ">
             วันที่สิ้นสุด<span class="text-danger"> *</span>
           </label>
-          <input
+          {/* <input
             className="form-control"
             type="date"
             value={formData.expDate}
             name={`expDate`}
             onChange={handleChange}
-          />
+          /> */}
+          <DatePicker
+                            style={{textAlign: 'center'}}
+                            showIcon
+                            className="form-control"
+                            todayButton="Vandaag"
+                            // isClearable
+                            name="effDatestart"
+                            showYearDropdown
+                            dateFormat="dd/MM/yyyy"
+                            dropdownMode="select"
+                            id="expDate"
+                            selected={formData.expDate}
+                            onChange={(date) => handleChangeDate(date,'expDate')}
+                                 />
         </div>
         <div class="col-2 form-group ">
           <label class="form-label px-3">

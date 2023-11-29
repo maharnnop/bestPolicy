@@ -6,6 +6,8 @@ const ctrl = require("../../controllers");
 router.get('/all', ctrl.MT_Models.showAll);
 router.post('/search', ctrl.MT_Models.showAllinBrand);
 router.get('/brand/:index', ctrl.MT_Models.searchByinModel);
+router.post('/showallspecinmodel', ctrl.MT_Models.showAllSpecinModel);
+
 
 // router.get('/:index', ctrl.amphurs.showAllinProvince);
 // router.post('/', ctrl.cars.postCar);

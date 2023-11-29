@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 import PremInTable from "./PremInTable";
 import axios from 'axios'
 import { useCookies } from "react-cookie";
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
 
 const config = require("../../config.json");
 export default function PremInSearch() {
@@ -272,26 +274,54 @@ export default function PremInSearch() {
             <label class="col-sm-3 col-form-label" htmlFor="ardatestart">
               จาก วันที่
             </label>
-            <input
+            {/* <input
               className="form-control"
               type="date"
               name="ardatestart"
               id="ardatestart"
               onChange={handleChange}
-            />
+            /> */}
+            <DatePicker
+                            showIcon
+                            className="form-control"
+                            todayButton="Vandaag"
+                            // isClearable
+                            showYearDropdown
+                            dateFormat="dd/MM/yyyy"
+                            dropdownMode="select"
+                            selected={filterData.ardatestart}
+                            onChange={(date) => setFilterData((prevState) => ({
+                                ...prevState,
+                                ardatestart: date,
+                            }))}
+                                 />
           </div>
 
           <div className="col-5 ">
             <label class="col-sm-2 col-form-label" htmlFor="ardateend">
               ถึง วันที่
             </label>
-            <input
+            {/* <input
               className="form-control"
               type="date"
               name="ardateend"
               id="ardateend"
               onChange={handleChange}
-            />
+            /> */}
+            <DatePicker
+                            showIcon
+                            className="form-control"
+                            todayButton="Vandaag"
+                            // isClearable
+                            showYearDropdown
+                            dateFormat="dd/MM/yyyy"
+                            dropdownMode="select"
+                            selected={filterData.ardateend}
+                            onChange={(date) => setFilterData((prevState) => ({
+                                ...prevState,
+                                ardateend: date,
+                            }))}
+                                 />
           </div>
         </div>
         

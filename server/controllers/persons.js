@@ -437,6 +437,8 @@ const findAgentInsurer = async (req,res) =>{
   
   } 
 
+
+
 //get agent data by agentCode
 const getAgentByAgentCode = async (req,res) =>{
   try{

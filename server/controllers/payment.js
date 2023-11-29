@@ -5,7 +5,7 @@ const CommOVOut = require("../models").CommOVOut;
 const b_jabilladvisor = require('../models').b_jabilladvisor;
 const b_jabilladvisordetail = require('../models').b_jabilladvisordetail;
 const process = require('process');
-const {getRunNo,getCurrentDate} = require("./lib/runningno");
+const {getRunNo,getCurrentDate,getCurrentYYMM} = require("./lib/runningno");
 const {decode} = require('jsonwebtoken');
 require('dotenv').config();
 // const Package = require("../models").Package;
@@ -89,6 +89,29 @@ const findTransaction = async (req,res) => {
 
 const findPolicyByPreminDue = async (req,res) => {
 
+  let cond =''
+  if(req.body.insurerCode !== null && req.body.insurerCode !== ''){
+    cond = `${cond} and t."insurerCode" = '${req.body.insurerCode}'`
+  }
+  if(req.body.agentCode !== null && req.body.agentCode !== ''){
+    cond = `${cond} and t."agentCode"  = '${req.body.agentCode}'`
+  }
+  if(req.body.dueDate !== null && req.body.dueDate !== ''){
+    cond = `${cond} and t."dueDate" <= '${req.body.dueDate}'`
+  }
+  if(req.body.policyNoStart !== null && req.body.policyNoStart !== ''){
+    cond = `${cond} and t."policyNo" >= '${req.body.policyNoStart}'`
+  }
+  if(req.body.policyNoEnd !== null && req.body.policyNoEnd !== ''){
+    cond = `${cond} and t."policyNo" <= '${req.body.policyNoEnd}'`
+  }
+  if(req.body.createdDateStart !== null && req.body.createdDateStart !== ''){
+    cond = `${cond} and p."createdAt" >= '${req.body.createdDateStart}'`
+  }
+  if(req.body.createdDateEnd !== null && req.body.createdDateEnd !== ''){
+    cond = `${cond} and p."createdAt" <= '${req.body.createdDateEnd}'`
+  }
+
     const records = await sequelize.query(
       `select t."agentCode", t."insurerCode",  t."withheld" ,
       t."dueDate", t."policyNo", t."endorseNo", j."invoiceNo", t."seqNo" ,
@@ -104,12 +127,13 @@ const findPolicyByPreminDue = async (req,res) => {
       join static_data."Policies" p on p.id = j.polid
      
       where "transType" = 'PREM-IN' 
-      and txtype2 = '1' and rprefdate isnull and t."agentCode" = :agentCode and t."insurerCode" = :insurerCode and t.billadvisorno isnull 
-      and "dueDate"<=:dueDate  and (case when :policyNoAll then true else t."policyNo" between :policyNoStart and :policyNoStart end)
-      and j.installmenttype ='A'`,
+      and txtype2 = '1' and rprefdate isnull 
+      and t.billadvisorno isnull 
+      and j.installmenttype ='A'
+      ${cond}`,
           {
             replacements: {
-              agentCode:req.body.agentCode,
+              // agentCode:req.body.agentCode,
               insurerCode:req.body.insurerCode,
               dueDate: req.body.dueDate,
               policyNoStart: req.body.policyNoStart,
@@ -164,7 +188,7 @@ const createbilladvisor = async (req,res) =>{
       //insert to master jabilladvisor
       const billdate = new Date().toISOString().split('T')[0]
       const currentdate = getCurrentDate()
-      req.body.bill.billadvisorno = 'BILL' + await getRunNo('bill',null,null,'kw',currentdate,t);
+      req.body.bill.billadvisorno = getCurrentYYMM() +'/'+ String(await getRunNo('bill',null,null,'kw',currentdate,t)).padStart(4, '0');
       const billadvisors = await sequelize.query(
         'INSERT INTO static_data.b_jabilladvisors (insurerno, advisorno, billadvisorno, billdate, createusercode, amt, cashierreceiptno, active ) ' +
         'VALUES ((select id from static_data."Insurers" where "insurerCode" = :insurerCode limit 1), '+
@@ -260,8 +284,8 @@ const findbilladvisor =async (req,res) =>{
     'and (case when :billdate is null then true else billdate <= :billdate end) ',
         {
           replacements: {
-            insurerid: req.body.insurerid,
-            agentid:req.body.agentid,
+            insurerid: req.body.insurerId,
+            agentid:req.body.agentId,
             billadvisorno: req.body.billadvisorno,
             billdate: req.body.billdate,
           },
@@ -297,7 +321,8 @@ const editbilladvisor = async (req,res) =>{
   const t = await sequelize.transaction();
   try{
     const currentdate = getCurrentDate()
-    req.body.bill.billadvisorno = 'BILL' + await getRunNo('bill',null,null,'kw',currentdate,t);
+    // req.body.bill.billadvisorno = 'BILL' + await getRunNo('bill',null,null,'kw',currentdate,t);
+    req.body.bill.billadvisorno = getCurrentYYMM() +'/'+ String(await getRunNo('bill',null,null,'kw',currentdate,t)).padStart(4, '0');
   const billadvisors = await sequelize.query(
     'INSERT INTO static_data.b_jabilladvisors (insurerno, advisorno, billadvisorno, billdate, createusercode, amt, cashierreceiptno, active, old_keyid ) ' +
     'VALUES ((select id from static_data."Insurers" where "insurerCode" = :insurerCode), '+

@@ -1,6 +1,7 @@
 D:\Onedrive-Dhipaya\OneDrive - Dhipaya Insurance Public Company Limited\Best Policy\bestPolicy\report\BestPolicyReport_Mai\BestPolicyReport\bin\Release\net6.0\publish\BestPolicyReport.exe
 D:\Onedrive-Dhipaya\OneDrive - Dhipaya Insurance Public Company Limited\Best Policy\bestPolicy\report\BestPolicyReport_Mai\BestPolicyReport\bin\Release\net6.0\publish\appsettings.Development.json
 D:\Onedrive-Dhipaya\OneDrive - Dhipaya Insurance Public Company Limited\Best Policy\bestPolicy\report\BestPolicyReport_Mai\BestPolicyReport\bin\Release\net6.0\publish\appsettings.json
+D:\Onedrive-Dhipaya\OneDrive - Dhipaya Insurance Public Company Limited\Best Policy\bestPolicy\report\BestPolicyReport_Mai\BestPolicyReport\bin\Release\net6.0\publish\libman.json
 D:\Onedrive-Dhipaya\OneDrive - Dhipaya Insurance Public Company Limited\Best Policy\bestPolicy\report\BestPolicyReport_Mai\BestPolicyReport\bin\Release\net6.0\publish\BestPolicyReport.dll
 D:\Onedrive-Dhipaya\OneDrive - Dhipaya Insurance Public Company Limited\Best Policy\bestPolicy\report\BestPolicyReport_Mai\BestPolicyReport\bin\Release\net6.0\publish\BestPolicyReport.deps.json
 D:\Onedrive-Dhipaya\OneDrive - Dhipaya Insurance Public Company Limited\Best Policy\bestPolicy\report\BestPolicyReport_Mai\BestPolicyReport\bin\Release\net6.0\publish\BestPolicyReport.runtimeconfig.json

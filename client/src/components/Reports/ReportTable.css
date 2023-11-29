@@ -1,0 +1,26 @@
+.dtHorizontalExampleWrapper {
+    max-width: 600px;
+    margin: 0 auto;
+  }
+  #dtHorizontalExample th, td {
+    white-space: nowrap;
+  }
+  #contable{
+    overflow-x:auto;
+  }
+  /* div.table.dataTable thead .sorting:after,
+  div.table.dataTable thead .sorting:before,
+  div.table.dataTable thead .sorting_asc:after,
+  div.table.dataTable thead .sorting_asc:before,
+  div.table.dataTable thead .sorting_asc_disabled:after,
+  div.table.dataTable thead .sorting_asc_disabled:before,
+  div.table.dataTable thead .sorting_desc:after,
+  div.table.dataTable thead .sorting_desc:before,
+  div.table.dataTable thead .sorting_desc_disabled:after,
+  div.table.dataTable thead .sorting_desc_disabled:before {
+   bottom: .5em;
+  }
+  div.table.dataTable thead .sortable-column:after,
+div.table.dataTable thead .sortable-column:before {
+  display: none;
+} */

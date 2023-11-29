@@ -2,10 +2,11 @@ import React, { useEffect, useState, useRef } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import { CenterPage } from "../StylesPages/AdminStyles";
-import DatePicker from 'react-datepicker';
-import 'react-datepicker/dist/react-datepicker.css';
 import Select from 'react-select';
 import jwt_decode from "jwt-decode";
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
+
 import {
   BrowserRouter,
   Routes,
@@ -96,9 +97,9 @@ const Insurer = () => {
         setTitlePDD(array2)
       }).catch((err) => {
 
-        alert("token expired pls login again!!");
-        removeCookie('jwt');
-        navigate('/login')
+        // alert("token expired pls login again!!");
+        // removeCookie('jwt');
+        // navigate('/login')
 
       });
 
@@ -428,6 +429,7 @@ const Insurer = () => {
   }
 
   const handleSubmit = (e) => {
+    e.preventDefault()
     let contactP = contactData 
     if (contactData.checkLocation) {
       contactP = { ...contactData, 
@@ -543,6 +545,7 @@ const Insurer = () => {
               <select
                 className="form-control"
                 name={`stamentType`}
+                required
                 onChange={changeInsurer}
                 value={insurerData.stamentType}
               >
@@ -559,6 +562,7 @@ const Insurer = () => {
               <input
                 defaultValue={insurerData.premCreditT}
                 className="form-control"
+                required
                 type="number"
                 name="premCreditT"
                 onChange={changeInsurer}
@@ -569,6 +573,7 @@ const Insurer = () => {
               <select
                 className="form-control"
                 name={`premCreditUnit`}
+                required
                 onChange={changeInsurer}
                 value={insurerData.premCreditUnit}
               >
@@ -584,6 +589,7 @@ const Insurer = () => {
               <input
                 className="form-control"
                 type="number"
+                required
                 name="commovCreditT"
                 onChange={changeInsurer}
                 defaultValue={insurerData.commovCreditT}
@@ -594,6 +600,7 @@ const Insurer = () => {
               <select
                 className="form-control"
                 name={`commovCreditUnit`}
+                required
                 onChange={changeInsurer}
                 value={insurerData.commovCreditUnit}
               >
@@ -615,6 +622,7 @@ const Insurer = () => {
                 value={titleODD.filter(({ value }) => value === entityData.titleID)}
                 formatOptionLabel={(option, { context }) => context === 'value' ? option.label : `${option.label}  ${option.label2}`}
                 name={`title`}
+                required
                 onChange={(e) => setEntityData((prevState) => ({
                   ...prevState,
                   titleID: e.value,
@@ -720,14 +728,30 @@ const Insurer = () => {
                 วันที่จดทะเบียน<span class="text-danger"> *</span>
               </label>
 
-              <input
+              {/* <input
                 className="form-control"
                 type="date"
                 required
                 name="taxActDate"
                 defaultValue={entityData.taxActDate}
                 onChange={changeEntity}
-              />
+              /> */}
+              <DatePicker
+                            style={{textAlign: 'center'}}
+                            showIcon
+                            
+                            className="form-control"
+                            todayButton="Vandaag"
+                            // isClearable
+                            showYearDropdown
+                            dateFormat="dd/MM/yyyy"
+                            dropdownMode="select"
+                            selected={entityData.taxActDate}
+                            onChange={(date) => setEntityData((prevState) => ({
+                                ...prevState,
+                                taxActDate: date,
+                            }))}
+                                 />
 
             </div>
             <div class="col-2">
@@ -736,14 +760,30 @@ const Insurer = () => {
               </label>
 
 
-              <input
+              {/* <input
                 className="form-control"
                 type="date"
                 required
                 name="taxExpDate"
                 defaultValue={entityData.taxExpDate}
                 onChange={changeEntity}
-              />
+              /> */}
+               <DatePicker
+                            style={{textAlign: 'center'}}
+                            showIcon
+                            
+                            className="form-control"
+                            todayButton="Vandaag"
+                            // isClearable
+                            showYearDropdown
+                            dateFormat="dd/MM/yyyy"
+                            dropdownMode="select"
+                            selected={entityData.taxExpDate}
+                            onChange={(date) => setEntityData((prevState) => ({
+                                ...prevState,
+                                taxExpDate: date,
+                            }))}
+                                 />
             </div>
 
           </div>
@@ -757,6 +797,7 @@ const Insurer = () => {
               </label>
               <select
                 value={entityData.vatRegis}
+                required
                 className="form-control" name="vatRegis" onChange={changeEntity}>
                 <option value="" selected disabled hidden></option>
                 <option value={true} >อยู่</option>
@@ -773,6 +814,7 @@ const Insurer = () => {
               <input
                 defaultValue={entityData.pk20}
                 className="form-control"
+                required
                 type="text"
                 name="pk20"
                 onChange={changeEntity}
@@ -785,6 +827,7 @@ const Insurer = () => {
               <input
                 defaultValue={entityData.branch}
                 className="form-control"
+                required
                 type="text"
                 name="branch"
                 onChange={changeEntity}
@@ -818,6 +861,7 @@ const Insurer = () => {
               <input
                 defaultValue={locationData.t_location_2}
                 className="form-control"
+                required
                 type="text"
                 name="t_location_2"
                 onChange={changeLocation}
@@ -828,6 +872,7 @@ const Insurer = () => {
                 หมู่<span class="text-danger"> *</span>
               </label>
               <input
+                required
                 defaultValue={locationData.t_location_3}
                 className="form-control"
                 type="text"
@@ -842,6 +887,7 @@ const Insurer = () => {
               <input
                 defaultValue={locationData.t_location_4}
                 className="form-control"
+                required
                 type="text"
                 name="t_location_4"
                 onChange={changeLocation}
@@ -854,6 +900,7 @@ const Insurer = () => {
               <input
                 defaultValue={locationData.t_location_5}
                 className="form-control"
+                required
                 type="text"
                 name="t_location_5"
                 onChange={changeLocation}
@@ -872,6 +919,7 @@ const Insurer = () => {
                 // className="form-control"
                 value={provinceDD.filter(({ value }) => value === locationData.provinceID)}
                 name={`provinceID`}
+                required
                 onChange={(e) => changeProvince(e, 1)}
                 options={provinceDD}
                 styles={{ zIndex: 2000 }}
@@ -887,6 +935,7 @@ const Insurer = () => {
                 value={districDD.filter(({ value }) => value === locationData.districtID)}
                 ref={selectInputDistrict}
                 name={`districtID`}
+                required
                 onChange={(e) => changeDistrict(e, 1)}
                 options={districDD}
               />
@@ -900,6 +949,7 @@ const Insurer = () => {
                 value={subDistricDD.filter(({ value }) => value === locationData.subDistrictID)}
                 ref={selectInputSubDistrict}
                 name={`subDistrictID`}
+                required
                 onChange={(e) => changeSubDistrict(e, 1)}
                 options={subDistricDD}
               />
@@ -909,7 +959,7 @@ const Insurer = () => {
               <label class="form-label ">
                 รหัสไปรษณีย์<span class="text-danger"> *</span>
               </label>
-              <select className="form-control" name="zipcode" onChange={changeLocation} value={locationData.zipcode}>
+              <select className="form-control" required name="zipcode" onChange={changeLocation} value={locationData.zipcode}>
                 {/* <option value="" selected disabled hidden>เลือกรหัสไปรษณีย์</option> */}
                 {zipcodeDD}
               </select>
@@ -925,6 +975,7 @@ const Insurer = () => {
                 Email<span class="text-danger"> *</span>
               </label>
               <input
+                required
                 defaultValue={entityData.email}
                 className="form-control"
                 type="text"
@@ -937,6 +988,7 @@ const Insurer = () => {
                 เบอร์มือถือ<span class="text-danger"> *</span>
               </label>
               <input
+                required
                 defaultValue={locationData.telNum_1}
                 className="form-control"
                 type="number"
@@ -949,6 +1001,7 @@ const Insurer = () => {
                 เบอร์โทรศัพท์<span class="text-danger"> *</span>
               </label>
               <input
+              required
                 defaultValue={locationData.telNum_2}
                 className="form-control"
                 type="number"
@@ -961,6 +1014,7 @@ const Insurer = () => {
                 เบอร์โทรสาร<span class="text-danger"> *</span>
               </label>
               <input
+              required
                 defaultValue={locationData.telNum_3}
                 className="form-control"
                 type="number"
@@ -989,6 +1043,7 @@ const Insurer = () => {
                     value={titlePDD.filter(({ value }) => value === contactData.titleID)}
                     formatOptionLabel={(option, { context }) => context === 'value' ? option.label : `${option.label}  ${option.label2}`}
                     name={`title`}
+                    required
                     onChange={(e) => setContactData((prevState) => ({
                       ...prevState,
                       titleID: e.value,
@@ -1003,6 +1058,7 @@ const Insurer = () => {
                   <input
                     defaultValue={contactData.t_firstName}
                     className="form-control"
+                    required
                     type="text"
                     name="t_firstName"
                     onChange={changeContact}
@@ -1011,6 +1067,7 @@ const Insurer = () => {
                 <div class="col-2">
                   <label class="form-label ">นามสกุล<span class="text-danger"> *</span></label>
                   <input
+                  required
                     defaultValue={contactData.t_lastName}
                     className="form-control"
                     type="text"
@@ -1036,6 +1093,7 @@ const Insurer = () => {
                     <div class="col-2">
                       <label class="form-label ">บ้านเลขที่<span class="text-danger"> *</span></label>
                       <input
+                      required
                        defaultValue={contactData.t_location_1}
                         className="form-control"
                         type="text"
@@ -1046,6 +1104,7 @@ const Insurer = () => {
                     <div class="col-2">
                       <label class="form-label ">หมู่บ้านอาคาร<span class="text-danger"> *</span></label>
                       <input
+                      required
                        defaultValue={contactData.t_location_2}
                         className="form-control"
                         type="text"
@@ -1056,6 +1115,7 @@ const Insurer = () => {
                     <div class="col-2">
                       <label class="form-label ">หมู่<span class="text-danger"> *</span></label>
                       <input
+                      required
                        defaultValue={contactData.t_location_3}
                         className="form-control"
                         type="text"
@@ -1066,6 +1126,7 @@ const Insurer = () => {
                     <div class="col-2">
                       <label class="form-label ">ซอย<span class="text-danger"> *</span></label>
                       <input
+                      required
                        defaultValue={contactData.t_location_4}
                         className="form-control"
                         type="text"
@@ -1076,6 +1137,7 @@ const Insurer = () => {
                     <div class="col-2">
                       <label class="form-label ">ถนน<span class="text-danger"> *</span></label>
                       <input
+                      required
                        defaultValue={contactData.t_location_5}
                         className="form-control"
                         type="text"
@@ -1092,6 +1154,7 @@ const Insurer = () => {
                     <div class="col-2">
                       <label class="form-label ">จังหวัด<span class="text-danger"> *</span></label>
                       <Select
+                      required
                       value={provinceDD.filter(({ value }) => value === contactData.provinceID)}
                         // className="form-control"
                         name={`provinceID`}
@@ -1104,6 +1167,7 @@ const Insurer = () => {
                     <div class="col-2">
                       <label class="form-label ">อำเภอ<span class="text-danger"> *</span></label>
                       <Select
+                      required
                        value={districDD2.filter(({ value }) => value === contactData.districtID)}
                         // className="form-control"
                         name={`districtID`}
@@ -1114,6 +1178,7 @@ const Insurer = () => {
                     <div class="col-2">
                       <label class="form-label ">ตำบล<span class="text-danger"> *</span></label>
                       <Select
+                      required
                        value={subDistricDD2.filter(({ value }) => value === contactData.subDistrictID)}
                         // className="form-control"
                         name={`subDistrictID`}
@@ -1123,7 +1188,7 @@ const Insurer = () => {
                     </div>
                     <div class="col-2">
                       <label class="form-label ">รหัสไปรษณีย์<span class="text-danger"> *</span></label>
-                      <select className="form-control" name="zipcode" onChange={changeContact} value={contactData.zipcode}>
+                      <select className="form-control" required name="zipcode" onChange={changeContact} value={contactData.zipcode}>
                         {/* <option value="" selected disabled hidden>เลือกรหัสไปรษณีย์</option> */}
                         {zipcodeDD2}
                       </select>
@@ -1138,6 +1203,7 @@ const Insurer = () => {
                   <label class="form-label ">Email<span class="text-danger"> *</span></label>
                   <input
                   defaultValue={contactData.email}
+                  required
                     className="form-control"
                     type="text"
                     name="email"
@@ -1147,6 +1213,7 @@ const Insurer = () => {
                 <div class="col-2">
                   <label class="form-label ">เบอร์มือถือ<span class="text-danger"> *</span></label>
                   <input
+                  required
                   defaultValue={contactData.telNum_1}
                     className="form-control"
                     type="text"
@@ -1158,6 +1225,7 @@ const Insurer = () => {
                 <div class="col-2">
                   <label class="form-label ">เบอร์โทรศัพท์<span class="text-danger"> *</span></label>
                   <input
+                  required
                     defaultValue={contactData.telNum_2}
                     className="form-control"
                     type="text"
@@ -1168,6 +1236,7 @@ const Insurer = () => {
                 <div class="col-2">
                   <label class="form-label ">เบอร์โทรสาร<span class="text-danger"> *</span></label>
                   <input
+                  required
                     defaultValue={contactData.telNum_3}
                     className="form-control"
                     type="text"
@@ -1208,15 +1277,14 @@ const Insurer = () => {
               <div class="col-3"></div>
               <div class="col-2">
                 <select
+                  required
                   name={`insureID-${index}`}
                   onChange={changeComOv}
                   class="form-control"
                   key={index}
                   value={comOvInData[index].insureID}
                 >
-                  <option disabled selected hidden>
-                    class:subclass
-                  </option>
+                  <option value="" selected disabled hidden></option>
                   {insureTypeDD}
                 </select>
               </div>
@@ -1225,6 +1293,7 @@ const Insurer = () => {
                 <input
                   class="form-control"
                   type="number"
+                  required
                   step={0.1}
                   name={`rateComIn-${index}`}
                   onChange={changeComOv}
@@ -1237,6 +1306,7 @@ const Insurer = () => {
               <div class="col-2">
                 <input
                   class="form-control"
+                  required
                   type="number"
                   step={0.1}
                   name={`rateOVIn_1-${index}`}

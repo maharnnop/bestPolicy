@@ -2,6 +2,8 @@ import React, { useEffect, useState }  from "react";
 import PremInTable from "../PremIn/PremInTable";
 import axios from "axios";
 import Modal from 'react-bootstrap/Modal';
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
 import { useCookies } from "react-cookie";
 
 const config = require("../../config.json");
@@ -16,8 +18,8 @@ export default function CommOutCreate() {
   const [filterData, setFilterData] = useState(
     {
        
-        "effDatestart" : '1990-01-01',
-        "effDateend" : '2100-01-01',
+        // "effDatestart" : '1990-01-01',
+        // "effDateend" : '2100-01-01',
         "insurerCode": null,
         "agentCode": null,
         "policyNostart" : null,
@@ -128,6 +130,12 @@ export default function CommOutCreate() {
           [e.target.name]: e.target.value,
       }));
   };
+  const handleChangeDate = (date,name) => {
+    setFilterData((prevState) => ({
+        ...prevState,
+        [name]: date,
+    }));
+};
   const submitFilter = (e) => {
     e.preventDefault();
     console.log(filterData);
@@ -259,26 +267,54 @@ const submitapcommout = async (e) => {
             <label class="col-sm-2 col-form-label" htmlFor="effDatestart">
               จาก
             </label>
-            <input
+            {/* <input
               className="form-control"
               type="date"
               name="effDatestart"
-              id="policyNostart"
+              id="effDatestart"
               onChange={handleChange}
-            />
+            /> */}
+            <DatePicker
+                            style={{textAlign: 'center'}}
+                            showIcon
+                            className="form-control"
+                            todayButton="Vandaag"
+                            // isClearable
+                            name="effDatestart"
+                            showYearDropdown
+                            dateFormat="dd/MM/yyyy"
+                            dropdownMode="select"
+                            id="effDatestart"
+                            selected={filterData.effDatestart}
+                            onChange={(date) => handleChangeDate(date,'effDatestart')}
+                                 />
           </div>
 
           <div className="col-4 ">
             <label class="col-sm-2 col-form-label" htmlFor="effDateend">
               ถึง
             </label>
-            <input
+            {/* <input
               className="form-control"
               type="date"
               name="effDateend"
               id="effDateend"
               onChange={handleChange}
-            />
+            /> */}
+            <DatePicker
+                            style={{textAlign: 'center'}}
+                            showIcon
+                            className="form-control"
+                            todayButton="Vandaag"
+                            // isClearable
+                            name="effDatestart"
+                            showYearDropdown
+                            dateFormat="dd/MM/yyyy"
+                            dropdownMode="select"
+                            id="effDateend"
+                            selected={filterData.effDateend}
+                            onChange={(date) => handleChangeDate(date,'effDateend')}
+                                 />
           </div>
         </div>
          {/* duedate  */}
@@ -287,13 +323,27 @@ const submitapcommout = async (e) => {
             dueDate
           </label>
           <div className="col-4 ">
-            <input
+            {/* <input
               className="form-control"
               type="date"
               name="dueDate"
               id="dueDate"
               onChange={handleChange}
-              />
+              /> */}
+              <DatePicker
+                            style={{textAlign: 'center'}}
+                            showIcon
+                            className="form-control"
+                            todayButton="Vandaag"
+                            // isClearable
+                            name="effDatestart"
+                            showYearDropdown
+                            dateFormat="dd/MM/yyyy"
+                            dropdownMode="select"
+                            id="dueDate"
+                            selected={filterData.dueDate}
+                            onChange={(date) => handleChangeDate(date,'dueDate')}
+                                 />
           </div>
         </div>
        

@@ -74,18 +74,23 @@ const login = (req,res)=>{
             }else{
                 //check password
                 // if(hash == foundUser.password){
-                  if(req.body.password == foundUser.password){
-                        const token = jwt.sign(
-                            {
-                                USERID: foundUser.id,
-                                USERNAME : foundUser.userName
-                            },
-                            secretKey,
-                            {
-                                expiresIn: "2 hours",
-                            }
-                            );
-                            res.status(200).json({ jwt: token });     
+                  if(req.body.password === foundUser.password){
+                    console.log(foundUser);
+                  foundUser.loginFailCount = 0
+                    foundUser.save()
+                      const token = jwt.sign(
+                        {
+                            USERID: foundUser.id,
+                            USERNAME : foundUser.userName
+                        },
+                        secretKey,
+                        {
+                            expiresIn: "2 hours",
+                        }
+                        );
+                        res.status(200).json({ jwt: token });   
+                  
+                      
                 }else{
                     foundUser.loginFailCount ++
                     foundUser.save()

@@ -22,6 +22,7 @@ const Bank = () => {
       headers: { 'Content-Type': 'application/json', 
                     'Authorization': `Bearer ${cookies["jwt"]}` }
   };
+  const params = useParams()
     const [bankBrand, setBankBrand] = useState('')
     const [bankBrandDD, setBankBrandDD] = useState([])
     const [bankBranch, setBankBranch] = useState('')
@@ -45,6 +46,41 @@ const Bank = () => {
         //   console.log(array);
           setBankBrandDD(array);
         })
+
+        //get defualt bank detail
+        if (params.id) {
+            axios
+            .post(url + "/static/bank/findbankbyid", { id: params.id }, headers)
+            .then((data) => {
+                console.log(data.data);
+                const bank = data.data
+                setBankBrand(bank.bankBrand)
+                setBankBranch(bank.bankBranch)
+                setBankNo(bank.bankNo)
+                setBankOf(bank.type)
+                setBankOfCode(bank.code)
+              // set bankBranchDD
+              axios
+              .post(url + "/bills/getbankbranchinbrand",{bankCode:bank.bankBrand}, headers)
+              .then((branch) => {
+                  // console.log(branch);
+                const array = [];
+                branch.data.forEach((ele) => {
+                  array.push(
+                    { label: ele.branchName, value: ele.branchCode }
+                  );
+                });
+              //   console.log(array);
+                setBankBranchDD(array);
+              })
+    
+            })
+            .catch((err) => {
+    
+              alert("internal error");
+            });
+    
+        }
     },[])
 
     const changeBankBrand = (e) =>{
@@ -82,7 +118,24 @@ const Bank = () => {
                 console.log(error);
             });
     }
-
+    const handleUpdate = (e) => {
+        e.preventDefault();
+        let data = JSON.stringify({
+            "bankBrand": bankBrand,
+            "bankBranch":bankBranch,
+            "bankNo":bankNo,
+            "type":bankOf,
+            "code":bankOfCode,
+            "id" : params.id
+        });
+        axios.post(url +"/static/bank/editbank", data, headers)
+            .then((response) => {
+                console.log(JSON.stringify(response.data));
+            })
+            .catch((error) => {
+                console.log(error);
+            });
+      };
     return(
         <div className="container" style={{paddingTop: "30px", paddingBottom: "30px" }}>
             <h1 className="text-center">ธนาคาร</h1>
@@ -162,8 +215,14 @@ const Bank = () => {
                         </div>
                         <div className="row" style={{ marginTop: '20px' }}>
                             <div className="col-12 text-center">
-                                <button type="submit" className="btn btn-primary btn-lg" onClick={handleSubmit}>Submit</button>
+                               
+                                <div className="d-flex justify-content-center">
+          {params.id ?  <button type="submit" className="btn btn-primary btn-lg" onClick={handleUpdate}>Update</button>
+            :  <button type="submit" className="btn btn-primary btn-lg" onClick={handleSubmit}>Submit</button>}
+
+        </div>
                             </div>
+                            
                         </div>
                     </form>
                 </div>

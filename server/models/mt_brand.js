@@ -17,9 +17,8 @@ module.exports = (sequelize, DataTypes) => {
     BRANDCODE: DataTypes.INTEGER,
     BRANDNAME: DataTypes.STRING,
     BRANDNAMETH: DataTypes.STRING,
-    SHORTNAME: DataTypes.STRING,
-    DHIPBRANDCODE: DataTypes.STRING,
-    BRAND_SORT: DataTypes.INTEGER
+    sortno: DataTypes.INTEGER,
+    activeflag: DataTypes.STRING,
   }, {
     sequelize,
     modelName: 'MT_Brand',
