@@ -202,8 +202,8 @@ const ReportฺARAPInsurer = () => {
             "endPolicyIssueDate": toDate,
             "asAtDate": atdate,
             "createUserCode": createusercode,
-            "mainAccountContactPersonId": "",
-            "mainAccountCode": employeecode,
+            "mainAccountContactPersonId": employeecode,
+            "mainAccountCode": advisorcode,
             "insurerCode": insurercode,
             
             "policyStatus": status,
@@ -217,10 +217,10 @@ const ReportฺARAPInsurer = () => {
             data.createUserCode = ''
          }
          if (document.getElementsByName ("employeecodeCB")[0].checked) {
-            data.contactPersonId1 = ''
+            data.mainAccountContactPersonId = ''
          }
          if (document.getElementsByName ("advisorcodeCB")[0].checked) {
-            data.agentCode1 = ''
+            data.mainAccountCode = ''
          }
          if (document.getElementsByName ("insurercodeCB")[0].checked) {
             data.insurerCode = ''

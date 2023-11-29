@@ -157,6 +157,8 @@ const Insurer = () => {
           //update version num
           person.insurer.version ++
           person.entity.version ++
+          person.entity.taxActDate = new Date(person.entity.taxActDate)
+          person.entity.taxExpDate = new Date(person.entity.taxExpDate)
           
           setInsurerData(person.insurer)
           setEntityData(person.entity)

@@ -127,8 +127,16 @@ const FindBillAdvisor = () => {
         e.preventDefault();
         setPoliciesData([])
         console.log(filterData);
+        const data = filterData
+        if (document.getElementsByName("insurerIdCB")[0].checked) {
+            data.insurerId = null
+         }
+         if (document.getElementsByName("agentIdCB")[0].checked) {
+            data.agentId = null
+         }
+         
         axios
-            .post(url + "/payments/findbill", filterData, headers)
+            .post(url + "/payments/findbill", data, headers)
             .then((res) => {
                 // let token = res.data.jwt;
                 // let decode = jwt_decode(token);
@@ -195,20 +203,14 @@ const FindBillAdvisor = () => {
                                 {insurerDD}
                             </select>
 
-                            <div class="input-group-append">
-                                <div class="input-group-text ">
-                                    <div class="form-check checkbox-xl">
-                                        <input class="form-check-input" type="checkbox" value="" onChange={handleChange} />
-                                        <label class="form-check-label" >All</label>
-                                    </div>
-                                </div>
-                            </div>
-
-
                         </div>
 
 
                     </div>
+                    <div className="col-1">
+                                <input type="checkbox" name="insurerIdCB" className="form-check-input"/>
+                                <label htmlFor="cashierReceiptCheckbox" className="form-check-label">&nbsp;ALL</label>
+                            </div>
                     <div class="col align-self-end ">
                         <div class="input-group mb-3">
                             <button type="submit" class="btn btn-primary btn-lg" >ค้นหา</button>
@@ -230,21 +232,15 @@ const FindBillAdvisor = () => {
                                 <option value="" disabled selected hidden>รหัสผู้แนะนำ</option>
                                 {agentDD}
                             </select>
-                            <div class="input-group-append">
-                                <div class="input-group-text ">
-                                    <div class="form-check checkbox-xl">
-                                        <input class="form-check-input" type="checkbox" value="" />
-                                        <label class="form-check-label" >All</label>
-                                    </div>
-                                </div>
-                            </div>
-
-
+                            
                         </div>
 
 
                     </div>
-
+                    <div className="col-1">
+                                <input type="checkbox" name="agentIdCB" className="form-check-input"/>
+                                <label htmlFor="cashierReceiptCheckbox" className="form-check-label">&nbsp;ALL</label>
+                            </div>
                 </div>
 
                 <div class="row">

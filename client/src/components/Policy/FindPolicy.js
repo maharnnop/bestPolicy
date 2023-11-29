@@ -8,6 +8,7 @@ import * as XLSX from 'xlsx';
 import Select from 'react-select';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
+import convertDateFormat from "../lib/convertdateformat";
 import {
     BrowserRouter,
     Routes,
@@ -127,8 +128,10 @@ const FindPolicy = () => {
 
 
     const changestatus = (e) => {
+        // e.preventDefault()
+        console.log(e.target.checked);
         // e.preventDefault();
-        const array = policiesData
+        const array = policiesData.map((ele)=>ele)
         array[e.target.id] = { ...policiesData[e.target.id], [e.target.name]: e.target.checked }
         setPoliciesData(array)
 
@@ -166,8 +169,53 @@ const FindPolicy = () => {
     const submitFilter = (e) => {
         // e.preventDefault();
         console.log(filterData);
+        const data =    {
+            "insurerCode": filterData.insurerCode,
+            "policyNo": filterData.policyNo,
+            "insureID": filterData.insureID,
+            "createdate_start": filterData.createdate_start,
+            "effdate_start": filterData.effdate_start,
+            "createusercode": filterData.createusercode,
+            "agentCode": filterData.agentCode,
+            "carRegisNo" : filterData.carRegisNo,
+            "chassisNo" : filterData.chassisNo,
+            "provinceID" : filterData.provinceID,
+            "status" : filterData.status,
+            "applicationNo" : filterData.applicationNo,
+
+        }
+        if (document.getElementsByName("insurerCodeCB")[0].checked) {
+            data.insurerCode = null
+         }
+         if (document.getElementsByName("policyNoCB")[0].checked) {
+            data.policyNo = null
+         }
+         if (document.getElementsByName("applicationNoCB")[0].checked) {
+            data.applicationNo = null
+         }
+         if (document.getElementsByName("insureIDCB")[0].checked) {
+            data.insureID = null
+         }
+         if (document.getElementsByName("createdateCB")[0].checked) {
+            data.createdate_end = null
+            data.createdate_start = null
+         }
+         if (document.getElementsByName("effdateCB")[0].checked) {
+            data.effdate_start = null
+            data.effdate_end = null
+         }
+         if (document.getElementsByName("createusercodeCB")[0].checked) {
+            data.createusercode = null
+         }
+         if (document.getElementsByName("agentCodeCB")[0].checked) {
+            data.agentCode = null
+         }
+         if (document.getElementsByName("chassisNoCB")[0].checked) {
+            data.chassisNo = null
+         }
+         
         axios
-            .post(url + "/policies/policygetlist", filterData, headers)
+            .post(url + "/policies/policygetlist", data, headers)
             .then((res) => {
                 // let token = res.data.jwt;
                 // let decode = jwt_decode(token);
@@ -237,7 +285,7 @@ const FindPolicy = () => {
         e.preventDefault();
         await axios.post(url + "/policies/policyedit/batch", data, headers).then((res) => {
           alert("policy batch updated");
-          //window.location.reload(false);
+          window.location.reload(false);
         }).catch((err)=>{ alert("Something went wrong, Try Again.");});
       };
       const editCard =(e) =>{
@@ -280,20 +328,18 @@ const FindPolicy = () => {
                                 {insurerDD}
                             </select>
 
-                            <div class="input-group-append">
-                                <div class="input-group-text ">
-                                    <div class="form-check checkbox-xl">
-                                        <input class="form-check-input" type="checkbox" value="" onChange={handleChange} />
-                                        <label class="form-check-label" >All</label>
-                                    </div>
-                                </div>
-                            </div>
-
-
+                            
+                           
                         </div>
+                       
 
 
                     </div>
+                    <div className="col-1">
+                                <input type="checkbox" name="insurerCodeCB" className="form-check-input"/>
+                                <label htmlFor="cashierReceiptCheckbox" className="form-check-label">&nbsp;ALL</label>
+                            </div>
+
                     <div class="col align-self-end ">
                         <div class="input-group mb-3">
                             <button type="button" class="btn btn-primary btn-lg" onClick={submitFilter}>ค้นหารายการ</button>
@@ -312,20 +358,18 @@ const FindPolicy = () => {
                     <div class="col-2 ">
                         <div class="input-group mb-3">
                             <input type="text" class="form-control" placeholder="เลขกรมธรรม์" name="policyNo" onChange={handleChange} />
-                            <div class="input-group-append">
-                                <div class="input-group-text ">
-                                    <div class="form-check checkbox-xl">
-                                        <input class="form-check-input" type="checkbox" value="" />
-                                        <label class="form-check-label" >All</label>
-                                    </div>
-                                </div>
-                            </div>
+                           
 
 
                         </div>
 
 
                     </div>
+                    <div className="col-1">
+                                <input type="checkbox" name="policyNoCB" className="form-check-input"/>
+                                <label htmlFor="cashierReceiptCheckbox" className="form-check-label">&nbsp;ALL</label>
+                            </div>
+
                     <div class="col-1">
                         <label class="col-form-label">สถานะกรมธรรม์</label>
 
@@ -356,20 +400,17 @@ const FindPolicy = () => {
                     <div class="col-2 ">
                         <div class="input-group mb-3">
                             <input type="text" class="form-control" placeholder="เลขที่ใบคำขอ" name="applicationNo" onChange={handleChange} />
-                            <div class="input-group-append">
-                                <div class="input-group-text ">
-                                    <div class="form-check checkbox-xl">
-                                        <input class="form-check-input" type="checkbox" value="" />
-                                        <label class="form-check-label" >All</label>
-                                    </div>
-                                </div>
-                            </div>
+                            
 
 
                         </div>
 
 
                     </div>
+                    <div className="col-1">
+                                <input type="checkbox" name="applicationNoCB" className="form-check-input"/>
+                                <label htmlFor="cashierReceiptCheckbox" className="form-check-label">&nbsp;ALL</label>
+                            </div>
                     
 
                 </div>
@@ -388,20 +429,17 @@ const FindPolicy = () => {
                                 <option disabled selected hidden>Class/Subclass</option>
                                 {insureTypeDD}
                             </select>
-                            <div class="input-group-append">
-                                <div class="input-group-text ">
-                                    <div class="form-check checkbox-xl">
-                                        <input class="form-check-input" type="checkbox" value="" />
-                                        <label class="form-check-label" >All</label>
-                                    </div>
-                                </div>
-                            </div>
+                            
 
 
                         </div>
 
 
                     </div>
+                    <div className="col-1">
+                                <input type="checkbox" name="insureIDCB" className="form-check-input"/>
+                                <label htmlFor="cashierReceiptCheckbox" className="form-check-label">&nbsp;ALL</label>
+                            </div>
 
 
 
@@ -416,7 +454,7 @@ const FindPolicy = () => {
 
                     </div>
 
-                    <div class="col-2 ">
+                    <div class="col-3 ">
                         <div class="input-group mb-3">
                             {/* <input type="date" class="form-control " name="createdate_start" onChange={handleChange} value={filterData.createdate_start} 
                             onBlur={(e)=>{setFilterData((prevState) => ({
@@ -430,7 +468,7 @@ const FindPolicy = () => {
                             className="form-control"
                             todayButton="Vandaag"
                             // isClearable
-                            name="effDatestart"
+                            name="createdate_start"
                             showYearDropdown
                             dateFormat="dd/MM/yyyy"
                             dropdownMode="select"
@@ -464,7 +502,7 @@ const FindPolicy = () => {
                             className="form-control"
                             todayButton="Vandaag"
                             // isClearable
-                            name="effDatestart"
+                            name="createdate_end"
                             showYearDropdown
                             dateFormat="dd/MM/yyyy"
                             dropdownMode="select"
@@ -473,16 +511,13 @@ const FindPolicy = () => {
                             onChange={(date) => handleChangeDate(date,'createdate_end')}
                             
                                  />
-                            <div class="input-group-append">
-                                <div class="input-group-text ">
-                                    <div class="form-check checkbox-xl">
-                                        <input class="form-check-input" type="checkbox" name="createdate-check" onChange={handleChange} />
-                                        <label class="form-check-label" >All</label>
-                                    </div>
-                                </div>
-                            </div>
+                           
                         </div>
                     </div>
+                    <div className="col-1">
+                                <input type="checkbox" name="createdateCB" className="form-check-input"/>
+                                <label htmlFor="cashierReceiptCheckbox" className="form-check-label">&nbsp;ALL</label>
+                            </div>
 
 
                 </div>
@@ -495,7 +530,7 @@ const FindPolicy = () => {
                         <label class="col-form-label">วันคุ้มครอง</label>
 
                     </div>
-                    <div class="col-2 ">
+                    <div class="col-3 ">
                         <div class="input-group mb-3">
                             {/* <input type="date" class="form-control " name="effdate_start" onChange={handleChange} value={filterData.effdate_start} 
                             
@@ -548,16 +583,13 @@ const FindPolicy = () => {
                             onChange={(date) => handleChangeDate(date,'effdate_end')}
                         
                                  />
-                            <div class="input-group-append">
-                                <div class="input-group-text ">
-                                    <div class="form-check checkbox-xl">
-                                        <input class="form-check-input" type="checkbox" name="effdate-check" onChange={handleChange}  />
-                                        <label class="form-check-label" >All</label>
-                                    </div>
-                                </div>
-                            </div>
+                            
                         </div>
                     </div>
+                    <div className="col-1">
+                                <input type="checkbox" name="effdateCB" className="form-check-input"/>
+                                <label htmlFor="cashierReceiptCheckbox" className="form-check-label">&nbsp;ALL</label>
+                            </div>
                 </div>
 
                 <div class="row">
@@ -571,16 +603,13 @@ const FindPolicy = () => {
                     <div class="col-2 ">
                         <div class="input-group mb-3">
                             <input type="text" class="form-control" name="createusercode" onChange={handleChange} />
-                            <div class="input-group-append">
-                                <div class="input-group-text ">
-                                    <div class="form-check checkbox-xl">
-                                        <input class="form-check-input" type="checkbox" name="createusercode" onChange={handleChange} />
-                                        <label class="form-check-label" >All</label>
-                                    </div>
-                                </div>
-                            </div>
+                            
                         </div>
                     </div>
+                    <div className="col-1">
+                                <input type="checkbox" name="createusercodeCB" className="form-check-input"/>
+                                <label htmlFor="cashierReceiptCheckbox" className="form-check-label">&nbsp;ALL</label>
+                            </div>
 
                     <div class="col-1">
                         <label class="col-form-label">เลขทะเบียนรถ</label>
@@ -603,20 +632,7 @@ const FindPolicy = () => {
           styles={{zIndex:2000}}
           // onChange={opt => console.log(opt)}
           />
-                        {/* <div class="input-group mb-3 col-10">
-                           
-                
-                            <div class="input-group-append">
-                                <div class="input-group-text ">
-                                    <div class="form-check checkbox-xl">
-                                        <input class="form-check-input" type="checkbox" name="provinceID-check" onChange={handleChange} />
-                                        <label class="form-check-label" >All</label>
-                                    </div>
-                                </div>
-                            </div>
-
-
-                        </div> */}
+                        
 
 
                     </div>
@@ -633,20 +649,17 @@ const FindPolicy = () => {
                     <div class="col-2 ">
                         <div class="input-group mb-3">
                             <input type="text" class="form-control" name="agentCode" onChange={handleChange} />
-                            <div class="input-group-append">
-                                <div class="input-group-text ">
-                                    <div class="form-check checkbox-xl">
-                                        <input class="form-check-input" type="checkbox" name="agentCode" onChange={handleChange} />
-                                        <label class="form-check-label" >All</label>
-                                    </div>
-                                </div>
-                            </div>
+                            
 
 
                         </div>
 
 
                     </div>
+                    <div className="col-1">
+                                <input type="checkbox" name="agentCodeCB" className="form-check-input"/>
+                                <label htmlFor="cashierReceiptCheckbox" className="form-check-label">&nbsp;ALL</label>
+                            </div>
                     <div class="col-1">
                         <label class="col-form-label">เลขคัสซี</label>
                     </div>
@@ -654,16 +667,13 @@ const FindPolicy = () => {
                     <div class="col-2 ">
                         <div class="input-group mb-3">
                             <input type="text" class="form-control" placeholder="Chassis Number" name="chassisNo" onChange={handleChange} />
-                            <div class="input-group-append">
-                                <div class="input-group-text ">
-                                    <div class="form-check checkbox-xl">
-                                        <input class="form-check-input" type="checkbox" name="chassisNo-check" />
-                                        <label class="form-check-label" >All</label>
-                                    </div>
-                                </div>
-                            </div>
+                            
                         </div>
                     </div>
+                    <div className="col-1">
+                                <input type="checkbox" name="chassisNoCB" className="form-check-input"/>
+                                <label htmlFor="cashierReceiptCheckbox" className="form-check-label">&nbsp;ALL</label>
+                            </div>
 
 
                 </div>
@@ -710,7 +720,7 @@ const FindPolicy = () => {
                                 <th scope="row">{i + 1}</th>
                                 {ele.status === 'I'?
                                 <>
-                                <td scope="row"><input type="checkbox" name="select" id={i} onClick={changestatus} /></td>
+                                <td scope="row"><input type="checkbox" name="select" id={i} checked={ele.select} onClick={changestatus} /></td>
                                 <td scope="row"><button type="button" class="btn btn-secondary " id={i} onClick={(e)=>editCard(e)} >Edit</button></td>
                                 </>
                                 : <><td></td> <td></td></>}
@@ -722,9 +732,9 @@ const FindPolicy = () => {
                                 <td>{ele.agentCode2}</td>
                                 <td>{ele.class}</td>
                                 <td>{ele.subClass}</td>
-                                <td>{ele.createdAt.split('T')[0]}</td>
-                                <td>{ele.actDate} - {ele.expDate}</td>
-                                <td>{ele.insureeCode}</td>
+                                <td>{ele.polcreatedAt.split(" ")[0]}</td>
+                                <td>{convertDateFormat(ele.actDate,false)} - {convertDateFormat(ele.expDate,false)}</td>
+                                <td>{ele.fullName}</td>
                                 <td>{ele.licenseNo}</td>
                                 <td>{ele.chassisNo}</td>
                                 <td>{ele.endorseNo}</td>

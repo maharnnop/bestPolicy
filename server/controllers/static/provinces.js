@@ -5,7 +5,8 @@ const { Op } = require("sequelize");
 //handle index request
 const showAll = (req,res) =>{
     Province.findAll({
-      attributes: ['provinceid', 't_provincename','e_provincename']
+      attributes: ['provinceid', 't_provincename','e_provincename'],
+      order:[['t_provincename',  'ASC']],
     }).then((province)=>{
         res.json(province);
     })
@@ -16,7 +17,8 @@ const showOne = (req, res) => {
     attributes: ['provinceid', 't_provincename','e_provincename'],
     where: {
         provinceid: req.params.index
-    }
+    },
+    order:[['t_provincename',  'ASC']],
   }).then((province) => {
     res.json(province);
   });

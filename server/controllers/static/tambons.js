@@ -32,7 +32,7 @@ const showAllinAmphur = (req, res) => {
     attributes: ['tambonid','t_tambonname','e_tambonname','amphurid','postcodeall'],
     where: {
         amphurid: req.params.index
-    }
+    },order:[['t_tambonname',  'ASC']],
   }).then((tambon) => {
     res.json(tambon);
   });
@@ -40,7 +40,7 @@ const showAllinAmphur = (req, res) => {
 
 const showAllinAmphurname = (req,res)=>{
   sequelize.query(
-    'select * from static_data."Tambons" t join static_data."Amphurs" a on a.amphurid = t.amphurid where a.t_amphurname = :amphurname',
+    'select * from static_data."Tambons" t join static_data."Amphurs" a on a.amphurid = t.amphurid where a.t_amphurname = :amphurname  order by ',
         {
           replacements: {
             amphurname:req.body.amphurname,

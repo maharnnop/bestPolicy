@@ -29,7 +29,7 @@ const showAllinProvince = (req, res) => {
     attributes: ['amphurid', 't_amphurname','e_amphurname','provinceid'],
     where: {
         provinceid: req.params.index
-    }
+    },order:[['t_amphurname',  'ASC']],
   }).then((amphur) => {
     res.json(amphur);
   });
@@ -37,7 +37,7 @@ const showAllinProvince = (req, res) => {
 
 const showAllinProvincename = (req,res)=>{
   sequelize.query(
-    'select * from static_data."Amphurs" a join static_data.provinces p on p.provinceid = a.provinceid where p.t_provincename = :provincename',
+    'select * from static_data."Amphurs" a join static_data.provinces p on p.provinceid = a.provinceid where p.t_provincename = :provincename order by a.t_amphurname ASC',
         {
           replacements: {
             provincename:req.body.provincename,

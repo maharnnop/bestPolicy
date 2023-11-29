@@ -7,6 +7,8 @@ import { CenterPage } from "../StylesPages/AdminStyles";
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 
+
+
 import {
   BrowserRouter,
   Routes,
@@ -163,7 +165,8 @@ const Agent = () => {
           //update version num
           person.agent.version ++
           person.entity.version ++
-
+          person.entity.taxActDate = new Date(person.entity.taxActDate)
+          person.entity.taxExpDate = new Date(person.entity.taxExpDate)
           setAgentData(person.agent)
           setEntityData(person.entity)
           setLocationData(person.location)

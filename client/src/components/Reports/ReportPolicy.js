@@ -305,7 +305,7 @@ axios
                         {/* employeecode */}
                         <div className="row mb-3">
                             <div className="col-2">
-                                <label htmlFor="employeecode" className="form-label">Employeecode</label>
+                                <label htmlFor="employeecode" className="form-label">EmployeeID</label>
                             </div>
                             <div className="col-7">
                                 <input type="text" id="employeecode" value={employeecode} onChange={(e) => setEmployeecode(e.target.value)} className="form-control" />

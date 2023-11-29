@@ -109,13 +109,14 @@ const CreateBillAdvisor = () => {
     const editCard = (e) => {
         setHidecard([true, 1])
         const array = []
-        const net = { no: 0, prem: 0, comm_out: 0, whtcom: 0, ov_out: 0, whtov: 0, }
+        const net = { no: 0, prem: 0, comm_out: 0, whtcom: 0, ov_out: 0, whtov: 0, bill:0}
         const gross = { no: 0, prem: 0 }
         for (let i = 0; i < policiesData.length; i++) {
             if (policiesData[i].select) {
                 if (policiesData[i].statementtype) {
                     net.no++
-                    net.prem = net.prem + policiesData[i].totalprem - policiesData[i].commout_amt - policiesData[i].ovout_amt - policiesData[i].withheld
+                    net.bill = net.bill + policiesData[i].totalprem - policiesData[i].commout_amt - policiesData[i].ovout_amt - policiesData[i].withheld
+                    net.prem = net.prem + policiesData[i].totalprem
                     net.comm_out = net.comm_out + policiesData[i].commout_amt
                     net.whtcom = net.comm_out * wht
                     net.ov_out = net.ov_out + policiesData[i].ovout_amt
@@ -191,25 +192,34 @@ const CreateBillAdvisor = () => {
     const submitFilter = (e) => {
         e.preventDefault();
         setPoliciesData([])
-
-            const filter = filterData
-            if (filter.insurerAll) {
-                filter.insurerCode = null
+        let data = {
+            "insurerCode": filterData.insurerCode,
+            "agentCode": filterData.agentCode,
+            "dueDate": filterData.dueDate,
+            "policyNoStart": filterData.policyNoStart,
+            "policyNoEnd": filterData.policyNoEnd,
+            "createdDateStart": filterData.createdDateStart,
+            "createdDateEnd": filterData.createdDateEnd,
+     
+        }
+            
+            if (document.getElementsByName("insurerCodeCB")[0].checked) {
+                data.insurerCode = null
             }
-            if (filter.agentAll) {
-                filter.agentCode = null
+            if (document.getElementsByName("agentCodeCB")[0].checked) {
+                data.agentCode = null
             }
-            if (filter.policyNoAll) {
-                filter.policyNoStart = null
-                filter.policyNoEnd = null
+            if (document.getElementsByName("policyNoCB")[0].checked) {
+                data.policyNoStart = null
+                data.policyNoEnd = null
             }
-            if (filter.createDateAll) {
-                filter.createdDateStart = null
-                filter.createdDateEnd = null
+            if (document.getElementsByName("createdDateCB")[0].checked) {
+                data.createdDateStart = null
+                data.createdDateEnd = null
             }
-        console.log(filterData);
+        console.log(data);
         axios
-            .post(url + "/payments/findpolicyinDue", filter, headers)
+            .post(url + "/payments/findpolicyinDue", data, headers)
             .then((res) => {
                 if (res.status === 201) {
                     console.log(res.data);
@@ -243,7 +253,7 @@ const CreateBillAdvisor = () => {
         for (let i = 0; i < array.length; i++) {
             if (array[i].statementtype ) {
                 array[i].statementtype = 'N'
-                array[i].billpremium = array[i].totalprem - array[i].commout_amt - array[i].ovout_amt
+                array[i].billpremium = array[i].totalprem - array[i].commout_amt*(1-wht) - array[i].ovout_amt*(1-wht) 
             }else{
                 array[i].statementtype = 'G'
                 array[i].billpremium = array[i].totalprem 
@@ -259,7 +269,7 @@ const CreateBillAdvisor = () => {
                 // let token = res.data.jwt;
                 // let decode = jwt_decode(token);
                 // navigate("/");
-                // window.location.reload();
+                window.location.reload();
                 // localStorage.setItem("jwt", token);
                 console.log(res.data);
                 alert(res.data.msg)
@@ -294,20 +304,18 @@ const CreateBillAdvisor = () => {
                                 {insurerDD}
                             </select>
 
-                            <div class="input-group-append">
-                                <div class="input-group-text ">
-                                    <div class="form-check checkbox-xl">
-                                        <input class="form-check-input" type="checkbox" name="insurerAll" defaultChecked onChange={handleChangeCheckbox} />
-                                        <label class="form-check-label" >All</label>
-                                    </div>
-                                </div>
-                            </div>
+                           
 
 
                         </div>
 
 
                     </div>
+                    <div className="col-1">
+                                <input type="checkbox" name="insurerCodeCB" defaultChecked className="form-check-input"/>
+                                <label htmlFor="cashierReceiptCheckbox" className="form-check-label">&nbsp;ALL</label>
+                            </div>
+
                     <div class="col align-self-end ">
                         <div class="input-group mb-3">
                             <button type="submit" class="btn btn-primary btn-lg" >ค้นหา</button>
@@ -325,24 +333,19 @@ const CreateBillAdvisor = () => {
                     </div>
                     <div class="col-2 ">
                         <div class="input-group mb-3">
-                            <select name="agentCode" class="form-control" onChange={handleChange} >
+                            <select name="agentCode" class="form-control" value={filterData.agentCode} onChange={handleChange} >
                                 <option value="" disabled selected hidden>รหัสผู้แนะนำ</option>
                                 {agentDD}
                             </select>
-                            <div class="input-group-append">
-                                <div class="input-group-text ">
-                                    <div class="form-check checkbox-xl">
-                                        <input class="form-check-input" type="checkbox" name="agentAll" defaultChecked onChange={handleChangeCheckbox} />
-                                        <label class="form-check-label" >All</label>
-                                    </div>
-                                </div>
-                            </div>
-
-
+                          
                         </div>
 
 
                     </div>
+                    <div className="col-1">
+                                <input type="checkbox" name="agentCodeCB" defaultChecked className="form-check-input"/>
+                                <label htmlFor="cashierReceiptCheckbox" className="form-check-label">&nbsp;ALL</label>
+                            </div>
 
                 </div>
                 <div class="row">
@@ -403,16 +406,13 @@ const CreateBillAdvisor = () => {
                     <div class="col-2 ">
                         <div class="input-group mb-3">
                             <input type="text" class="form-control" name="policyNoEnd" onChange={handleChange} />
-                            <div class="input-group-append">
-                                <div class="input-group-text ">
-                                    <div class="form-check checkbox-xl">
-                                        <input class="form-check-input" type="checkbox" name="policyNoAll"  defaultChecked onChange={handleChangeCheckbox} />
-                                        <label class="form-check-label" >All</label>
-                                    </div>
-                                </div>
-                            </div>
+                            
                         </div>
                     </div>
+                    <div className="col-1">
+                                <input type="checkbox" name="policyNoCB" defaultChecked className="form-check-input"/>
+                                <label htmlFor="cashierReceiptCheckbox" className="form-check-label">&nbsp;ALL</label>
+                            </div>
 
 
                 </div>
@@ -467,17 +467,13 @@ const CreateBillAdvisor = () => {
                                 createdDateEnd: date,
                             }))}
                             />
-                            <div class="input-group-append">
-                                <div class="input-group-text ">
-                                    <div class="form-check checkbox-xl">
-                                        <input class="form-check-input" type="checkbox" name="createDateAll" defaultChecked onChange={handleChangeCheckbox} />
-                                        <label class="form-check-label" >All</label>
-                                    </div>
-                                </div>
-                            </div>
+                           
                         </div>
                     </div>
-
+                    <div className="col-1">
+                                <input type="checkbox" name="createdDateCB" defaultChecked className="form-check-input"/>
+                                <label htmlFor="cashierReceiptCheckbox" className="form-check-label">&nbsp;ALL</label>
+                            </div>
 
                 </div>
 
@@ -488,13 +484,16 @@ const CreateBillAdvisor = () => {
                     <thead>
                         <tr>
                             <th scope="col"><input type="checkbox" name="select" onClick={selectAll} />select</th>
+                            <th scope="col">เลขที่กรมธรรม์</th>
+                            <th scope="col">เลขที่สลักหลัง</th>
+                            <th scope="col">เลขที่ใบแจ้งหนี้</th>
+                            <th scope="col">เลขที่ใบกำกับภาษี</th>
+                            <th scope="col">ลำดับที่</th>
+
                             <th scope="col">รหัสบริษัทประกัน</th>
                             <th scope="col">รหัสผู้แนะนำ</th>
                             <th scope="col">Duedate</th>
-                            <th scope="col">เลขกรมธรรม์</th>
-                            <th scope="col">เลขสลักหลัง</th>
-                            <th scope="col">เลขใบแจ้งหนี้</th>
-                            <th scope="col">seqno</th>
+
                             <th scope="col">idผู้อาประกัน</th>
                             <th scope="col">ชื่อผู้เอาประกัน</th>
                             <th scope="col">เลขทะเบียนรถ</th>
@@ -519,13 +518,16 @@ const CreateBillAdvisor = () => {
                         {policiesData.map((ele, i) => {
                             return (<tr>
                                 <th scope="row"><input type="checkbox" name="select" id={i} onClick={changestatementtype} />{i + 1}</th>
-                                <td>{ele.insurerCode}</td>
-                                <td>{ele.agentCode}</td>
-                                <td>{ele.dueDate}</td>
                                 <td>{ele.policyNo}</td>
                                 <td>{ele.endorseNo}</td>
                                 <td>{ele.invoiceNo}</td>
+                                <td>{ele.taxinvoiceNo}</td>
                                 <td>{ele.seqNo}</td>
+
+                                <td>{ele.insurerCode}</td>
+                                <td>{ele.agentCode}</td>
+                                <td>{ele.dueDate}</td>
+
                                 <td>{ele.insureeCode}</td>
                                 <td>{ele.insureename}</td>
                                 <td>{ele.licenseNo}</td>
@@ -569,7 +571,7 @@ const CreateBillAdvisor = () => {
                         <div class="col-2">
                             <label class="col-form-label">จำนวนเงินสุทธิ</label>
                         </div>
-                        <div class="col-2">  <label class="col-form-label">{policiesRender.total.prem.toLocaleString(undefined, { minimumFractionDigits: 2 })}</label></div>
+                        <div class="col-2">  <label class="col-form-label">{policiesRender.total.billprem.toLocaleString(undefined, { minimumFractionDigits: 2 })}</label></div>
                     </div>
                     <div class="row">
                         <div class="col-2">
@@ -671,7 +673,7 @@ const CreateBillAdvisor = () => {
                         <div class="col-2">
                             <label class="col-form-label">Bill Payment</label>
                         </div>
-                        <div class="col-2"> <label class="col-form-label">{(policiesRender.total.prem + policiesRender.total.whtov + policiesRender.total.whtcom).toLocaleString(undefined, { minimumFractionDigits: 2 })}</label></div>
+                        <div class="col-2"> <label class="col-form-label">{(policiesRender.total.billprem).toLocaleString(undefined, { minimumFractionDigits: 2 })}</label></div>
                     </div>
 
                 </Modal.Body>

@@ -39,7 +39,7 @@ const PolicyScreen = (props) => {
     menu: (provided) => ({
       ...provided,
       width: 'auto',
-      zIndex: 2000 ,
+      zIndex: 2000,
       whiteSpace: 'nowrap', // Prevent line breaks in dropdown options
     }),
   };
@@ -82,10 +82,10 @@ const PolicyScreen = (props) => {
 
   //for modal
   const editCard = (e, name) => {
-   
-    if(formData.class !== undefined && formData.subClass !== undefined  && formData.insurerCode !== undefined ){
+
+    if (formData.class !== undefined && formData.subClass !== undefined && formData.insurerCode !== undefined) {
       setHidecard([true, name])
-    }else{
+    } else {
       alert('กรุณาเลือก บริษัทประกัน / Class / Subclass ก่อนผู้แนะนำ ')
     }
 
@@ -201,9 +201,9 @@ const PolicyScreen = (props) => {
 
   };
 
-  const handleChangeActdate = (value,name) => {
-    
-   
+  const handleChangeActdate = (value, name) => {
+
+
     const originalDate = new Date(value);
     // const originalDate = new Date(value.split('T'));
 
@@ -213,28 +213,29 @@ const PolicyScreen = (props) => {
     // Convert the updated Date object back to a string
     // const updatedDateString = originalDate.toISOString().substring(0, 10);
     const updatedDateString = originalDate;
-if (name === 'actDate') {
-  setFormData((prevState) => ({
-    ...prevState,
-    actDate: value,
-    expDate: updatedDateString
-  }));
-}else{
-  setFormData((prevState) => ({
-    ...prevState,
-    expDate: value
-  }));
-}
+    if (name === 'actDate') {
+      setFormData((prevState) => ({
+        ...prevState,
+        actDate: value,
+        expDate: updatedDateString
+      }));
+    } else {
+      setFormData((prevState) => ({
+        ...prevState,
+        expDate: value
+      }));
+    }
 
-    
+
 
 
   };
 
   function validateDate(e) {
-    // e.preventDefault();
+    e.preventDefault();
+    const dayparse = e.target.value.split("/")
     const name = e.target.name
-    const value = e.target.value
+    const value = `${dayparse[1]}/${dayparse[0]}/${dayparse[2]} `
     console.log("value : " + value);
     console.log("name : " + name);
     let mindate = new Date()
@@ -247,11 +248,12 @@ if (name === 'actDate') {
       maxdate.setFullYear(maxdate.getFullYear() + 4)
     }
 
-    let inputDate ;
 
-    if (new Date(value)) {
+    let inputDate;
+
+    if (new Date(value) != "Invalid Date") {
       inputDate = new Date(value)
-    }else{
+    } else {
       return
     }
     console.log("inputDate : " + inputDate);
@@ -263,18 +265,18 @@ if (name === 'actDate') {
       console.log('input < min');
       // actdate = mindate.toISOString().substring(0, 10)
       actdate = mindate
-      console.log('actdate : ' +actdate);
+      console.log('actdate : ' + actdate);
       mindate.setFullYear(mindate.getFullYear() + 1)
       // expdate = mindate.toISOString().substring(0, 10)
       expdate = mindate
-      console.log('expdate : ' +expdate)
+      console.log('expdate : ' + expdate)
     } else if (inputDate > maxdate) {
       console.log('input > max');
       // actdate = maxdate.toISOString().substring(0, 10)
-      actdate = maxdate
-      maxdate.setFullYear(maxdate.getFullYear() + 1)
+      actdate = new Date(maxdate)
+      expdate = maxdate.setFullYear(maxdate.getFullYear() + 1)
       // expdate = maxdate.toISOString().substring(0, 10)
-      expdate = maxdate
+      // expdate = maxdate
     } else {
       console.log('else');
       actdate = new Date(value)
@@ -440,23 +442,23 @@ if (name === 'actDate') {
     }));
     getSubDistrict(e.value);
   }
-  const changeSubDistrict = (e) =>{
+  const changeSubDistrict = (e) => {
     setFormData((prevState) => ({
       ...prevState,
       subdistrict: e.value,
     }));
     const postcode = subDistricDD.find(el => el.value === e.value).postcode;
-    
+
     const arrayZip = postcode.map((zip, index) => (
       <option key={index} value={zip}>
         {zip}
       </option>
     ));
     setZipCodeDD(arrayZip);
-        setFormData((prevState) => ({
-          ...prevState,
-          zipcode: postcode[0]
-        }))
+    setFormData((prevState) => ({
+      ...prevState,
+      zipcode: postcode[0]
+    }))
   }
   const changeMotorBrand = (e) => {
     setFormData((prevState) => ({
@@ -513,7 +515,7 @@ if (name === 'actDate') {
           //     {ele.MODEL}
           //   </option>
           // );
-          array.push({ label: ele.compulsorycode +' : ' + ele.t_description, value: ele.compulsorycode })
+          array.push({ label: ele.compulsorycode + ' : ' + ele.t_description, value: ele.compulsorycode })
         });
         setCcDD(array);
       })
@@ -528,7 +530,7 @@ if (name === 'actDate') {
       .then((model) => {
         const array = [];
         model.data.forEach((ele) => {
-          
+
           array.push({ label: ele.MODELNAME, value: ele.MODELNAME })
         });
         setMotormodelDD(array);
@@ -544,7 +546,7 @@ if (name === 'actDate') {
       .then((model) => {
         const array = [];
         model.data.forEach((ele) => {
-          
+
           array.push({ label: ele.SPECNAME, value: ele.SPECNAME })
         });
         setMotorspecDD(array);
@@ -563,11 +565,11 @@ if (name === 'actDate') {
         const arrayZip = [];
         const zip = [];
         subdistric.data.forEach((ele) => {
-          
-          arraySub.push({ label: ele.t_tambonname, value: ele.t_tambonname,  postcode: ele.postcodeall.split("/")  })
-        
+
+          arraySub.push({ label: ele.t_tambonname, value: ele.t_tambonname, postcode: ele.postcodeall.split("/") })
+
         });
-       
+
         setSubDistricDD(arraySub);
       })
       .catch((err) => {
@@ -577,54 +579,102 @@ if (name === 'actDate') {
 
   const getcommov = (e) => {
     // e.preventDefault();
- 
+
     //check insurer class subclass 
-    if (!formData.class  || !formData.subClass  || !formData.insurerCode  ) {
+    if (!formData.class || !formData.subClass || !formData.insurerCode) {
       alert('กรุณากรอกข้อมูล class/subclass/บริษัทประกัน ให้ครบถ้วน')
       e.target.value = null
       setFormData((prevState) => ({
         ...prevState,
-        [e.target.name] : e.target.value,
+        [e.target.name]: e.target.value,
 
       }));
       return
     }
-  
+
     //get comm  ov setup
     let i = 1
     if (e.target.name === 'agentCode') {
       i = 1
+      console.log(i);
     } else if (e.target.name === 'agentCode2') {
       i = 2
+      console.log(i);
     }
     axios
-      .post(url + "/insures/getcommov", {...formData, [e.target.name]: e.target.value }, headers)
+      .post(url + "/insures/getcommov", { ...formData, agentCode: e.target.value }, headers)
       .then((res) => {
         console.log(res.data);
-        if (res.data.length >0) {
-          setFormData((prevState) => ({
-            ...prevState,
-            [e.target.name] : e.target.value,
-            [`commin_rate`]: res.data[0].rateComIn,
-            [`ovin_rate`]: res.data[0].rateOVIn_1,
-            [`commout${i}_rate`]: res.data[0].rateComOut,
-            [`ovout${i}_rate`]: res.data[0].rateOVOut_1,
-            // [`commin_amt`]: res.data[0].rateComIn * formData[`grossprem`] / 100,
-            // [`ovin_amt`]: res.data[0].rateOVIn_1 * formData[`grossprem`] / 100,
-            // [`commout${i}_amt`]: res.data[0].rateComOut * formData[`grossprem`] / 100,
-            // [`ovout${i}_amt`]: res.data[0].rateOVOut_1 * formData[`grossprem`] / 100,
-  
-          }));
-        }else{
+        if (res.data.length > 0) {
+          if (i === 1) {
+            if (res.data[0].rateComIn < res.data[0].rateComOut + formData.commout2_rate || res.data[0].rateOVIn_1 < res.data[0].rateOVOut_1 + formData.ovout2_rate) {
+              alert("ค่า comm/ov out > comm/ov in")
+              e.target.value = null
+              setFormData((prevState) => ({
+                ...prevState,
+                [e.target.name]: e.target.value,
+
+              }));
+              return
+            } else {
+              setFormData((prevState) => ({
+                ...prevState,
+                [e.target.name]: e.target.value,
+                [`commin_rate`]: res.data[0].rateComIn,
+                [`ovin_rate`]: res.data[0].rateOVIn_1,
+                [`commout${i}_rate`]: res.data[0].rateComOut,
+                [`ovout${i}_rate`]: res.data[0].rateOVOut_1,
+                // [`commin_amt`]: res.data[0].rateComIn * formData[`grossprem`] / 100,
+                // [`ovin_amt`]: res.data[0].rateOVIn_1 * formData[`grossprem`] / 100,
+                // [`commout${i}_amt`]: res.data[0].rateComOut * formData[`grossprem`] / 100,
+                // [`ovout${i}_amt`]: res.data[0].rateOVOut_1 * formData[`grossprem`] / 100,
+
+              }))
+            }
+          } else if (i === 2) {
+            if (res.data[0].rateComIn < res.data[0].rateComOut + formData.commout1_rate || res.data[0].rateOVIn_1 < res.data[0].rateOVOut_1 + formData.ovout1_rate) {
+              alert("ค่า comm/ov out > comm/ov in")
+              e.target.value = null
+              setFormData((prevState) => ({
+                ...prevState,
+                [e.target.name]: e.target.value,
+
+              }));
+              return
+            } else {
+              setFormData((prevState) => ({
+                ...prevState,
+                [e.target.name]: e.target.value,
+                [`commin_rate`]: res.data[0].rateComIn,
+                [`ovin_rate`]: res.data[0].rateOVIn_1,
+                [`commout${i}_rate`]: res.data[0].rateComOut,
+                [`ovout${i}_rate`]: res.data[0].rateOVOut_1,
+                // [`commin_amt`]: res.data[0].rateComIn * formData[`grossprem`] / 100,
+                // [`ovin_amt`]: res.data[0].rateOVIn_1 * formData[`grossprem`] / 100,
+                // [`commout${i}_amt`]: res.data[0].rateComOut * formData[`grossprem`] / 100,
+                // [`ovout${i}_amt`]: res.data[0].rateOVOut_1 * formData[`grossprem`] / 100,
+
+              }))
+            }
+          }
+
+
+
+
+
+
+        } else {
           alert('ไม่พบข้อมูล Comm OV ของผู้แนะนำ ตามเงื่อนไข class/subclass/บริษัทประกัน นี้')
           e.target.value = null
           setFormData((prevState) => ({
             ...prevState,
-            [e.target.name] : e.target.value,
-    
+            [e.target.name]: e.target.value,
+            [`commout${i}_rate`]: 0,
+            [`ovout${i}_rate`]: 0,
+
           }));
         }
-       
+
       })
       .catch((err) => {
         alert("Something went wrong, Try Again.");
@@ -692,10 +742,10 @@ if (name === 'actDate') {
     console.log(data);
     e.preventDefault();
     await axios.post(url + "/policies/policydraft/batch", data, headers).then((res) => {
-      alert("policy batch Created AppNo : "+ res.data.appNo[0]);
+      alert("policy batch Created AppNo : " + res.data.appNo[0]);
       console.log(res.data);
       window.location.reload(false);
-    }).catch((err) => { alert("Something went wrong, Try Again." +err.msg); });
+    }).catch((err) => { alert("Something went wrong, Try Again." + err.msg); });
   };
 
 
@@ -822,15 +872,15 @@ if (name === 'actDate') {
 
     //get voluntary code motor
     axios
-    .get(url + "/static/mt_brands/getallvc", headers)
-    .then((vcs) => {
-      const array = [];
-      vcs.data.forEach((ele) => {
-        array.push({ label: ele.newvoluntarycode +' : '+ele.t_description , value: ele.newvoluntarycode })
-      });
-      setVcDD(array);
-    })
-    .catch((err) => { });
+      .get(url + "/static/mt_brands/getallvc", headers)
+      .then((vcs) => {
+        const array = [];
+        vcs.data.forEach((ele) => {
+          array.push({ label: ele.newvoluntarycode + ' : ' + ele.t_description, value: ele.newvoluntarycode })
+        });
+        setVcDD(array);
+      })
+      .catch((err) => { });
 
   }, []);
 
@@ -878,19 +928,19 @@ if (name === 'actDate') {
             onChange={handleChangeActdate}
             onBlur={(e) => validateDate(e)}
           /> */}
-            <DatePicker
-                            showIcon
-                            className="form-control"
-                            todayButton="Vandaag"
-                            // isClearable
-                            name="actDate"
-                            showYearDropdown
-                            dateFormat="dd/MM/yyyy"
-                            dropdownMode="select"
-                            selected={formData.actDate}
-                            onChange={(date) => handleChangeActdate(date,'actDate')}
-                            // onBlur={(e) => validateDate(e)}
-                                 />
+          <DatePicker
+            showIcon
+            className="form-control"
+            todayButton="Vandaag"
+            // isClearable
+            name="actDate"
+            showYearDropdown
+            dateFormat="dd/MM/yyyy"
+            dropdownMode="select"
+            selected={formData.actDate}
+            onChange={(date) => handleChangeActdate(date, 'actDate')}
+            onBlur={(e) => validateDate(e)}
+          />
 
         </div>
         <div class="col-2 form-group ">
@@ -921,18 +971,18 @@ if (name === 'actDate') {
             onBlur={(e) => validateDate(e)}
           /> */}
           <DatePicker
-                            showIcon
-                            className="form-control"
-                            todayButton="Vandaag"
-                            // isClearable
-                            name="expDate"
-                            showYearDropdown
-                            dateFormat="dd/MM/yyyy"
-                            dropdownMode="select"
-                            selected={formData.expDate}
-                            onChange={(date) => handleChangeActdate(date,'expDate')}
-                            // onBlur={(e) => validateDate(e)}
-                                 />
+            showIcon
+            className="form-control"
+            todayButton="Vandaag"
+            // isClearable
+            name="expDate"
+            showYearDropdown
+            dateFormat="dd/MM/yyyy"
+            dropdownMode="select"
+            selected={formData.expDate}
+            onChange={(date) => handleChangeActdate(date, 'expDate')}
+          // onBlur={(e) => validateDate(e)}
+          />
         </div>
         <div class="col-2 form-group ">
           <label class="form-label ">
@@ -944,9 +994,9 @@ if (name === 'actDate') {
             defaultValue={"16:30"}
             name={`expTime`}
             onChange={handleChange}
-            
+
           />
-          
+
         </div>
         <div class="col-2 form-group ">
           <label class="form-label px-3">
@@ -1037,7 +1087,7 @@ if (name === 'actDate') {
               value={formData.agentCode2}
               name={`agentCode2`}
               onChange={handleChange}
-              disabled={formData.agentCode === '' ? true:false}
+              disabled={formData.agentCode === '' ? true : false}
               onBlur={getcommov}
             />
             <div class="input-group-append">
@@ -1046,7 +1096,7 @@ if (name === 'actDate') {
           </div>
 
         </div>
-        
+
         <div class="col-2 form-group ">
           <label class="form-label px-3">
             ทุนประกัน<span class="text-danger"> *</span>
@@ -1074,6 +1124,7 @@ if (name === 'actDate') {
             className="form-control numbers"
             id="grossprem"
             type="number"
+            thousandSeparator={true}
             step={0.1}
             value={formData.grossprem}
             name={`grossprem`}
@@ -1198,19 +1249,19 @@ if (name === 'actDate') {
           </label>
         </div>
         <div class="col-3">
-        <div className="row">
-        <div className="col">
-        <label class="form-label ">
-            Comm Rate(%)
-          </label>
+          <div className="row">
+            <div className="col">
+              <label class="form-label ">
+                Comm Rate(%)
+              </label>
+            </div>
+            <div className="col-5">
+              <label class="form-label ">
+                Amt<span class="text-danger"> *</span>
+              </label>
+            </div>
           </div>
-          <div className="col-5">
-          <label class="form-label ">
-            Amt<span class="text-danger"> *</span>
-          </label>
-          </div>
-        </div>
-          
+
           <div className="row">
             <div className="col">
               <input
@@ -1221,9 +1272,9 @@ if (name === 'actDate') {
                 name={`commin_rate`}
                 onChange={(e) => handleChange(e)}
               />
-              
-            </div> 
-            
+
+            </div>
+
             <div className="col-8">
               <input
                 className="form-control"
@@ -1241,19 +1292,19 @@ if (name === 'actDate') {
 
 
         <div class="col-3">
-         
+
           <div className="row">
-        <div className="col">
-        <label class="form-label ">
-        OV Rate(%)
-          </label>
+            <div className="col">
+              <label class="form-label ">
+                OV Rate(%)
+              </label>
+            </div>
+            <div className="col-5">
+              <label class="form-label ">
+                Amt<span class="text-danger"> *</span>
+              </label>
+            </div>
           </div>
-          <div className="col-5">
-          <label class="form-label ">
-            Amt<span class="text-danger"> *</span>
-          </label>
-          </div>
-        </div>
           <div className="row">
             <div className="col input-group">
               <input
@@ -1264,7 +1315,7 @@ if (name === 'actDate') {
                 name={`ovin_rate`}
                 onChange={handleChange}
               />
-              
+
             </div>
             <div className="col-8">
               <input
@@ -1303,7 +1354,7 @@ if (name === 'actDate') {
                 name={`commout1_rate`}
                 onChange={handleChange}
               />
-              
+
             </div>
             <div className="col-8">
               <input
@@ -1311,7 +1362,7 @@ if (name === 'actDate') {
                 type="number"
                 disabled
                 step={0.1}
-                value={(formData[`commout1_rate`] * (100 - formData[`specdiscrate`]) * formData[`grossprem`] / 10000).toFixed(2)*100/100 || ""}
+                value={(formData[`commout1_rate`] * (100 - formData[`specdiscrate`]) * formData[`grossprem`] / 10000).toFixed(2) * 100 / 100 || ""}
                 name={`commout1_amt`}
                 onChange={handleChange}
               />
@@ -1334,7 +1385,7 @@ if (name === 'actDate') {
                 name={`ovout1_rate`}
                 onChange={handleChange}
               />
-              
+
             </div>
             <div className="col-8">
               <input
@@ -1359,91 +1410,86 @@ if (name === 'actDate') {
 
       </div>
 
-        {formData.agentCode2 !== '' ? 
+      {formData.agentCode2 !== '' ?
         <div class="row">
-        <div className="col-1"></div>
-        <div class="col-2">
+          <div className="col-1"></div>
+          <div class="col-2">
 
-          <label class="form-label">
-            Comm/OV OUT <br /> ผู้แนะนำ 2
-          </label>
-        </div>
-        <div class="col-3">
-          <label class="form-label ">
-            {/* Comm Out% (2) */}
-          </label>
-          <div className="row">
-            <div className="col input-group">
-              <input
-                className="form-control"
-                type="number"
-                step={0.1}
-                value={formData[`commout2_rate`]}
-                name={`commout2_rate`}
-                onChange={(e) => handleChange(e)}
-              />
-            
-            </div>
-            <div className="col-8">
-              <input
-                className="form-control"
-                type="number"
-                disabled
-                step={0.1}
-                //value={(formData[`commin2_rate`] * formData[`grossprem`]) / 100 || ""}
-                value={parseFloat((formData[`commout2_rate`] * (100 - formData[`specdiscrate`]) * formData[`grossprem`] / 10000).toFixed(2)) || ""}
-                name={`commout2_amt`}
-                onChange={(e) => handleChange(e)}
-              />
-            </div>
+            <label class="form-label">
+              Comm/OV OUT <br /> ผู้แนะนำ 2
+            </label>
           </div>
+          <div class="col-3">
+            <label class="form-label ">
+              {/* Comm Out% (2) */}
+            </label>
+            <div className="row">
+              <div className="col input-group">
+                <input
+                  className="form-control"
+                  type="number"
+                  step={0.1}
+                  value={formData[`commout2_rate`]}
+                  name={`commout2_rate`}
+                  onChange={(e) => handleChange(e)}
+                />
 
-        </div>
-
-
-        <div class="col-3">
-          <label class="form-label ">
-            {/* Ov Out% (2) */}
-          </label>
-          <div className="row">
-            <div className="col input-group">
-              <input
-                className="form-control"
-                type="number"
-                step={0.1}
-                value={formData[`ovout2_rate`]}
-                name={`ovout2_rate`}
-                onChange={handleChange}
-              />
-              <div class="input-group-append">
-                <div class="input-group-text ">
-                  <label class="form-check-label" >%</label>
-
-                </div>
+              </div>
+              <div className="col-8">
+                <input
+                  className="form-control"
+                  type="number"
+                  disabled
+                  step={0.1}
+                  //value={(formData[`commin2_rate`] * formData[`grossprem`]) / 100 || ""}
+                  value={parseFloat((formData[`commout2_rate`] * (100 - formData[`specdiscrate`]) * formData[`grossprem`] / 10000).toFixed(2)) || ""}
+                  name={`commout2_amt`}
+                  onChange={(e) => handleChange(e)}
+                />
               </div>
             </div>
-            <div className="col-8">
-              <input
-                className="form-control"
-                type="number"
-                disabled
-                step={0.1}
-                name={`ovout2_amt`}
-                //value={(formData[`ovin2_rate`] * formData[`grossprem`]) / 100 || ""}
-                value={parseFloat((formData[`ovout2_rate`] * (100 - formData[`specdiscrate`]) * formData[`grossprem`] / 10000).toFixed(2)) || ""}
-                onChange={handleChange}
-              />
-            </div>
+
           </div>
 
-        </div>
-        {/* <div class="col-2 align-bottom">
+
+          <div class="col-3">
+            <label class="form-label ">
+              {/* Ov Out% (2) */}
+            </label>
+            <div className="row">
+              <div className="col input-group">
+                <input
+                  className="form-control"
+                  type="number"
+                  step={0.1}
+                  value={formData[`ovout2_rate`]}
+                  name={`ovout2_rate`}
+                  onChange={handleChange}
+                />
+
+              </div>
+              <div className="col-8">
+                <input
+                  className="form-control"
+                  type="number"
+                  disabled
+                  step={0.1}
+                  name={`ovout2_amt`}
+                  //value={(formData[`ovin2_rate`] * formData[`grossprem`]) / 100 || ""}
+                  value={parseFloat((formData[`ovout2_rate`] * (100 - formData[`specdiscrate`]) * formData[`grossprem`] / 10000).toFixed(2)) || ""}
+                  onChange={handleChange}
+                />
+              </div>
+            </div>
+
+          </div>
+          {/* <div class="col-2 align-bottom">
 
           <button type="button" name="btn_comm2" class="btn btn-primary align-bottom" onClick={getcommov} >ค่า comm/ov : ผู้แนะนำคนที่ 2</button>
         </div> */}
-      </div>
-      :null}
-      
+        </div>
+        : null}
+
       <div class="row">
         <div className="col-1"></div>
         <div class="col-2">
@@ -1461,12 +1507,13 @@ if (name === 'actDate') {
               <input
                 className="form-control"
                 type="number"
+                disabled
                 step={0.1}
                 value={parseFloat(formData[`commout1_rate`] || 0) + parseFloat(formData[`commout2_rate`] || 0)}
                 name={`commout_rate`}
                 onChange={handleChange}
               />
-              
+
             </div>
             <div className="col-8">
               <input
@@ -1474,9 +1521,9 @@ if (name === 'actDate') {
                 type="number"
                 disabled
                 step={0.1}
-              // value={((document.getElementsByName(`commout_rate`)[0] ? document.getElementsByName(`commout_rate`)[0].value : 0) * ((100 - formData[`specdiscrate`]) * formData[`grossprem`] / 10000).toFixed(2)) || ''}
-              value={ parseFloat(((parseFloat(formData[`commout1_rate`] || 0) + parseFloat(formData[`commout2_rate`] || 0))* ((100 - formData[`specdiscrate`]) * formData[`grossprem`] / 10000).toFixed(2)).toFixed(2)) || ''}  
-              name={`commout_amt`}
+                // value={((document.getElementsByName(`commout_rate`)[0] ? document.getElementsByName(`commout_rate`)[0].value : 0) * ((100 - formData[`specdiscrate`]) * formData[`grossprem`] / 10000).toFixed(2)) || ''}
+                value={parseFloat(((parseFloat(formData[`commout1_rate`] || 0) + parseFloat(formData[`commout2_rate`] || 0)) * ((100 - formData[`specdiscrate`]) * formData[`grossprem`] / 10000).toFixed(2)).toFixed(2)) || ''}
+                name={`commout_amt`}
                 onChange={handleChange}
               />
             </div>
@@ -1493,12 +1540,13 @@ if (name === 'actDate') {
               <input
                 className="form-control"
                 type="number"
+                disabled
                 step={0.1}
                 value={parseFloat(formData[`ovout1_rate`] || 0) + parseFloat(formData[`ovout2_rate`] || 0)}
                 name={`ovout_rate`}
                 onChange={handleChange}
               />
-              
+
             </div>
             <div className="col-8">
               <input
@@ -1508,7 +1556,7 @@ if (name === 'actDate') {
                 step={0.1}
                 name={`ovout_amt`}
                 // value={((document.getElementsByName(`ovout_rate`)[0] ? document.getElementsByName(`ovout_rate`)[0].value : 0) * ((100 - formData[`specdiscrate`]) * formData[`grossprem`] / 10000).toFixed(2)) || ''}
-                value={parseFloat(((parseFloat(formData[`ovout1_rate`] || 0) + parseFloat(formData[`ovout2_rate`] || 0))* ((100 - formData[`specdiscrate`]) * formData[`grossprem`] / 10000)).toFixed(2)) || ''}
+                value={parseFloat(((parseFloat(formData[`ovout1_rate`] || 0) + parseFloat(formData[`ovout2_rate`] || 0)) * ((100 - formData[`specdiscrate`]) * formData[`grossprem`] / 10000)).toFixed(2)) || ''}
                 onChange={handleChange}
               />
             </div>
@@ -1600,7 +1648,7 @@ if (name === 'actDate') {
             <div class="col-1">
               <label class="form-label ">คำนำหน้า<span class="text-danger"> *</span></label>
               <Select
-              styles={customStyles}
+                styles={customStyles}
                 formatOptionLabel={(option, { context }) => context === 'value' ? option.label : `${option.label}  ${option.label2}`}
                 name={`title`}
                 onChange={(e) => setFormData((prevState) => ({
@@ -1775,12 +1823,12 @@ if (name === 'actDate') {
             search
           /> */}
           <Select
-          styles={customStyles}
+            styles={customStyles}
             // className="form-control"
             name={`province`}
             onChange={(e) => changeProvince(e)}
             options={provinceDD}
-            
+
           // onChange={opt => console.log(opt)}
           />
           {/* <option value={formData.province} disabled selected hidden>
@@ -1818,13 +1866,13 @@ if (name === 'actDate') {
           <label class="form-label ">
             ตำบล<span class="text-danger"> *</span>
           </label>
-        
+
 
           <Select
             // className="form-control"
             styles={customStyles}
             name={`subdistrict`}
-            onChange={ (e) =>changeSubDistrict(e)}
+            onChange={(e) => changeSubDistrict(e)}
             options={subDistricDD}
           />
 
@@ -1838,7 +1886,7 @@ if (name === 'actDate') {
             name={`zipcode`}
             onChange={handleChange}
           >
-            
+
             {zipcodeDD}
           </select>
           {/* <Select
@@ -1850,7 +1898,7 @@ if (name === 'actDate') {
             }))}
             options={zipcodeDD}
           /> */}
-          
+
 
         </div>
       </div>
@@ -1926,7 +1974,7 @@ if (name === 'actDate') {
                   compulsoryCode: e.value,
                 }))}
                 options={ccDD}
-                
+
               // onChange={opt => console.log(opt)}
               />
             </div>
@@ -2059,7 +2107,7 @@ if (name === 'actDate') {
                 styles={customStyles}
                 name={`modelname`}
                 onChange={(e) => changeMotorModel(e)}
-      
+
                 options={motormodelDD}
               />
 

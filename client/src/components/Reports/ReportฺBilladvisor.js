@@ -1,9 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useCookies } from "react-cookie";
 import axios from "axios";
 import jwt_decode from "jwt-decode";
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
+import ReportTable from "./ReportTable";
+import convertDateFormat from "../lib/convertdateformat";
 
 import {
     BrowserRouter,
@@ -31,55 +34,94 @@ const ReportฺBilladvisor = () => {
     const url = window.globalConfig.BEST_POLICY_V1_BASE_URL;
     const url_report = window.globalConfig.REPORT_BEST_POLICY_V1_BASE_URL;
     const navigate = useNavigate();
+    const [cookies, setCookie, removeCookie] = useCookies(["jwt"]);
+    const headers = {
+        headers: { Authorization: `Bearer ${cookies["jwt"]}` }
+      };
+    
+      const [insurercode, setInsurercode] = useState("");
+      const [advisorcode, setAdvisorcode] = useState("")
+      const [fromBilladvisorno, setFromBilladvisorno] = useState('');
+      const [toBilladvisorno, setToBilladvisorno] = useState('');
+    
 
-    const [tableData, setTableData] = useState([])
-    const [billAdvisorNo, setBillAdvisorNo] = useState("")
-    const [insurercode, setInsurercode] = useState("");
-    const [advisorcode, setAdvisorcode] = useState("")
-    const [refno, setRefno] = useState("");
-    const [cashierReceiptNo, setCashierReceiptNo] = useState("");
-    const [transactionType, setTransactionType] = useState({});
-    const [checkboxValue, setCheckboxValue] = useState();
-    const [createUserCode, setCreateUserCode] = useState();
+   
     const [fromDate, setFromDate] = useState('');
     const [toDate, setToDate] = useState('');
-    const [fromBilladvisorno, setFromBilladvisorno] = useState('');
-    const [toBilladvisorno, setToBilladvisorno] = useState('');
-    const [dfrpreferno, setDfrpreferno] = useState();
-    const [createusercode, setCreateusercode] = useState();
-    const [employeecode, setEmployeecode] = useState();
-    const [status, setStatus] = useState();
-    const [orderby, setOrderby] = useState();
-    const [advisoryReadOnly, setAdvisoryReadOnly] = useState(false)
-    const [insurerReadOnly, setInsurerReadOnly] = useState(false)
-    const [transactionTypeReadOnly, setTransactionTypeReadOnly] = useState(false)
     
+    
+    // const [orderby, setOrderby] = useState();
+    
+    const [filterData, setFilterData] = useState({
+        "startPolicyDate": "",
+        "endPolicyDate": "",
+        "createUserCode": "",
+        "contactPersonId1": "",
+        "contactPersonId2": "",
+        "agentCode1": "",
+        "agentCode2": "",
+        "insurerCode": "",
+        "status": "",
+        "class": "",
+        "subClass": "",
+        "orderBy": ""
+      }
+      )
+      const [reportData, setReportData] = useState([])
+      const colData = 
+    {
+        "insurerCode": "รหัสบริษัทประกัน",
+        "agentCode1": "รหัสผู้แนะนำ 1",
+        "agentCode2": "รหัสผู้แนะนำ 2",
+        "dueDate": "วันครบกำหนดชำระ",
+        "policyNo": "หมายเลขกรมธรรม์",
+        "endorseNo": "หมายเลขสลักหลัง",
+        "invoiceNo": "เลขที่ใบแจ้งหนี้",
+        "seqNo": "งวดชำระที่",
+        "insureeCode": "รหัสผู้เอาประกัน",
+        "insureeName": "ชื่อผู้เอาประกัน",
+        "licenseNo": "ทะเบียนรถ",
+        "province": "จังหวัด",
+        "chassisNo": "เลขตัวถัง",
+        "grossPrem": "เบี้ยรวม",
+        "specDiscRate": "อัตราส่วนลด",
+        "specDiscAmt": "มูลค่าส่วนลด",
+        "netGrossPrem": "เบี้ยสุทธิ",
+        "duty": "อากร",
+        "tax": "ภาษี",
+        "totalPrem": "เบี้ยประกันรับรวม",
+        "commOutRate1": "อัตราคอมมิชชั่นจ่าย 1",
+        "commOutAmt1": "ยอดคอมมิชชั่นจ่าย 1",
+        "ovOutRate1": "อัตรา OV จ่าย 1",
+        "ovOutAmt1": "ยอด OV จ่าย 1",
+        "commOutRate2": "อัตราคอมมิชชั่นจ่าย 2",
+        "commOutAmt2": "ยอดคอมมิชชั่นจ่าย 2",
+        "ovOutRate2": "อัตรา OV จ่าย 2",
+        "ovOutAmt2": "ยอด OV จ่าย 2",
+        "commOutRate": "อัตราคอมมิชชั่นจ่าย",
+        "commOutAmt": "ยอดคอมมิชชั่นจ่าย",
+        "ovOutRate": "อัตรา OV จ่าย",
+        "ovOutAmt": "ยอด OV จ่าย 2",
+        "netFlag": "NetFlag",
+        "billPremium": "ยอดชำระรวม",
+        "billAdvisorNo": "เลขที่ใบวางบิล",
+        "billAdvisorSubNo": "เลขที่ใบวางบิลย่อย",
+        "billDate": "วันที่สร้างใบวางบิล"
+      }
+
     useEffect(() => {
 
-    }, [billAdvisorNo]);
+    }, []);
 
     
-    const searchBill = (e) =>{
+    const exportExcel =(e) => {
         e.preventDefault()
-        let data = JSON.stringify({
-            "billadvisorno": billAdvisorNo
-        });
-        axios.post(window.globalConfig.BEST_POLICY_V1_BASE_URL+"/bills/findDataByBillAdvisoryNo",data,{
+        axios.post(url_report + "/DailyPolicy/excel", filterData, {
             headers: {
                 'Content-Type': 'application/json'
             }
         })
             .then((response) => {
-                // console.log(response.data);
-                if (response.data[0])
-                {
-                    setInsurercode(response.data[0].insurerCode)
-                    setAdvisorcode(response.data[0].agentCode)
-                    setTransactionType("PREM-IN")
-                    setInsurerReadOnly(true)
-                    setAdvisoryReadOnly(true)
-                    setTransactionTypeReadOnly(true)
-                }
                 
             })
             .catch((error) => {
@@ -88,26 +130,42 @@ const ReportฺBilladvisor = () => {
     }
     const searchdata = (e) =>{
         e.preventDefault()
-        let data = JSON.stringify({
-            "billadvisorno": billAdvisorNo,
-            "insurercode":insurercode,
-            "advisorcode":advisorcode,
-            "refno":refno,
-            "cashierReceiptNo":cashierReceiptNo,
-            "transactionType":transactionType,
-            "createUserCode":createUserCode,
-            "fromDate":fromDate,
-            "toDate":toDate,
-            "dfrpreferno":dfrpreferno
-        });
-        axios.post(window.globalConfig.BEST_POLICY_V1_BASE_URL+"/bills/findbill",data,{
+       let data = {
+           "startBillDate": fromDate,
+           "endBillDate": toDate,
+        "insurerCode": insurercode,
+        "agentCode1": advisorcode,
+        "agentCode2": "",
+        "startBillAdvisorNo": fromBilladvisorno,
+        "endBillAdvisorNo": toBilladvisorno,
+      }
+
+      if (document.getElementsByName("insurercodeCB")[0].checked) {
+        data.insurerCode = ''
+     }
+     if (document.getElementsByName("advisorcodeCB")[0].checked) {
+        data.agentCode1 = ''
+     }
+        axios.post(url_report + "/Bill/json", data, {
             headers: {
                 'Content-Type': 'application/json'
             }
         })
             .then((response) => {
-                // console.log(response.data);
-                setTableData(response.data)
+                if (response.data.length < 1) {
+                    alert('ไม่พบข้อมูล')
+                    return
+                }
+                const rawdata = response.data.map((ele,index)=>{
+                    if (ele.dueDate) {
+                        ele.dueDate =  convertDateFormat(ele.dueDate)
+                    }
+                    if (ele.billDate) {
+                        ele.billDate =  convertDateFormat(ele.billDate)
+                    }
+                    return ele
+                })
+                setReportData(response.data)
             })
             .catch((error) => {
                 console.log(error);
@@ -129,10 +187,10 @@ const ReportฺBilladvisor = () => {
                                 <label htmlFor="Insurer" className="form-label">รหัส Insurer</label>
                             </div>
                             <div className="col-7">
-                                <input type="text" id="InsurerCode" value={insurercode} readOnly={insurerReadOnly} onChange={(e) => setInsurercode(e.target.value)} className="form-control"/>
+                                <input type="text" id="InsurerCode" value={insurercode} onChange={(e) => setInsurercode(e.target.value)} className="form-control"/>
                             </div>
                             <div className="col-1">
-                                <input type="checkbox" id="cashierReceiptCheckbox" value={checkboxValue}  onChange={(e) => setCheckboxValue(e.target.checked)} className="form-check-input"/>
+                                <input type="checkbox" name="insurercodeCB" className="form-check-input"/>
                                 <label htmlFor="cashierReceiptCheckbox" className="form-check-label">&nbsp;ALL</label>
                             </div>
                         </div>
@@ -143,10 +201,10 @@ const ReportฺBilladvisor = () => {
                                 <label htmlFor="Advisor" className="form-label">รหัส Advisor </label>
                             </div>
                             <div className="col-7">
-                                <input type="text" id="Advisor" value={advisorcode} readOnly={advisoryReadOnly}  onChange={(e) => setAdvisorcode(e.target.value)} className="form-control"/>
+                                <input type="text" id="Advisor" value={advisorcode} onChange={(e) => setAdvisorcode(e.target.value)} className="form-control"/>
                             </div>
                             <div className="col-1">
-                                <input type="checkbox" id="cashierReceiptCheckbox" value={checkboxValue} onChange={(e) => setCheckboxValue(e.target.checked)} className="form-check-input"/>
+                                <input type="checkbox" name="advisorcodeCB" className="form-check-input"/>
                                 <label htmlFor="cashierReceiptCheckbox" className="form-check-label">&nbsp;ALL</label>
                             </div>
                         </div>
@@ -162,6 +220,7 @@ const ReportฺBilladvisor = () => {
                                 <input
                                     type="text"
                                     id="fromBilladvisorno"
+                                    className="form-control"
                                     value={fromDate}
                                     onChange={(e) => setFromBilladvisorno(e.target.value)}
                                 />
@@ -171,6 +230,7 @@ const ReportฺBilladvisor = () => {
                                 <input
                                     type="text"
                                     id="toBilladvisorno"
+                                    className="form-control"
                                     value={toDate}
                                     onChange={(e) => setToBilladvisorno(e.target.value)}
                                 />
@@ -226,7 +286,7 @@ const ReportฺBilladvisor = () => {
                         </div>
 
                         {/* orderby  */}
-                        <div className="row my-3">
+                        {/* <div className="row my-3">
                             <label class="col-sm-2 col-form-label" htmlFor="orderby">
                                 Order BY
                             </label>
@@ -262,7 +322,7 @@ const ReportฺBilladvisor = () => {
                         Insurercode
                     </label>
                     </div>
-                            </div>
+                            </div> */}
 
                         <div className="row" style={{ marginTop: '20px' }}>
                             <div className="col-12 text-center">
@@ -275,58 +335,14 @@ const ReportฺBilladvisor = () => {
                 </div>
                 <div className="col-lg-12">
                     <div style={{ overflowY: 'auto', height: '400px' , marginTop:"50px" }}>
-                        {tableData.length!=0?<table className="table table-striped table-bordered">
-                            <thead>
-                            <tr>
-                                <th>Bill Advisor No</th>
-                                <th>DFR Preder No</th>
-                                <th>Insurer Code</th>
-                                <th>Advisor Code</th>
-                                <th>Cashier Receipt No</th>
-                                <th>Cashier Date</th>
-                                <th>ARNO</th>
-                                <th>Receive From</th>
-                                <th>Receive Name</th>
-                                <th>User Code</th>
-                                <th>Create Date</th>
-                                <th>Amt</th>
-                                <th>Receive Type</th>
-                                <th>Amity Account No</th>
-                                <th>Amity Bank</th>
-                                <th>Amity Bank Branch</th>
-                                <th>Ref No</th>
-                                <th>Bank</th>
-                                <th>Bank Branch</th>
-                                <th>Status</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            {tableData.map((row, index) => (
-                                <tr key={index}>
-                                    <td>{row.billadvisorno}</td>
-                                    <td>{row.dfrprederno ? row.dfrprederno : 'N/A'}</td>
-                                    <td>{row.insurercode}</td>
-                                    <td>{row.advisorcode}</td>
-                                    <td>{row.cashierreceiveno ? row.cashierreceiveno : 'N/A'}</td>
-                                    <td>{row.cashierdate ? row.cashierdate : 'N/A'}</td>
-                                    <td>{row.ARNO ? row.ARNO : 'N/A'}</td>
-                                    <td>{row.receivefrom}</td>
-                                    <td>{row.receivename}</td>
-                                    <td>{row.createusercode}</td>
-                                    <td>{row.createdAt}</td>
-                                    <td>{row.amt}</td>
-                                    <td>{row.receivetype}</td>
-                                    <td>{row.amityAccountno}</td>
-                                    <td>{row.amityBank}</td>
-                                    <td>{row.amityBankbranch}</td>
-                                    <td>{row.partnerAccountno ? row.partnerAccountno : 'N/A'}</td>
-                                    <td>{row.partnerBank}</td>
-                                    <td>{row.partnerBankbranch}</td>
-                                    <td>{row.status}</td>
-                                </tr>
-                            ))}
-                            </tbody>
-                        </table>:
+                        {reportData.length!=0?
+                         <div>
+                         <ReportTable cols={colData} rows={reportData} />
+                         <button className="btn btn-primary" onClick={exportExcel}>Export To Excel</button>
+                         {/* <button className="btn btn-warning" onClick={(e)=>saveapcommin(e)}>save</button>
+                         <button className="btn btn-success" onClick={(e)=>submitapcommin(e)}>submit</button> */}
+                       </div>
+                       :
                             <div className="container" style={{marginTop:"30px"}}>
                                 <div className="row justify-content-center">
                                     <h2 className={"text-center"}>No Data</h2>

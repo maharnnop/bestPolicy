@@ -66,7 +66,9 @@ const getallVC =(req,res) =>{
     attributes: ['newvoluntarycode','t_description'],
     where: {
       'active' : 'Y'
-    }
+    },
+    order:[['newvoluntarycode',  'ASC'],
+   ]
   }).then((re)=>{
       res.json(re);
   })
@@ -78,7 +80,9 @@ const getCCbyVC =(req,res) =>{
     where: {
       'newvoluntarycode': req.body.voluntarycode,
       'active' : 'Y'
-    }
+    },
+    order:[['compulsorycode',  'ASC'],
+   ]
   }).then((re)=>{
       res.json(re);
   })

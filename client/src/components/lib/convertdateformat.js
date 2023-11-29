@@ -1,7 +1,13 @@
 
-export const  convertDateFormat = (inputDate) => {
+export const  convertDateFormat = (inputDate,withT =true) => {
     // Parse the input date string
-    const dateParts = inputDate.split('T')[0].split("-");
+    let dateParts
+    if (withT) {
+       dateParts = inputDate.split('T')[0].split("-");
+      
+    }else{
+      dateParts = inputDate.split("-");
+    }
     const year = dateParts[0];
     const month = dateParts[1];
     const day = dateParts[2];

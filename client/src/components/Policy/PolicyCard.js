@@ -356,6 +356,7 @@ const PolicyCard = (props) => {
     
     setFormData((prevState) => ({
       ...prevState,
+      select:true,
       updatedAt: new Date().toLocaleDateString(),
       updateusercode : jwt_decode(cookies["jwt"]).USERNAME
     }));
@@ -1753,7 +1754,6 @@ const handleClose = (e) => {
               <th scope="col-1">Ov in</th>
               <th scope="col-1">Comm out</th>
               <th scope="col-1">Ov out</th>
-              <th scope="col-1">แก้ไข</th>
             </tr>
           </thead>
           <tbody>
