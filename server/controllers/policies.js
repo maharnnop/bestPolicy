@@ -1231,7 +1231,8 @@ const editPolicyList = async (req, res) => {
        ovin_taxamt = :ovin_taxamt, commout_rate = :commout_rate, commout_amt = :commout_amt, ovout_rate = :ovout_rate, ovout_amt = :ovout_amt, 
       "policyDate" = :policyDate, "status" = 'A', commout1_rate = :commout1_rate, commout1_amt = :commout1_amt, ovout1_rate = :ovout1_rate, 
       ovout1_amt = :ovout1_amt, commout2_rate = :commout2_rate, commout2_amt = :commout2_amt, ovout2_rate = :ovout2_rate, ovout2_amt = :ovout2_amt,
-      "seqNoins" = :seqNoins, "seqNoagt" = :seqNoagt, "issueDate" = :issueDate , "policyType" = :policyType, "cover_amt" = :cover_amt, "withheld" = :withheld
+      "seqNoins" = :seqNoins, "seqNoagt" = :seqNoagt, "issueDate" = :issueDate , "policyType" = :policyType, "cover_amt" = :cover_amt, "withheld" = :withheld,
+       "invoiceNo" = :invoiceNo, "taxInvoiceNo" = :taxInvoiceNo
       WHERE "applicationNo" = :applicationNo and "status" = 'I' Returning id`,
         {
           replacements: {
@@ -1268,7 +1269,9 @@ const editPolicyList = async (req, res) => {
             policyType:  req.body[i][`policyType`],
             cover_amt: req.body[i][`cover_amt`],
             policyDate:  new Date().toJSON().slice(0, 10),
-            withheld : req.body[i]['withheld']
+            withheld : req.body[i]['withheld'],
+            invoiceNo : req.body[i]['invoiceNo'],
+            taxInvoiceNo : req.body[i]['taxInvoiceNo'],
             
           },
           transaction: t ,
