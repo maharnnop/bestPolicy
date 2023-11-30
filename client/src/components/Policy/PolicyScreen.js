@@ -14,6 +14,7 @@ import ModalSearchAgent from "./ModalSearchAgent";
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 
+
 const config = require("../../config.json");
 
 const PolicyScreen = (props) => {
@@ -187,16 +188,23 @@ const PolicyScreen = (props) => {
     //set dropdown subclass when class change
     if (e.target.name === "class") {
       const array = [];
-      insureTypeDD.forEach((ele) => {
+      
+      insureTypeDD.forEach((ele,index) => {
         if (e.target.value === ele.class) {
           array.push(
             <option key={ele.id} value={ele.subClass}>
               {ele.subClass}
             </option>
           );
+          
         }
       });
       setInsureSubClassDD(array);
+      
+      setFormData((prevState) => ({
+        ...prevState,
+        subClass: array[0].props.value,
+      }));
     }
 
   };
@@ -219,10 +227,15 @@ const PolicyScreen = (props) => {
         actDate: value,
         expDate: updatedDateString
       }));
-    } else {
+    } else if(name === 'actDate'){
       setFormData((prevState) => ({
         ...prevState,
         expDate: value
+      }));
+    }else{
+      setFormData((prevState) => ({
+        ...prevState,
+        [name]: value
       }));
     }
 
@@ -658,7 +671,7 @@ const PolicyScreen = (props) => {
             }
           }
 
-
+          
 
 
 
@@ -739,6 +752,17 @@ const PolicyScreen = (props) => {
     }
     data[0].commout_amt = document.getElementsByName('commout_amt')[0].value
     data[0].ovout_amt = document.getElementsByName('ovout_amt')[0].value
+
+    //set actdate expdate format time 
+    data[0].actDate = data[0].actDate.toLocaleDateString()// Adjust to the desired time zone
+    data[0].expDate = data[0].expDate.toLocaleDateString()
+    data[0].dueDateAgent = data[0].dueDateAgent.toLocaleDateString()
+    data[0].dueDateInsurer = data[0].dueDateInsurer.toLocaleDateString()
+
+    ////////////////bypassssssssssssssssssssssssss/////////////////////////
+    data[0].subdistrict = 'ดุสิต'
+    data[0].zipcode = '81120'
+
     console.log(data);
     e.preventDefault();
     await axios.post(url + "/policies/policydraft/batch", data, headers).then((res) => {
@@ -1046,8 +1070,8 @@ const PolicyScreen = (props) => {
                 name={`subClass`}
                 onChange={handleChange}
               >
-                <option value={formData.subClass} selected disabled hidden>
-                  {formData.subClass}
+                <option value={formData.subClass} selected disabled  hidden>
+                  {formData.subClass} 
                 </option>
                 {insureSubClassDD}
               </select>
@@ -1110,12 +1134,6 @@ const PolicyScreen = (props) => {
             onChange={handleChange}
           />
         </div>
-
-      </div>
-      {/* policy table */}
-
-      <div class="row">
-        <div className="col-1"></div>
         <div class="col-2">
           <label class="form-label ">
             เบี้ย<span class="text-danger"> *</span>
@@ -1133,14 +1151,18 @@ const PolicyScreen = (props) => {
           {/* <NumberInputWithCommas value={formData.grossprem} name={`grossprem`} onChange={handleChange}  /> */}
 
         </div>
+      </div>
+      {/* policy table */}
+
+      <div class="row">
+        <div className="col-1"></div>
+        
 
         <div class="col-2">
           <label class="form-label ">
             ส่วนลด walkin
           </label>
-          <div className="row">
-            <div className="col">
-              <input
+          <input
                 className="form-control"
                 type="number"
                 step={0.1}
@@ -1148,8 +1170,13 @@ const PolicyScreen = (props) => {
                 name={`specdiscrate`}
                 onChange={(e) => handleChangePrem(e)}
               />
-            </div>
-            <div className="col">
+          
+
+        </div>
+        <div className="col-2">
+        <label class="form-label ">
+            จำนวนเงินส่วนลด
+          </label>
               <input
                 className="form-control"
                 type="number"
@@ -1161,10 +1188,6 @@ const PolicyScreen = (props) => {
                 onChange={(e) => handleChange(e)}
               />
             </div>
-          </div>
-
-        </div>
-
         <div class="col-2">
           <label class="form-label ">
             เบี้ยสุทธิ
@@ -1182,9 +1205,7 @@ const PolicyScreen = (props) => {
         </div>
 
         <div class="col-2">
-          <div className="row">
-            <div className="col">
-              <label class="form-label ">
+        <label class="form-label ">
                 อากร
               </label>
               <input
@@ -1198,8 +1219,9 @@ const PolicyScreen = (props) => {
                 name={`duty`}
                 onChange={handleChange}
               />
-            </div>
-            <div className="col">
+          
+        </div>
+        <div className="col-2">
               <label class="form-label ">
                 ภาษี
               </label>
@@ -1215,12 +1237,14 @@ const PolicyScreen = (props) => {
                 onChange={handleChange}
               />
             </div>
+        
 
-          </div>
 
-        </div>
 
-        <div class="col-2">
+      </div>
+      <div class="row">
+        <div className="col-1"></div>
+      <div class="col-2">
           <label class="form-label ">
             เบี้ยรวม<span class="text-danger"> *</span>
           </label>
@@ -1235,11 +1259,7 @@ const PolicyScreen = (props) => {
             disabled
           />
         </div>
-
-
-
-      </div>
-
+        </div>
       <div class="row">
         <div className="col-1"></div>
         <div class="col-2">
@@ -1930,6 +1950,42 @@ const PolicyScreen = (props) => {
             onBlur={isEmailValid}
           />
         </div>
+        <div class="col-2">
+        <label class="form-label ">
+            Due Date บ.ประกัน<span class="text-danger"> *</span>
+          </label>
+        <DatePicker
+            showIcon
+            className="form-control"
+            todayButton="Vandaag"
+            // isClearable
+            name="actDate"
+            showYearDropdown
+            dateFormat="dd/MM/yyyy"
+            dropdownMode="select"
+            selected={formData.dueDateInsurer}
+            onChange={(date) => handleChangeActdate(date, 'dueDateInsurer')}
+            // onBlur={(e) => validateDate(e)}
+          />
+                                  </div>
+                                  <div class="col-2">
+        <label class="form-label ">
+            Due Date ผู้แนะนำ<span class="text-danger"> *</span>
+          </label>
+        <DatePicker
+            showIcon
+            className="form-control"
+            todayButton="Vandaag"
+            // isClearable
+            name="actDate"
+            showYearDropdown
+            dateFormat="dd/MM/yyyy"
+            dropdownMode="select"
+            selected={formData.dueDateAgent}
+            onChange={(date) => handleChangeActdate(date, 'dueDateAgent')}
+            // onBlur={(e) => validateDate(e)}
+          />
+                                  </div>
       </div>
       {formData.class === "MO" ?
         <div class="row">

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import Select from 'react-select';
 import jwt_decode from "jwt-decode";
 import Modal from 'react-bootstrap/Modal';
 import DatePicker from 'react-datepicker';
@@ -29,6 +30,17 @@ const NormalText = {
 /* eslint-disable react-hooks/exhaustive-deps */
 
 const CreateBillAdvisor = () => {
+
+    //style react-select
+  const customStyles = {
+    menu: (provided) => ({
+      ...provided,
+      width: 'auto',
+      zIndex: 2000,
+      whiteSpace: 'nowrap', // Prevent line breaks in dropdown options
+    }),
+  };
+
     const [cookies] = useCookies(["jwt"]);
     const headers = {
     headers: { Authorization: `Bearer ${cookies["jwt"]}` }
@@ -78,9 +90,10 @@ const CreateBillAdvisor = () => {
                 const array = [];
                 agent.data.forEach((ele) => {
                     array.push(
-                        <option key={ele.id} value={ele.agentCode}>
-                            {ele.agentCode}
-                        </option>
+                        // <option key={ele.id} value={ele.agentCode}>
+                        //     {ele.agentCode}
+                        // </option>
+                        { label: ele.agentCode, value: ele.agentCode }
                     );
                 });
                 setAgentDD(array);
@@ -203,12 +216,12 @@ const CreateBillAdvisor = () => {
      
         }
             
-            if (document.getElementsByName("insurerCodeCB")[0].checked) {
-                data.insurerCode = null
-            }
-            if (document.getElementsByName("agentCodeCB")[0].checked) {
-                data.agentCode = null
-            }
+            // if (document.getElementsByName("insurerCodeCB")[0].checked) {
+            //     data.insurerCode = null
+            // }
+            // if (document.getElementsByName("agentCodeCB")[0].checked) {
+            //     data.agentCode = null
+            // }
             if (document.getElementsByName("policyNoCB")[0].checked) {
                 data.policyNoStart = null
                 data.policyNoEnd = null
@@ -332,13 +345,24 @@ const CreateBillAdvisor = () => {
                         <span class="text-danger"> *</span>
                     </div>
                     <div class="col-2 ">
-                        <div class="input-group mb-3">
-                            <select name="agentCode" required class="form-control" value={filterData.agentCode} onChange={handleChange} >
+                        
+                            {/* <select name="agentCode" required class="form-control" value={filterData.agentCode} onChange={handleChange} >
                                 <option value=""  disabled selected hidden>รหัสผู้แนะนำ</option>
                                 {agentDD}
-                            </select>
-                          
-                        </div>
+                            </select> */}
+
+                            <Select
+                                // styles={customStyles}
+                                class="form-control"
+                                name={`agentCode`}
+                                onChange={(e) => setFilterData((prevState) => ({
+                                    ...prevState,
+                                    agentCode: e.value,
+                                  }))}
+                                options={agentDD}
+
+                            />
+                    
 
 
                     </div>
@@ -492,7 +516,7 @@ const CreateBillAdvisor = () => {
 
                             <th scope="col">รหัสบริษัทประกัน</th>
                             <th scope="col">รหัสผู้แนะนำ</th>
-                            <th scope="col">Duedate</th>
+                            <th scope="col">Due date</th>
 
                             <th scope="col">idผู้อาประกัน</th>
                             <th scope="col">ชื่อผู้เอาประกัน</th>
@@ -522,14 +546,14 @@ const CreateBillAdvisor = () => {
                     <tbody>
                         {policiesData.map((ele, i) => {
                             return (<tr>
-                                <th scope="row"><input type="checkbox" name="select" checked={ele.select} id={i} onClick={changestatementtype} />{i + 1}</th>
+                                <th scope="row" style={{'text-align': 'center'}}><input type="checkbox" name="select" checked={ele.select} id={i} onClick={changestatementtype} />{i + 1}</th>
                                 <td>{ele.policyNo}</td>
                                 <td>{ele.endorseNo}</td>
                                 <td>{ele.invoiceNo}</td>
                                 <td>{ele.taxinvoiceNo}</td>
                                 <td>{ele.seqNo}</td>
 
-                                <td>{ele.insurerCode}</td>
+                                <td style={{'text-align': 'center'}} >{ele.insurerCode}</td>
                                 <td>{ele.agentCode}</td>
                                 <td>{ele.dueDate}</td>
 

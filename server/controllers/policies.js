@@ -1105,16 +1105,19 @@ const draftPolicyList = async (req, res) => {
 
       //insert policy
       await sequelize.query(
-        'insert into static_data."Policies" ("applicationNo","insureeCode","insurerCode","agentCode","agentCode2","insureID","actDate", "expDate" ,grossprem, duty, tax, totalprem, ' +
-        'commin_rate, commin_amt, ovin_rate, ovin_amt, commin_taxamt, ovin_taxamt, commout_rate, commout_amt, ovout_rate, ovout_amt, createusercode, "itemList","status", ' +
-        'commout1_rate, commout1_amt, ovout1_rate, ovout1_amt, commout2_rate, commout2_amt, ovout2_rate, ovout2_amt, netgrossprem, specdiscrate, specdiscamt, cover_amt, withheld) ' +
-        // 'values (:policyNo, (select "insureeCode" from static_data."Insurees" where "entityID" = :entityInsuree), '+
-        'values ( :applicationNo, :insureeCode, ' +
-        '(select "insurerCode" from static_data."Insurers" where "insurerCode" = :insurerCode and lastversion =\'Y\'), ' +
-        ':agentCode, :agentCode2, (select "id" from static_data."InsureTypes" where "class" = :class and  "subClass" = :subClass ), ' +
-        ':actDate, :expDate, :grossprem, :duty, :tax, :totalprem, ' +
-        ':commin_rate, :commin_amt, :ovin_rate, :ovin_amt, :commin_taxamt, :ovin_taxamt, :commout_rate, :commout_amt, :ovout_rate, :ovout_amt, :createusercode, :itemList ,\'I\', ' +
-        ' :commout1_rate, :commout1_amt, :ovout1_rate, :ovout1_amt,  :commout2_rate, :commout2_amt, :ovout2_rate, :ovout2_amt, :netgrossprem,  :specdiscrate, :specdiscamt, :cover_amt, :withheld )',
+       ` insert into static_data."Policies" ("applicationNo","insureeCode","insurerCode","agentCode","agentCode2","insureID","actDate", "expDate" ,grossprem, duty, tax, totalprem, 
+        commin_rate, commin_amt, ovin_rate, ovin_amt, commin_taxamt, ovin_taxamt, commout_rate, commout_amt, ovout_rate, ovout_amt, createusercode, "itemList","status", 
+        commout1_rate, commout1_amt, ovout1_rate, ovout1_amt, commout2_rate, commout2_amt, ovout2_rate, ovout2_amt, netgrossprem, specdiscrate, specdiscamt, cover_amt, withheld,
+        dueDateInsurer, dueDateAgent) 
+        -- 'values (:policyNo, (select "insureeCode" from static_data."Insurees" where "entityID" = :entityInsuree), '+
+        values ( :applicationNo, :insureeCode, 
+        (select "insurerCode" from static_data."Insurers" where "insurerCode" = :insurerCode and lastversion =\'Y\'), 
+        :agentCode, :agentCode2, (select "id" from static_data."InsureTypes" where "class" = :class and  "subClass" = :subClass ), 
+        :actDate, :expDate, :grossprem, :duty, :tax, :totalprem, 
+        :commin_rate, :commin_amt, :ovin_rate, :ovin_amt, :commin_taxamt, :ovin_taxamt, :commout_rate, :commout_amt, :ovout_rate, :ovout_amt, :createusercode, :itemList ,\'I\', 
+        :commout1_rate, :commout1_amt, :ovout1_rate, :ovout1_amt,  :commout2_rate, :commout2_amt, :ovout2_rate, :ovout2_amt, :netgrossprem,  :specdiscrate, :specdiscamt, :cover_amt, :withheld,
+        :dueDateInsurer, :dueDateAgent )`
+        ,
         {
           replacements: {
             applicationNo: req.body[i].applicationNo,
@@ -1157,7 +1160,9 @@ const draftPolicyList = async (req, res) => {
             cover_amt:req.body[i][`cover_amt`],
             createusercode: usercode,
             itemList: cars[0].id,
-            withheld: req.body[i].withheld
+            withheld: req.body[i].withheld,
+            dueDateInsurer:req.body[i].dueDateInsurer,
+            dueDateAgent: req.body[i].dueDateAgent,
             
           },
           transaction: t,
@@ -1618,6 +1623,138 @@ if (policy.installment.insurer.length === 0 ) {
  return {insurer :arrIns , advisor:arrAds}
  
 }
+
+// edit for status = I
+const savechangPolicy = async (req, res) => {
+  const jwt = req.headers.authorization.split(' ')[1];
+  const usercode = decode(jwt).USERNAME;
+  const appNo = []
+  for (let i = 0; i < req.body.length; i++) {
+    const t = await sequelize.transaction();
+
+    try {
+    if (!req.body[i].installment) {
+      req.body[i].policyType = 'F'
+    }else{
+
+     if(req.body[i].installment.advisor.length === 0 && req.body[i].installment.insurer.length === 0)
+     {
+      req.body[i].policyType = 'F'
+     }else{req.body[i].policyType = 'S'}
+    }
+
+     //cal withheld 1% 
+     const insuree = await sequelize.query(
+      `select * from static_data."Entities" e 
+      join static_data."Insurees" i on i."entityID" = e.id
+      where i."insureeCode" = :insureeCode
+      and e.lastversion = 'Y' `,
+      {
+        replacements: {
+          insureeCode: req.body[i].insureeCode,
+        },
+        transaction: t ,
+        type: QueryTypes.SELECT
+      }
+    )
+    req.body[i].personType = insuree[0].personType.trim()
+     if (req.body[i].personType === 'O') {
+      req.body[i].withheld = Number(((req.body[i].netgrossprem +req.body[i].duty) * withheld).toFixed(2))
+    }else{
+      req.body[i].withheld
+    }
+
+      //update policy
+      const policy = await sequelize.query(
+       `update static_data."Policies" 
+       SET "policyNo" = :policyNo,  grossprem = :grossprem,  netgrossprem = :netgrossprem, specdiscrate = :specdiscrate, specdiscamt = :specdiscamt, duty = :duty, tax = :tax, totalprem = :totalprem, 
+       commin_rate = :commin_rate, commin_amt = :commin_amt, ovin_rate = :ovin_rate, ovin_amt = :ovin_amt, commin_taxamt = :commin_taxamt, 
+       ovin_taxamt = :ovin_taxamt, commout_rate = :commout_rate, commout_amt = :commout_amt, ovout_rate = :ovout_rate, ovout_amt = :ovout_amt, 
+      "policyDate" = :policyDate, "status" = 'A', commout1_rate = :commout1_rate, commout1_amt = :commout1_amt, ovout1_rate = :ovout1_rate, 
+      ovout1_amt = :ovout1_amt, commout2_rate = :commout2_rate, commout2_amt = :commout2_amt, ovout2_rate = :ovout2_rate, ovout2_amt = :ovout2_amt,
+      "seqNoins" = :seqNoins, "seqNoagt" = :seqNoagt, "issueDate" = :issueDate , "policyType" = :policyType, "cover_amt" = :cover_amt, "withheld" = :withheld,
+       "invoiceNo" = :invoiceNo, "taxInvoiceNo" = :taxInvoiceNo
+      WHERE "applicationNo" = :applicationNo and "status" = 'I' Returning id`,
+        {
+          replacements: {
+            policyNo: req.body[i].policyNo,
+            applicationNo: req.body[i].applicationNo,
+            seqNoins: req.body[i].seqNoins,
+            seqNoagt: req.body[i].seqNoagt,
+            grossprem: req.body[i].grossprem,
+            netgrossprem: req.body[i].netgrossprem,
+            duty: req.body[i].duty,
+            tax: req.body[i].tax,
+            totalprem: req.body[i].totalprem,
+            specdiscrate: req.body[i][`specdiscrate`],
+            specdiscamt: req.body[i][`specdiscamt`],
+            commin_rate: req.body[i][`commin_rate`],
+            commin_amt: req.body[i][`commin_amt`],
+            ovin_rate: req.body[i][`ovin_rate`],
+            ovin_amt: req.body[i][`ovin_amt`],
+            commin_taxamt: req.body[i][`commin_taxamt`],
+            ovin_taxamt: req.body[i][`ovin_taxamt`],
+            commout_rate: req.body[i][`commout_rate`],
+            commout_amt: req.body[i][`commout_amt`],
+            ovout_rate: req.body[i][`ovout_rate`],
+            ovout_amt: req.body[i][`ovout_amt`],
+            commout1_rate: req.body[i][`commout1_rate`],
+            commout1_amt: req.body[i][`commout1_amt`],
+            ovout1_rate: req.body[i][`ovout1_rate`],
+            ovout1_amt: req.body[i][`ovout1_amt`],
+            commout2_rate: req.body[i][`commout2_rate`],
+            commout2_amt: req.body[i][`commout2_amt`],
+            ovout2_rate: req.body[i][`ovout2_rate`],
+            ovout2_amt: req.body[i][`ovout2_amt`],
+            issueDate:  req.body[i][`issueDate`],
+            policyType:  req.body[i][`policyType`],
+            cover_amt: req.body[i][`cover_amt`],
+            policyDate:  new Date().toJSON().slice(0, 10),
+            withheld : req.body[i]['withheld'],
+            invoiceNo : req.body[i]['invoiceNo'],
+            taxInvoiceNo : req.body[i]['taxInvoiceNo'],
+            
+          },
+          transaction: t ,
+          type: QueryTypes.UPDATE
+        }
+      )
+    console.log(policy[0][0].id);
+    //insert jupgr
+    req.body[i].polid = policy[0][0].id
+//check installment 
+if (!req.body[i].installment) {
+  req.body[i].installment = {advisor:[], insurer:[]}
+}
+
+    await createjupgr(req.body[i],t,usercode)
+    
+    //insert transaction 
+    await createTransection(req.body[i],t)
+    // await createTransection(req.body[i],t)
+
+    // insert  jugltx table -> ลงผังบัญชี
+    await account.insertjugltx('POLICY',req.body[i].policyNo,t )
+
+    await t.commit();
+    // If the execution reaches this line, an error was thrown.
+    // We rollback the transaction.
+  } catch (error) {
+    console.log(error);
+    await t.rollback();
+    await res.status(500).json(error);
+    return
+  }
+  
+}
+await res.json({ status: 'success' })
+    
+
+
+  
+
+
+};
 
 module.exports = {
 

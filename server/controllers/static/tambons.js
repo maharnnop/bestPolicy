@@ -40,7 +40,7 @@ const showAllinAmphur = (req, res) => {
 
 const showAllinAmphurname = (req,res)=>{
   sequelize.query(
-    'select * from static_data."Tambons" t join static_data."Amphurs" a on a.amphurid = t.amphurid where a.t_amphurname = :amphurname  order by ',
+    'select * from static_data."Tambons" t join static_data."Amphurs" a on a.amphurid = t.amphurid where a.t_amphurname = :amphurname  order by t.t_tambonname',
         {
           replacements: {
             amphurname:req.body.amphurname,

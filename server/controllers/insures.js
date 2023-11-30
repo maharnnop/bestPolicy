@@ -104,12 +104,19 @@ const newCommOVIn = (req, res) => {
   };
   const getCommOV = async (req, res) => {
     const records = await sequelize.query(
-      'select * FROM static_data."CommOVOuts" comout ' +
-      'JOIN static_data."CommOVIns" comin ' +
-      'ON comin."insurerCode" = comout."insurerCode" and comin."insureID" = comout."insureID" ' +
-      'where comout."agentCode" = :agentcode ' +
-      'and comout."insureID" = (select "id" from static_data."InsureTypes" where "class" = :class and  "subClass" = :subClass) '+
-      'and comout."insurerCode" = :insurerCode',
+      `select comout.*, comin.* ,
+      a."premCreditT" as  "creditTAgent", a."premCreditUnit" as  "creditUAgent" ,
+      i."premCreditT" as  "creditTInsurer", i."premCreditUnit" as  "creditUInsurer" 
+      FROM static_data."CommOVOuts" comout 
+      JOIN static_data."CommOVIns" comin ON comin."insurerCode" = comout."insurerCode" and comin."insureID" = comout."insureID"
+      left join static_data."Insurers" i on i."insurerCode" = comout."insurerCode" and i.lastversion = 'Y'
+      left join static_data."Agents" a on a."agentCode" = comout."agentCode" and a.lastversion = 'Y'
+      where comout."agentCode" = :agentcode 
+      and comout."insureID" = (select "id" from static_data."InsureTypes" where "class" = :class and  "subClass" = :subClass) 
+      and comout."insurerCode" = :insurerCode 
+      
+      
+      `,
       {
         replacements: {
           agentcode: req.body.agentCode,

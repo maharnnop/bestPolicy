@@ -44,11 +44,24 @@ const PolicyCard = (props) => {
   const submitFilter = (e) =>{
     e.preventDefault();
     axios.post(url + "/persons/findagent",filterData,headers)
-          .then((agents) => {    
+          .then((agents) => {  
+            data =   agents.data.map(ele =>{
+              let duedateA = new Date()
+              let duedateI = new Date()
+              if (ele.creditUAgent === "D") {
+                duedateA.setDate(duedateA.getDate + 30)
+              }else if (ele.creditUAgent === "M") {
+                duedateA.setMonth(duedateA.getMonth + ele.creditTAgent)
+              }
+              ele.dueDateAgent = duedateA
+              ele.dueDateInsurer = duedateI
+              return ele 
+            })
             setAgentList(agents.data)
             if (agents.data.length === 0) {
               alert('ไม่พบผู้แนะนำ สำหรับกรมธรรม์ ตามเงื่อนไข class/subclass/บริษัทประกันนี้')
             }
+            console.log(data);
           })
           .catch((err) => { 
             alert(err.data)

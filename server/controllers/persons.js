@@ -346,17 +346,21 @@ const findAgent = async (req, res) =>{
     const agents = await sequelize.query(
       ` select a."agentCode" ,
       (case when e."personType" = 'O' then t."TITLETHAIBEGIN"||' '||e."t_ogName" else t."TITLETHAIBEGIN"||' '||e."t_firstName"||' '||e."t_lastName"  end) as "fullName" ,
-      e."personType",co."rateComOut", co."rateOVOut_1" , ci."rateComIn", ci."rateOVIn_1" 
+      e."personType",co."rateComOut", co."rateOVOut_1" , ci."rateComIn", ci."rateOVIn_1",
+      a."premCreditT" as  "creditTAgent", a."premCreditUnit" as  "creditUAgent" ,
+      ins."premCreditT" as  "creditTInsurer", ins."premCreditUnit" as  "creditUInsurer" 
       from static_data."Agents" a 
       join static_data."Entities" e on a."entityID"  = e.id 
       join static_data."Titles" t on t."TITLEID"  = e."titleID" 
       join static_data."CommOVOuts" co on a."agentCode" = co."agentCode"
       join static_data."CommOVIns" ci on ci."insurerCode" = co."insurerCode" and ci."insureID" = co."insureID"
+      left join static_data."Insurers" ins on ins."insurerCode" = co."insurerCode"
       where co."insurerCode" = :insurerCode
       and co."insureID" = (select id from static_data."InsureTypes" it where it."class" = :class and it."subClass" = :subClass )
       and co.lastversion  = 'Y'
       and ci.lastversion  ='Y'
       and a.lastversion = 'Y'
+      and ins.lastversion = 'Y'
       ${cond} `,
       {
         replacements: {
