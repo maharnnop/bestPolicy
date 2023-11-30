@@ -120,11 +120,14 @@ const findPolicyByPreminDue = async (req,res) => {
       (select "t_firstName"||' '||"t_lastName"  as insureeName from static_data."Entities" where id =
       (select "entityID" from static_data."Insurees" where "insureeCode" = p."insureeCode" ) ) as insureeName , 
      
-      j.polid, (select "licenseNo" from static_data."Motors" where id = p."itemList") , (select  "chassisNo" from static_data."Motors" where id = p."itemList"), j.netgrossprem, j.duty, j.tax, j.totalprem, j.commout_rate,
-      j.commout_amt, j.ovout_rate, j.ovout_amt, t.netflag, t.remainamt
+      j.polid, (select "licenseNo" from static_data."Motors" where id = p."itemList") , (select  "chassisNo" from static_data."Motors" where id = p."itemList"), 
+      j.grossprem, j.specdiscrate, j.specdiscamt, j.netgrossprem, j.duty, j.tax, j.totalprem, j.commout_rate,
+      j.commout_amt, j.ovout_rate, j.ovout_amt, t.netflag, t.remainamt, (case when a."stamentType" = 'Net' then true else false end) as "statementtype",
+      true as "select"
       from static_data."Transactions" t 
       join static_data.b_jupgrs j on t.polid = j.polid and t."seqNo" = j."seqNo" 
       join static_data."Policies" p on p.id = j.polid
+      left join static_data."Agents" a on a."agentCode" = t."mainaccountcode"
      
       where "transType" = 'PREM-IN' 
       and txtype2 = '1' and rprefdate isnull 

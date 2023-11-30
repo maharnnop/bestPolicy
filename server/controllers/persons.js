@@ -112,7 +112,8 @@ const newUser = (req, res) => {
 // get insurerall
 const getInsurerAll = (req, res) => {
   sequelize.query(
-    `select *,(t."TITLETHAIBEGIN" ||' '|| e."t_ogName"||' '||t."TITLETHAIEND") as fullname FROM static_data."Insurers" ins
+    `select *,(t."TITLETHAIBEGIN" ||' '|| e."t_ogName"||' '||t."TITLETHAIEND") as fullname , ins.id as id
+    FROM static_data."Insurers" ins
      JOIN static_data."Entities" e ON ins."entityID" = e."id"
      join static_data."Titles" t on e."titleID" = t."TITLEID" 
      where ins.lastversion ='Y';`,

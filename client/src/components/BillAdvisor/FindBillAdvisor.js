@@ -127,7 +127,20 @@ const FindBillAdvisor = () => {
         e.preventDefault();
         setPoliciesData([])
         console.log(filterData);
-        const data = filterData
+        const data = {
+            "insurerId": filterData.insurerId,
+            "agentId":filterData.agentId,
+            "billadvisorno": filterData.billadvisorno,
+            "billdate": filterData.billdate
+
+        }
+        const d = new Date();
+        // console.log(d.getVarDate());
+        data.billdate = data.billdate.toLocaleDateString('en-US', {
+            year: 'numeric',
+            month: '2-digit',
+            day: '2-digit'
+          });
         if (document.getElementsByName("insurerIdCB")[0].checked) {
             data.insurerId = null
          }
@@ -193,13 +206,13 @@ const FindBillAdvisor = () => {
                     </div>
                     <div class="col-2">
                         <label class="col-form-label">รหัสบริษัทประกัน</label>
-
+                        
                     </div>
                     <div class="col-2 ">
                         <div class="input-group mb-3">
                             {/* <input type="text" class="form-control" placeholder="รหัสบริษัทประกัน" name="insurerCode" onChange={handleChange} /> */}
-                            <select  name="insurerId" class="form-control" onChange={handleChange} >
-                                <option  disabled selected hidden>รหัสบริษัทประกัน</option>
+                            <select  name="insurerId"  class="form-control" onChange={handleChange} >
+                                <option value="" disabled selected hidden>รหัสบริษัทประกัน</option>
                                 {insurerDD}
                             </select>
 
@@ -224,11 +237,11 @@ const FindBillAdvisor = () => {
                     </div>
                     <div class="col-2">
                         <label class="col-form-label">รหัสผู้แนะนำ</label>
-
+                        
                     </div>
                     <div class="col-2 ">
                         <div class="input-group mb-3">
-                            <select  name="agentId" class="form-control" onChange={handleChange} >
+                            <select  name="agentId"  class="form-control" onChange={handleChange} >
                                 <option value="" disabled selected hidden>รหัสผู้แนะนำ</option>
                                 {agentDD}
                             </select>
@@ -276,7 +289,7 @@ const FindBillAdvisor = () => {
                     </div>
                     <div class="col-2">
                         <label class="col-form-label">billdate</label>
-
+                        <span class="text-danger"> *</span>
                     </div>
                     <div class="col-2 ">
 
@@ -285,6 +298,7 @@ const FindBillAdvisor = () => {
                             <DatePicker
                             style={{textAlign: 'center'}}
                             showIcon
+                            required
                             className="form-control"
                             todayButton="Vandaag"
                             // isClearable

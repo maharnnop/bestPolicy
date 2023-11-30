@@ -581,7 +581,10 @@ const handleClose = (e) => {
         let taxseq = parseFloat((tax * (premperseq + dutyseq)).toFixed(2))
 
         //cal withheld
-        let withheldseq = parseFloat((withheld * (premperseq + dutyseq)).toFixed(2))
+        let withheldseq = 0 
+         if (formData.witheld > 0) {
+          withheldseq = parseFloat((withheld * (premperseq + dutyseq)).toFixed(2))  
+        }
 
         // cal duedate
         let seqDueDate 
@@ -592,7 +595,7 @@ const handleClose = (e) => {
         }else if (i === 1 ){
           seqDueDate = dueDate.setMonth(dueDate.getMonth())
         }
-
+        console.log(seqDueDate);
         //cal comm-ov in
         let comminseq = parseFloat((formData.commin_rate * premperseq / 100).toFixed(2))
         let ovinseq = parseFloat((formData.ovin_rate * premperseq / 100).toFixed(2))
@@ -602,7 +605,7 @@ const handleClose = (e) => {
           duty: dutyseq,
           totalprem: parseFloat((premperseq + taxseq + dutyseq).toFixed(2)),
           // dueDate: dueDate.toISOString().split('T')[0],
-          dueDate: seqDueDate,
+          dueDate: new Date(seqDueDate),
           commin_amt: comminseq,
           commin_taxamt: parseFloat((comminseq * tax).toFixed(2)),
           ovin_amt: ovinseq,
@@ -648,7 +651,10 @@ const handleClose = (e) => {
         let taxseq = parseFloat((tax * (premperseq + dutyseq)).toFixed(2))
 
         //cal withheld
-        let withheldseq = parseFloat((withheld * (premperseq + dutyseq)).toFixed(2))
+        let withheldseq = 0 
+         if (formData.witheld > 0) {
+          withheldseq = parseFloat((withheld * (premperseq + dutyseq)).toFixed(2))  
+        }
 
         // cal duedate
         console.log(seqNoagttype === 'M');
@@ -671,7 +677,7 @@ const handleClose = (e) => {
           duty: dutyseq,
           totalprem: premperseq + taxseq + dutyseq,
           // dueDate: dueDate.toISOString().split('T')[0],
-          dueDate: seqDueDate,
+          dueDate: new Date(seqDueDate),
           commin_amt: comminseq,
           commin_taxamt: comminseq * tax,
           ovin_amt: ovinseq,
@@ -683,7 +689,7 @@ const handleClose = (e) => {
         })
 
       }
-      console.log(arrI);
+      console.log(arrA);
     }
     setInstallment({ insurer: arrI, advisor: arrA })
   }

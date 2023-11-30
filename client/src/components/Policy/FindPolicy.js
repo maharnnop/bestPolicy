@@ -686,9 +686,16 @@ const FindPolicy = () => {
                             <th scope="col">ลำดับ</th>
                             <th scope="col">เลือก</th>
                             <th scope="col">แก้ไข</th>
-                            <th scope="col">บริษัทรับประกัน</th>
+                            
                             <th scope="col">เลขที่ใบคำขอ</th>
                             <th scope="col">เลขที่กรมธรรม์</th>
+                            <th scope="col">เลขที่สลักหลัง</th>
+                            <th scope="col">เลขที่ใบแจ้งหนี้</th>
+                            <th scope="col">เลขที่ใบกำกับภาษี</th>
+                            <th scope="col">ลำดับที่</th>
+                            <th scope="col">บริษัทรับประกัน</th>
+
+
                             <th scope="col">ผู้แนะนำ 1</th>
                             <th scope="col">ผู้แนะนำ 2</th>
                             <th scope="col">Class</th>
@@ -698,11 +705,13 @@ const FindPolicy = () => {
                             <th scope="col">ชื่อผู้เอาประกัน</th>
                             <th scope="col">เลขทะเบียนรถ</th>
                             <th scope="col">เลขตัวถังรถ</th>
-                            <th scope="col">เลขที่สลักหลัง</th>
-                            <th scope="col">seqno</th>
-                            <th scope="col">เลขที่ใบแจ้งหนี้</th>
-                            <th scope="col">เลขที่ใบกำกับภาษี</th>
-                            <th scope="col">เบี้ย</th>
+
+                            {/* <th scope="col">เบี้ย</th>
+                            <th scope="col">ส่วนลด Walkin</th>
+                            <th scope="col">จำนวนเงินส่วนลด</th> */}
+                            
+                           
+                            <th scope="col">เบี้ยสุทธิ</th>
                             <th scope="col">อากร</th>
                             <th scope="col">ภาษี</th>
                             <th scope="col">เบี้ยรวม</th>
@@ -724,10 +733,14 @@ const FindPolicy = () => {
                                 <td scope="row"><button type="button" class="btn btn-secondary " id={i} onClick={(e)=>editCard(e)} >Edit</button></td>
                                 </>
                                 : <><td></td> <td></td></>}
-        
-                                <td>{ele.insurerCode}</td>
                                 <td>{ele.applicationNo}</td>
                                 <td>{ele.policyNo}</td>
+                                <td>{ele.endorseNo}</td>
+                                <td>{ele.invoiceNo}</td>
+                                <td>{ele.taxInvoiceNo}</td>
+                                <td>{ele.seqNo}</td>
+                                <td>{ele.insurerCode}</td>
+                             
                                 <td>{ele.agentCode}</td>
                                 <td>{ele.agentCode2}</td>
                                 <td>{ele.class}</td>
@@ -737,10 +750,11 @@ const FindPolicy = () => {
                                 <td>{ele.fullName}</td>
                                 <td>{ele.licenseNo}</td>
                                 <td>{ele.chassisNo}</td>
-                                <td>{ele.endorseNo}</td>
-                                <td>{ele.seqNo}</td>
-                                <td>{ele.invoiceNo}</td>
-                                <td>{ele.taxInvoiceNo}</td>
+                               
+                                {/* <td>{ele.grossprem.toLocaleString(undefined, { minimumFractionDigits: 2 })}</td>
+                                <td>{ele.specdiscrate.toLocaleString(undefined, { minimumFractionDigits: 2 })}</td>
+                                <td>{ele.specdiscamt.toLocaleString(undefined, { minimumFractionDigits: 2 })}</td> */}
+                                
                                 <td>{ele.netgrossprem.toLocaleString(undefined, { minimumFractionDigits: 2 })}</td>
                                 <td>{ele.duty.toLocaleString(undefined, { minimumFractionDigits: 2 })}</td>
                                 <td>{ele.tax.toLocaleString(undefined, { minimumFractionDigits: 2 })}</td>

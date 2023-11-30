@@ -85,7 +85,7 @@ const login = (req,res)=>{
                         },
                         secretKey,
                         {
-                            expiresIn: "2 hours",
+                            expiresIn: "8 hours",
                         }
                         );
                         res.status(200).json({ jwt: token });   

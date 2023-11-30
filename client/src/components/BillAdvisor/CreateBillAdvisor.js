@@ -161,7 +161,7 @@ const CreateBillAdvisor = () => {
 
     const changestatementtype = (e) => {
         // e.preventDefault();
-        const array = policiesData
+        const array = policiesData.map((ele)=>ele)
         array[e.target.id] = { ...policiesData[e.target.id], [e.target.name]: e.target.checked }
         setPoliciesData(array)
         const array2 = billpremiumData
@@ -172,7 +172,7 @@ const CreateBillAdvisor = () => {
             array2[e.target.id] = array[e.target.id].totalprem
         }
         setBillpremiumData(array2)
-        console.log(array2);
+        console.log(array);
 
     };
 
@@ -294,13 +294,13 @@ const CreateBillAdvisor = () => {
                     </div>
                     <div class="col-2">
                         <label class="col-form-label">รหัสบริษัทประกัน</label>
-
+                        <span class="text-danger"> *</span>
                     </div>
                     <div class="col-2 ">
                         <div class="input-group mb-3">
                             {/* <input type="text" class="form-control" placeholder="รหัสบริษัทประกัน" name="insurerCode" onChange={handleChange} /> */}
-                            <select  name="insurerCode" class="form-control" onChange={handleChange} >
-                                <option value="" disabled selected hidden>รหัสบริษัทประกัน</option>
+                            <select  name="insurerCode" required class="form-control" onChange={handleChange} >
+                                <option value=""   disabled selected hidden>รหัสบริษัทประกัน</option>
                                 {insurerDD}
                             </select>
 
@@ -311,10 +311,10 @@ const CreateBillAdvisor = () => {
 
 
                     </div>
-                    <div className="col-1">
+                    {/* <div className="col-1">
                                 <input type="checkbox" name="insurerCodeCB" defaultChecked className="form-check-input"/>
                                 <label htmlFor="cashierReceiptCheckbox" className="form-check-label">&nbsp;ALL</label>
-                            </div>
+                            </div> */}
 
                     <div class="col align-self-end ">
                         <div class="input-group mb-3">
@@ -329,12 +329,12 @@ const CreateBillAdvisor = () => {
                     </div>
                     <div class="col-2">
                         <label class="col-form-label">รหัสผู้แนะนำ</label>
-
+                        <span class="text-danger"> *</span>
                     </div>
                     <div class="col-2 ">
                         <div class="input-group mb-3">
-                            <select name="agentCode" class="form-control" value={filterData.agentCode} onChange={handleChange} >
-                                <option value="" disabled selected hidden>รหัสผู้แนะนำ</option>
+                            <select name="agentCode" required class="form-control" value={filterData.agentCode} onChange={handleChange} >
+                                <option value=""  disabled selected hidden>รหัสผู้แนะนำ</option>
                                 {agentDD}
                             </select>
                           
@@ -342,10 +342,10 @@ const CreateBillAdvisor = () => {
 
 
                     </div>
-                    <div className="col-1">
+                    {/* <div className="col-1">
                                 <input type="checkbox" name="agentCodeCB" defaultChecked className="form-check-input"/>
                                 <label htmlFor="cashierReceiptCheckbox" className="form-check-label">&nbsp;ALL</label>
-                            </div>
+                            </div> */}
 
                 </div>
                 <div class="row">
@@ -354,7 +354,7 @@ const CreateBillAdvisor = () => {
                     </div>
                     <div class="col-2">
                         <label class="col-form-label">DueDate</label>
-
+                        <span class="text-danger"> *</span>
                     </div>
                     <div class="col-2 ">
 
@@ -483,7 +483,7 @@ const CreateBillAdvisor = () => {
                 <table class="table table-hover">
                     <thead>
                         <tr>
-                            <th scope="col"><input type="checkbox" name="select" onClick={selectAll} />select</th>
+                            <th scope="col">เลือก</th>
                             <th scope="col">เลขที่กรมธรรม์</th>
                             <th scope="col">เลขที่สลักหลัง</th>
                             <th scope="col">เลขที่ใบแจ้งหนี้</th>
@@ -500,6 +500,11 @@ const CreateBillAdvisor = () => {
                             <th scope="col">จังหวัดที่จดทะเบียน</th>
                             <th scope="col">เลขคัชซี</th>
                             
+                            {/* <th scope="col">เบี้ย</th>
+                            <th scope="col">ส่วนลด Walkin</th>
+                            <th scope="col">จำนวนเงินส่วนลด</th> */}
+                            
+
                             <th scope="col">เบี้ยสุทธิ</th>
                             <th scope="col">อากร</th>
                             <th scope="col">ภาษี</th>
@@ -517,7 +522,7 @@ const CreateBillAdvisor = () => {
                     <tbody>
                         {policiesData.map((ele, i) => {
                             return (<tr>
-                                <th scope="row"><input type="checkbox" name="select" id={i} onClick={changestatementtype} />{i + 1}</th>
+                                <th scope="row"><input type="checkbox" name="select" checked={ele.select} id={i} onClick={changestatementtype} />{i + 1}</th>
                                 <td>{ele.policyNo}</td>
                                 <td>{ele.endorseNo}</td>
                                 <td>{ele.invoiceNo}</td>
@@ -533,6 +538,11 @@ const CreateBillAdvisor = () => {
                                 <td>{ele.licenseNo}</td>
                                 <td>{ele.motorprovinceID}</td>
                                 <td>{ele.chassisNo}</td>
+
+                                {/* <td>{ele.grossprem.toLocaleString(undefined, { minimumFractionDigits: 2 })}</td>
+                                <td>{ele.specdiscrate.toLocaleString(undefined, { minimumFractionDigits: 2 })}</td>
+                                <td>{ele.specdiscamt.toLocaleString(undefined, { minimumFractionDigits: 2 })}</td> */}
+
                                 <td>{ele.netgrossprem.toLocaleString(undefined, { minimumFractionDigits: 2 })}</td>
                                 <td>{ele.duty.toLocaleString(undefined, { minimumFractionDigits: 2 })}</td>
                                 <td>{ele.tax.toLocaleString(undefined, { minimumFractionDigits: 2 })}</td>
@@ -542,7 +552,7 @@ const CreateBillAdvisor = () => {
                                 <td>{ele.commout_amt.toLocaleString(undefined, { minimumFractionDigits: 2 })}</td>
                                 <td>{ele.ovout_rate.toLocaleString(undefined, { minimumFractionDigits: 2 })}</td>
                                 <td>{ele.ovout_amt.toLocaleString(undefined, { minimumFractionDigits: 2 })}</td>
-                                <td><input type="checkbox" name="statementtype" id={i} onClick={changestatementtype} /></td>
+                                <td><input type="checkbox" name="statementtype" checked={ele.statementtype} id={i} onClick={changestatementtype} /></td>
                                 {/* <td><input type="number" disabled value={billpremiumData[i]} /></td> */}
                             </tr>)
 
