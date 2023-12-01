@@ -114,7 +114,8 @@ const newCommOVIn = (req, res) => {
       where comout."agentCode" = :agentcode 
       and comout."insureID" = (select "id" from static_data."InsureTypes" where "class" = :class and  "subClass" = :subClass) 
       and comout."insurerCode" = :insurerCode 
-      
+      and comout.lastversion = 'Y'
+      and comin.lastversion = 'Y'
       
       `,
       {

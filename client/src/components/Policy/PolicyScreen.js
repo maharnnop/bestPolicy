@@ -712,7 +712,101 @@ const PolicyScreen = (props) => {
 
 
   }
+  const getcommov2 = (name,value) => {
+    // e.preventDefault();
 
+    //check insurer class subclass 
+    if (!formData.class || !formData.subClass || !formData.insurerCode) {
+      alert('กรุณากรอกข้อมูล class/subclass/บริษัทประกัน ให้ครบถ้วน')
+      value = null
+      setFormData((prevState) => ({
+        ...prevState,
+        [name]: value,
+
+      }));
+      return
+    }
+
+    //get comm  ov setup
+    let i = 1
+    if (name === 'agentCode') {
+      i = 1
+      console.log(i);
+    } else if (name === 'agentCode2') {
+      i = 2
+      console.log(i);
+    }
+    axios
+      .post(url + "/insures/getcommov", { ...formData, agentCode: value }, headers)
+      .then((res) => {
+        console.log(res.data);
+        if (res.data.length > 0) {
+          if (i === 1) {
+            if (res.data[0].rateComIn < res.data[0].rateComOut + formData.commout2_rate || res.data[0].rateOVIn_1 < res.data[0].rateOVOut_1 + formData.ovout2_rate) {
+              alert("ค่า comm/ov out > comm/ov in")
+              value = null
+              setFormData((prevState) => ({
+                ...prevState,
+                [name]: value,
+
+              }));
+              return
+            } else {
+              const dueDateA = 
+
+              setFormData((prevState) => ({
+                ...prevState,
+                [name]: value,
+                [`commin_rate`]: res.data[0].rateComIn,
+                [`ovin_rate`]: res.data[0].rateOVIn_1,
+                [`commout${i}_rate`]: res.data[0].rateComOut,
+                [`ovout${i}_rate`]: res.data[0].rateOVOut_1,
+
+              }))
+            }
+          } else if (i === 2) {
+            if (res.data[0].rateComIn < res.data[0].rateComOut + formData.commout1_rate || res.data[0].rateOVIn_1 < res.data[0].rateOVOut_1 + formData.ovout1_rate) {
+              alert("ค่า comm/ov out > comm/ov in")
+              value = null
+              setFormData((prevState) => ({
+                ...prevState,
+                [name]: value,
+
+              }));
+              return
+            } else {
+              setFormData((prevState) => ({
+                ...prevState,
+                [name]: value,
+                [`commin_rate`]: res.data[0].rateComIn,
+                [`ovin_rate`]: res.data[0].rateOVIn_1,
+                [`commout${i}_rate`]: res.data[0].rateComOut,
+                [`ovout${i}_rate`]: res.data[0].rateOVOut_1,
+
+              }))
+            }
+          }
+
+        } else {
+          alert('ไม่พบข้อมูล Comm OV ของผู้แนะนำ ตามเงื่อนไข class/subclass/บริษัทประกัน นี้')
+          value = null
+          setFormData((prevState) => ({
+            ...prevState,
+            [name]: value,
+            [`commout${i}_rate`]: 0,
+            [`ovout${i}_rate`]: 0,
+
+          }));
+        }
+        setHidecard([false, 0])
+      })
+      .catch((err) => {
+        alert("Something went wrong, Try Again.");
+       
+      });
+
+
+  }
 
   const handleSubmit = async (e) => {
     const data = []
@@ -915,7 +1009,7 @@ const PolicyScreen = (props) => {
           <Modal.Title >ค้นหาผู้แนะนำ</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          {<ModalSearchAgent name={hidecard[1]} formData={formData} setFormData={handleChangeCard} />}
+          {<ModalSearchAgent name={hidecard[1]} formData={formData} setFormData={handleChangeCard} getcommov={getcommov2}/>}
         </Modal.Body>
 
       </Modal>
@@ -1092,7 +1186,8 @@ const PolicyScreen = (props) => {
               value={formData.agentCode}
               name={`agentCode`}
               onChange={handleChange}
-              onBlur={getcommov}
+              // onBlur={getcommov}
+              onBlur={(e)=>getcommov2(e.target.name,e.target.value)}
             />
             <div class="input-group-append">
               <button class="btn btn-primary" type="button" name="btn-agent1" onClick={(e) => editCard(e, 'agentCode')}><BiSearchAlt style={{ fontSize: "30px", color: "white" }} /></button>
@@ -1112,7 +1207,8 @@ const PolicyScreen = (props) => {
               name={`agentCode2`}
               onChange={handleChange}
               disabled={formData.agentCode === '' ? true : false}
-              onBlur={getcommov}
+              // onBlur={getcommov}
+              onBlur={(e)=>getcommov2(e.target.name,e.target.value)}
             />
             <div class="input-group-append">
               <button class="btn btn-primary" type="button" name="btn-agent2" onClick={(e) => editCard(e, "agentCode2")}><BiSearchAlt style={{ fontSize: "30px", color: "white" }} /></button>

@@ -204,15 +204,18 @@ const PolicyCard = (props) => {
           <tbody>
     {agentList.map((ele)=>{
        return <tr>
-            {name === 'agentCode' ? 
-            <td scope="col-1"><button className=" btn btn-primary"  
-            onClick={e=>props.setFormData(e,
+            {/* {name === 'agentCode' ? 
+            <td scope="col-1"><button className=" btn btn-primary"  onClick={e=>props.setFormData(e,
               {[name]:ele.agentCode, 
                 commout1_rate :ele.rateComOut, 
                 ovout1_rate : ele.rateOVOut_1,
                 commin_rate :ele.rateComIn,
                 ovin_rate : ele.rateOVIn_1,})}>เลือก</button></td>
-            :<td scope="col-1"><button className=" btn btn-primary"  onClick={e=>props.setFormData(e,{[name]:ele.agentCode, commout2_rate :ele.rateComOut, ovout2_rate : ele.rateOVOut_1})}>เลือก</button></td>}
+             <td scope="col-1"><button className=" btn btn-primary"  onClick={e=>props.getcommov(name,ele.agentCode)}>เลือก</button></td>
+            :
+            <td scope="col-1"><button className=" btn btn-primary"  onClick={e=>props.setFormData(e,{[name]:ele.agentCode, commout2_rate :ele.rateComOut, ovout2_rate : ele.rateOVOut_1})}>เลือก</button></td>
+            } */}
+             <td scope="col-1"><button className=" btn btn-primary"  onClick={e=>props.getcommov(name,ele.agentCode)}>เลือก</button></td>
             <td scope="col-1">{ele.agentCode}</td>
             <td scope="col-1">{ele.fullName}</td>
             <td scope="col-1">{ele.personType.trim() === 'P' ? 'บุคคล' :'นิติบุคคล'}</td>
