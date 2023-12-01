@@ -150,16 +150,25 @@ const findDataByBillAdvisoryNo = async (req, res) => {
     let insertQuery =''
     if (req.query.txtype === 'premin') {
         insertQuery = 
-        `SELECT *, (select "t_firstName"||' '||"t_lastName"  from static_data."Entities" e where e.id = a."entityID") as receivename 
-        FROM static_data.b_jabilladvisors b join static_data."Agents" A on b."advisorno" = A."id"  join static_data."Insurers" I on B."insurerno" = I."id" 
+        `SELECT *, 
+            (case when e."personType" = 'P' then ti."TITLETHAIBEGIN"||' '||e."t_firstName"||' '||e."t_lastName"||' '||ti."TITLETHAIEND" 
+            else ti."TITLETHAIBEGIN"||' '||e."t_ogName"||' '||ti."TITLETHAIEND" end )   as receivename 
+        FROM static_data.b_jabilladvisors b 
+        join static_data."Agents" A on b."advisorno" = A."id" 
+        join static_data."Insurers" I on B."insurerno" = I."id" 
+        left join static_data."Entities" e  on  e.id = a."entityID"
+        left join static_data."Titles" ti  on  ti."TITLEID" = e."titleID"
         WHERE 1=1 AND billadvisorno = :filter;`;    
     } else{
         insertQuery = 
-        `SELECT  (select "t_ogName"  from static_data."Entities" e where e.id = I."entityID") as receivename , 
-        (bj.commin + bj.ovin + bj.whtcommin + bj.whtovin) as amt  ,*
+        `SELECT   (case when e."personType" = 'P' then ti."TITLETHAIBEGIN"||' '||e."t_firstName"||' '||e."t_lastName"||' '||ti."TITLETHAIEND" 
+        else ti."TITLETHAIBEGIN"||' '||e."t_ogName"||' '||ti."TITLETHAIEND" end )   as receivename,  
+        (select (SUM(t.ovamt) - SUM(t.ovtaxamt) + SUM(t.ovamt) - SUM(t.ovtaxamt)) AS ovamt_sum from static_data."Transactions" t where t."premout-dfrpreferno" = bj.dfrpreferno and "transType" in ('OV-IN','COMM-IN')) as amt  ,*
         FROM static_data."Transactions" t   join static_data."Agents" A on t."agentCode" = A."agentCode"  
         join static_data."Insurers" I on t."insurerCode"  = I."insurerCode"  
-        join static_data.b_jaaraps bj on bj.dfrpreferno  = t.dfrpreferno 
+        join static_data.b_jaaraps bj on bj.dfrpreferno  = t.dfrpreferno
+        left join static_data."Entities" e  on  e.id = I."entityID"
+        left join static_data."Titles" ti  on  ti."TITLEID" = e."titleID"
         WHERE  bj.dfrpreferno  = :filter limit 1`
     }
     const schema = Joi.object({
@@ -202,7 +211,7 @@ const findbill = async (req, res) => {
         toDate,
         dfrpreferno,
     } = req.body; // Replace this with your state variables
-    transactionType = "PREM-IN"
+    // transactionType = "PREM-IN"
     let whereClauses = [];
 
     if (billadvisorno) whereClauses.push(`billadvisorno = :billadvisorno`);
@@ -210,9 +219,9 @@ const findbill = async (req, res) => {
     if (advisorcode) whereClauses.push(`advisorcode = :advisorcode`);
     if (refno) whereClauses.push(`refno = :refno`);
     if (cashierreceiveno) whereClauses.push(`cashierreceiveno = :cashierreceiveno`);
-    if (transactionType) whereClauses.push(`transactionType = :transactionType`);
-    if (fromDate) whereClauses.push(`fromDate = :fromDate`);
-    if (toDate) whereClauses.push(`toDate = :toDate`);
+    if (transactionType) whereClauses.push(`"transactiontype" = :transactionType`);
+    if (fromDate) whereClauses.push(`"createdAt" >= :fromDate`);
+    if (toDate) whereClauses.push(`"createdAt" <= :toDate`);
     if (dfrpreferno) whereClauses.push(`dfrpreferno = :dfrpreferno`);
 
     let whereClause = whereClauses.length ? ' WHERE ' + whereClauses.join(' AND ') : '';
@@ -365,10 +374,10 @@ const submitCashier = async (req, res) => {
 
     await t.commit();
     updateCashierReceiveNo (cashierreceiveno,req.body.billadvisorno)
-    console.log("Record inserted successfully");
+    console.log(`สร้างใบเสร็จรับเงินเลขที่ : ${cashierreceiveno} สำเร็จ`);
 
     //TABLE b_jugltx  
-    res.status(200).json(({}))
+    res.status(200).json(({CashierReceiveNo : cashierreceiveno}))
 
 } catch (error) {
     console.log(error);

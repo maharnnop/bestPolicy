@@ -97,18 +97,19 @@ const saveapcommin = async (e) => {
   await axios.post(url + "/araps/savearcommin", {master : filterData, trans : policiesData}, headers)
   .then((res) => {
     alert("save account recive successed!!!")
-    .catch((err)=>{ alert("Something went wrong, Try Again.");});
+   
     // window.location.reload(false);
-  });
+  }) .catch((err)=>{ alert("Something went wrong, Try Again.");});
 };
 
 const submitapcommin = async (e) => {
   console.log({master :  {...filterData}, trans : policiesData});
   await axios.post(url + "/araps/submitarcommin", {master :filterData, trans : policiesData}, headers).then((res) => {
-    alert("save account recive successed!!!")
-    .catch((err)=>{ alert("Something went wrong, Try Again.");});
-    // window.location.reload(false);
-  });
+    alert(res.data.msg)
+    
+    window.location.reload(false);
+  }).catch((err)=>{ alert("Something went wrong, Try Again.");});
+  // window.location.reload(false);;
 };
 
   return (
@@ -265,7 +266,7 @@ const submitapcommin = async (e) => {
       <div>
         <PremInTable cols={colsData} rows={policiesData} handleChange={handleChange}/>
         <button className="btn btn-primary">Export To Excel</button>
-        <button className="btn btn-warning" onClick={(e)=>saveapcommin(e)}>save</button>
+        {/* <button className="btn btn-warning" onClick={(e)=>saveapcommin(e)}>save</button> */}
         <button className="btn btn-success" onClick={(e)=>submitapcommin(e)}>submit</button>
       </div>
     </div>

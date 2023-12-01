@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams, useLocation } from "react-router-dom";
 import axios from "axios";
 import jwt_decode from "jwt-decode";
 import Modal from 'react-bootstrap/Modal';
@@ -33,7 +33,12 @@ const EditBillAdvisor = (props) => {
     const headers = {
     headers: { Authorization: `Bearer ${cookies["jwt"]}` }
 };
-    const params = useParams()
+    
+    const location = useLocation();
+   // Access query parameters
+  const queryParams = new URLSearchParams(location.search);
+  
+
     const url = window.globalConfig.BEST_POLICY_V1_BASE_URL;
     const wht = config.wht
     const navigate = useNavigate();
@@ -42,18 +47,21 @@ const EditBillAdvisor = (props) => {
     const [locationData, setLocationData] = useState({ entityID: null, locationType: 'A' });
 
     const [billpremiumData, setBillpremiumData] = useState([]);
+    const [billpremiumDataOld, setBillpremiumDataOld] = useState([]);
     const [hidecard, setHidecard] = useState([false, 0]);
     const [filterData, setFilterData] = useState(
         {
             "insurerCode": null,
-            "policyNoAll": true,
-            "policyNoStart": '000000',
-            "policyNoEnd": '0000000',
             "agentCode": null,
-            "billadvisorno":'B'+ Date.now(),
+            "dueDate": null,
+            "policyNoStart": null,
+            "policyNoEnd": null,
+            "createdDateStart": null,
+            "createdDateEnd": null,
 
         })
     const [policiesData, setPoliciesData] = useState([])
+    const [policiesDataOld, setPoliciesDataOld] = useState([])
     const [policiesRender, setPoliciesRender] = useState({
         net:{ no: 0, prem: 0, comm_out: 0, whtcom: 0, ov_out: 0, whtov: 0, },
         gross:{ no: 0, prem: 0 },
@@ -63,10 +71,11 @@ const EditBillAdvisor = (props) => {
     const [agentDD, setAgentDD] = useState([]);
 
     useEffect(() => {
-        console.log(params.billno);
+        const billno = queryParams.get('billno');
+
         // get pol in billno
         axios
-        .post(url + "/payments/findpolicybyBill",{billadvisorno: params.billno}, headers)
+        .post(url + "/payments/findpolicybyBill",{billadvisorno: billno}, headers)
         .then((res) => {
             console.log(res.data);
             if (res.status === 201) {
@@ -87,9 +96,11 @@ const EditBillAdvisor = (props) => {
                         arrPoldata.push({...res.data.data[i], 'select':true,'statementtype':false})
                     }
                 }
-                setPoliciesData(arrPoldata)
+                // setPoliciesData(arrPoldata)
+                setPoliciesDataOld(arrPoldata)
                 setFilterData({...filterData, insurerCode:res.data.data[0].insurerCode, agentCode:res.data.data[0].agentCode ,old_keyid:res.data.old_keyid})
                 setBillpremiumData(array)
+                setBillpremiumDataOld(array)
                 alert("found it") 
             }
         })
@@ -208,9 +219,27 @@ const EditBillAdvisor = (props) => {
     //for add new policy in bill
     const submitFilter = (e) => {
         e.preventDefault();
-        console.log(filterData);
+        let data = {
+            "insurerCode": filterData.insurerCode,
+            "agentCode": filterData.agentCode,
+            "dueDate": filterData.dueDate,
+            "policyNoStart": filterData.policyNoStart,
+            "policyNoEnd": filterData.policyNoEnd,
+            "createdDateStart": filterData.createdDateStart,
+            "createdDateEnd": filterData.createdDateEnd,
+     
+        }
+        if (document.getElementsByName("policyNoCB")[0].checked) {
+            data.policyNoStart = null
+            data.policyNoEnd = null
+        }
+        if (document.getElementsByName("createdDateCB")[0].checked) {
+            data.createdDateStart = null
+            data.createdDateEnd = null
+        }
+    console.log(data);
         axios
-            .post(url + "/payments/findpolicyinDue", filterData, headers)
+            .post(url + "/payments/findpolicyinDue", data, headers)
             .then((res) => {
                 if (res.status === 201) {
                     console.log(res.data);
@@ -218,8 +247,9 @@ const EditBillAdvisor = (props) => {
 
                 } else {
 
-                    const array = []
-                    const arrPoldata = policiesData
+                    const array = billpremiumDataOld.map((ele)=>ele)
+                    // const arrPoldata = policiesDataOld.map((ele)=>ele)
+                    const arrPoldata =[]
                     for (let i = 0; i < res.data.length; i++) {
                         // console.log(statementtypeData[i].statementtype == null? res.data[i].totalprem -res.data[i].commout_amt-res.data[i].ovout_amt: res.data[i].totalprem);
                         array.push(res.data[i].totalprem)
@@ -227,6 +257,7 @@ const EditBillAdvisor = (props) => {
                             arrPoldata.push(res.data[i])
                         
                     }
+                    
                     setPoliciesData(arrPoldata)
                     setFilterData({...filterData, insurerCode:res.data[0].insurerCode, agentCode:res.data[0].agentCode })
                     setBillpremiumData(array)
@@ -289,13 +320,13 @@ const EditBillAdvisor = (props) => {
             {/* <BackdropBox1> */}
             <form className="container-fluid " onSubmit={submitFilter}>
                 {/* insurer table */}
-                <h1 className="text-center">แก้ไขรายการ billadvisor</h1>
+                <h1 className="text-center">แก้ไขรายการ ใบวางบิล {queryParams.get('billno')}</h1>
                 <div class="row">
                     <div class="col-1">
 
                     </div>
                     <div class="col-2">
-                        <label class="col-form-label">รหัส Insurer</label>
+                        <label class="col-form-label">รหัสบริษัทประกัน</label>
 
                     </div>
                     <div class="col-2 ">
@@ -306,14 +337,7 @@ const EditBillAdvisor = (props) => {
                                 {insurerDD}
                             </select>
 
-                            <div class="input-group-append">
-                                <div class="input-group-text ">
-                                    <div class="form-check checkbox-xl">
-                                        <input class="form-check-input" type="checkbox" value="" onChange={handleChange} />
-                                        <label class="form-check-label" >All</label>
-                                    </div>
-                                </div>
-                            </div>
+                         
 
 
                         </div>
@@ -332,7 +356,7 @@ const EditBillAdvisor = (props) => {
 
                     </div>
                     <div class="col-2">
-                        <label class="col-form-label">รหัส Advisor</label>
+                        <label class="col-form-label">รหัสผู้แนะนำ</label>
 
                     </div>
                     <div class="col-2 ">
@@ -341,14 +365,7 @@ const EditBillAdvisor = (props) => {
                                 <option value="" disabled selected hidden>{filterData.agentCode}</option>
                                 {agentDD}
                             </select>
-                            <div class="input-group-append">
-                                <div class="input-group-text ">
-                                    <div class="form-check checkbox-xl">
-                                        <input class="form-check-input" type="checkbox" value="" />
-                                        <label class="form-check-label" >All</label>
-                                    </div>
-                                </div>
-                            </div>
+                          
 
 
                         </div>
@@ -362,7 +379,7 @@ const EditBillAdvisor = (props) => {
 
                     </div>
                     <div class="col-2">
-                        <label class="col-form-label">Duedate</label>
+                        <label class="col-form-label">Due Date</label>
 
                     </div>
                     <div class="col-2 ">
@@ -397,11 +414,11 @@ const EditBillAdvisor = (props) => {
 
                     </div>
                     <div class="col-1">
-                        <label class="col-form-label">Policy No.</label>
+                        <label class="col-form-label">เลขที่กรมธรรม์</label>
 
                     </div>
                     <div class="col-1">
-                        <label class="col-form-label">form</label>
+                        <label class="col-form-label">จาก</label>
                     </div>
                     <div class="col-2 ">
                         <div class="input-group mb-3">
@@ -410,170 +427,195 @@ const EditBillAdvisor = (props) => {
                         </div>
                     </div>
                     <div class="col-1">
-                        <label class="col-form-label">to</label>
+                        <label class="col-form-label">ถึง</label>
                     </div>
                     <div class="col-2 ">
                         <div class="input-group mb-3">
                             <input type="text" class="form-control" name="policyNoEnd" onChange={handleChange} />
-                            <div class="input-group-append">
-                                <div class="input-group-text ">
-                                    <div class="form-check checkbox-xl">
-                                        <input class="form-check-input" type="checkbox" name="policyNoAll" onClick={(e) => {
-                                            setFilterData((prevState) => ({
-                                                ...prevState,
-                                                policyNoAll: e.target.checked,
-                                            }))
-                                        }} />
-                                        <label class="form-check-label" >All</label>
-                                    </div>
-                                </div>
-                            </div>
+                            
                         </div>
                     </div>
+                    <div className="col-1">
+                                <input type="checkbox" name="policyNoCB"  className="form-check-input"/>
+                                <label htmlFor="cashierReceiptCheckbox" className="form-check-label">&nbsp;ALL</label>
+                            </div>
 
 
                 </div>
 
+                
                 <div class="row">
                     <div class="col-1">
 
                     </div>
                     <div class="col-1">
-                        <label class="col-form-label">Endorse No.</label>
+                        <label class="col-form-label">วันที่บันทึกกรมธรรม์</label>
 
                     </div>
                     <div class="col-1">
-                        <label class="col-form-label">form</label>
+                        <label class="col-form-label">จากวันที่</label>
                     </div>
                     <div class="col-2 ">
                         <div class="input-group mb-3">
-                            <input type="text" class="form-control " name="policyNoStart" onChange={handleChange} />
-
+                            {/* <input type="text" class="form-control " name="createdDateStart" onChange={handleChange} /> */}
+                            <DatePicker
+                            showIcon
+                            className="form-control"
+                            todayButton="Vandaag"
+                            // isClearable
+                            showYearDropdown
+                            dateFormat="dd/MM/yyyy"
+                            dropdownMode="select"
+                            selected={filterData.createdDateStart}
+                            onChange={(date) => setFilterData((prevState) => ({
+                                ...prevState,
+                                createdDateStart: date,
+                            }))}
+                            />
                         </div>
                     </div>
                     <div class="col-1">
-                        <label class="col-form-label">to</label>
+                        <label class="col-form-label">ถึง</label>
                     </div>
                     <div class="col-2 ">
                         <div class="input-group mb-3">
-                            <input type="text" class="form-control" name="policyNoEnd" onChange={handleChange} />
-                            <div class="input-group-append">
-                                <div class="input-group-text ">
-                                    <div class="form-check checkbox-xl">
-                                        <input class="form-check-input" type="checkbox" name="policyNoAll" onClick={(e) => {
-                                            setFilterData((prevState) => ({
-                                                ...prevState,
-                                                policyNoAll: e.target.checked,
-                                            }))
-                                        }} />
-                                        <label class="form-check-label" >All</label>
-                                    </div>
-                                </div>
+                            {/* <input type="text" class="form-control" name="createdDateEnd" onChange={handleChange} /> */}
+                            <DatePicker
+                            showIcon
+                            className="form-control"
+                            todayButton="Vandaag"
+                            // isClearable
+                            showYearDropdown
+                            dateFormat="dd/MM/yyyy"
+                            dropdownMode="select"
+                            selected={filterData.createdDateEnd}
+                            onChange={(date) => setFilterData((prevState) => ({
+                                ...prevState,
+                                createdDateEnd: date,
+                            }))}
+                            />
+                           
+                        </div>
+                    </div>
+                    <div className="col-1">
+                                <input type="checkbox" name="createdDateCB"  className="form-check-input"/>
+                                <label htmlFor="cashierReceiptCheckbox" className="form-check-label">&nbsp;ALL</label>
                             </div>
-                        </div>
-                    </div>
-
-
-                </div>
-
-                <div class="row">
-                    <div class="col-1">
-
-                    </div>
-                    <div class="col-1">
-                        <label class="col-form-label">application No.</label>
-
-                    </div>
-                    <div class="col-1">
-                        <label class="col-form-label">form</label>
-                    </div>
-                    <div class="col-2 ">
-                        <div class="input-group mb-3">
-                            <input type="text" class="form-control " name="policyNoStart" onChange={handleChange} />
-
-                        </div>
-                    </div>
-                    <div class="col-1">
-                        <label class="col-form-label">to</label>
-                    </div>
-                    <div class="col-2 ">
-                        <div class="input-group mb-3">
-                            <input type="text" class="form-control" name="policyNoEnd" onChange={handleChange} />
-                            <div class="input-group-append">
-                                <div class="input-group-text ">
-                                    <div class="form-check checkbox-xl">
-                                        <input class="form-check-input" type="checkbox" name="policyNoAll" onClick={(e) => {
-                                            setFilterData((prevState) => ({
-                                                ...prevState,
-                                                policyNoAll: e.target.checked,
-                                            }))
-                                        }} />
-                                        <label class="form-check-label" >All</label>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
 
                 </div>
             </form>
             <form className="container-fluid " >
-
+            <div className="table-responsive overflow-scroll"  >
                 <table class="table table-hover">
                     <thead>
                         <tr>
-                            <th scope="col"><input type="checkbox" name="select" onClick={selectAll} />select</th>
-                            <th scope="col">InsurerCode</th>
-                            <th scope="col">AdvisorCode</th>
-                            <th scope="col">Duedate</th>
-                            <th scope="col">Policyno</th>
-                            <th scope="col">Endorseno</th>
-                            <th scope="col">Invoiceno</th>
-                            <th scope="col">seqno</th>
-                            <th scope="col">customerid</th>
-                            <th scope="col">insuredname</th>
-                            <th scope="col">licenseno</th>
-                            <th scope="col">province</th>
-                            <th scope="col">chassino</th>
-                            <th scope="col">grossprem</th>
-                            <th scope="col">duty</th>
-                            <th scope="col">tax</th>
-                            <th scope="col">totalamt</th>
+                            <th scope="col">เลือก</th>
+                            <th scope="col">เลขที่กรมธรรม์</th>
+                            <th scope="col">เลขที่สลักหลัง</th>
+                            <th scope="col">เลขที่ใบแจ้งหนี้</th>
+                            <th scope="col">เลขที่ใบกำกับภาษี</th>
+                            <th scope="col">ลำดับที่</th>
+
+                            <th scope="col">รหัสบริษัทประกัน</th>
+                            <th scope="col">รหัสผู้แนะนำ</th>
+                            <th scope="col">Due date</th>
+
+                            <th scope="col">รหัสผู้อาประกัน</th>
+                            <th scope="col">ชื่อผู้เอาประกัน</th>
+                            <th scope="col">เลขทะเบียนรถ</th>
+                            <th scope="col">จังหวัดที่จดทะเบียน</th>
+                            <th scope="col">เลขคัชซี</th>
+                            
+                            <th scope="col">เบี้ย</th>
+                            <th scope="col">ส่วนลด Walkin</th>
+                            <th scope="col">จำนวนเงินส่วนลด</th>
+                            
+
+                            <th scope="col">เบี้ยสุทธิ</th>
+                            <th scope="col">อากร</th>
+                            <th scope="col">ภาษี</th>
+                            <th scope="col">เบี้ยประกันรวม</th>
+                            <th scope="col">ภาษีหัก ณ ที่จ่าย (1%)</th>
                             <th scope="col">comm-out%</th>
-                            <th scope="col">comm-out-amt</th>
+                            <th scope="col">จำนวนเงิน</th>
                             <th scope="col">ov-out%</th>
-                            <th scope="col">ov-out-amt</th>
-                            <th scope="col"><input type="checkbox" name="statementtype" onClick={selectAll} />net</th>
+                            <th scope="col">จำนวนเงิน</th>
+                            <th scope="col"><input type="checkbox" name="statementtype"  onClick={selectAll} />net</th>
                             {/* <th scope="col">billpremium</th> */}
 
                         </tr>
                     </thead>
                     <tbody>
-                        {policiesData.map((ele, i) => {
+                    {policiesDataOld.map((ele, i) => {
                             return (<tr>
-                                <th scope="row"><input type="checkbox" name="select" defaultChecked={ele.select} id={i} onClick={changestatementtype} />{i + 1}</th>
-                                <td>{ele.insurerCode}</td>
-                                <td>{ele.agentCode}</td>
-                                <td>{ele.dueDate}</td>
+                                <th scope="row" style={{'text-align': 'center'}}><input type="checkbox" name="select" checked={ele.select} id={i} onClick={changestatementtype} />{i + 1}</th>
                                 <td>{ele.policyNo}</td>
                                 <td>{ele.endorseNo}</td>
                                 <td>{ele.invoiceNo}</td>
-                                <td>{ele.seqno}</td>
+                                <td>{ele.taxinvoiceNo}</td>
+                                <td>{ele.seqNo}</td>
+
+                                <td style={{'text-align': 'center'}} >{ele.insurerCode}</td>
+                                <td>{ele.agentCode}</td>
+                                <td>{ele.dueDate}</td>
+
                                 <td>{ele.insureeCode}</td>
-                                <td>{ele.insureeName}</td>
+                                <td>{ele.insureename}</td>
                                 <td>{ele.licenseNo}</td>
-                                <td>{ele.motorprovinceID}</td>
+                                <td>{ele.motorprovince}</td>
                                 <td>{ele.chassisNo}</td>
-                                <td>{ele.grossprem}</td>
-                                <td>{ele.duty}</td>
-                                <td>{ele.tax}</td>
-                                <td>{ele.totalprem}</td>
-                                <td>{ele.commout_rate}</td>
-                                <td>{ele.commout_amt}</td>
-                                <td>{ele.ovout_rate}</td>
-                                <td>{ele.ovout_amt}</td>
-                                <td><input type="checkbox" name="statementtype" defaultChecked={ele.netflag === 'N'? true:false} id={i} onClick={changestatementtype} /></td>
+
+                                <td>{ele.grossprem.toLocaleString(undefined, { minimumFractionDigits: 2 })}</td>
+                                <td>{ele.specdiscrate.toLocaleString(undefined, { minimumFractionDigits: 2 })}</td>
+                                <td>{ele.specdiscamt.toLocaleString(undefined, { minimumFractionDigits: 2 })}</td>
+
+                                <td>{ele.netgrossprem.toLocaleString(undefined, { minimumFractionDigits: 2 })}</td>
+                                <td>{ele.duty.toLocaleString(undefined, { minimumFractionDigits: 2 })}</td>
+                                <td>{ele.tax.toLocaleString(undefined, { minimumFractionDigits: 2 })}</td>
+                                <td>{ele.totalprem.toLocaleString(undefined, { minimumFractionDigits: 2 })}</td>
+                                <td>{ele.withheld ? ele.withheld.toLocaleString(undefined, { minimumFractionDigits: 2 }): 0}</td>
+                                <td>{ele.commout_rate.toLocaleString(undefined, { minimumFractionDigits: 2 })}</td>
+                                <td>{ele.commout_amt.toLocaleString(undefined, { minimumFractionDigits: 2 })}</td>
+                                <td>{ele.ovout_rate.toLocaleString(undefined, { minimumFractionDigits: 2 })}</td>
+                                <td>{ele.ovout_amt.toLocaleString(undefined, { minimumFractionDigits: 2 })}</td>
+                                <td><input type="checkbox" name="statementtype" checked={ele.statementtype} id={i} onClick={changestatementtype} /></td>
+                                {/* <td><input type="number" disabled value={billpremiumData[i]} /></td> */}
+                            </tr>)
+
+                        })}
+                        {policiesData.map((ele, i) => {
+                            return (<tr>
+                                <th scope="row" style={{'text-align': 'center'}}><input type="checkbox" name="select" checked={ele.select} id={i} onClick={changestatementtype} />{i + 1}</th>
+                                <td>{ele.policyNo}</td>
+                                <td>{ele.endorseNo}</td>
+                                <td>{ele.invoiceNo}</td>
+                                <td>{ele.taxinvoiceNo}</td>
+                                <td>{ele.seqNo}</td>
+
+                                <td style={{'text-align': 'center'}} >{ele.insurerCode}</td>
+                                <td>{ele.agentCode}</td>
+                                <td>{ele.dueDate}</td>
+
+                                <td>{ele.insureeCode}</td>
+                                <td>{ele.insureename}</td>
+                                <td>{ele.licenseNo}</td>
+                                <td>{ele.motorprovince}</td>
+                                <td>{ele.chassisNo}</td>
+
+                                <td>{ele.grossprem.toLocaleString(undefined, { minimumFractionDigits: 2 })}</td>
+                                <td>{ele.specdiscrate.toLocaleString(undefined, { minimumFractionDigits: 2 })}</td>
+                                <td>{ele.specdiscamt.toLocaleString(undefined, { minimumFractionDigits: 2 })}</td>
+
+                                <td>{ele.netgrossprem.toLocaleString(undefined, { minimumFractionDigits: 2 })}</td>
+                                <td>{ele.duty.toLocaleString(undefined, { minimumFractionDigits: 2 })}</td>
+                                <td>{ele.tax.toLocaleString(undefined, { minimumFractionDigits: 2 })}</td>
+                                <td>{ele.totalprem.toLocaleString(undefined, { minimumFractionDigits: 2 })}</td>
+                                <td>{ele.withheld ? ele.withheld.toLocaleString(undefined, { minimumFractionDigits: 2 }): 0}</td>
+                                <td>{ele.commout_rate.toLocaleString(undefined, { minimumFractionDigits: 2 })}</td>
+                                <td>{ele.commout_amt.toLocaleString(undefined, { minimumFractionDigits: 2 })}</td>
+                                <td>{ele.ovout_rate.toLocaleString(undefined, { minimumFractionDigits: 2 })}</td>
+                                <td>{ele.ovout_amt.toLocaleString(undefined, { minimumFractionDigits: 2 })}</td>
+                                <td><input type="checkbox" name="statementtype" checked={ele.statementtype} id={i} onClick={changestatementtype} /></td>
                                 {/* <td><input type="number" disabled value={billpremiumData[i]} /></td> */}
                             </tr>)
 
@@ -582,11 +624,11 @@ const EditBillAdvisor = (props) => {
 
                     </tbody>
                 </table>
-
+                </div>
 
                 <div className="d-flex justify-content-center">
                     {/* <LoginBtn type="submit">confirm</LoginBtn> */}
-                    <button type="button" class="btn btn-primary " onClick={(e) => editCard(e)} >confirm</button>
+                    <button type="button" class="btn btn-primary " onClick={(e) => editCard(e)} >ยืนยัน</button>
                 </div>
             </form>
 

@@ -79,7 +79,7 @@ export default function PremInSearch() {
         .then((res) => {
             if (res.status === 201) {
                 console.log(res.data);
-                alert("not found policy")
+                alert("ไม่พบรายการตัดหนี้")
 
             } else {
 
@@ -88,7 +88,7 @@ export default function PremInSearch() {
                console.log(res.data);
                 setPoliciesData(res.data)
                 
-                alert("find arno success")
+                alert("พบรายการตัดหนี้ success")
             }
         })
         .catch((err) => {
@@ -100,7 +100,7 @@ export default function PremInSearch() {
   return (
     <div className="container d-fle justify-content-center ">
       <form onSubmit={(e)=>searchHandler(e)}>
-        <h1>ค้นหารายการ</h1>
+        <h1>ค้นหารายการตัดหนี้ PREM-IN</h1>
         {/* BillAdvisorNo */}
         <div className="row my-3">
           <label class="col-sm-2 col-form-label" htmlFor="billadvisorno">

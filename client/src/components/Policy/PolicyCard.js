@@ -22,17 +22,7 @@ const PolicyCard = (props) => {
   //import excel
   const [cookies] = useCookies(["jwt"]);
   const [formData, setFormData] = useState(props.formData);
-  const [provinceDD, setProvinceDD] = useState([]);
-  const [districDD, setDistricDD] = useState([]);
-  const [subDistricDD, setSubDistricDD] = useState([]);
-  const [zipcodeDD, setZipCodeDD] = useState([]);
-  const [titleDD, setTitleDD] = useState([]);
-  const [insureTypeDD, setInsureTypeDD] = useState([]);
-  const [insureClassDD, setInsureClassDD] = useState([]);
-  const [insureSubClassDD, setInsureSubClassDD] = useState([]);
-  const [insurerDD, setInsurerDD] = useState([]);
-  const [motorbrandDD, setMotorbrandDD] = useState([]);
-  const [motormodelDD, setMotormodelDD] = useState([]);
+ 
   const [installment, setInstallment] = useState({ insurer: [], advisor: [] })
   const [hidecard, setHidecard] = useState([false, 0]);
 
@@ -42,7 +32,16 @@ const PolicyCard = (props) => {
     const formattedDate = new Date(parts[2], parts[1] - 1, parts[0]);
     return formattedDate;
 }
-
+function formatNumber(input) {
+  console.log(input.value);
+  let sanitizedValue = input.value.replace(/[^\d]/g, '').replace(/^0+/, '');
+      
+      // Add commas for thousands separator
+      sanitizedValue = parseInt(sanitizedValue, 10).toLocaleString('en-US');
+      
+      // Update the input value
+      input.value = sanitizedValue;
+}
   const handleChange = async (e) => {
     e.preventDefault();
 
@@ -50,238 +49,27 @@ const PolicyCard = (props) => {
       ...prevState,
       [e.target.name]: e.target.value,
     }));
-    //set dropdown subclass when class change
-    if (e.target.name === "class") {
-      const array = [];
-      insureTypeDD.forEach((ele) => {
-        if (e.target.value === ele.class) {
-          array.push(
-            <option key={ele.id} value={ele.subClass}>
-              {ele.subClass}
-            </option>
-          );
-        }
-      });
-      setInsureSubClassDD(array);
-    }
-    //  set totalprem
-    if (
-      formData.duty !== null &&
-      formData.tax !== null &&
-      formData.grossprem !== null
-    ) {
-      const newTotalPrem =
-        parseFloat(formData.grossprem) -
-        parseFloat(formData.duty) -
-        parseFloat(formData.tax);
-      setFormData((prevState) => ({
-        ...prevState,
-        [e.target.name]: e.target.value,
-        totalprem: newTotalPrem,
-      }));
-    } else {
-      if (e.target.name === 'commin_rate') {
-        setFormData((prevState) => ({
-          ...prevState,
-          [e.target.name]: e.target.value,
-          commin_amt: (formData[`commin_rate`] * formData[`grossprem`]) / 100
-        }));
-      } else if (e.target.name === 'ovin_rate') {
-        setFormData((prevState) => ({
-          ...prevState,
-          [e.target.name]: e.target.value,
-          ovin_amt: (formData[`ovin_rate`] * formData[`grossprem`]) / 100
-        }));
-      } else if (e.target.name === 'commout_rate') {
-        setFormData((prevState) => ({
-          ...prevState,
-          [e.target.name]: e.target.value,
-          commout_amt: (formData[`commout_rate`] * formData[`grossprem`]) / 100
-        }));
-      } else if (e.target.name === 'ovout_rate') {
-        setFormData((prevState) => ({
-          ...prevState,
-          [e.target.name]: e.target.value,
-          ovout_amt: (formData[`ovout_rate`] * formData[`grossprem`]) / 100
-        }));
-      } else if (e.target.name === 'grossprem')
-        setFormData((prevState) => ({
-          ...prevState,
-          [e.target.name]: e.target.value,
-          duty: (duty * formData[`grossprem`]) / 100,
-          tax: (tax * formData[`grossprem`]) / 100
-        }));
-    }
+    
 
-    //set dropdown title follow to personType
-    if (e.target.name === "personType") {
-      if (e.target.value === "P") {
-        axios
-          .get(url + "/static/titles/person/all")
-          .then((title) => {
-            const array2 = [];
-            title.data.forEach((ele) => {
-              array2.push(
-                <option key={ele.TITLEID} value={ele.TITLETHAIBEGIN}>
-                  {ele.TITLETHAIBEGIN}
-                </option>
-              );
-            });
-            setTitleDD(array2);
-          })
-          .catch((err) => { });
-      } else {
-        axios
-          .get(url + "/static/titles/company/all")
-          .then((title) => {
-            const array2 = [];
-            title.data.forEach((ele) => {
-              array2.push(
-                <option key={ele.TITLEID} value={ele.TITLETHAIBEGIN}>
-                  {ele.TITLETHAIBEGIN}
-                </option>
-              );
-            });
-            setTitleDD(array2);
-          })
-          .catch((err) => { });
-      }
-    }
-
-    //set dropdown distric subdistric
-    if (e.target.name === "province") {
-
-      getDistrict(e.target.value);
-    } else if (e.target.name === "district") {
-      getSubDistrict(e.target.value);
-    } else if (e.target.name === "brandname") {
-      getMotormodel(e.target.value);
-    }
-    //get com/ov setup
-
-  
   };
 
   const handleChangeDate = (date,name) => {
-    setFormData((prevState) => ({
+    if (name === 'seqNoinsStart') {
+      setFormData((prevState) => ({
+        ...prevState,
+        seqNoinsStart: date,
+        seqNoagtStart: date,
+    }));
+    }else{
+
+      setFormData((prevState) => ({
         ...prevState,
         [name]: date,
-    }));
+      }));
+    }
   }
 
-  const getDistrict = (provincename) => {
-    //get distric in province selected
-    axios
-      .post(url + "/static/amphurs/search", { provincename: provincename })
-      .then((distric) => {
-        const array = [];
-        distric.data.forEach((ele) => {
-          array.push(
-            <option id={ele.amphurid} value={ele.t_amphurname} value2={ele.t_amphurname}>
-              {ele.t_amphurname}
-            </option>
-          );
-        });
-        setDistricDD(array);
-      })
-      .catch((err) => {
-        // alert("cant get aumphur");
-      });
-  };
-
-  const getMotormodel = (brandname) => {
-    //get distric in province selected
-    axios
-      .post(url + "/static/mt_models/search", { brandname: brandname })
-      .then((model) => {
-        const array = [];
-        model.data.forEach((ele) => {
-          array.push(
-            <option value={ele.MODEL} >
-              {ele.MODEL}
-            </option>
-          );
-        });
-        setMotormodelDD(array);
-      })
-      .catch((err) => {
-        // alert("cant get aumphur");
-      });
-  };
-  const getcommov = (e) => {
-    e.preventDefault();
-    //get comm  ov setup
-    axios
-      .post(url + "/insures/getcommov", formData)
-      .then((res) => {
-        console.log(res.data);
-        setFormData((prevState) => ({
-          ...prevState,
-          [`commin_rate`]: res.data[0].rateComIn,
-          [`ovin_rate`]: res.data[0].rateOVIn_1,
-          [`commout_rate`]: res.data[0].rateComOut,
-          [`ovout_rate`]: res.data[0].rateOVOut_1,
-          [`commin_amt`]: res.data[0].rateComIn * formData[`grossprem`] / 100,
-          [`ovin_amt`]: res.data[0].rateOVIn_1 * formData[`grossprem`] / 100,
-          [`commout_amt`]: res.data[0].rateComOut * formData[`grossprem`] / 100,
-          [`ovout_amt`]: res.data[0].rateOVOut_1 * formData[`grossprem`] / 100,
-
-        }));
-      })
-      .catch((err) => {
-        alert("Something went wrong, Try Again.");
-        // alert("cant get aumphur");
-      });
-
-    // if (formData[`commin_rate`] == null && formData[`ovin_rate`] == null ) {
-    //   setFormData((prevState) => ({
-    //     ...prevState,
-    //     [`commin_rate`]: 10,
-    //     [`ovin_rate`]: 15,
-    //   }));
-
-    // }
-    //  if (formData[`commout_rate`] == null && formData[`ovout_rate`] == null){
-    //   setFormData((prevState) => ({
-    //     ...prevState,
-    //     [`commout_rate`]: 10,
-    //     [`ovout_rate`]: 15,
-    //   }));
-    // }
-
-
-  }
-
-
-
-  const getSubDistrict = (amphurname) => {
-    //get tambons in distric selected
-    axios
-      .post(url + "/static/tambons/search", { amphurname: amphurname })
-      .then((subdistric) => {
-        const arraySub = [];
-        const arrayZip = [];
-        const zip = [];
-        subdistric.data.forEach((ele) => {
-          arraySub.push(
-            <option id={ele.tambonid} value={ele.t_tambonname}>
-              {ele.t_tambonname}
-            </option>
-          );
-          zip.push(ele.postcodeall.split("/"));
-        });
-        const uniqueZip = [...new Set(...zip)];
-        console.log(uniqueZip);
-        uniqueZip.forEach((zip) => {
-          arrayZip.push(<option value={zip}>{zip}</option>);
-        });
-        setSubDistricDD(arraySub);
-        setZipCodeDD(arrayZip);
-      })
-      .catch((err) => {
-        // alert("cant get tambons");
-      });
-  };
+ 
 
   const editInstallment = (e, type, index) => {
     // e.preventDefault();
@@ -318,7 +106,7 @@ const PolicyCard = (props) => {
         ovin_taxamt: parseFloat((ovin_amt * tax).toFixed(2))
       }
       console.log(arrI);
-      setInstallment()
+      // setInstallment()
 
     } else if (type === 'advisor') {
       const dueDate = document.getElementsByName(`dueDate-${index}`)[0].value
@@ -418,116 +206,49 @@ const handleClose = (e) => {
     });
   };
   useEffect(() => {
-    //get province
-    axios
-      .get(url + "/static/provinces/all")
-      .then((province) => {
-        // let token = res.data.jwt;
-        // let decode = jwt_decode(token);
-        // navigate("/");
-        // window.location.reload();
-        // localStorage.setItem("jwt", token);
+    // console.log(formData);
+    const data = {...formData}
+    // data.policyNo = '111111'
+    const arrI = []
+    console.log(formData);
+        arrI.push({
+          netgrossprem: formData.netgrossprem,
+          tax: formData.tax,
+          duty: formData.duty,
+          totalprem: formData.totalprem,
+          dueDate: new Date(formData.seqNoinsStart),
+          commin_amt: formData.commin_amt,
+          commin_taxamt: formData.commin_taxamt,
+          ovin_amt: formData.ovin_amt,
+          ovin_taxamt: formData.ovin_taxamt,
+          withheld: formData.withheld,
+        })
 
-        const array = [];
-        province.data.forEach((ele) => {
-          array.push(
-            <option value={ele.t_provincename} >
-              {ele.t_provincename}
-            </option>
-          );
-        });
-        setProvinceDD(array);
-        // get title
-        axios
-          .get(url + "/static/titles/company/all")
-          .then((title) => {
-            const array2 = [];
-            title.data.forEach((ele) => {
-              array2.push(
-                <option key={ele.TITLEID} value={ele.TITLEID}>
-                  {ele.TITLETHAIBEGIN}
-                </option>
-              );
-            });
-            setTitleDD(array2);
-          })
-          .catch((err) => { });
-      })
-      .catch((err) => { });
-    // get title all of company type
+      console.log(arrI);
+    
 
-    //get insureType
-    axios
-      .get(url + "/insures/insuretypeall")
-      .then((insuretype) => {
-        // let token = res.data.jwt;
-        // let decode = jwt_decode(token);
-        // navigate("/");
-        // window.location.reload();
-        // localStorage.setItem("jwt", token);
+    const arrA = []
+        arrA.push({
+          netgrossprem: formData.netgrossprem,
+          tax:  formData.tax,
+          duty: formData.duty,
+          totalprem: formData.totalprem,
+          dueDate: new Date(formData.seqNoagtStart),
+          commin_amt: formData.commin_amt,
+          commin_taxamt: formData.commin_taxamt,
+          ovin_amt: formData.ovin_amt,
+          ovin_taxamt: formData.ovin_taxamt,
+          commout1_amt: formData.commout1_amt,
+          ovout1_amt: formData.ovout1_amt,
+          withheld: formData.withheld,
 
-        const array = [];
-        insuretype.data.forEach((ele) => {
-          array.push(
-            <option key={ele.id} value={ele.class}>
-              {ele.class}
-            </option>
-          );
-        });
-        setInsureTypeDD(insuretype.data);
-        setInsureClassDD(array);
-      })
-      .catch((err) => { });
+        })
 
-    //get insurer
-    axios
-      .get(url + "/persons/insurerall")
-      .then((insurer) => {
-        // let token = res.data.jwt;
-        // let decode = jwt_decode(token);
-        // navigate("/");
-        // window.location.reload();
-        // localStorage.setItem("jwt", token);
-
-        const array = [];
-        insurer.data.forEach((ele) => {
-          array.push(
-            <option key={ele.id} value={ele.insurerCode}>
-              {ele.insurerCode}
-            </option>
-          );
-        });
-        setInsurerDD(array);
-      })
-      .catch((err) => {
-        // alert("cant get province");
-      });
-
-    //get motor brand
-    axios
-      .get(url + "/static/mt_brands/all")
-      .then((brands) => {
-        // let token = res.data.jwt;
-        // let decode = jwt_decode(token);
-        // navigate("/");
-        // window.location.reload();
-        // localStorage.setItem("jwt", token);
-
-        const array = [];
-        brands.data.forEach((ele) => {
-          array.push(
-            <option key={ele.id} value={ele.BRANDNAME}>
-              {ele.BRANDNAME}
-            </option>
-          );
-        });
-        setMotorbrandDD(array);
-      })
-      .catch((err) => { });
-    //get installment
-    if (props.formData.installment) {
-      setInstallment(props.formData.installment)
-    }
+      
+    
+    
+    setInstallment({ insurer: arrI, advisor: arrA })
+    setFormData(data)
   }, []);
 
   const calinstallment = (e) => {
@@ -811,547 +532,7 @@ const handleClose = (e) => {
         </table>
       </div>
 
-      {/* <div className="row form-group form-inline ">
-        <div className="col-1"></div>
-        <div className="col-2 form-group  ">
-          <label class="form-label ">
-            เลขที่กรมธรรม์<span class="text-danger"> *</span>
-          </label>
-          <input
-            className="form-control"
-            type="text"
-            value={formData.policyNo || ''}
-            name={`policyNo`}
-            onChange={handleChange}
-          />
-        </div>
 
-        <div class="col-2 form-group ">
-          <label class="form-label">
-            วันที่เริ่มคุ้มครอง<span class="text-danger"> *</span>
-          </label>
-          <input
-            disabled
-            className="form-control"
-            type="date"
-            defaultValue={formData.actDate}
-            name={`actDate`}
-            onChange={handleChange}
-          />
-        </div>
-
-        <div class="col-2 form-group ">
-          <label class="form-label ">
-            วันที่สิ้นสุด<span class="text-danger"> *</span>
-          </label>
-          <input
-            disabled
-            className="form-control"
-            type="date"
-            defaultValue={formData.expDate}
-            name={`expDate`}
-            onChange={handleChange}
-          />
-        </div>
-        <div className="col-2 form-group  ">
-          <label class="form-label ">
-            วันที่ทำสัญญา<span class="text-danger"> *</span>
-          </label>
-          <input
-            className="form-control"
-            type="date"
-            value={formData.issueDate || ''}
-            name={`npm star`}
-            onChange={handleChange}
-          />
-        </div>
-        <div class="col-3"></div>
-      </div>
-      
-      <div class="row">
-        <div className="col-1"></div>
-        <div class="col-2 form-group ">
-          <label class="form-label px-3">
-            บริษัทรับประกัน<span class="text-danger"> *</span>
-          </label>
-          <select
-            disabled
-            className="form-control"
-            name={`insurerCode`}
-            onChange={handleChange}
-          >
-            <option value={formData.insurerCode} selected disabled hidden>
-              {formData.insurerCode}
-            </option>
-            {insurerDD}
-          </select>
-        </div>
-
-        <div class="col-2 form-group ">
-          <label class="form-label px-3">
-            รหัสผู้แนะนำ<span class="text-danger"> *</span>
-          </label>
-          <input
-            disabled
-            className="form-control"
-            type="text"
-            defaultValue={formData.agentCode}
-            name={`agentCode`}
-            onChange={handleChange}
-          />
-        </div>
-        <div class="col-2 form-group ">
-          <label class="form-label px-3">
-            รหัสผู้แนะนำ 2<span class="text-danger"> *</span>
-          </label>
-          <input
-            className="form-control"
-            type="text"
-            disabled
-            defaultValue={formData.agentCode2}
-            name={`agentCode2`}
-            onChange={handleChange}
-          />
-        </div>
-        <div class="col-2 form-group ">
-          <div className="row">
-
-            <div className="col form-group">
-              <label class="form-label ">
-                Class
-              </label>
-              <select
-                disabled
-                className="form-control"
-                name={`class`}
-                onChange={handleChange}
-              >
-                <option value={formData.class} selected disabled hidden>
-                  {formData.class}
-                </option>
-                {insureClassDD}
-              </select>
-            </div>
-
-            <div className="col form-group">
-              <label class="form-label ">
-                Subclass
-              </label>
-              <select
-                disabled
-                className="form-control"
-                name={`subClass`}
-                onChange={handleChange}
-              >
-                <option value={formData.subClass} selected disabled hidden>
-                  {formData.subClass}
-                </option>
-                {insureSubClassDD}
-              </select>
-            </div>
-
-          </div>
-
-        </div>
-
-        <div class="col-2">
-          <label class="form-label ">
-            ทุนประกัน<span class="text-danger"> *</span>
-          </label>
-          <input
-            className="form-control"
-            type="number"
-            step={0.1}
-            value={formData.cover_amt}
-            name={`cover_amt`}
-            onChange={(e) => handleChange(e)}
-          />
-        </div>
-
-      </div>
-
-      <div class="row">
-        <div className="col-1"></div>
-        <div class="col-2">
-          <label class="form-label ">
-            ค่าเบี้ย<span class="text-danger"> *</span>
-          </label>
-          <input
-            className="form-control"
-            type="number"
-            step={0.1}
-            value={formData.grossprem}
-            name={`grossprem`}
-            onChange={(e) => handleChange(e)}
-          />
-        </div>
-
-        <div class="col-2">
-          <label class="form-label ">
-            ส่วนลด %
-          </label>
-          <div className="row">
-            <div className="col">
-              <input
-                className="form-control"
-                type="number"
-                step={0.1}
-                value={formData[`specdiscrate`]}
-                name={`specdiscrate`}
-                onChange={(e) => handleChange(e)}
-              />
-            </div>
-            <div className="col">
-              <input
-                className="form-control"
-                type="number"
-                disabled
-                step={0.1}
-                value={parseFloat((formData[`specdiscrate`] * formData[`grossprem`] / 100).toFixed(2)) || ""}
-                name={`specdiscamt`}
-                onChange={(e) => handleChange(e)}
-              />
-            </div>
-          </div>
-
-        </div>
-
-        <div class="col-2">
-          <div className="row">
-            <div className="col">
-              <label class="form-label ">
-                อากร
-              </label>
-              <input
-                className="form-control"
-                type="number"
-                step={0.1}
-                disabled
-                // netgrossprem * tax 
-                value={parseFloat(Math.ceil((100 - formData[`specdiscrate`]) * formData[`grossprem`] / 100 * duty)) || ""}
-                //value={formData.duty}
-                name={`duty`}
-                onChange={handleChange}
-              />
-            </div>
-            <div className="col">
-              <label class="form-label ">
-                ภาษี
-              </label>
-              <input
-                className="form-control"
-                type="number"
-                step={0.1}
-                disabled
-                // netgrossprem * tax 
-                value={parseFloat(((100 - formData[`specdiscrate`]) * formData[`grossprem`] / 100 * tax).toFixed(2)) || ""}
-                //value={formData.tax}
-                name={`tax`}
-                onChange={handleChange}
-              />
-            </div>
-
-          </div>
-
-        </div>
-
-        <div class="col-2">
-          <label class="form-label ">
-            ค่าเบี้ยรวม<span class="text-danger"> *</span>
-          </label>
-          <input
-            type="number" // Use an input element for displaying numbers
-            className="form-control"
-            // value={formData.totalprem} // Display the totalprem value from the state
-            // value={parseFloat(formData.grossprem) - parseFloat(formData.duty) - parseFloat(formData.tax)}
-            value={parseFloat(((100 - formData[`specdiscrate`]) * formData[`grossprem`] / 100 * (1 + duty + tax)).toFixed(2)) || ""}
-            step={0.1}
-            name={`totalprem`}
-            disabled
-          />
-        </div>
-
-        <div class="col-2">
-          <label class="form-label ">
-            ภาษีหัก ณ ที่จ่าย 1 %<span class="text-danger"> *</span>
-          </label>
-          <input
-            type="number" // Use an input element for displaying numbers
-            className="form-control"
-            // value={formData.totalprem} // Display the totalprem value from the state
-            // value={parseFloat(formData.grossprem) - parseFloat(formData.duty) - parseFloat(formData.tax)}
-            value={parseFloat(((100 - formData[`specdiscrate`]) * formData[`grossprem`] / 100 * (1 + duty) * withheld).toFixed(2)) || ""}
-            disabled
-            step={0.1}
-            name={`totalprem`}
-
-          />
-        </div>
-      </div>
-
-      <div class="row">
-        <div className="col-1"></div>
-        <div class="col-2">
-          <label class="form-label ">
-            Comm In % <span class="text-danger"> *</span>
-          </label>
-          <div className="row">
-            <div className="col">
-              <input
-                className="form-control"
-                type="number"
-                step={0.1}
-                value={formData[`commin_rate`]}
-                name={`commin_rate`}
-                onChange={(e) => handleChange(e)}
-              />
-            </div>
-            <div className="col">
-              <input
-                className="form-control"
-                type="number"
-                disabled
-                step={0.1}
-                value={parseFloat((formData[`commin_rate`] * (100 - formData[`specdiscrate`]) * formData[`grossprem`] / 10000).toFixed(2)) || ""}
-                name={`commin_amt`}
-                onChange={(e) => handleChange(e)}
-              />
-            </div>
-          </div>
-
-        </div>
-
-
-        <div class="col-2">
-          <label class="form-label ">
-            Ov In % <span class="text-danger"> *</span>
-          </label>
-          <div className="row">
-            <div className="col">
-              <input
-                className="form-control"
-                type="number"
-                step={0.1}
-                value={formData[`ovin_rate`]}
-                name={`ovin_rate`}
-                onChange={handleChange}
-              />
-            </div>
-            <div className="col">
-              <input
-                className="form-control"
-                type="number"
-                disabled
-                step={0.1}
-                name={`ovin_amt`}
-                value={parseFloat((formData[`ovin_rate`] * (100 - formData[`specdiscrate`]) * formData[`grossprem`] / 10000).toFixed(2)) || ""}
-                onChange={handleChange}
-              />
-            </div>
-          </div>
-
-        </div>
-
-        <div class="col-2">
-          <label class="form-label ">
-            Comm Out % (1)<span class="text-danger"> *</span>
-          </label>
-          <div className="row">
-            <div className="col">
-              <input
-                className="form-control"
-                type="number"
-                step={0.1}
-                value={formData[`commout1_rate`]}
-                name={`commout1_rate`}
-                onChange={handleChange}
-              />
-            </div>
-            <div className="col">
-              <input
-                className="form-control"
-                type="number"
-                disabled
-                step={0.1}
-                value={(formData[`commout1_rate`] * formData[`grossprem`]) / 100 || ""}
-                name={`commout1_amt`}
-                onChange={handleChange}
-              />
-            </div>
-
-          </div>
-        </div>
-        <div class="col-2">
-          <label class="form-label ">
-            Ov Out % (1)<span class="text-danger"> *</span>
-          </label>
-
-          <div className="row">
-            <div className="col">
-              <input
-                className="form-control"
-                type="number"
-                step={0.1}
-                value={formData[`ovout1_rate`]}
-                name={`ovout1_rate`}
-                onChange={handleChange}
-              />
-            </div>
-            <div className="col">
-              <input
-                className="form-control"
-                type="number"
-                disabled
-                step={0.1}
-                name={`ovout1_amt`}
-                //value={(formData[`ovout1_rate`] * formData[`grossprem`]) / 100 || ""}
-                value={parseFloat((formData[`ovout1_rate`] * (100 - formData[`specdiscrate`]) * formData[`grossprem`] / 10000).toFixed(2)) || ""}
-                onChange={handleChange}
-              />
-            </div>
-
-          </div>
-        </div>
-        
-
-
-      </div>
-
-      <div class="row">
-        <div className="col-1"></div>
-
-
-        <div class="col-2">
-          <label class="form-label ">
-            Comm Out % (2)<span class="text-danger"> *</span>
-          </label>
-          <div className="row">
-            <div className="col">
-              <input
-                className="form-control"
-                type="number"
-                step={0.1}
-                value={formData[`commout2_rate`]}
-                name={`commout2_rate`}
-                onChange={handleChange}
-              />
-            </div>
-            <div className="col">
-              <input
-                className="form-control"
-                type="number"
-                disabled
-                step={0.1}
-                value={parseFloat((formData[`commout2_rate`] * (100 - formData[`specdiscrate`]) * formData[`grossprem`] / 10000).toFixed(2)) || ""}
-                //value={(formData[`commout2_rate`] * formData[`grossprem`]) / 100 || ""}
-                name={`commout2_amt`}
-                onChange={handleChange}
-              />
-            </div>
-
-          </div>
-        </div>
-        <div class="col-2">
-          <label class="form-label ">
-            Ov Out % (2)<span class="text-danger"> *</span>
-          </label>
-
-          <div className="row">
-            <div className="col">
-              <input
-                className="form-control"
-                type="number"
-                step={0.1}
-                value={formData[`ovout2_rate`]}
-                name={`ovout2_rate`}
-                onChange={handleChange}
-              />
-            </div>
-            <div className="col">
-              <input
-                className="form-control"
-                type="number"
-                disabled
-                step={0.1}
-                name={`ovout2_amt`}
-                //value={(formData[`ovout2_rate`] * formData[`grossprem`]) / 100 || ""}
-                value={parseFloat((formData[`ovout2_rate`] * (100 - formData[`specdiscrate`]) * formData[`grossprem`] / 10000).toFixed(2)) || ""}
-                onChange={handleChange}
-              />
-            </div>
-
-          </div>
-        </div>
-        <div class="col-2">
-          <label class="form-label ">
-            Comm Out % (sum)
-          </label>
-          <div className="row">
-            <div className="col">
-              <input
-                className="form-control"
-                type="number"
-                step={0.1}
-                value={formData[`commout_rate`]}
-                name={`commout_rate`}
-                onChange={(e) => handleChange(e)}
-                disabled
-              />
-            </div>
-            <div className="col">
-              <input
-                className="form-control"
-                type="number"
-                disabled
-                step={0.1}
-                //value={(formData[`commin2_rate`] * formData[`grossprem`]) / 100 || ""}
-                value={parseFloat((formData[`commout_rate`] * (100 - formData[`specdiscrate`]) * formData[`grossprem`] / 10000).toFixed(2)) || ""}
-                name={`commout_amt`}
-                onChange={(e) => handleChange(e)}
-
-              />
-            </div>
-          </div>
-
-        </div>
-
-
-        <div class="col-2">
-          <label class="form-label ">
-            Ov Out % (sum)
-          </label>
-          <div className="row">
-            <div className="col">
-              <input
-                className="form-control"
-                type="number"
-                step={0.1}
-                value={formData[`ovout_rate`]}
-                name={`ovout_rate`}
-                onChange={handleChange}
-                disabled
-              />
-            </div>
-            <div className="col">
-              <input
-                className="form-control"
-                type="number"
-                disabled
-                step={0.1}
-                name={`ovout_amt`}
-                //value={(formData[`ovin2_rate`] * formData[`grossprem`]) / 100 || ""}
-                value={parseFloat((formData[`ovout_rate`] * (100 - formData[`specdiscrate`]) * formData[`grossprem`] / 10000).toFixed(2)) || ""}
-                onChange={handleChange}
-
-              />
-            </div>
-          </div>
-
-        </div>
-        
-
-
-      </div> */}
 
       {/* end policy data */}
       <h3 className="text-center" style={{padding:`20px`}}>แบ่งงวดชำระ</h3>
@@ -1527,6 +708,7 @@ const handleClose = (e) => {
                             dropdownMode="select"
                             selected={formData.seqNoinsStart || null}
                             onChange={(date) => handleChangeDate(date,'seqNoinsStart')}
+                          
                                  />
         </div>
         
@@ -1565,26 +747,28 @@ const handleClose = (e) => {
           <table class="table  table-striped">
             <thead>
               <tr>
-                <th scope="col-1">ประเภท</th>
-                <th scope="col-1">แบ่งงวด</th>
-                <th scope="col-2">DueDate</th>
-                <th scope="col-2">เบี้ยประกัน</th>
-                <th scope="col-1">อากร</th>
-                <th scope="col-1">ภาษี</th>
-                <th scope="col-1">WHT 1%</th>
-                <th scope="col-1">Comm in</th>
-                <th scope="col-1">Ov in</th>
-                <th scope="col-1">Comm out</th>
-                <th scope="col-1">Ov out</th>
-                <th scope="col-1">แก้ไข</th>
+                <th >ประเภท</th>
+                <th >แบ่งงวด</th>
+                <th >วันครบกำหนดชำระ</th>
+                <th   >เบี้ยประกัน</th>
+                <th >เลขที่ใบแจ้งหนี้ (ประกัน)</th>
+                
+                <th >อากร</th>
+                <th >ภาษี</th>
+                <th >WHT 1%</th>
+                <th >Comm in</th>
+                <th >Ov in</th>
+                <th >Comm out</th>
+                <th >Ov out</th>
+                <th >แก้ไข</th>
               </tr>
             </thead>
             <tbody>
               {installment.insurer.map((ele, i) => {
                 return (<tr>
-                  <th scope="row">บริษัทประกัน</th>
-                  <td scope="col-1">{i + 1}</td>
-                  <td scope="col-2">
+                  <th>บริษัทประกัน</th>
+                  <td >{i + 1}</td>
+                  <td >
                     {/* <input
                     className="form-control"
                     type="date"
@@ -1605,25 +789,35 @@ const handleClose = (e) => {
                             onChange={(date) => handleChangeDate(date,`dueDate-${i}`)}
                                  />
                   </td>
-                  <td scope="col-2"><input
+                  <td  ><input
                     className="form-control"
+                    style={{width: "150px"}}
                     type="text"
-                    defaultValue={ele.netgrossprem.toLocaleString(undefined, { minimumFractionDigits: 2 })}
+                    value={ele.netgrossprem.toLocaleString(undefined, { minimumFractionDigits: 2 })}
                     name={`netgrossprem-${i}`}
                     onChange={handleChange}
+                    onInput={(e)=>formatNumber(e.target)}
                   /></td>
+                  <td ><input
+                    className="form-control"
+                    type="text"
+                    style={{width: "150px"}}
+                    name={`invoiceNo-${i}`}
+                    onChange={handleChange}
+                  /></td>
+                  
                   {/* <td scope="col-1"><input type="number" className="w-100" name={`duty-${i}`} step={.01} defaultValue={ele.duty}></input></td>
               <td scope="col-1"><input type="number" className="w-100" name={`tax-${i}`} step={.01} defaultValue={ele.tax}></input></td>
               <td scope="col-1"><input type="number" className="w-100" name={`commin_amt-${i}`} step={.01} defaultValue={ele.commin_amt}></input></td>
               <td scope="col-1"><input type="number" className="w-100" name={`ovin_amt-${i}`} step={.01} defaultValue={ele.ovin_amt}></input></td> */}
-                  <td scope="col-1">{ele.duty.toLocaleString(undefined, { minimumFractionDigits: 2 })}</td>
-                  <td scope="col-1">{ele.tax.toLocaleString(undefined, { minimumFractionDigits: 2 })}</td>
-                  <td scope="col-1">{ele.withheld.toLocaleString(undefined, { minimumFractionDigits: 2 })}</td>
-                  <td scope="col-1">{ele.commin_amt.toLocaleString(undefined, { minimumFractionDigits: 2 })}</td>
-                  <td scope="col-1">{ele.ovin_amt.toLocaleString(undefined, { minimumFractionDigits: 2 })}</td>
-                  <td scope="col-1"></td>
-                  <td scope="col-1"></td>
-                  <td scope="col-1"><button onClick={e => editInstallment(e, 'insurer', i)}>แก้ไข</button></td>
+                  <td >{ele.duty.toLocaleString(undefined, { minimumFractionDigits: 2 })}</td>
+                  <td >{ele.tax.toLocaleString(undefined, { minimumFractionDigits: 2 })}</td>
+                  <td >{ele.withheld.toLocaleString(undefined, { minimumFractionDigits: 2 })}</td>
+                  <td >{ele.commin_amt.toLocaleString(undefined, { minimumFractionDigits: 2 })}</td>
+                  <td >{ele.ovin_amt.toLocaleString(undefined, { minimumFractionDigits: 2 })}</td>
+                  <td ></td>
+                  <td ></td>
+                  <td ><button onClick={e => editInstallment(e, 'insurer', i)}>แก้ไข</button></td>
                 </tr>)
               })}
               {installment.insurer.length > 0 ?
@@ -1632,6 +826,8 @@ const handleClose = (e) => {
                   <td></td>
                   <td></td>
                   <td scope="col-1">{installment.insurer.reduce((prev, curr) => prev + parseFloat(curr.netgrossprem.toFixed(2)), 0).toLocaleString(undefined, { minimumFractionDigits: 2 })}</td>
+                  <td></td>
+                  <td></td>
                   <td scope="col-1">{installment.insurer.reduce((prev, curr) => prev + parseFloat(curr.duty.toFixed(2)), 0).toLocaleString(undefined, { minimumFractionDigits: 2 })}</td>
                   <td scope="col-1">{installment.insurer.reduce((prev, curr) => prev + parseFloat(curr.tax.toFixed(2)), 0).toLocaleString(undefined, { minimumFractionDigits: 2 })}</td>
                   <td scope="col-1">{installment.insurer.reduce((prev, curr) => prev + parseFloat(curr.withheld.toFixed(2)), 0).toLocaleString(undefined, { minimumFractionDigits: 2 })}</td>
@@ -1657,18 +853,19 @@ const handleClose = (e) => {
           <table class="table  table-striped">
             <thead>
               <tr>
-                <th scope="col-1">ประเภท</th>
-                <th scope="col-1">แบ่งงวด</th>
-                <th scope="col-2">DueDate</th>
-                <th scope="col-2">เบี้ยประกัน</th>
-                <th scope="col-1">อากร</th>
-                <th scope="col-1">ภาษี</th>
-                <th scope="col-1">WHT 1%</th>
-                <th scope="col-1">Comm in</th>
-                <th scope="col-1">Ov in</th>
-                <th scope="col-1">Comm out</th>
-                <th scope="col-1">Ov out</th>
-                <th scope="col-1">แก้ไข</th>
+                <th >ประเภท</th>
+                <th >แบ่งงวด</th>
+                <th scope="col">วันครบกำหนดชำระ</th>
+                <th >เบี้ยประกัน</th>
+                <th >เลขที่ใบแจ้งหนี้ (อะมิตี้)</th>
+                <th >อากร</th>
+                <th >ภาษี</th>
+                <th >WHT 1%</th>
+                <th >Comm in</th>
+                <th >Ov in</th>
+                <th >Comm out</th>
+                <th >Ov out</th>
+                <th >แก้ไข</th>
               </tr>
             </thead>
             <tbody>
@@ -1684,9 +881,10 @@ const handleClose = (e) => {
                     name={`dueDate-${i}`}
                     onChange={handleChange}
                   /></td> */}
-                  <td>
+                  <td scope="col-2">
                    <DatePicker
                             // showIcon
+                            style={{width: "130px"}}
                             className="form-control"
                             todayButton="Vandaag"
                             // isClearable
@@ -1699,11 +897,19 @@ const handleClose = (e) => {
                             onChange={(date) => handleChangeDate(date,`dueDate-${i}`)}
                                  />
                                  </td>
+                  <td ><input
+                    className="form-control"
+                    style={{width: "150px"}}
+                    type="text"
+                    value={ele.netgrossprem.toLocaleString(undefined, { minimumFractionDigits: 2 })}
+                    name={`netgrossprem-${i}`}
+                    onChange={handleChange}
+                  /></td>
                   <td scope="col-2"><input
                     className="form-control"
                     type="text"
-                    defaultValue={ele.netgrossprem.toLocaleString(undefined, { minimumFractionDigits: 2 })}
-                    name={`netgrossprem-${i}`}
+                    
+                    name={`invoiceNo-${i}`}
                     onChange={handleChange}
                   /></td>
                   {/* <td scope="col-1"><input type="number" name={`duty-${i}`} step={.01} defaultValue={ele.duty}></input></td>
@@ -1729,6 +935,7 @@ const handleClose = (e) => {
                   <td></td>
                   <td></td>
                   <td scope="col-1">{installment.advisor.reduce((prev, curr) => prev + parseFloat(curr.netgrossprem.toFixed(2)), 0).toLocaleString(undefined, { minimumFractionDigits: 2 })}</td>
+                  <td></td>
                   <td scope="col-1">{installment.advisor.reduce((prev, curr) => prev + parseFloat(curr.duty.toFixed(2)), 0).toLocaleString(undefined, { minimumFractionDigits: 2 })}</td>
                   <td scope="col-1">{installment.advisor.reduce((prev, curr) => prev + parseFloat(curr.tax.toFixed(2)), 0).toLocaleString(undefined, { minimumFractionDigits: 2 })}</td>
                   <td scope="col-1">{installment.advisor.reduce((prev, curr) => prev + parseFloat(curr.withheld.toFixed(2)), 0).toLocaleString(undefined, { minimumFractionDigits: 2 })}</td>

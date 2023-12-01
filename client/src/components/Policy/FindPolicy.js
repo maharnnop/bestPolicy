@@ -23,6 +23,7 @@ import {
     BackdropBox1,
 } from "../StylesPages/LoginStyles";
 import { useCookies } from "react-cookie";
+import { date } from "joi";
 
 const config = require("../../config.json");
 
@@ -230,47 +231,27 @@ const FindPolicy = () => {
                 }
                 
                 const array = []
-                setExportPolicyData(res.data)
-                // for (let i = 0; i < res.data.length; i++) {
-                //     array.push(<tr>
-                //         <th scope="row">{i + 1}</th>
-                //         {res.data[i].status === 'I'?
-                //         <>
-                //         <td scope="row"><input type="checkbox" name="select" id={i} onClick={changestatus} /></td>
-                //         <td scope="row"><button type="button" class="btn btn-secondary " id={i} onClick={(e)=>editCard(e)} >Edit</button></td>
-                //         </>
-                //         : <><td></td> <td></td></>}
-
-                //         <td>{res.data[i].insurerCode}</td>
-                //         <td>{res.data[i].applicationNo}</td>
-                //         <td>{res.data[i].policyNo}</td>
-                //         <td>{res.data[i].agentCode}</td>
-                //         <td>{res.data[i].agentCode2}</td>
-                //         <td>{res.data[i].class}</td>
-                //         <td>{res.data[i].subclass}</td>
-                //         <td>{res.data[i].createdAt}</td>
-                //         <td>{res.data[i].actDate} - {res.data[i].expDate}</td>
-                //         <td>{res.data[i].insureeCode}</td>
-                //         <td>{res.data[i].licenseNo}</td>
-                //         <td>{res.data[i].chassisNo}</td>
-                //         <td>{res.data[i].endorseNo}</td>
-                //         <td>{res.data[i].seqNo}</td>
-                //         <td>{res.data[i].invoiceNo}</td>
-                //         <td>{res.data[i].taxInvoiceNo}</td>
-                //         <td>{res.data[i].netgrossprem}</td>
-                //         <td>{res.data[i].duty}</td>
-                //         <td>{res.data[i].stamp}</td>
-                //         <td>{res.data[i].totalprem}</td>
-                //         <td>{res.data[i].commin_amt}</td>
-                //         <td>{res.data[i].ovin_amt}</td>
-                //         <td>{res.data[i].commout_amt}</td>
-                //         <td>{res.data[i].ovout_amt}</td>
-                //     </tr>)
-
-                // }
-                //setPoliciesData(array)
-                //console.log(array);
-                setPoliciesData(res.data)
+                res.data.forEach((ele)=>{
+                    if (ele.duedateinsurer !== null) {
+                        ele.seqNoinsStart = new Date(ele.duedateinsurer)
+                    }else{
+                        let defualtDueDate = new Date();
+                        defualtDueDate = defualtDueDate.setMonth(defualtDueDate.getMonth() + 2)
+                        ele.seqNoinsStart = defualtDueDate
+                    }
+                    if (ele.duedateagent !== null) {
+                        ele.seqNoagtStart = new Date(ele.duedateagent)
+                    }else{
+                        let defualtDueDate = new Date();
+                        defualtDueDate = defualtDueDate.setMonth(defualtDueDate.getMonth() + 1)
+                        ele.seqNoagtStart = defualtDueDate
+                    }
+                  
+                    array.push(ele)
+                })
+                setExportPolicyData(array)
+                
+                setPoliciesData(array)
             })
             .catch((err) => {
 
@@ -285,14 +266,16 @@ const FindPolicy = () => {
         e.preventDefault();
         await axios.post(url + "/policies/policyedit/batch", data, headers).then((res) => {
           alert("policy batch updated");
-          window.location.reload(false);
+        //   window.location.reload(false);
+        submitFilter()
         }).catch((err)=>{ alert("Something went wrong, Try Again.");});
-      };
-      const editCard =(e) =>{
-        console.log(policiesData[e.target.id]);
-        setHidecard([true,e.target.id])
-       
-      };
+        
+    };
+    const editCard =(e) =>{
+    console.log(policiesData[e.target.id]);
+    setHidecard([true,e.target.id])
+    
+    };
     const handleClose = (e) =>{
       setHidecard([false,0])
     }
@@ -706,9 +689,9 @@ const FindPolicy = () => {
                             <th scope="col">เลขทะเบียนรถ</th>
                             <th scope="col">เลขตัวถังรถ</th>
 
-                            {/* <th scope="col">เบี้ย</th>
+                            <th scope="col">เบี้ย</th>
                             <th scope="col">ส่วนลด Walkin</th>
-                            <th scope="col">จำนวนเงินส่วนลด</th> */}
+                            <th scope="col">จำนวนเงินส่วนลด</th>
                             
                            
                             <th scope="col">เบี้ยสุทธิ</th>
@@ -751,9 +734,9 @@ const FindPolicy = () => {
                                 <td>{ele.licenseNo}</td>
                                 <td>{ele.chassisNo}</td>
                                
-                                {/* <td>{ele.grossprem.toLocaleString(undefined, { minimumFractionDigits: 2 })}</td>
+                                <td>{ele.grossprem.toLocaleString(undefined, { minimumFractionDigits: 2 })}</td>
                                 <td>{ele.specdiscrate.toLocaleString(undefined, { minimumFractionDigits: 2 })}</td>
-                                <td>{ele.specdiscamt.toLocaleString(undefined, { minimumFractionDigits: 2 })}</td> */}
+                                <td>{ele.specdiscamt.toLocaleString(undefined, { minimumFractionDigits: 2 })}</td>
                                 
                                 <td>{ele.netgrossprem.toLocaleString(undefined, { minimumFractionDigits: 2 })}</td>
                                 <td>{ele.duty.toLocaleString(undefined, { minimumFractionDigits: 2 })}</td>

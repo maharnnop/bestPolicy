@@ -353,6 +353,7 @@ const CreateBillAdvisor = () => {
 
                             <Select
                                 // styles={customStyles}
+                                required
                                 class="form-control"
                                 name={`agentCode`}
                                 onChange={(e) => setFilterData((prevState) => ({
@@ -518,15 +519,15 @@ const CreateBillAdvisor = () => {
                             <th scope="col">รหัสผู้แนะนำ</th>
                             <th scope="col">Due date</th>
 
-                            <th scope="col">idผู้อาประกัน</th>
+                            <th scope="col">รหัสผู้อาประกัน</th>
                             <th scope="col">ชื่อผู้เอาประกัน</th>
                             <th scope="col">เลขทะเบียนรถ</th>
                             <th scope="col">จังหวัดที่จดทะเบียน</th>
                             <th scope="col">เลขคัชซี</th>
                             
-                            {/* <th scope="col">เบี้ย</th>
+                            <th scope="col">เบี้ย</th>
                             <th scope="col">ส่วนลด Walkin</th>
-                            <th scope="col">จำนวนเงินส่วนลด</th> */}
+                            <th scope="col">จำนวนเงินส่วนลด</th>
                             
 
                             <th scope="col">เบี้ยสุทธิ</th>
@@ -560,12 +561,12 @@ const CreateBillAdvisor = () => {
                                 <td>{ele.insureeCode}</td>
                                 <td>{ele.insureename}</td>
                                 <td>{ele.licenseNo}</td>
-                                <td>{ele.motorprovinceID}</td>
+                                <td>{ele.motorprovince}</td>
                                 <td>{ele.chassisNo}</td>
 
-                                {/* <td>{ele.grossprem.toLocaleString(undefined, { minimumFractionDigits: 2 })}</td>
+                                <td>{ele.grossprem.toLocaleString(undefined, { minimumFractionDigits: 2 })}</td>
                                 <td>{ele.specdiscrate.toLocaleString(undefined, { minimumFractionDigits: 2 })}</td>
-                                <td>{ele.specdiscamt.toLocaleString(undefined, { minimumFractionDigits: 2 })}</td> */}
+                                <td>{ele.specdiscamt.toLocaleString(undefined, { minimumFractionDigits: 2 })}</td>
 
                                 <td>{ele.netgrossprem.toLocaleString(undefined, { minimumFractionDigits: 2 })}</td>
                                 <td>{ele.duty.toLocaleString(undefined, { minimumFractionDigits: 2 })}</td>

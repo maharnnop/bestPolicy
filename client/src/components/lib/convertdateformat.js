@@ -1,11 +1,12 @@
 
 export const  convertDateFormat = (inputDate,withT =true) => {
     // Parse the input date string
-    let dateParts
-    if (withT) {
+    let dateParts 
+
+    if (withT) { // for pattern 2023-09-14T03:44:19.691Z => 14/09/2023
        dateParts = inputDate.split('T')[0].split("-");
       
-    }else{
+    }else{ //for pattern 2024-01-30 => 30/01/2024
       dateParts = inputDate.split("-");
     }
     const year = dateParts[0];

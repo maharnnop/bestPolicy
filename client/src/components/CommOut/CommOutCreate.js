@@ -182,10 +182,10 @@ const saveapcommout = async (e) => {
 const submitapcommout = async (e) => {
   console.log({master :  filterData, trans : policiesData});
   await axios.post(url + "/araps/submitapcommout", {master :filterData, trans : policiesData}, headers).then((res) => {
-    alert("save account recive successed!!!")
-    .catch((err)=>{ alert("Something went wrong, Try Again.");});
-    // window.location.reload(false);
-  });
+    alert(res.data.msg)
+    
+    window.location.reload(false);
+  }).catch((err)=>{ alert("Something went wrong, Try Again.");});
 };
 
   return (
@@ -390,7 +390,7 @@ const submitapcommout = async (e) => {
                     </div>
                 </Modal.Body>
                 <Modal.Footer>
-                <button className="btn btn-warning" onClick={(e)=>saveapcommout(e)}>save</button>
+                {/* <button className="btn btn-warning" onClick={(e)=>saveapcommout(e)}>save</button> */}
         <button className="btn btn-success" onClick={(e)=>submitapcommout(e)}>submit</button>
                 </Modal.Footer>
             </Modal>

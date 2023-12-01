@@ -42,7 +42,7 @@ const FindCashierReceive = () => {
     const [advisorcode, setAdvisorcode] = useState("")
     const [refno, setRefno] = useState("");
     const [cashierReceiptNo, setCashierReceiptNo] = useState("");
-    const [transactionType, setTransactionType] = useState({});
+    const [transactionType, setTransactionType] = useState("PREM-IN");
     const [checkboxValue, setCheckboxValue] = useState();
     const [createUserCode, setCreateUserCode] = useState();
     const [fromDate, setFromDate] = useState('');
@@ -62,7 +62,7 @@ const FindCashierReceive = () => {
         let data = JSON.stringify({
             "billadvisorno": billAdvisorNo
         });
-        axios.post(window.globalConfig.BEST_POLICY_V1_BASE_URL+"/bills/findDataByBillAdvisoryNo",data,headers)
+        axios.post(url+"/bills/findDataByBillAdvisoryNo",data,headers)
             .then((response) => {
                 // console.log(response.data);
                 if (response.data[0])
@@ -95,13 +95,12 @@ const FindCashierReceive = () => {
             "toDate":toDate,
             "dfrpreferno":dfrpreferno
         });
-        axios.post(window.globalConfig.BEST_POLICY_V1_BASE_URL+"/bills/findbill",data,{
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        })
+        axios.post(url+"/bills/findbill",data,headers)
             .then((response) => {
                 // console.log(response.data);
+                if (response.data.length < 1) {
+                    alert("ไม่พบข้อมูล");
+                }
                 setTableData(response.data)
             })
             .catch((error) => {
@@ -125,9 +124,9 @@ const FindCashierReceive = () => {
                             <div className="col-7">
                                 <input type="text" id="billAdvisorNo" value={billAdvisorNo} onChange={(e) => setBillAdvisorNo(e.target.value)} className="form-control"/>
                             </div>
-                            <div className="col-1 text-center">
+                            {/* <div className="col-1 text-center">
                                 <button type="submit" className="btn btn-primary" onClick={searchBill}>ค้นหา</button>
-                            </div>
+                            </div> */}
                         </div>
                         
                         {/* Cashier Receipt No */}
@@ -260,8 +259,8 @@ const FindCashierReceive = () => {
                                 >
                                     <option value="" disabled>เลือกประเภทธุรกรรม</option>
                                     <option value="PREM-IN">PREM-IN</option>
-                                    <option value="PREM-OUT">PREM-OUT</option>
-                                    <option value="COMM-OUT">COMM-OUT</option>
+                                    {/* <option value="PREM-OUT">PREM-OUT</option>
+                                    <option value="COMM-OUT">COMM-OUT</option> */}
                                     <option value="COMM-IN">COMM-IN</option>
                                 </select>
                             </div>
@@ -321,7 +320,7 @@ const FindCashierReceive = () => {
                                     <td>{row.advisorcode}</td>
                                     <td>{row.cashierreceiveno ? row.cashierreceiveno : 'N/A'}</td>
                                     <td>{row.cashierdate ? row.cashierdate : 'N/A'}</td>
-                                    <td>{row.ARNO ? row.ARNO : 'N/A'}</td>
+                                    <td>{row.dfrpreferno ? row.dfrpreferno : 'N/A'}</td>
                                     <td>{row.receivefrom}</td>
                                     <td>{row.receivename}</td>
                                     <td>{row.createusercode}</td>

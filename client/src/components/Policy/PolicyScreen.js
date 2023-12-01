@@ -56,8 +56,8 @@ const PolicyScreen = (props) => {
     tax: 0,
     totalprem: 0,
     withheld: 0,
-    agentCode: '',
-    agentCode2: '',
+    agentCode: null,
+    agentCode2: null,
     unregisterflag: 'Y',
     actTime: "16:30",
     expTime: "16:30",
@@ -752,7 +752,22 @@ const PolicyScreen = (props) => {
               }));
               return
             } else {
-              const dueDateA = 
+             
+                const duedateA = new Date()
+                const  duedateI = new Date()
+                if (res.data[0].creditUAgent === "D") {
+                  duedateA.setDate(duedateA.getDate() + res.data[0].creditTAgent)
+                }else if (res.data[0].creditUAgent === "M") {
+                  duedateA.setMonth(duedateA.getMonth() + res.data[0].creditTAgent)
+                }
+                if (res.data[0].creditUInsurer === "D") {
+                  duedateI.setDate(duedateI.getDate() + res.data[0].creditTInsurer)
+                }else if (res.data[0].creditUInsurer === "M") {
+                  duedateI.setMonth(duedateI.getMonth() + res.data[0].creditTInsurer)
+                }
+                console.log(duedateA);
+               console.log(duedateI);
+               
 
               setFormData((prevState) => ({
                 ...prevState,
@@ -761,6 +776,8 @@ const PolicyScreen = (props) => {
                 [`ovin_rate`]: res.data[0].rateOVIn_1,
                 [`commout${i}_rate`]: res.data[0].rateComOut,
                 [`ovout${i}_rate`]: res.data[0].rateOVOut_1,
+                ['dueDateAgent'] : duedateA,
+                ['dueDateInsurer'] : duedateI,
 
               }))
             }
@@ -854,8 +871,8 @@ const PolicyScreen = (props) => {
     data[0].dueDateInsurer = data[0].dueDateInsurer.toLocaleDateString()
 
     ////////////////bypassssssssssssssssssssssssss/////////////////////////
-    data[0].subdistrict = 'ดุสิต'
-    data[0].zipcode = '81120'
+    // data[0].subdistrict = 'ดุสิต'
+    // data[0].zipcode = '81120'
 
     console.log(data);
     e.preventDefault();
@@ -1206,7 +1223,7 @@ const PolicyScreen = (props) => {
               value={formData.agentCode2}
               name={`agentCode2`}
               onChange={handleChange}
-              disabled={formData.agentCode === '' ? true : false}
+              disabled={formData.agentCode === null ? true : false}
               // onBlur={getcommov}
               onBlur={(e)=>getcommov2(e.target.name,e.target.value)}
             />
@@ -1526,7 +1543,7 @@ const PolicyScreen = (props) => {
 
       </div>
 
-      {formData.agentCode2 !== '' ?
+      {formData.agentCode2 !== null ?
         <div class="row">
           <div className="col-1"></div>
           <div class="col-2">

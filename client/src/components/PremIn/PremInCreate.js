@@ -22,7 +22,12 @@ export default function PremInCreate() {
         "agentCode": null,
         "cashierreceiveno": null,
         "dueDate" : null,
-        "policyNoAll" : true
+        "policyNoAll" : true,
+        // findpolicyindue
+        policyNoStart : null,
+        policyNoEnd : null,
+        createdDateStart : null,
+        createdDateEnd : null,
 
     })
     const [policiesData, setPoliciesData] = useState([])
@@ -149,8 +154,6 @@ const getData = (e) => {
             alert("dont find cashierreceiveno : " + filterData.cashierreceiveno);
 
         } else {
-
-
           console.log(res.data);
             const data = {...filterData ,amt: res.data[0].amt}
             setFilterData(data)
@@ -167,9 +170,11 @@ const getData = (e) => {
     .then((res) => {
         if (res.status === 201) {
             console.log(res.data);
-            alert("dont find billadvisorNo : " + filterData.billadvisorno);
+            alert("ไม่พบข้อมูลเลขที่ใบวางบิล : " + filterData.billadvisorno);
 
-        } else {
+        } else if(res.data.trans.length <1){
+          alert("เลขที่ใบวางบิล : " + filterData.billadvisorno +"ทำการตัดหนี้ไปแล้ว");
+        }else {
 
             const data = {...filterData , agentCode : res.data.billdata[0].agentCode, insurerCode : res.data.billdata[0].insurerCode,  actualvalue  : res.data.billdata[0].amt}
             setFilterData(data)
@@ -215,7 +220,7 @@ const savearpremin = async (e) => {
   const whtcommout = commout * wht
   const whtovout = ovout * wht
   const data = filterData 
-  data.diffamt = document.getElementsByName('DiffAmt')[0].value
+  data.diffamt = parseFloat(document.getElementsByName('DiffAmt')[0].value.replace(/,/g, ''));
   data.commout = commout
   data.ovout = ovout
   data.whtcommout = whtcommout
@@ -246,7 +251,7 @@ const submitarpremin = async (e) => {
   const whtcommout = commout * wht
   const whtovout = ovout * wht
   const data = filterData 
-  data.diffamt = document.getElementsByName('DiffAmt')[0].value
+  data.diffamt = parseFloat(document.getElementsByName('DiffAmt')[0].value.replace(/,/g, ''));
   data.commout = commout
   data.ovout = ovout
   data.whtcommout = whtcommout
@@ -255,10 +260,10 @@ const submitarpremin = async (e) => {
   console.log({master :  data, trans : policiesData});
   await axios.post(url + "/araps/submitarpremin", {master : data, trans : policiesData}, headers)
   .then((res) => {
-    alert("save account recive successed!!!")
-    .catch((err)=>{ alert("Something went wrong, Try Again.");});
-    // window.location.reload(false);
-  });
+    alert(res.data.msg)
+    
+    window.location.reload(false);
+  }).catch((err)=>{ alert("Something went wrong, Try Again.");});
 };
 
   return (
@@ -285,11 +290,12 @@ const submitarpremin = async (e) => {
               onClick={getData}
             >ค้นหา ข้อมูลใบวางบิล</button>
           </div>
+          {/* for premindirect
           <div className="col-2">
             <button
               onClick={submitFilter}
             >ค้นหา</button>
-          </div>
+          </div> */}
         </div>
         {/* insurerCode  */}
         <div className="row my-3">
@@ -323,18 +329,13 @@ const submitarpremin = async (e) => {
             />
           </div>
         </div>
+        {/* for premindirect
         <div className="row my-3">
           <label class="col-sm-2 col-form-label" htmlFor="cashierreceiveno">
             dueDate
           </label>
           <div className="col-4 ">
-            {/* <input
-              className="form-control"
-              type="date"
-              name="dueDate"
-              id="dueDate"
-              onChange={handleChange}
-              /> */}
+            
               <DatePicker
                             showIcon
                             className="form-control"
@@ -350,7 +351,7 @@ const submitarpremin = async (e) => {
                             }))}
                                  />
           </div>
-        </div>
+        </div> */}
               {/* cashierreceiveno */}
         <div className="row my-3">
           <label class="col-sm-2 col-form-label" htmlFor="cashierreceiveno">
@@ -402,11 +403,11 @@ const submitarpremin = async (e) => {
           <div className="col-4 ">
             <input
               className="form-control"
-              type="number"
+              type="text"
               name="DiffAmt"
               id="DiffAmt"
-              value={filterData.actualvalue - filterData.amt}
-              readOnly
+              value={(filterData.actualvalue - filterData.amt).toLocaleString(undefined, { minimumFractionDigits: 2 })}
+              disabled
             />
           </div>
         </div>

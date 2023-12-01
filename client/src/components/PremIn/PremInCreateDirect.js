@@ -199,7 +199,7 @@ export default function PremInCreateDirect() {
     master.whtovout = master.ovout * wht
     console.log({ master: master, trans: selecteddata });
     await axios.post(url + "/araps/submitarpremindirect", { master: master, trans: selecteddata }, headers).then((res) => {
-      alert("save account recive successed!!!");
+      alert(res.data.msg);
       window.location.reload(false);
     }).catch((err)=>{ alert("Something went wrong, Try Again.");});
   };
@@ -377,7 +377,7 @@ export default function PremInCreateDirect() {
       <div>
         <PremInTable cols={colsData} rows={policiesData} setPoliciesData={setPoliciesData} checknetflag={true} />
         <button className="btn btn-primary">Export To Excel</button>
-        <button className="btn btn-warning" onClick={(e) => savearpremin(e)}>save</button>
+        {/* <button className="btn btn-warning" onClick={(e) => savearpremin(e)}>save</button> */}
         <button className="btn btn-success" onClick={(e) => submitarpremin(e)}>submit</button>
       </div>
     </div>

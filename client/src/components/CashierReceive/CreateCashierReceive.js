@@ -92,6 +92,11 @@ const CreateCashierReceive = () => {
         axios.post(window.globalConfig.BEST_POLICY_V1_BASE_URL + "/bills/findDataByBillAdvisoryNo?txtype=" + txtype, data, headers)
             .then((response) => {
                 console.log(response);
+                if (response.data.length <1) {
+                    alert("เลขที่ใบวางบิลไม่สามารถทำการตัดหนี้ได้")
+                }else{
+
+                
                 setInsurer(response.data[0].insurerCode)
                 setInsurerReadOnly(true)
                 setAdvisoryReadOnly(true)
@@ -105,7 +110,7 @@ const CreateCashierReceive = () => {
                 }
                 setReceiveName(response.data[0].receivename)
                 setAmount(response.data[0].amt)
-
+            }
 
             })
 
@@ -233,6 +238,7 @@ const CreateCashierReceive = () => {
 
 
     }, [receiveForm]);
+
     const handleSubmit = () => {
         let data = {
             // keyid: Joi.string().required(),
@@ -322,8 +328,10 @@ const CreateCashierReceive = () => {
 
                 if (response.status == 200) {
                     console.log("Success")
-                    setModalText("Success")
-                    setShow(true)
+                    alert(`สร้างใบเสร็จรับเงินเลขที่ ${response.data.CashierReceiveNo}`)
+                    // setModalText(`สร้างใบเสร็จรับเงินเลขที่ ${response.data.CashierReceiveNo}`)
+                    // setShow(true)
+                    window.location.reload(false);
                 } else {
                     setModalText(response.data.error)
                     setShow(true)
@@ -487,7 +495,7 @@ const CreateCashierReceive = () => {
 
                                 <div className="row mb-3">
                                     <div className="col-4">
-                                        <label htmlFor="dfrpreferno" className="form-label">เลขที่รายการที่ลูกค้าจ่ายเงินที่ประกัน</label>
+                                        <label htmlFor="dfrpreferno" className="form-label">เลขที่ตัดจ่าย Prem Out</label>
                                     </div>
                                     <div className="col-7">
                                         <input type="text" required id="dfrpreferno" value={dfrpreferno} onChange={(e) => setDfrpreferno(e.target.value)} className="form-control" />
@@ -850,9 +858,9 @@ const CreateCashierReceive = () => {
 
 
                         <div className="row" style={{ marginTop: '20px' }}>
-                            <div className="col-12 text-center">
+                            {/* <div className="col-12 text-center">
                                 <button type="submit" className="btn btn-primary btn-lg" onClick={handleSave}>Save</button>
-                            </div>
+                            </div> */}
                         </div>
                         <div className="row" style={{ marginTop: '20px' }}>
                             <div className="col-12 text-center">

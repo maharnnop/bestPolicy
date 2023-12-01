@@ -57,7 +57,8 @@ const getbilldata = async (req, res) => {
         join static_data.b_jupgrs j on t.polid = j.polid and t."seqNo" = j."seqNo" 
         join static_data."Policies" p on p.id = j.polid
         where t.billadvisorno = :billadvisorno 
-        and t."transType" = 'PREM-IN' and j.installmenttype ='A' `,
+        and t."transType" = 'PREM-IN' and j.installmenttype ='A' 
+        and t.dfrpreferno is null`,
     {
       replacements: {
         billadvisorno: req.body.billadvisorno,
@@ -850,7 +851,7 @@ const findAPPremOut = async (req, res) => {
     cond = cond + ` and r.reconcileno = '${req.body.reconcileno}'`
   }
   if (req.body.dueDate  !== null && req.body.dueDate !== '' ) {
-    cond = cond + ` and  '${req.body.dueDate}' <= t."dueDate" `
+    cond = cond + ` and   t."dueDate" <= '${req.body.dueDate}' `
   }
   
   //wait rewrite when clear reconcile process
@@ -1070,7 +1071,7 @@ const submitAPPremOut = async (req, res) => {
     //insert to deteil of transaction when netflag = N
     if (req.body.trans[i].netflag === "N") {
       const agent = await sequelize.query(
-        '(select taxno, deducttaxrate from static_data."Agents" where "agentCode" = :agentCode )',
+        '(select taxno, "deductTaxRate"from static_data."Agents" where "agentCode" = :agentCode )',
         {
           replacements: {
             agentCode: req.body.trans[i].agentCode,
@@ -1108,7 +1109,7 @@ const submitAPPremOut = async (req, res) => {
   }// end for loop
     await t.commit();
     await res.json({
-      msg: `created ARNO : ${req.body.master.apno } success!!`,
+      msg: `created APNO : ${req.body.master.apno } success!!`,
     });
   } catch (error) {
     console.log(error);
@@ -1173,7 +1174,8 @@ const findARCommIn = async (req, res) => {
         and t.dfrpreferno is null
         and t."premout-rprefdate" is not null
         and t."premout-dfrpreferno" is not null
-        and j.installmenttype ='I' ${cond} `,
+        and j.installmenttype ='I' 
+        ${cond} `,
     {
       
       type: QueryTypes.SELECT,

@@ -26,33 +26,10 @@ export default function PremOutCreate() {
     })
     const [policiesData, setPoliciesData] = useState([])
     const [hidecard, setHidecard] = useState([false, 0]);
-  const colsData = [
-    "select",
-    "insurerCode",
-    "advisorCode",
-    "Duedate",
-    "Policyno",
-    "Endorseno",
-    "Invoiceno",
-    "seqno",
-    "customerid",
-    "insuredname",
-    "licenseno",
-    "province",
-    "chassisno",
-    "grossprem",
-    "duty",
-    "tax",
-    "totalamt",
-    "comm-out%",
-    "comm-out-amt",
-    "ov-out%",
-    "ov-out-amt",
-    "[] net",
-    "billpremium",
-  ];
+  
   const cols2Data = {
     select : "เลือก",
+    netflag: "[] Net",
     insurerCode:"รหัสบริษัทประกัน",
     agentCode:"รหัสผู้แนะนำ",
     dueDate:"Duedate",
@@ -78,7 +55,7 @@ export default function PremOutCreate() {
     ovin_amt: "จำนวน",
     ovin_taxamt: "Vat Ov In",
     ovin_total: "Ov In รวม",
-    netflag: "[] Net",
+    
     paymentamt: "รวม (บาท)",
 
 };
@@ -142,8 +119,8 @@ export default function PremOutCreate() {
         .then((res) => {
             if (res.status === 201) {
                 console.log(res.data);
-                alert("not found policy")
-
+                alert("ไม่พบกรมธรรม์สำหรับ ส่งค่าเบี้ยประกัน")
+                setPoliciesData([])
             } else {
 
 
@@ -179,8 +156,8 @@ const savearpremout = async (e) => {
 const submitarpremout = async (e) => {
   console.log({master :  filterData, trans : policiesData});
   await axios.post(url + "/araps/submitappremout", {master :filterData, trans : policiesData}, headers).then((res) => {
-    alert("save account recive successed!!!");
-    // window.location.reload(false);
+    alert(res.data.msg);
+    window.location.reload(false);
   }).catch((err)=>{ alert("Something went wrong, Try Again.");});
 };
 
@@ -323,7 +300,7 @@ const submitarpremout = async (e) => {
                     </div>
                 </Modal.Body>
                 <Modal.Footer>
-                <button className="btn btn-warning" onClick={(e)=>savearpremout(e)}>save</button>
+                {/* <button className="btn btn-warning" onClick={(e)=>savearpremout(e)}>save</button> */}
         <button className="btn btn-success" onClick={(e)=>submitarpremout(e)}>submit</button>
                 </Modal.Footer>
             </Modal>
