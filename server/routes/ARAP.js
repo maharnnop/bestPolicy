@@ -22,6 +22,7 @@ router.post('/submitarcommin', ctrl.arap.submitARCommIn);
 router.post('/getapcommout', ctrl.arap.findAPCommOut);
 router.post('/saveapcommout', ctrl.arap.saveAPCommOut);
 router.post('/submitapcommout', ctrl.arap.submitAPCommOut);
+router.post('/getaraptransall', ctrl.arap.getARAPtransAll);
 
 
 

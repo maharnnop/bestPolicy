@@ -11,7 +11,8 @@ router.get('/commovinget/:id', ctrl.insures.getCommOVInByid);
 router.post('/commovoutnew', ctrl.insures.newCommOVOut);
 router.get('/commovoutget/:id', ctrl.insures.getCommOVOutByid);
 router.post('/commovnew', ctrl.insures.newCommOV);
-router.post('/getcommov', ctrl.insures.getCommOV);
+router.post('/getcommov', ctrl.insures.getCommOVOut);
+router.post('/getcommovin', ctrl.insures.getCommOVIn);
 router.post('/getinsurebyclass', ctrl.insures.getInsureByClass);
 
 // router.post('/', ctrl.cars.postCar);

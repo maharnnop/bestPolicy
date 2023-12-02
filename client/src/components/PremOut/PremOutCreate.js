@@ -167,11 +167,11 @@ const submitarpremout = async (e) => {
         <h1>Statement ค่าเบี้ยส่งบริษัทประกัน</h1>
        
         {/* insurerCode  */}
-        <div className="row my-3">
+        <div className="row my-3"><div className="col-1"></div>
           <label class="col-sm-2 col-form-label" htmlFor="insurerCode">
             รหัสบริษัทประกัน
           </label>
-          <div className="col-4 ">
+          <div className="col-3 ">
             <input
               className="form-control"
               type="text"
@@ -183,11 +183,11 @@ const submitarpremout = async (e) => {
           </div>
         </div>
         {/* advisorCode  */}
-        <div className="row my-3">
+        <div className="row my-3"><div className="col-1"></div>
           <label class="col-sm-2 col-form-label" htmlFor="agentCode">
             รหัสผู้แนะนำ
           </label>
-          <div className="col-4 ">
+          <div className="col-3">
             <input
               className="form-control"
               type="text"
@@ -199,11 +199,11 @@ const submitarpremout = async (e) => {
           </div>
         </div>
           {/* reconcileno */}
-          <div className="row my-3">
+          {/* <div className="row my-3"><div className="col-1"></div>
           <label class="col-sm-2 col-form-label" htmlFor="cashierreceiveno">
             reconcileno
           </label>
-          <div className="col-4 ">
+          <div className="col-3 ">
             <input
               className="form-control"
               type="text"
@@ -214,13 +214,13 @@ const submitarpremout = async (e) => {
               onChange={handleChange}
             />
           </div>
-          </div>
+          </div> */}
          {/* duedate  */}
-        <div className="row my-3">
+        <div className="row my-3"><div className="col-1"></div>
           <label class="col-sm-2 col-form-label" htmlFor="cashierreceiveno">
             dueDate
           </label>
-          <div className="col-4 ">
+          <div className="col-3 ">
             {/* <input
               className="form-control"
               type="date"
@@ -246,7 +246,7 @@ const submitarpremout = async (e) => {
         </div>
        
         
-        <div className="row my-3">
+        <div className="d-flex justify-content-center">
           <input type="submit" className="btn btn-success" value={'ค้นหา'}/>
         </div>
       </form>
@@ -306,9 +306,12 @@ const submitarpremout = async (e) => {
             </Modal>
       <div>
         <PremInTable cols={cols2Data} rows={policiesData} handleChange={handleChange} checknetflag={true}/>
-        <button className="btn btn-primary">Export To Excel</button>
-        <button type="button" class="btn btn-primary " onClick={(e) => editCard(e)} >ยืนยัน</button>
+        
        
+      </div>
+      <div className="d-flex justify-content-center">
+      <button className="btn btn-primary">Export To Excel</button>
+        <button type="button" class="btn btn-primary " onClick={(e) => editCard(e)} >ยืนยัน</button>
       </div>
     </div>
   );

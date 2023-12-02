@@ -43,7 +43,7 @@ const CreateCashierReceive = () => {
     const [dfrpreferno, setDfrpreferno] = useState("-");
     const [Insurer, setInsurer] = useState("");
     const [Advisor, setAdvisor] = useState("")
-    const [Customer, setCustomer] = useState("");
+    const [Customer, setCustomer] = useState("0");
     const [cashierReceiptNo, setCashierReceiptNo] = useState("");
     const [cashierDate, setCashierDate] = useState("");
     const [receiveForm, setReceiveForm] = useState("Advisor");
@@ -539,14 +539,14 @@ const CreateCashierReceive = () => {
                             </div>
 
                             {/* Customer */}
-                            <div className="row mb-3">
+                            {/* <div className="row mb-3">
                                 <div className="col-4">
                                     <label htmlFor="CustomerId" className="form-label">ID ลูกค้า</label>
                                 </div>
                                 <div className="col-7">
                                     <input type="number" id="Customer" value={Customer} required onChange={(e) => setCustomer(e.target.value)} className="form-control" />
                                 </div>
-                            </div>
+                            </div> */}
 
                             {/* Cashier Receipt No */}
                             {/* <div className="row mb-3">

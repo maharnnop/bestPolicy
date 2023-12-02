@@ -160,8 +160,8 @@ const submitARPremin = async (req, res) => {
     const arPremIn = await sequelize.query(
       `insert into static_data.b_jaaraps (billadvisorno, cashierreceiveno, cashieramt, insurerno, advisorno, type, transactiontype, actualvalue, diffamt, status, 
             createusercode, dfrpreferno, rprefdate )
-          values( :billadvisorno, :cashierreceiveno, :cashieramt, (select "id" from static_data."Insurers" where "insurerCode" = :insurerCode), 
-          (select "id" from static_data."Agents" where "agentCode" = :agentCode), :type, :transactiontype, :actualvalue, :diffamt, :status, 
+          values( :billadvisorno, :cashierreceiveno, :cashieramt, (select "id" from static_data."Insurers" where "insurerCode" = :insurerCode and lastversion ='Y'), 
+          (select "id" from static_data."Agents" where "agentCode" = :agentCode and lastversion ='Y'), :type, :transactiontype, :actualvalue, :diffamt, :status, 
             :createusercode, :dfrpreferno, :rprefdate ) Returning id`,
       {
         replacements: {
@@ -895,6 +895,67 @@ const findAPPremOut = async (req, res) => {
     await res.json( trans );
   }
 };
+const getARAPtransAll = async (req, res) => {
+  
+  let cond = ''
+  if (req.body.billadvisorno  !== null && req.body.billadvisorno !== '') {
+    cond = cond + ` and t.billadvisorno = '${req.body.billadvisorno}'` 
+  }
+  if (req.body.insurerCode  !== null && req.body.insurerCode !== '') {
+    cond = cond + ` and t.insurerCode = '${req.body.insurerCode}'` 
+  }
+  if (req.body.agentCode  !== null && req.body.agentCode !== '') {
+    cond = cond + ` and t.agentCode = '${req.body.agentCode}'` 
+  }
+  if (req.body.receiptno  !== null && req.body.receiptno !== '') {
+    cond = cond + ` and t.receiptno = '${req.body.receiptno}'` 
+  }
+  if (req.body.rprefdatestart  !== null && req.body.rprefdatestart !== '') {
+    cond = cond + ` and t.rprefdate >= '${req.body.rprefdatestart}'` 
+  }
+  if (req.body.rprefdateend  !== null && req.body.rprefdateend !== '') {
+    cond = cond + ` and t.rprefdate <= '${req.body.rprefdateend}'` 
+  }
+  if (req.body.type === 'prem_in') {
+    cond = cond + ` and t."transType" = 'PREM-IN'` 
+  }else if (req.body.type === 'prem_out') {
+    cond = cond + ` and t."transType" = 'PREM-OUT'` 
+  }else if (req.body.type === 'comm/ov_out') {
+    cond = cond + ` and t."transType" in ( 'COMM-OUT', 'OV-OUT' )` 
+  }else if (req.body.type === 'comm/ov_in') {
+    cond = cond + ` and t."transType" in ( 'COMM-IN', 'OV-IN' )`     
+  }
+  
+  const trans = await sequelize.query(
+    `select t."agentCode", t."insurerCode",  t."withheld" , 
+        t."dueDate", t."policyNo", t."endorseNo", j."invoiceNo", t."seqNo" ,
+        (select "id" from static_data."Insurees" where "insureeCode" = p."insureeCode" ) as customerid, 
+        (select "t_firstName"||' '||"t_lastName"  as insureeName from static_data."Entities" where id =
+        (select "entityID" from static_data."Insurees" where "insureeCode" = p."insureeCode" ) ) as insureeName , 
+       
+        j.polid, (select "licenseNo" from static_data."Motors" where id = p."itemList") , (select  "chassisNo" from static_data."Motors" where id = p."itemList"), j.netgrossprem, j.duty, j.tax, j.totalprem, j.commout_rate,
+        j.commout_amt, j.ovout_rate, j.ovout_amt, t.netflag, t.remainamt, t."transType",
+        t.rprefdate, t.dfrpreferno, t."premin-dfrpreferno", t."premout-dfrpreferno"
+        from static_data."Transactions" t 
+        join static_data.b_jupgrs j on t.polid = j.polid and t."seqNo" = j."seqNo" 
+        join static_data."Policies" p on p.id = j.polid
+        where t.txtype2 in ( 1, 2, 3, 4, 5 )
+        and t.status ='N'
+        and t.dfrpreferno is not null
+        and j.installmenttype ='I' ${cond}`,
+    {
+      replacements: {
+        billadvisorno: req.body.billadvisorno,
+      },
+      type: QueryTypes.SELECT,
+    }
+  );
+  if (trans.length === 0) {
+    await res.status(201).json({ msg: "not found transaction" });
+  } else {
+    await res.json({ trans: trans });
+  }
+};
 
 const saveAPPremOut = async (req, res) => {
   const jwt = req.headers.authorization.split(' ')[1];
@@ -984,8 +1045,8 @@ const submitAPPremOut = async (req, res) => {
     const arPremIn = await sequelize.query(
       `insert into static_data.b_jaaraps (insurerno, advisorno, type, transactiontype, actualvalue, diffamt, status, 
             createusercode, netprem, commin, ovin, vatcommin, vatovin, whtcommin, whtovin, dfrpreferno, rprefdate )
-          values((select "id" from static_data."Insurers" where "insurerCode" = :insurerCode), 
-          (select "id" from static_data."Agents" where "agentCode" = :agentCode), :type, :transactiontype, :actualvalue, :diffamt, :status, 
+          values((select "id" from static_data."Insurers" where "insurerCode" = :insurerCode and lastversion ='Y'), 
+          (select "id" from static_data."Agents" where "agentCode" = :agentCode and lastversion ='Y'), :type, :transactiontype, :actualvalue, :diffamt, :status, 
             :createusercode, :netprem, :commin , :ovin, :vatcommin, :vatovin, :whtcommin, :whtovin,  :dfrpreferno, :rprefdate ) Returning id`,
       {
         replacements: {
@@ -1340,8 +1401,8 @@ const submitARCommIn = async (req, res) => {
     const arCommIn = await sequelize.query(
       `insert into static_data.b_jaaraps (insurerno, advisorno, type, transactiontype, actualvalue,  status, 
             createusercode,  commin,  whtcommin, ovin,  whtovin, dfrpreferno, rprefdate)
-          values((select "id" from static_data."Insurers" where "insurerCode" = :insurerCode), 
-          (select "id" from static_data."Agents" where "agentCode" = :agentCode), :type, :transactiontype, :actualvalue,  :status, 
+          values((select "id" from static_data."Insurers" where "insurerCode" = :insurerCode and lastversion = 'Y'), 
+          (select "id" from static_data."Agents" where "agentCode" = :agentCode and lastversion = 'Y'), :type, :transactiontype, :actualvalue,  :status, 
             :createusercode, :commin ,  :whtcommin,  :ovin ,  :whtovin, :dfrpreferno, :rprefdate) Returning id`,
       {
         replacements: {
@@ -1504,8 +1565,8 @@ const submitARCommIn = async (req, res) => {
 //account payment comm/ov out 
 const findAPCommOut = async (req, res) => {
 
-  let cond = ` and (p."actDate" between '${req.body.effDatestart}' and '${req.body.effDateend}'   or p."expDate" between '${req.body.effDatestart}' and '${req.body.effDateend}')`
-
+  // let cond = ` and (p."actDate" between '${req.body.effDatestart}' and '${req.body.effDateend}'   or p."expDate" between '${req.body.effDatestart}' and '${req.body.effDateend}')`
+let cond = ''
   if (req.body.insurerCode  !== null && req.body.insurerCode !== '') {
     cond = cond + ` and t."insurerCode" = '${req.body.insurerCode}'`
   }
@@ -1650,8 +1711,8 @@ const submitAPCommOut = async (req, res) => {
     const arCommOut = await sequelize.query(
       `insert into static_data.b_jaaraps (insurerno, advisorno, type, transactiontype, actualvalue,  status, 
             createusercode,  commout,  whtcommout, ovout,  whtovout, dfrpreferno, rprefdate)
-          values((select "id" from static_data."Insurers" where "insurerCode" = :insurerCode), 
-          (select "id" from static_data."Agents" where "agentCode" = :agentCode), :type, :transactiontype, :actualvalue,  :status, 
+          values((select "id" from static_data."Insurers" where "insurerCode" = :insurerCode and lastversion = 'Y'), 
+          (select "id" from static_data."Agents" where "agentCode" = :agentCode and lastversion = 'Y'), :type, :transactiontype, :actualvalue,  :status, 
             :createusercode, :commout ,  :whtcommout,  :ovout ,  :whtovout, :dfrpreferno, :rprefdate) Returning id`,
       {
         replacements: {
@@ -1682,7 +1743,7 @@ const submitAPCommOut = async (req, res) => {
   //insert to deteil of jatw 
   
     const agent = await sequelize.query(
-      '(select taxno, deducttaxrate from static_data."Agents" where "agentCode" = :agentCode )',
+      '(select taxno, "deductTaxRate" from static_data."Agents" where "agentCode" = :agentCode )',
       {
         replacements: {
           agentCode: req.body.master.agentCode,
@@ -1701,7 +1762,7 @@ const submitAPCommOut = async (req, res) => {
           keyidm: arCommOut[0][0].id,
           advisorcode: req.body.master.agentCode,
           taxno: agent[0].taxno,
-          deducttaxrate: agent[0].deducttaxrate,
+          deducttaxrate: agent[0].deductTaxRate,
           commout_amt: req.body.master.commout,
           ovout_amt: req.body.master.ovout,
           whtcommout_amt: req.body.master.whtcommout,
@@ -1798,5 +1859,6 @@ module.exports = {
   findAPCommOut,
   saveAPCommOut,
   submitAPCommOut,
+  getARAPtransAll
 
 };

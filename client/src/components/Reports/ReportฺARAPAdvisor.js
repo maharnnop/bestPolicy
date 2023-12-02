@@ -6,7 +6,7 @@ import jwt_decode from "jwt-decode";
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import ReportTable from "./ReportTable";
-import convertDateFormat from "../lib/convertdateformat";
+import {convertDateFormat , getDateReport} from "../lib/convertdateformat";
 
 import {
     BrowserRouter,
@@ -171,16 +171,86 @@ axios
 
 
     
-    const exportExcel =(e) => {
+    const exportExcel = (e) => {
         e.preventDefault()
-        axios.post(url_report + "/Cashier/excel", filterData, {
+        let url_type
+        let filename
+       if (type === 'In') {
+        if (reporttype === 'Open') {
+            
+        }else if(reporttype === 'Clear') {
+
+        }else if(reporttype === 'Outstand') {
+            
+        }
+       }else if (type === 'Out'){
+        if (reporttype === 'Open') {
+            url_type = 'commOutOvOutOpenItem'
+            filename =`รายงานตัดจ่ายค่าCommOV_ตัวตั้ง_${getDateReport('D')}`;
+        }else if(reporttype === 'Clear') {
+            url_type = 'commOutOvOutClearing'
+            filename =`รายงานตัดจ่ายค่าCommOV_ตัวตัด_${getDateReport('D')}`;
+        }else if(reporttype === 'Outstand') {
+            url_type = 'commOutOvOutOutstanding'
+            filename =`รายงานตัดจ่ายค่าCommOV_ตัวคงเหลือ_${getDateReport('D')}`;
+        }
+       }
+       const data = 
+        {
+            "startPolicyIssueDate": fromDate,
+            "endPolicyIssueDate": toDate,
+            "asAtDate": atdate,
+            "createUserCode": createusercode,
+            "mainAccountContactPersonId": employeecode,
+            "mainAccountCode": advisorcode,
+            "insurerCode": insurercode,
+            
+            "policyStatus": status,
+            "class": filterData.class,
+            "subClass": filterData.subClass,
+            "transactionType": ""
+
+        
+          }
+          
+          if (document.getElementsByName("createusercodeCB")[0].checked) {
+            data.createUserCode = ''
+         }
+         if (document.getElementsByName ("employeecodeCB")[0].checked) {
+            data.mainAccountContactPersonId = ''
+         }
+         if (document.getElementsByName ("advisorcodeCB")[0].checked) {
+            data.mainAccountCode = ''
+         }
+         if (document.getElementsByName ("insurercodeCB")[0].checked) {
+            data.insurerCode = ''
+         }
+
+        axios.post(url_report + `/ArAp/${url_type}/excel`, data, {
             headers: {
                 'Content-Type': 'application/json'
-            }
+            },            
+            responseType: 'blob',
+        
         })
-            .then((response) => {
-                
-            })
+        .then((response) => {
+            // Extract filename from Content-Disposition header, if available
+ 
+  
+  const blob = new Blob([response.data], { type: response.headers['content-type'] });
+
+  // Create a temporary link element
+  const link = document.createElement('a');
+  link.href = window.URL.createObjectURL(blob);
+  link.download = filename;
+
+  // Trigger a click on the link to start the download
+  link.click();
+
+  // Remove the link from the DOM
+  document.body.removeChild(link);
+         
+        })
             .catch((error) => {
                 console.log(error);
             });
@@ -552,9 +622,7 @@ axios
                         {reportData.length!=0 ?
                         <div>
                         <ReportTable cols={colData} rows={reportData} />
-                        <button className="btn btn-primary" onClick={exportExcel}>Export To Excel</button>
-                        {/* <button className="btn btn-warning" onClick={(e)=>saveapcommin(e)}>save</button>
-                        <button className="btn btn-success" onClick={(e)=>submitapcommin(e)}>submit</button> */}
+                        
                       </div>:
                             <div className="container" style={{marginTop:"30px"}}>
                                 <div className="row justify-content-center">
@@ -562,6 +630,11 @@ axios
                                 </div>
                             </div>}
                     </div>
+                    <div className="d-flex justify-content-center">
+        <button className="btn btn-primary" onClick={exportExcel}>Export To Excel</button>
+        {/* <button className="btn btn-warning" onClick={(e)=>saveapcommin(e)}>save</button>
+        <button className="btn btn-success" onClick={(e)=>submitapcommin(e)}>submit</button> */}
+        </div>
                 </div>
             </div >
         </div >

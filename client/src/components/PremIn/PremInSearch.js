@@ -103,10 +103,11 @@ export default function PremInSearch() {
         <h1>ค้นหารายการตัดหนี้ PREM-IN</h1>
         {/* BillAdvisorNo */}
         <div className="row my-3">
+        <div className="col-1"></div>
           <label class="col-sm-2 col-form-label" htmlFor="billadvisorno">
             เลขที่ใบวางบิล
           </label>
-          <div className="col-4">
+          <div className="col-3">
             <input
               className="form-control"
               type="text"
@@ -118,10 +119,11 @@ export default function PremInSearch() {
         </div>
         {/* Insurercode  */}
         <div className="row my-3">
+        <div className="col-1"></div>
           <label class="col-sm-2 col-form-label" htmlFor="insurercode">
             รหัสบริษัทประกัน
           </label>
-          <div className="col-4 ">
+          <div className="col-3 ">
             <input
               className="form-control"
               type="text"
@@ -148,10 +150,11 @@ export default function PremInSearch() {
         </div>
         {/* Advisorcode  */}
         <div className="row my-3">
+        <div className="col-1"></div>
           <label class="col-sm-2 col-form-label" htmlFor="advisorcode">
             รหัสผู้แนะนำ
           </label>
-          <div className="col-4 ">
+          <div className="col-3 ">
             <input
               className="form-control"
               type="text"
@@ -177,11 +180,11 @@ export default function PremInSearch() {
           </div>
         </div>
         {/* CashierReceiveNo */}
-        <div className="row my-3">
+        <div className="row my-3"><div className="col-1"></div>
           <label class="col-sm-2 col-form-label" htmlFor="cashierreceiveno">
             เลขที่ใบรับเงิน
           </label>
-          <div className="col-4 ">
+          <div className="col-3 ">
             <input
               className="form-control"
               type="text"
@@ -207,11 +210,11 @@ export default function PremInSearch() {
           </div>
         </div>
         {/* Refno */}
-        <div className="row my-3">
+        <div className="row my-3"><div className="col-1"></div>
           <label class="col-sm-2 col-form-label" htmlFor="refno">
             เลขที่อ้างอิงการจ่ายเงิน
           </label>
-          <div className="col-4 ">
+          <div className="col-3 ">
             <input
               className="form-control"
               type="text"
@@ -237,11 +240,11 @@ export default function PremInSearch() {
           </div>
         </div>
        {/* ARNO  */}
-       <div className="row my-3">
+       <div className="row my-3"><div className="col-1"></div>
           <label class="col-sm-2 col-form-label" htmlFor="arno">
             เลขที่รายการตัดหนี้
           </label>
-          <div className="col-4 ">
+          <div className="col-3 ">
             <input
               className="form-control"
               type="text"
@@ -266,14 +269,14 @@ export default function PremInSearch() {
           </div>
         </div>
         {/* ARDATE*/}
-        <div className="row my-3">
+        <div className="row my-3"><div className="col-1"></div>
           <label class="col-sm-2 col-form-label" htmlFor="ardate">
-            วันที่ตัดหนี้
+            วันที่ตัดหนี้ จาก
           </label>
-          <div className="col-5 " id="ardate">
-            <label class="col-sm-3 col-form-label" htmlFor="ardatestart">
+          <div className="col-4 " id="ardate">
+            {/* <label class="col-sm-3 col-form-label" htmlFor="ardatestart">
               จาก วันที่
-            </label>
+            </label> */}
             {/* <input
               className="form-control"
               type="date"
@@ -326,11 +329,11 @@ export default function PremInSearch() {
         </div>
         
          {/* ARcreateusercode */}
-         <div className="row my-3">
+         <div className="row my-3"><div className="col-1"></div>
           <label class="col-sm-2 col-form-label" htmlFor="arcreateusercode">
             ผู้บันทึกรายการตัดหนี้
           </label>
-          <div className="col-4 ">
+          <div className="col-3 ">
             <input
               className="form-control"
               type="text"
@@ -355,10 +358,11 @@ export default function PremInSearch() {
             </div>
           </div>
         </div>
-        <div className="row my-3">
+       
+      </form>
+      <div className="d-flex justify-content-center">
           <button className="btn btn-success" onClick={submitFilter}>ค้นหา</button>
         </div>
-      </form>
       <div>
         <PremInTable cols={colData2} rows={policiesData} />
       </div>

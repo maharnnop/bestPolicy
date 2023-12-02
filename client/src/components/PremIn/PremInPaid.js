@@ -96,11 +96,12 @@ export default function PremInPaid() {
       <form onSubmit={(e)=>searchHandler(e)}>
         <h1>แสดงรายการที่รับชำระหนี้</h1>
         {/* BillAdvisorNo */}
-        <div className="row my-3">
+        <div className="row my-3"><div className="col-1"></div>
+          
           <label class="col-sm-2 col-form-label" htmlFor="billAdvisorNo">
             เลขที่ใบวางบิล
           </label>
-          <div className="col-4">
+          <div className="col-3">
             <input
               className="form-control"
               type="text"
@@ -110,11 +111,11 @@ export default function PremInPaid() {
           </div>
         </div>
         {/* Insurercode  */}
-        <div className="row my-3">
+        <div className="row my-3"><div className="col-1"></div>
           <label class="col-sm-2 col-form-label" htmlFor="Insurercode">
             รหัสบริษัทประกัน
           </label>
-          <div className="col-4 ">
+          <div className="col-3 ">
             <input
               className="form-control"
               type="text"
@@ -139,11 +140,11 @@ export default function PremInPaid() {
           </div>
         </div>
         {/* Advisorcode  */}
-        <div className="row my-3">
+        <div className="row my-3"><div className="col-1"></div>
           <label class="col-sm-2 col-form-label" htmlFor="Advisorcode">
             รหัสผู้แนะนำ
           </label>
-          <div className="col-4 ">
+          <div className="col-3 ">
             <input
               className="form-control"
               type="text"
@@ -168,11 +169,11 @@ export default function PremInPaid() {
           </div>
         </div>
         {/* CashierReceiveNo */}
-        <div className="row my-3">
+        <div className="row my-3"><div className="col-1"></div>
           <label class="col-sm-2 col-form-label" htmlFor="CashierReceiveNo">
             เลขที่รับเงิน
           </label>
-          <div className="col-4 ">
+          <div className="col-3 ">
             <input
               className="form-control"
               type="text"
@@ -197,11 +198,11 @@ export default function PremInPaid() {
           </div>
         </div>
         {/* ARNO */}
-        <div className="row my-3">
+        <div className="row my-3"><div className="col-1"></div>
           <label class="col-sm-2 col-form-label" htmlFor="ARNO">
             เลขที่ตัดหนี้
           </label>
-          <div className="col-4 ">
+          <div className="col-3 ">
             <input className="form-control" type="text" name="ARNO" id="ARNO" />
           </div>
           <div class="col-4 form-check d-flex align-items-center text-center  ">
@@ -221,14 +222,17 @@ export default function PremInPaid() {
           </div>
         </div>
 
-        <div className="row my-3">
+        <div className="d-flex justify-content-center">
           <button className="btn btn-success">ค้นหา</button>
         </div>
       </form>
       <div>
         <PremInTable cols={colData} rows={policiesData} />
-        <button className="btn btn-primary">Export To Excel</button>
+        
       </div>
+      <div className="d-flex justify-content-center">
+      <button className="btn btn-primary">Export To Excel</button>
+        </div>
     </div>
   );
 }

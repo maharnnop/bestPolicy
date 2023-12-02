@@ -158,6 +158,9 @@ const FindBillAdvisor = () => {
                 // localStorage.setItem("jwt", token);
                 console.log(res.data);
                 // alert("create new insuree success")
+                if (res.data.length < 1) {
+                    alert("ไม่พบข้อมูลใบวางบิล")                    
+                }
                 const array = []
               
                 console.log(array);

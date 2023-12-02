@@ -6,7 +6,8 @@ import jwt_decode from "jwt-decode";
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import ReportTable from "./ReportTable";
-import convertDateFormat from "../lib/convertdateformat";
+import {convertDateFormat, getDateReport} from "../lib/convertdateformat";
+
 
 import {
     BrowserRouter,
@@ -163,13 +164,59 @@ axios
     
     const exportExcel =(e) => {
         e.preventDefault()
+        const data = 
+        {
+            "startPolicyDate": fromDate,
+            "endPolicyDate": toDate,
+            "createUserCode": createusercode,
+            "contactPersonId1": employeecode,
+            "contactPersonId2": "",
+            "agentCode1": advisorcode,
+            "agentCode2": "",
+            "insurerCode": insurercode,
+            "status": status,
+            "class": filterData.class,
+            "subClass": filterData.subClass,
+            "orderBy": orderby
+          }
+          
+          if (document.getElementsByName("createusercodeCB")[0].checked) {
+            data.createUserCode = ''
+         }
+         if (document.getElementsByName ("employeecodeCB")[0].checked) {
+            data.contactPersonId1 = ''
+         }
+         if (document.getElementsByName ("advisorcodeCB")[0].checked) {
+            data.agentCode1 = ''
+         }
+         if (document.getElementsByName ("insurercodeCB")[0].checked) {
+            data.insurerCode = ''
+         }
         axios.post(url_report + "/DailyPolicy/excel", filterData, {
             headers: {
                 'Content-Type': 'application/json'
-            }
+            },
+            
+                responseType: 'blob',
+              
         })
             .then((response) => {
-                
+              
+      // Extract filename from Content-Disposition header, if available
+      const filename = `รายงานบันทึกกรมธรม์ประจำวัน_${getDateReport('D')}`;
+      
+      const blob = new Blob([response.data], { type: response.headers['content-type'] });
+
+      // Create a temporary link element
+      const link = document.createElement('a');
+      link.href = window.URL.createObjectURL(blob);
+      link.download = filename;
+
+      // Trigger a click on the link to start the download
+      link.click();
+
+      // Remove the link from the DOM
+      document.body.removeChild(link);
             })
             .catch((error) => {
                 console.log(error);
@@ -293,7 +340,7 @@ axios
                             <div className="col-2">
                                 <label htmlFor="createusercode" className="form-label">Createusercode</label>
                             </div>
-                            <div className="col-7">
+                            <div className="col-3">
                                 <input type="text" id="createusercode" value={createusercode} onChange={(e) => setCreateusercode(e.target.value)} className="form-control" />
                             </div>
                             <div className="col-1">
@@ -307,7 +354,7 @@ axios
                             <div className="col-2">
                                 <label htmlFor="employeecode" className="form-label">EmployeeID</label>
                             </div>
-                            <div className="col-7">
+                            <div className="col-3">
                                 <input type="text" id="employeecode" value={employeecode} onChange={(e) => setEmployeecode(e.target.value)} className="form-control" />
                             </div>
                             <div className="col-1">
@@ -320,7 +367,7 @@ axios
                             <div className="col-2">
                                 <label htmlFor="Advisor" className="form-label">Advisor Code</label>
                             </div>
-                            <div className="col-7">
+                            <div className="col-3">
                                 <input type="text" id="Advisor" value={advisorcode}  onChange={(e) => setAdvisorcode(e.target.value)} className="form-control" />
                             </div>
                             <div className="col-1">
@@ -334,7 +381,7 @@ axios
                             <div className="col-2">
                                 <label htmlFor="Insurer" className="form-label">InsurerCode</label>
                             </div>
-                            <div className="col-7">
+                            <div className="col-3">
                                 <input type="text" id="InsurerCode" value={insurercode}  onChange={(e) => setInsurercode(e.target.value)} className="form-control" />
                             </div>
                             <div className="col-1">
@@ -457,9 +504,7 @@ axios
                         
                         <div>
         <ReportTable cols={colData} rows={reportData} />
-        <button className="btn btn-primary" onClick={exportExcel}>Export To Excel</button>
-        {/* <button className="btn btn-warning" onClick={(e)=>saveapcommin(e)}>save</button>
-        <button className="btn btn-success" onClick={(e)=>submitapcommin(e)}>submit</button> */}
+        
       </div>
                         :
                             <div className="container" style={{ marginTop: "30px" }}>
@@ -468,6 +513,11 @@ axios
                                 </div>
                             </div>}
                     </div>
+                    <div className="d-flex justify-content-center">
+        <button className="btn btn-primary" onClick={exportExcel}>Export To Excel</button>
+        {/* <button className="btn btn-warning" onClick={(e)=>saveapcommin(e)}>save</button>
+        <button className="btn btn-success" onClick={(e)=>submitapcommin(e)}>submit</button> */}
+        </div>
                 </div>
             </div>
         </div>

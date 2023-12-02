@@ -33,6 +33,7 @@ import PremInPaid from "./components/PremIn/PremInPaid";
 import PremInSreach from "./components/PremIn/PremInSearch";
 import PolicyReconcile from "./components/Policy/PolicyReconcile";
 import PremOutCreate from "./components/PremOut/PremOutCreate";
+import PremOutSearch from "./components/PremOut/PremOutSearch";
 import CommInCreate from "./components/CommIn/CommInCreate";
 import CommOutCreate from "./components/CommOut/CommOutCreate";
 import ReportPolicy from "./components/Reports/ReportPolicy";
@@ -92,6 +93,7 @@ function App() {
           <Route path="premin/paid/:type" element={<PremInPaid />} />
           <Route path="/policyreconcile" element={<PolicyReconcile />} />
           <Route path="premout/create" element={<PremOutCreate />} />
+          <Route path="premout/find" element={<PremOutSearch />} />
           <Route path="commin/create" element={<CommInCreate />} />
           <Route path="commout/create" element={<CommOutCreate />} />
           {/* w8 api report */}

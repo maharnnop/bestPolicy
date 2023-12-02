@@ -195,14 +195,15 @@ const submitapcommout = async (e) => {
        
        
         {/* insurerCode  */}
-        <div className="row my-3">
+        <div className="row my-3"><div class="col-1"></div>
           <label class="col-sm-2 col-form-label" htmlFor="insurerCode">
             รหัสบริษัทประกัน
           </label>
-          <div className="col-4 ">
+          <div className="col-3 ">
             <input
               className="form-control"
               type="text"
+              
               name="insurerCode"
               id="insurerCode"
               value={filterData.insurerCode}
@@ -211,12 +212,13 @@ const submitapcommout = async (e) => {
           </div>
         </div>
        {/* advisorCode  */}
-       <div className="row my-3">
+       <div className="row my-3"><div class="col-1"></div>
           <label class="col-sm-2 col-form-label" htmlFor="agentCode">
-            รหัสผู้แนะนำ
+            รหัสผู้แนะนำ<span className="text-danger"> *</span>
           </label>
-          <div className="col-4 ">
+          <div className="col-3 ">
             <input
+            required
               className="form-control"
               type="text"
               name="agentCode"
@@ -227,14 +229,11 @@ const submitapcommout = async (e) => {
           </div>
         </div>
           {/* PolicyNo*/}
-        <div className="row my-3">
+        <div className="row my-3"><div class="col-1"></div>
           <label class="col-sm-2 col-form-label" htmlFor="policyNo">
-            เลขกรมธรรม์
+            เลขที่กรมธรรม์ จาก
           </label>
-          <div className="col-4 " id="policyNo">
-            <label class="col-sm-2 col-form-label" htmlFor="policyNostart">
-              จาก
-            </label>
+          <div className="col-3 " id="policyNo">
             <input
               className="form-control"
               type="text"
@@ -243,11 +242,11 @@ const submitapcommout = async (e) => {
               onChange={handleChange}
             />
           </div>
-
-          <div className="col-4 ">
-            <label class="col-sm-2 col-form-label" htmlFor="policyNoend">
-              ถึง
-            </label>
+          <label class="col-sm-1 col-form-label" htmlFor="policyNo">
+          ถึง
+          </label>
+          <div className="col-3 ">
+           
             <input
               className="form-control"
               type="text"
@@ -259,21 +258,12 @@ const submitapcommout = async (e) => {
         </div>
 
         {/* Effectivedate*/}
-        <div className="row my-3">
+        {/* <div className="row my-3"><div class="col-1"></div>
           <label class="col-sm-2 col-form-label" htmlFor="effDate">
-           วันที่ คุ้มครอง
+           วันที่ คุ้มครอง จาก
           </label>
-          <div className="col-4 " id="effDate">
-            <label class="col-sm-2 col-form-label" htmlFor="effDatestart">
-              จาก
-            </label>
-            {/* <input
-              className="form-control"
-              type="date"
-              name="effDatestart"
-              id="effDatestart"
-              onChange={handleChange}
-            /> */}
+          <div className="col-3 " id="effDate">
+            
             <DatePicker
                             style={{textAlign: 'center'}}
                             showIcon
@@ -289,18 +279,11 @@ const submitapcommout = async (e) => {
                             onChange={(date) => handleChangeDate(date,'effDatestart')}
                                  />
           </div>
-
-          <div className="col-4 ">
-            <label class="col-sm-2 col-form-label" htmlFor="effDateend">
-              ถึง
-            </label>
-            {/* <input
-              className="form-control"
-              type="date"
-              name="effDateend"
-              id="effDateend"
-              onChange={handleChange}
-            /> */}
+          <label class="col-sm-1 col-form-label" htmlFor="effDate">
+          ถึง
+          </label>
+          <div className="col-3 ">
+         
             <DatePicker
                             style={{textAlign: 'center'}}
                             showIcon
@@ -316,13 +299,13 @@ const submitapcommout = async (e) => {
                             onChange={(date) => handleChangeDate(date,'effDateend')}
                                  />
           </div>
-        </div>
+        </div> */}
          {/* duedate  */}
-        <div className="row my-3">
+        <div className="row my-3"><div class="col-1"></div>
           <label class="col-sm-2 col-form-label" htmlFor="cashierreceiveno">
-            dueDate
+            Due Date
           </label>
-          <div className="col-4 ">
+          <div className="col-3 ">
             {/* <input
               className="form-control"
               type="date"
@@ -348,7 +331,7 @@ const submitapcommout = async (e) => {
         </div>
        
         
-        <div className="row my-3">
+        <div className="d-flex justify-content-center">
           <input type="submit" className="btn btn-success"  value={'ค้นหา'}/>
         </div>
       </form>
@@ -396,10 +379,14 @@ const submitapcommout = async (e) => {
             </Modal>
       <div>
         <PremInTable cols={cols2Data} rows={policiesData} setPoliciesData={setPoliciesData}/>
-        <button className="btn btn-primary">Export To Excel</button>
-        <button type="button" class="btn btn-primary " onClick={(e) => editCard(e)} >ยืนยัน</button>
+        
        
       </div>
+      <div className="d-flex justify-content-center">
+      <button className="btn btn-primary">Export To Excel</button>
+        <button type="button" class="btn btn-primary " onClick={(e) => editCard(e)} >ยืนยัน</button>
+        </div>
+
     </div>
   );
 }

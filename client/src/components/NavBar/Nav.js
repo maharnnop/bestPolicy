@@ -89,10 +89,12 @@ function Nav() {
             </a>
 
             <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+              
+            <li><a class="dropdown-item" href="/premout/find">ค้นหารายการตัดหนี้ทั้งหมด</a></li>
               <li><a class="dropdown-item" href="/premin/create">สร้างรายการใหม่</a></li>
               <li><a class="dropdown-item" href="/premin/createdirect">สร้างรายการใหม่ (จ่ายประกันโดยตรง)</a></li>
               <li><a class="dropdown-item" href="/premin/find">ค้นหารายการ Prem-In</a></li>
-              <li><a class="dropdown-item" href="/premin/paid/premout">ค้นหารายการ Prem-Out</a></li>
+              <li><a class="dropdown-item" href="/premin/paid/premout">ค้นหารายการรอส่งเบี้ยบริษัทประกัน</a></li>
               <li><a class="dropdown-item" href="/premin/paid/commovout">ค้นหารายการ Comm/OV-Out</a></li>
               <li><a class="dropdown-item" href="/premin/paid/wht3">ค้นหารายการ WHT 3%</a></li>
             </ul>
@@ -103,7 +105,7 @@ function Nav() {
             </a>
 
             <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-              <li><a class="dropdown-item" href="/premout/create">stament ค่าเบี้ยส่งทิพ</a></li>
+              <li><a class="dropdown-item" href="/premout/create">stament ค่าเบี้ยส่งบริษัทประกัน</a></li>
             </ul>
           </div>
           <div class="dropdown">

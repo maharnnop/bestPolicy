@@ -120,6 +120,7 @@ const submitapcommin = async (e) => {
 
        {/* artype  */}
        <div className="row my-3">
+       <div class="col-1"></div>
           <label class="col-sm-2 col-form-label" htmlFor="insurerCode">
             รูปแบบการตัดหนี้ 
           </label>
@@ -140,16 +141,16 @@ const submitapcommin = async (e) => {
 
         {/* change by premin type  dfrpreferno*/}
         
-        <div className="row my-3">
+        <div className="row my-3"><div class="col-1"></div>
         {artype === 'N'? 
-        <label class="col-sm-2 col-form-label" htmlFor="dfrpreferno">
+        <label class="col-sm-3 col-form-label" htmlFor="dfrpreferno">
           เลขที่ตัดจ่าย PREM-OUT ให้ประกัน
         </label>
          :
-         <label class="col-sm-2 col-form-label" htmlFor="dfrpreferno">
+         <label class="col-sm-3 col-form-label" htmlFor="dfrpreferno">
          เลขที่รายการที่ลูกค้าจ่ายเงินที่ประกัน
        </label>}
-        <div className="col-4 ">
+        <div className="col-3 ">
           <input
             className="form-control"
             type="text"
@@ -164,11 +165,11 @@ const submitapcommin = async (e) => {
       
 
         {/* insurerCode  */}
-        <div className="row my-3">
-          <label class="col-sm-2 col-form-label" htmlFor="insurerCode">
+        <div className="row my-3"><div class="col-1"></div>
+          <label class="col-sm-3 col-form-label" htmlFor="insurerCode">
             รหัสบริษัทประกัน
           </label>
-          <div className="col-4 ">
+          <div className="col-3 ">
             <input
               className="form-control"
               type="text"
@@ -180,11 +181,11 @@ const submitapcommin = async (e) => {
           </div>
         </div>
         {/* advisorCode  */}
-        <div className="row my-3">
-          <label class="col-sm-2 col-form-label" htmlFor="agentCode">
+        <div className="row my-3"><div class="col-1"></div>
+          <label class="col-sm-3 col-form-label" htmlFor="agentCode">
             รหัสผู้แนะนำ
           </label>
-          <div className="col-4 ">
+          <div className="col-3 ">
             <input
               className="form-control"
               type="text"
@@ -196,11 +197,11 @@ const submitapcommin = async (e) => {
           </div>
         </div>
           {/* cashierReceiveNo */}
-          <div className="row my-3">
-          <label class="col-sm-2 col-form-label" htmlFor="cashierreceiveno">
+          <div className="row my-3"><div class="col-1"></div>
+          <label class="col-sm-3 col-form-label" htmlFor="cashierreceiveno">
           เลขที่รับเงิน
           </label>
-          <div className="col-4 ">
+          <div className="col-3 ">
             <input
               className="form-control"
               type="text"
@@ -211,11 +212,11 @@ const submitapcommin = async (e) => {
           </div>
           </div>
          {/* cashieramt  */}
-        <div className="row my-3">
-          <label class="col-sm-2 col-form-label" htmlFor="cashieramt">
+        <div className="row my-3"><div class="col-1"></div>
+          <label class="col-sm-3 col-form-label" htmlFor="cashieramt">
             จำนวนเงินที่รับ
           </label>
-          <div className="col-4 ">
+          <div className="col-3 ">
             <input
               className="form-control"
               type="number"
@@ -226,11 +227,11 @@ const submitapcommin = async (e) => {
           </div>
         </div>
         {/* actualvalue  */}
-        <div className="row my-3">
-          <label class="col-sm-2 col-form-label" htmlFor="actualvalue">
+        <div className="row my-3"><div class="col-1"></div>
+          <label class="col-sm-3 col-form-label" htmlFor="actualvalue">
           จำนวนเงินตัดหนี้
           </label>
-          <div className="col-4 ">
+          <div className="col-3 ">
             <input
               className="form-control"
               type="number"
@@ -241,11 +242,11 @@ const submitapcommin = async (e) => {
           </div>
         </div>
         {/* diff-amt */}
-        <div className="row my-3">
-          <label class="col-sm-2 col-form-label" htmlFor="diffamt">
+        <div className="row my-3"><div class="col-1"></div>
+          <label class="col-sm-3 col-form-label" htmlFor="diffamt">
           ผลต่าง
           </label>
-          <div className="col-4 ">
+          <div className="col-3 ">
             <input
               className="form-control"
               type="number"
@@ -259,16 +260,19 @@ const submitapcommin = async (e) => {
         </div>
        
         
-        <div className="row my-3">
+        <div className="d-flex justify-content-center">
           <input type="submit"  className="btn btn-success"  value={'ค้นหา'}/>
         </div>
       </form>
       <div>
         <PremInTable cols={colsData} rows={policiesData} handleChange={handleChange}/>
-        <button className="btn btn-primary">Export To Excel</button>
+      
+      </div>
+      <div className="d-flex justify-content-center">
+      <button className="btn btn-primary">Export To Excel</button>
         {/* <button className="btn btn-warning" onClick={(e)=>saveapcommin(e)}>save</button> */}
         <button className="btn btn-success" onClick={(e)=>submitapcommin(e)}>submit</button>
-      </div>
+        </div>
     </div>
   );
 }

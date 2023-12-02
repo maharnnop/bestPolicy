@@ -102,7 +102,7 @@ const newCommOVIn = (req, res) => {
     });
    
   };
-  const getCommOV = async (req, res) => {
+  const getCommOVOut = async (req, res) => {
     const records = await sequelize.query(
       `select comout.*, comin.* ,
       a."premCreditT" as  "creditTAgent", a."premCreditUnit" as  "creditUAgent" ,
@@ -131,7 +131,28 @@ const newCommOVIn = (req, res) => {
     res.json(records);
       
 };
-
+const getCommOVIn = async (req, res) => {
+  const records = await sequelize.query(
+    `select  comin.* ,
+    i."premCreditT" as  "creditTInsurer", i."premCreditUnit" as  "creditUInsurer" 
+    FROM static_data."CommOVIns" comin 
+    left join static_data."Insurers" i on i."insurerCode" = comin."insurerCode" and i.lastversion = 'Y'
+    where comin."insureID" = (select "id" from static_data."InsureTypes" where "class" = :class and  "subClass" = :subClass) 
+    and comin."insurerCode" = :insurerCode 
+    and comin.lastversion = 'Y'
+    `,
+    {
+      replacements: {
+        class: req.body.class,
+        subClass: req.body.subClass,
+        insurerCode:req.body.insurerCode
+      },
+      type: QueryTypes.SELECT
+    }
+  )
+  res.json(records);
+    
+};
 module.exports = {
 //   showAll,
   getInsureTypeAll,
@@ -142,7 +163,8 @@ module.exports = {
   getCommOVInByid,
   newCommOVIn,  
   newCommOV,
-  getCommOV,
+  getCommOVOut,
+  getCommOVIn,
   getInsureByClass
 
   // removeCar,AgentditCar,

@@ -9,6 +9,7 @@ import jwt_decode from "jwt-decode";
 import { useCookies } from "react-cookie";
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
+import { stringToNumber } from "../lib/stringToNumber";
 
 const config = require("../../config.json");
 
@@ -84,56 +85,69 @@ function formatNumber(input) {
       arrA.push(ele)
     })
     if (type === 'insurer') {
-      const dueDate = document.getElementsByName(`dueDate-${index}`)[0].value
-      const netgrossprem = parseFloat(document.getElementsByName(`netgrossprem-${index}`)[0].value)
-      const dutyamt = parseFloat(Math.ceil(netgrossprem * duty))
-      const taxamt = parseFloat(((netgrossprem + dutyamt) * tax).toFixed(2))
-      const witheldamt = parseFloat(((netgrossprem + dutyamt) * withheld).toFixed(2))
-      const commin_amt = parseFloat((formData.commin_rate * netgrossprem / 100).toFixed(2))
-      const ovin_amt = parseFloat((formData.ovin_rate * netgrossprem / 100).toFixed(2))
-
-
-      arrI[index] = {
-        netgrossprem: netgrossprem,
-        tax: taxamt,
-        duty: dutyamt,
-        totalprem: parseFloat((netgrossprem + tax + duty).toFixed(2)),
-        withheld: witheldamt,
-        dueDate: dueDate,
-        commin_amt: commin_amt,
-        commin_taxamt: parseFloat((commin_amt * tax).toFixed(2)),
-        ovin_amt: ovin_amt,
-        ovin_taxamt: parseFloat((ovin_amt * tax).toFixed(2))
+      if (e.target.name === `netgrosspremI-${index}`) {
+        const netgrosspremstr = stringToNumber(document.getElementsByName(`netgrosspremI-${index}`)[0].value)
+        const netgrossprem = parseFloat(netgrosspremstr)
+        const dutyamt = parseFloat(Math.ceil(netgrossprem * duty))
+        const taxamt = parseFloat(((netgrossprem + dutyamt) * tax).toFixed(2))
+        const witheldamt = parseFloat(((netgrossprem + dutyamt) * withheld).toFixed(2))
+        const commin_amt = parseFloat((formData.commin_rate * netgrossprem / 100).toFixed(2))
+        const ovin_amt = parseFloat((formData.ovin_rate * netgrossprem / 100).toFixed(2))
+  
+        arrI[index] = {
+          ...arrI[index],
+          netgrossprem: netgrosspremstr,
+          tax: taxamt,
+          duty: dutyamt,
+          totalprem: parseFloat((netgrossprem + tax + duty).toFixed(2)),
+          withheld: witheldamt,
+          commin_amt: commin_amt,
+          commin_taxamt: parseFloat((commin_amt * tax).toFixed(2)),
+          ovin_amt: ovin_amt,
+          ovin_taxamt: parseFloat((ovin_amt * tax).toFixed(2))
+        }
+      }else {
+        arrI[index] = {
+          ...arrI[index],
+          [e.target.name] : e.target.value
+        }
       }
-      console.log(arrI);
-      // setInstallment()
+     
 
     } else if (type === 'advisor') {
-      const dueDate = document.getElementsByName(`dueDate-${index}`)[0].value
-      const netgrossprem = parseFloat(document.getElementsByName(`netgrossprem-${index}`)[0].value)
-      const dutyamt = parseFloat(Math.ceil(duty * netgrossprem))
-      const taxamt = parseFloat((tax * (netgrossprem + dutyamt)).toFixed(2))
-      const witheldamt = parseFloat(((netgrossprem + dutyamt) * withheld).toFixed(2))
-      const commin_amt = parseFloat((formData.commin_rate * netgrossprem / 100).toFixed(2))
-      const ovin_amt = parseFloat((formData.ovin_rate * netgrossprem / 100).toFixed(2))
-      const commout1_amt = parseFloat((formData.commout1_rate * netgrossprem / 100).toFixed(2))
-      const ovout1_amt = parseFloat((formData.ovout1_rate * netgrossprem / 100).toFixed(2))
-
-      // get old installment
-      arrA[index] = {
-        netgrossprem: netgrossprem,
-        tax: taxamt,
-        duty: dutyamt,
-        totalprem: parseFloat((netgrossprem + tax + duty).toFixed(2)),
-        withheld: witheldamt,
-        dueDate: dueDate,
-        commin_amt: commin_amt,
-        commin_taxamt: parseFloat((commin_amt * tax).toFixed(2)),
-        ovin_amt: ovin_amt,
-        ovin_taxamt: parseFloat((ovin_amt * tax).toFixed(2)),
-        commout1_amt: commout1_amt,
-        ovout1_amt: ovout1_amt
+      if (e.target.name === `netgrosspremA-${index}`) {
+        const netgrosspremstr = stringToNumber(document.getElementsByName(`netgrosspremA-${index}`)[0].value)
+        const netgrossprem = parseFloat(netgrosspremstr)
+        const dutyamt = parseFloat(Math.ceil(duty * netgrossprem))
+        const taxamt = parseFloat((tax * (netgrossprem + dutyamt)).toFixed(2))
+        const witheldamt = parseFloat(((netgrossprem + dutyamt) * withheld).toFixed(2))
+        const commin_amt = parseFloat((formData.commin_rate * netgrossprem / 100).toFixed(2))
+        const ovin_amt = parseFloat((formData.ovin_rate * netgrossprem / 100).toFixed(2))
+        const commout1_amt = parseFloat((formData.commout1_rate * netgrossprem / 100).toFixed(2))
+        const ovout1_amt = parseFloat((formData.ovout1_rate * netgrossprem / 100).toFixed(2))
+  
+        // get old installment
+        arrA[index] = {
+          ...arrA[index],
+          netgrossprem: netgrossprem,
+          tax: taxamt,
+          duty: dutyamt,
+          totalprem: parseFloat((netgrossprem + tax + duty).toFixed(2)),
+          withheld: witheldamt,
+          commin_amt: commin_amt,
+          commin_taxamt: parseFloat((commin_amt * tax).toFixed(2)),
+          ovin_amt: ovin_amt,
+          ovin_taxamt: parseFloat((ovin_amt * tax).toFixed(2)),
+          commout1_amt: commout1_amt,
+          ovout1_amt: ovout1_amt
+        }
+      }else{
+        arrA[index] = {
+          ...arrA[index],
+          [e.target.name] : e.target.value
+        }
       }
+     
 
     }
     setInstallment({ insurer: arrI, advisor: arrA })
@@ -206,9 +220,9 @@ const handleClose = (e) => {
     });
   };
   useEffect(() => {
-    // console.log(formData);
+    console.log(formData);
+
     const data = {...formData}
-    // data.policyNo = '111111'
     const arrI = []
     console.log(formData);
         arrI.push({
@@ -223,32 +237,47 @@ const handleClose = (e) => {
           ovin_taxamt: formData.ovin_taxamt,
           withheld: formData.withheld,
         })
-
-      console.log(arrI);
-    
-
     const arrA = []
-        arrA.push({
-          netgrossprem: formData.netgrossprem,
-          tax:  formData.tax,
-          duty: formData.duty,
-          totalprem: formData.totalprem,
-          dueDate: new Date(formData.seqNoagtStart),
-          commin_amt: formData.commin_amt,
-          commin_taxamt: formData.commin_taxamt,
-          ovin_amt: formData.ovin_amt,
-          ovin_taxamt: formData.ovin_taxamt,
-          commout1_amt: formData.commout1_amt,
-          ovout1_amt: formData.ovout1_amt,
-          withheld: formData.withheld,
+    arrA.push({
+      netgrossprem: formData.netgrossprem,
+      tax:  formData.tax,
+      duty: formData.duty,
+      totalprem: formData.totalprem,
+      dueDate: new Date(formData.seqNoagtStart),
+      commin_amt: formData.commin_amt,
+      commin_taxamt: formData.commin_taxamt,
+      ovin_amt: formData.ovin_amt,
+      ovin_taxamt: formData.ovin_taxamt,
+      commout1_amt: formData.commout1_amt,
+      ovout1_amt: formData.ovout1_amt,
+      withheld: formData.withheld,
 
-        })
-
+    })
+    if (formData.installment) {
       
     
+    if (formData.installment.insurer.length < 1) {
+      
+      setInstallment({...formData.installment, insurer: arrI })
+      setFormData(data)
+    } else {
+      setInstallment({...formData.installment})
+      setFormData(data)
+    }
+    if (formData.installment.advisor.length < 1) {
+   
     
-    setInstallment({ insurer: arrI, advisor: arrA })
-    setFormData(data)
+        setInstallment({...formData.installment, advisor: arrA })
+        setFormData(data)
+      }else {
+        setInstallment({...formData.installment})
+        setFormData(data)
+      }
+    } else{
+      setInstallment({insurer: arrI, advisor: arrA })
+        setFormData(data)
+    }
+
   }, []);
 
   const calinstallment = (e) => {
@@ -336,6 +365,20 @@ const handleClose = (e) => {
 
       }
       console.log(arrI);
+    }else{
+      arrI.push({
+        netgrossprem: formData.netgrossprem,
+        tax: formData.tax,
+        duty: formData.duty,
+        totalprem: formData.totalprem,
+        dueDate: new Date(formData.seqNoinsStart),
+        commin_amt: formData.commin_amt,
+        commin_taxamt: formData.commin_taxamt,
+        ovin_amt: formData.ovin_amt,
+        ovin_taxamt: formData.ovin_taxamt,
+        withheld: formData.withheld,
+      })
+
     }
 
     const arrA = []
@@ -411,6 +454,22 @@ const handleClose = (e) => {
 
       }
       console.log(arrA);
+    }else{
+      arrA.push({
+        netgrossprem: formData.netgrossprem,
+        tax:  formData.tax,
+        duty: formData.duty,
+        totalprem: formData.totalprem,
+        dueDate: new Date(formData.seqNoagtStart),
+        commin_amt: formData.commin_amt,
+        commin_taxamt: formData.commin_taxamt,
+        ovin_amt: formData.ovin_amt,
+        ovin_taxamt: formData.ovin_taxamt,
+        commout1_amt: formData.commout1_amt,
+        ovout1_amt: formData.ovout1_amt,
+        withheld: formData.withheld,
+
+      })
     }
     setInstallment({ insurer: arrI, advisor: arrA })
   }
@@ -425,8 +484,8 @@ const handleClose = (e) => {
           <thead>
             <tr>
               <th scope="col" className="input"> เลขที่กรมธรรม์ </th>
-              <th scope="col" > เลขที่ใบแจ้งหนี้ </th>
-              <th scope="col" > เลขที่ใบกำกับภาษี </th>
+              {/* <th scope="col" > เลขที่ใบแจ้งหนี้ </th>
+              <th scope="col" > เลขที่ใบกำกับภาษี </th> */}
               <th scope="col" className="input">วันที่ทำสัญญา</th>
               <th scope="col">บริษัทรับประกัน</th>
               <th scope="col">เลขที่ใบคำขอ</th>
@@ -465,7 +524,7 @@ const handleClose = (e) => {
                 name={`policyNo`}
                 onChange={handleChange}
               /></td>
-              <td><input
+              {/* <td><input
                 className="form-control"
                 type="text"
                 defaultValue={formData.invoiceNo || ''}
@@ -478,7 +537,7 @@ const handleClose = (e) => {
                 defaultValue={formData.taxInvoiceNo || ''}
                 name={`taxInvoiceNo`}
                 onChange={handleChange}
-              /></td>
+              /></td> */}
               <td>
                 {/* <input
                 className="form-control"
@@ -536,12 +595,12 @@ const handleClose = (e) => {
 
       {/* end policy data */}
       <h3 className="text-center" style={{padding:`20px`}}>แบ่งงวดชำระ</h3>
-
+{/*  แบ่งงวด*/}
       <div class="row ">
         <div className="col-1"></div>
         <div className="col-2">
           <div class="form-check">
-            <input class="form-check-input" type="checkbox" name="installmentInsurer" id="flexCheckDefault" />
+            <input class="form-check-input bg-secondary" type="checkbox" name="installmentInsurer" id="flexCheckDefault" />
             <label class="form-check-label" for="flexCheckChecked">
             แบ่งงวด บริษัทประกัน
             </label>
@@ -574,7 +633,7 @@ const handleClose = (e) => {
         <div className="col-2 border-left">
 
           <div class="form-check ">
-            <input class="form-check-input" type="checkbox" name="installmentAdvisor" id="flexCheckDefault" />
+            <input class="form-check-input bg-secondary" type="checkbox" name="installmentAdvisor" id="flexCheckDefault" />
             <label class="form-check-label" for="flexCheckChecked">
             แบ่งงวด ผู้แนะนำ
             </label>
@@ -609,7 +668,7 @@ const handleClose = (e) => {
         <div class="col-2">
 
           <div class="form-check ">
-            <input class="form-check-input" type="checkbox" name="flagallowduty" defaultChecked={true} id="flexCheckDefault" />
+            <input class="form-check-input " type="checkbox" name="flagallowduty" defaultChecked={true} id="flexCheckDefault" />
             <label class="form-check-label" for="flexCheckChecked">
               แบ่งค่าอากร
             </label>
@@ -739,6 +798,7 @@ const handleClose = (e) => {
       <div class="d-flex justify-content-center "  style={{padding:`20px`}}>
         <button type="button" class="btn btn-primary align-bottom text-center" onClick={calinstallment} >คำนวณ แบ่งงวดชำระ</button>
       </div>
+{/*  จบแบ่งงวด*/}
 
       {installment.insurer.length > 0 ?
       <>
@@ -752,15 +812,15 @@ const handleClose = (e) => {
                 <th >วันครบกำหนดชำระ</th>
                 <th   >เบี้ยประกัน</th>
                 <th >เลขที่ใบแจ้งหนี้ (ประกัน)</th>
-                
+                <th >เลขที่ใบกำกับภาษี (ประกัน)</th>
                 <th >อากร</th>
                 <th >ภาษี</th>
                 <th >WHT 1%</th>
                 <th >Comm in</th>
                 <th >Ov in</th>
-                <th >Comm out</th>
+                {/* <th >Comm out</th>
                 <th >Ov out</th>
-                <th >แก้ไข</th>
+                <th >แก้ไข</th> */}
               </tr>
             </thead>
             <tbody>
@@ -781,7 +841,7 @@ const handleClose = (e) => {
                             className="form-control"
                             todayButton="Vandaag"
                             // isClearable
-                            name="effDatestart"
+                            name={`dueDate-${i}`}
                             showYearDropdown
                             dateFormat="dd/MM/yyyy"
                             dropdownMode="select"
@@ -793,31 +853,40 @@ const handleClose = (e) => {
                     className="form-control"
                     style={{width: "150px"}}
                     type="text"
-                    value={ele.netgrossprem.toLocaleString(undefined, { minimumFractionDigits: 2 })}
-                    name={`netgrossprem-${i}`}
-                    onChange={handleChange}
+                    value={ele.netgrossprem.toLocaleString()}
+                    name={`netgrosspremI-${i}`}
+                    onChange={e => editInstallment(e, 'insurer', i)}
                     onInput={(e)=>formatNumber(e.target)}
                   /></td>
                   <td ><input
                     className="form-control"
                     type="text"
                     style={{width: "150px"}}
-                    name={`invoiceNo-${i}`}
-                    onChange={handleChange}
+                    name={`invoiceNo`}
+                    value={ele.invoiceNo}
+                    onChange={e => editInstallment(e, 'insurer', i)}
+                  /></td>
+                   <td ><input
+                    className="form-control"
+                    type="text"
+                    style={{width: "150px"}}
+                    value={ele.taxInvoiceNo}
+                    name={`taxInvoiceNo`}
+                    onChange={e => editInstallment(e, 'insurer', i)}
                   /></td>
                   
                   {/* <td scope="col-1"><input type="number" className="w-100" name={`duty-${i}`} step={.01} defaultValue={ele.duty}></input></td>
               <td scope="col-1"><input type="number" className="w-100" name={`tax-${i}`} step={.01} defaultValue={ele.tax}></input></td>
               <td scope="col-1"><input type="number" className="w-100" name={`commin_amt-${i}`} step={.01} defaultValue={ele.commin_amt}></input></td>
               <td scope="col-1"><input type="number" className="w-100" name={`ovin_amt-${i}`} step={.01} defaultValue={ele.ovin_amt}></input></td> */}
-                  <td >{ele.duty.toLocaleString(undefined, { minimumFractionDigits: 2 })}</td>
-                  <td >{ele.tax.toLocaleString(undefined, { minimumFractionDigits: 2 })}</td>
-                  <td >{ele.withheld.toLocaleString(undefined, { minimumFractionDigits: 2 })}</td>
-                  <td >{ele.commin_amt.toLocaleString(undefined, { minimumFractionDigits: 2 })}</td>
-                  <td >{ele.ovin_amt.toLocaleString(undefined, { minimumFractionDigits: 2 })}</td>
+                  <td >{ele.duty.toLocaleString('en-US', { minimumFractionDigits: 2 })}</td>
+                  <td >{ele.tax.toLocaleString('en-US', { minimumFractionDigits: 2 })}</td>
+                  <td >{ele.withheld.toLocaleString('en-US', { minimumFractionDigits: 2 })}</td>
+                  <td >{ele.commin_amt.toLocaleString('en-US', { minimumFractionDigits: 2 })}</td>
+                  <td >{ele.ovin_amt.toLocaleString('en-US', { minimumFractionDigits: 2 })}</td>
+                  {/* <td ></td>
                   <td ></td>
-                  <td ></td>
-                  <td ><button onClick={e => editInstallment(e, 'insurer', i)}>แก้ไข</button></td>
+                  <td ><button onClick={e => editInstallment(e, 'insurer', i)}>แก้ไข</button></td> */}
                 </tr>)
               })}
               {installment.insurer.length > 0 ?
@@ -833,8 +902,8 @@ const handleClose = (e) => {
                   <td scope="col-1">{installment.insurer.reduce((prev, curr) => prev + parseFloat(curr.withheld.toFixed(2)), 0).toLocaleString(undefined, { minimumFractionDigits: 2 })}</td>
                   <td scope="col-1">{installment.insurer.reduce((prev, curr) => prev + parseFloat(curr.commin_amt.toFixed(2)), 0).toLocaleString(undefined, { minimumFractionDigits: 2 })}</td>
                   <td scope="col-1">{installment.insurer.reduce((prev, curr) => prev + parseFloat(curr.ovin_amt.toFixed(2)), 0).toLocaleString(undefined, { minimumFractionDigits: 2 })}</td>
-                  <td></td>
-                  <td></td>
+                  {/* <td></td>
+                  <td></td> */}
                 </tr>
                 : null}
 
@@ -848,7 +917,7 @@ const handleClose = (e) => {
 
       {installment.advisor.length > 0 ?
           <>
-          <h4 className="text-left" style={{padding:`20px`}} >แบ่งงวด ผู้แนะนำ </h4>
+          <h4 className="text-left" style={{padding:`20px`}} >แบ่งงวด ผู้แนะนำ 1</h4>
         <div className="table-responsive overflow-scroll"  >
           <table class="table  table-striped">
             <thead>
@@ -865,14 +934,14 @@ const handleClose = (e) => {
                 <th >Ov in</th>
                 <th >Comm out</th>
                 <th >Ov out</th>
-                <th >แก้ไข</th>
+                {/* <th >แก้ไข</th> */}
               </tr>
             </thead>
             <tbody>
 
               {installment.advisor.map((ele, i) => {
                 return (<tr>
-                  <th scope="row">ผู้แนะนำ</th>
+                  <th scope="row">ผู้แนะนำ 1</th>
                   <td>{i + 1}</td>
                   {/* <td scope="col-2"><input
                     className="form-control"
@@ -888,7 +957,7 @@ const handleClose = (e) => {
                             className="form-control"
                             todayButton="Vandaag"
                             // isClearable
-                            name="effDatestart"
+                            name={`dueDate-${i}`}
                             showYearDropdown
                             placeholder ='dd/mm/yyyy'
                             dateFormat="dd/MM/yyyy"
@@ -901,16 +970,16 @@ const handleClose = (e) => {
                     className="form-control"
                     style={{width: "150px"}}
                     type="text"
-                    value={ele.netgrossprem.toLocaleString(undefined, { minimumFractionDigits: 2 })}
-                    name={`netgrossprem-${i}`}
-                    onChange={handleChange}
+                    value={ele.netgrossprem.toLocaleString()}
+                    name={`netgrosspremA-${i}`}
+                    onChange={e => editInstallment(e, 'advisor', i)}
                   /></td>
                   <td scope="col-2"><input
-                    className="form-control"
+                    className="form-control  bg-warning"
                     type="text"
-                    
-                    name={`invoiceNo-${i}`}
-                    onChange={handleChange}
+                    disabled
+                    name={`invoiceNoA-${i}`}
+                    onChange={e => editInstallment(e, 'advisor', i)}
                   /></td>
                   {/* <td scope="col-1"><input type="number" name={`duty-${i}`} step={.01} defaultValue={ele.duty}></input></td>
               <td scope="col-1"><input type="number" name={`tax-${i}`} step={.01} defaultValue={ele.tax}></input></td>
@@ -918,20 +987,20 @@ const handleClose = (e) => {
               <td scope="col-1"><input type="number" name={`ovin_amt-${i}`} step={.01} defaultValue={ele.ovin_amt}></input></td>
               <td scope="col-1"><input type="number" name={`commout1_amt-${i}`} step={.01} defaultValue={ele.commout1_amt}></input></td>
               <td scope="col-1"><input type="number" name={`ovout1_amt-${i}`} step={.01} defaultValue={ele.ovout1_amt}></input></td> */}
-                  <td scope="col-1">{ele.duty}</td>
-                  <td scope="col-1">{ele.tax}</td>
-                  <td scope="col-1">{ele.withheld}</td>
-                  <td scope="col-1">{ele.commin_amt}</td>
-                  <td scope="col-1">{ele.ovin_amt}</td>
-                  <td scope="col-1">{ele.commout1_amt}</td>
-                  <td scope="col-1">{ele.ovout1_amt}</td>
-                  <td scope="col-1"><button onClick={e => editInstallment(e, 'advisor', i)}>แก้ไข</button></td>
+                  <td scope="col-1">{ele.duty.toLocaleString('en-US', { minimumFractionDigits: 2 })}</td>
+                  <td scope="col-1">{ele.tax.toLocaleString('en-US', { minimumFractionDigits: 2 })}</td>
+                  <td scope="col-1">{ele.withheld.toLocaleString('en-US', { minimumFractionDigits: 2 })}</td>
+                  <td scope="col-1">{ele.commin_amt.toLocaleString('en-US', { minimumFractionDigits: 2 })}</td>
+                  <td scope="col-1">{ele.ovin_amt.toLocaleString('en-US', { minimumFractionDigits: 2 })}</td>
+                  <td scope="col-1">{ele.commout1_amt.toLocaleString('en-US', { minimumFractionDigits: 2 })}</td>
+                  <td scope="col-1">{ele.ovout1_amt.toLocaleString('en-US', { minimumFractionDigits: 2 })}</td>
+                  {/* <td scope="col-1"><button onClick={e => editInstallment(e, 'advisor', i)}>แก้ไข</button></td> */}
                 </tr>)
               })}
 
               {installment.advisor.length > 0 ?
                 <tr>
-                  <th scope="row">รวม ผู้แนะนำ</th>
+                  <th scope="row">รวม ผู้แนะนำ 1</th>
                   <td></td>
                   <td></td>
                   <td scope="col-1">{installment.advisor.reduce((prev, curr) => prev + parseFloat(curr.netgrossprem.toFixed(2)), 0).toLocaleString(undefined, { minimumFractionDigits: 2 })}</td>
@@ -988,7 +1057,7 @@ const handleClose = (e) => {
 
             {installment.advisor.length > 0 ?
               <tr>
-                <th scope="row">รวม ผู้แนะนำ</th>
+                <th scope="row">รวม ผู้แนะนำ 1</th>
                 <td>{installment.advisor.length}</td>
                 <td scope="col-1">{installment.advisor.reduce((prev, curr) => prev + parseFloat(curr.netgrossprem.toFixed(2)), 0).toLocaleString(undefined, { minimumFractionDigits: 2 })}</td>
                 <td scope="col-1">{installment.advisor.reduce((prev, curr) => prev + parseFloat(curr.duty.toFixed(2)), 0).toLocaleString(undefined, { minimumFractionDigits: 2 })}</td>
@@ -1000,7 +1069,20 @@ const handleClose = (e) => {
                 <td scope="col-1">{installment.advisor.reduce((prev, curr) => prev + parseFloat(curr.ovout1_amt.toFixed(2)), 0).toLocaleString(undefined, { minimumFractionDigits: 2 })}</td>
               </tr>
               : null}
-
+{formData.agentCode2 !== null ?
+              <tr>
+                <th scope="row">รวม ผู้แนะนำ 2</th>
+                <td>1</td>
+                <td>{formData.netgrossprem.toLocaleString(undefined, { minimumFractionDigits: 2 })}</td>
+              <td>{formData.duty.toLocaleString(undefined, { minimumFractionDigits: 2 })}</td>
+              <td>{formData.tax.toLocaleString(undefined, { minimumFractionDigits: 2 })}</td>
+              <td>{formData.withheld.toLocaleString(undefined, { minimumFractionDigits: 2 })}</td>
+              <td>{formData.commin_amt.toLocaleString(undefined, { minimumFractionDigits: 2 })}</td>
+              <td>{formData.ovin_amt.toLocaleString(undefined, { minimumFractionDigits: 2 })}</td>
+              <td>{formData.commout2_amt.toLocaleString(undefined, { minimumFractionDigits: 2 })}</td>
+              <td>{formData.ovout2_amt.toLocaleString(undefined, { minimumFractionDigits: 2 })}</td>
+               </tr>
+              : null}
 
             <tr>
               <th scope="row">กรมธรรม์</th>

@@ -156,7 +156,7 @@ const EditCashierReceive = (props) => {
     useEffect(() => {
         let data={}
         if (bankAmity!="")
-            axios.get(window.globalConfig.BEST_POLICY_V1_BASE_URL+"/static/bank/BankAmityBranch?brand="+bankAmity,data, headers)
+            axios.get(window.globalConfig.BEST_POLICY_V1_BASE_URL+"/static/bank/BankAmityBranch?brand="+bankAmity, headers)
                 .then((response) => {
                     console.log(response.data);
                     setBankAmityBranchData(response.data)
@@ -439,7 +439,7 @@ const EditCashierReceive = (props) => {
                             <div className="col-4">
                                 <label htmlFor="billAdvisorNo" className="form-label">Bill Advisor No</label>
                             </div>
-                            <div className="col-7">
+                            <div className="col-4">
                                 <input type="text" id="billAdvisorNo" required value={billAdvisorNo} onChange={(e) => setBillAdvisorNo(e.target.value)} className="form-control"/>
                             </div>
                             <div className="col-1 text-center" style={{paddingRight:"20px"}}>
@@ -452,7 +452,7 @@ const EditCashierReceive = (props) => {
                             <div className="col-4">
                                 <label htmlFor="Insurer" className="form-label">Insurer</label>
                             </div>
-                            <div className="col-7">
+                            <div className="col-4">
                                 <input type="text" id="Insurer" required value={insurercode} readOnly={insurerReadOnly} onChange={(e) => setInsurer(e.target.value)} className="form-control"/>
                             </div>
                         </div>
@@ -461,7 +461,7 @@ const EditCashierReceive = (props) => {
                             <div className="col-4">
                                 <label htmlFor="Advisor" className="form-label">Advisor</label>
                             </div>
-                            <div className="col-7">
+                            <div className="col-4">
                                 <input type="text" id="Advisor" required value={advisorcode} readOnly={advisoryReadOnly} onChange={(e) => setAdvisor(e.target.value)} className="form-control"/>
                             </div>
                         </div>
@@ -471,7 +471,7 @@ const EditCashierReceive = (props) => {
                             <div className="col-4">
                                 <label htmlFor="Customer" className="form-label">Customer</label>
                             </div>
-                            <div className="col-7">
+                            <div className="col-4">
                                 <input type="text" id="Customer" required value={Customer} onChange={(e) => setCustomer(e.target.value)} className="form-control"/>
                             </div>
                         </div>
@@ -481,7 +481,7 @@ const EditCashierReceive = (props) => {
                             <div className="col-4">
                                 <label htmlFor="cashierReceiptNo" className="form-label">Cashier Receipt No</label>
                             </div>
-                            <div className="col-7">
+                            <div className="col-4">
                                 <input type="text" id="cashierReceiptNo" required value={cashierReceiptNo} onChange={(e) => setCashierReceiptNo(e.target.value)} className="form-control"/>
                             </div>
                         </div>
@@ -491,7 +491,7 @@ const EditCashierReceive = (props) => {
                             <div className="col-4">
                                 <label htmlFor="cashierDate" className="form-label">Cashier Date</label>
                             </div>
-                            <div className="col-7">
+                            <div className="col-4">
                                 <input type="datetime-local" id="cashierDate" required value={cashierDate} onChange={(e) => setCashierDate(e.target.value)} className="form-control"/>
                             </div>
                         </div>
@@ -501,7 +501,7 @@ const EditCashierReceive = (props) => {
                             <div className="col-4">
                                 <label htmlFor="receiveForm" className="form-label">Receive Form</label>
                             </div>
-                            <div className="col-7">
+                            <div className="col-4">
                                 <select type="text" id="receiveForm" value={receiveForm} onChange={(e) => setReceiveForm(e.target.value)}
                                         className="form-control"
                                         disabled={receiveFromReadOnly}
@@ -520,7 +520,7 @@ const EditCashierReceive = (props) => {
                             <div className="col-4">
                                 <label htmlFor="receiveName" className="form-label">Receive Name</label>
                             </div>
-                            <div className="col-7">
+                            <div className="col-4">
                                 <input type="text" id="receiveName" required value={receiveName} onChange={(e) => setReceiveName(e.target.value)} className="form-control"/>
                             </div>
                         </div>
@@ -529,7 +529,7 @@ const EditCashierReceive = (props) => {
                             <div className="col-4">
                                 <label htmlFor="receiveType" className="form-label">Receive Type</label>
                             </div>
-                            <div className="col-7">
+                            <div className="col-4">
                                 <select  id="receiveType" value={receiveType} onChange={(e) => setReceiveType(e.target.value)} className="form-control">
                                     <option value="" disabled>Select Transaction Type</option>
                                     <option value="PREM-IN">เงินโอน</option>
@@ -546,7 +546,7 @@ const EditCashierReceive = (props) => {
                             <div className="col-4">
                                 <label htmlFor="transactionType" className="form-label">Transaction Type</label>
                             </div>
-                            <div className="col-7">
+                            <div className="col-4">
                                 <select
                                     id="transactionType"
                                     value={transactionType}
@@ -570,7 +570,7 @@ const EditCashierReceive = (props) => {
                             <div className="col-4">
                                 <label htmlFor="bankPartner" className="form-label">Bank Partner</label>
                             </div>
-                            <div className="col-7">
+                            <div className="col-4">
                                 <select
                                     id="bankPartner"
                                     value={bankPartner}
@@ -598,7 +598,7 @@ const EditCashierReceive = (props) => {
                             <div className="col-4">
                                 <label htmlFor="bankBranchPartner" className="form-label">Bank Branch Partner</label>
                             </div>
-                            <div className="col-7">
+                            <div className="col-4">
                                 <select
                                     id="bankBranchPartner"
                                     value={bankBranchPartner}
@@ -625,7 +625,7 @@ const EditCashierReceive = (props) => {
                             <div className="col-4">
                                 <label htmlFor="bankNoPartner" className="form-label">Bank No Partner</label>
                             </div>
-                            <div className="col-7">
+                            <div className="col-4">
                                 <select
                                     id="bankNoPartner"
                                     value={bankNoPartner}
@@ -652,7 +652,7 @@ const EditCashierReceive = (props) => {
                             <div className="col-4">
                                 <label htmlFor="bankAmity" className="form-label">Bank Amity</label>
                             </div>
-                            <div className="col-7">
+                            <div className="col-4">
                                 <select
                                     id="bankAmity"
                                     value={bankAmity}
@@ -680,7 +680,7 @@ const EditCashierReceive = (props) => {
                             <div className="col-4">
                                 <label htmlFor="bankBranchAmity" className="form-label">Bank Branch Amity</label>
                             </div>
-                            <div className="col-7">
+                            <div className="col-4">
                                 <select
                                     id="bankBranchAmity"
                                     value={bankBranchAmity}
@@ -707,7 +707,7 @@ const EditCashierReceive = (props) => {
                             <div className="col-4">
                                 <label htmlFor="bankNo" className="form-label">Bank No</label>
                             </div>
-                            <div className="col-7">
+                            <div className="col-4">
                                 <select
                                     id="bankAmityNo"
                                     value={bankNo}
@@ -734,7 +734,7 @@ const EditCashierReceive = (props) => {
                             <div className="col-4">
                                 <label htmlFor="amount" className="form-label">Amount</label>
                             </div>
-                            <div className="col-7">
+                            <div className="col-4">
                                 <input type="text" id="amount" required value={amount} onChange={(e) => setAmount(e.target.value)} className="form-control"/>
                             </div>
                         </div>
@@ -773,7 +773,7 @@ const EditCashierReceive = (props) => {
                             <div className="col-3">
                                 <label htmlFor="billAdvisorNo" className="form-label">เลขที่ใบวางบิล</label>
                             </div>
-                            <div className="col-7">
+                            <div className="col-4">
                                 <input type="text" id="billAdvisorNo" value={billAdvisorNo} onChange={(e) => setBillAdvisorNo(e.target.value)} className="form-control"/>
                             </div>
                             <div className="col-1 text-center">
@@ -786,7 +786,7 @@ const EditCashierReceive = (props) => {
                             <div className="col-3">
                                 <label htmlFor="cashierReceiptNo" className="form-label">เลขที่ใบรับเงิน</label>
                             </div>
-                            <div className="col-7">
+                            <div className="col-4">
                                 <input type="text" id="cashierReceiptNo" value={cashierReceiptNo} onChange={(e) => setCashierReceiptNo(e.target.value)} className="form-control"/>
                             </div>
                             <div className="col-1">
@@ -801,7 +801,7 @@ const EditCashierReceive = (props) => {
                             <div className="col-3">
                                 <label htmlFor="Insurer" className="form-label">รหัสบริษัทประกัน</label>
                             </div>
-                            <div className="col-7">
+                            <div className="col-4">
                                 <input type="text" id="InsurerCode" value={insurercode} readOnly={insurerReadOnly} onChange={(e) => setInsurercode(e.target.value)} className="form-control"/>
                             </div>
                             <div className="col-1">
@@ -814,7 +814,7 @@ const EditCashierReceive = (props) => {
                             <div className="col-3">
                                 <label htmlFor="Advisor" className="form-label">รหัสผู้แนะนำ</label>
                             </div>
-                            <div className="col-7">
+                            <div className="col-4">
                                 <input type="text" id="Advisor" value={advisorcode} readOnly={advisoryReadOnly}  onChange={(e) => setAdvisorcode(e.target.value)} className="form-control"/>
                             </div>
                             <div className="col-1">
@@ -825,10 +825,10 @@ const EditCashierReceive = (props) => {
                         {/* Date Select */}
                         <div className="row">
                             <div className="col-3">
-                                <label htmlFor="Date Select" className="form-label">วันที่สร้าง</label>
+                                <label htmlFor="Date Select" className="form-label">วันที่สร้าง จาก</label>
                             </div>
                             <div className="col-4">
-                                <label htmlFor="fromDate">จาก วันที่&nbsp;</label>
+                                
                                 {/* <input
                                     type="date"
                                     id="fromDate"
@@ -849,8 +849,11 @@ const EditCashierReceive = (props) => {
                             onChange={(date) => setFromDate(date)}
                                  />
                             </div>
+                            <div className="col-1">
+                            <label htmlFor="toDate">ถึง &nbsp;</label>
+                            </div>
                             <div className="col-4">
-                                <label htmlFor="toDate">ถึง วันที่&nbsp;</label>
+                                
                                 {/* <input
                                     type="date"
                                     id="toDate"
@@ -878,7 +881,7 @@ const EditCashierReceive = (props) => {
                             <div className="col-3">
                                 <label htmlFor="create user code" className="form-label">รหัสผู้บันทึก</label>
                             </div>
-                            <div className="col-7">
+                            <div className="col-4">
                                 <input type="text" id="create user code" value={createUserCode} onChange={(e) => setCreateUserCode(e.target.value)} className="form-control"/>
                             </div>
                         </div>
@@ -887,7 +890,7 @@ const EditCashierReceive = (props) => {
                             <div className="col-3">
                                 <label htmlFor="Customer" className="form-label">ชื่อผู้แนะนำ</label>
                             </div>
-                            <div className="col-7">
+                            <div className="col-4">
                                 <input type="text" id="Customer" value={refno} onChange={(e) => setRefno(e.target.value)} className="form-control"/>
                             </div>
                         </div>
@@ -899,7 +902,7 @@ const EditCashierReceive = (props) => {
                             <div className="col-3">
                                 <label htmlFor="transactionType" className="form-label">ประเภทธุรกรรม</label>
                             </div>
-                            <div className="col-7">
+                            <div className="col-4">
                                 <select
                                     id="transactionType"
                                     value={transactionType}
@@ -921,7 +924,7 @@ const EditCashierReceive = (props) => {
                             <div className="col-3">
                                 <label htmlFor="Customer" className="form-label">เลขที่ตัดหนี้</label>
                             </div>
-                            <div className="col-7">
+                            <div className="col-4">
                                 <input type="text" id="dfrpreferno" value={dfrpreferno} onChange={(e) => setDfrpreferno(e.target.value)} className="form-control"/>
                             </div>
                         </div>

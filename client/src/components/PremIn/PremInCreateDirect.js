@@ -211,10 +211,11 @@ export default function PremInCreateDirect() {
 
         {/* insurerCode  */}
         <div className="row my-3">
+        <div className="col-1"></div>
           <label class="col-sm-2 col-form-label" htmlFor="insurerCode">
             รหัสบริษัทประกัน
           </label>
-          <div className="col-4 ">
+          <div className="col-3 ">
             <input
               className="form-control"
               type="text"
@@ -231,10 +232,11 @@ export default function PremInCreateDirect() {
         </div>
         {/* advisorCode  */}
         <div className="row my-3">
+        <div className="col-1"></div>
           <label class="col-sm-2 col-form-label" htmlFor="agentCode">
             รหัสผู้แนะนำ
           </label>
-          <div className="col-4 ">
+          <div className="col-3 ">
             <input
               className="form-control"
               type="text"
@@ -247,11 +249,12 @@ export default function PremInCreateDirect() {
         </div>
         {/* policyno */}
         <div className="row my-3">
+        <div className="col-1"></div>
           <label class="col-sm-2 col-form-label" htmlFor="billadvisorno">
             เลขที่กรมธรรม์
           </label>
 
-          <div className="col-4">
+          <div className="col-3">
             <input
               className="form-control"
               type="text"
@@ -263,7 +266,7 @@ export default function PremInCreateDirect() {
           <label class="col-sm-1 col-form-label" htmlFor="billadvisorno">
             ถึง
           </label>
-          <div className="col-4">
+          <div className="col-3">
             <input
               className="form-control"
               type="text"
@@ -276,11 +279,12 @@ export default function PremInCreateDirect() {
         </div>
         {/* endorseno */}
         <div className="row my-3">
+        <div className="col-1"></div>
           <label class="col-sm-2 col-form-label" htmlFor="billadvisorno">
             เลขสลักหลัง
           </label>
 
-          <div className="col-4">
+          <div className="col-3">
             <input
               className="form-control"
               type="text"
@@ -292,7 +296,7 @@ export default function PremInCreateDirect() {
           <label class="col-sm-1 col-form-label" htmlFor="billadvisorno">
             ถึง
           </label>
-          <div className="col-4">
+          <div className="col-3">
             <input
               className="form-control"
               type="text"
@@ -305,11 +309,12 @@ export default function PremInCreateDirect() {
         </div>
         {/* invoiceno */}
         <div className="row my-3">
+        <div className="col-1"></div>
           <label class="col-sm-2 col-form-label" htmlFor="billadvisorno">
             เลขใบแจ้งหนี้
           </label>
 
-          <div className="col-4">
+          <div className="col-3">
             <input
               className="form-control"
               type="text"
@@ -321,7 +326,7 @@ export default function PremInCreateDirect() {
           <label class="col-sm-1 col-form-label" htmlFor="billadvisorno">
             ถึง
           </label>
-          <div className="col-4">
+          <div className="col-3">
             <input
               className="form-control"
               type="text"
@@ -376,10 +381,13 @@ export default function PremInCreateDirect() {
       </form>
       <div>
         <PremInTable cols={colsData} rows={policiesData} setPoliciesData={setPoliciesData} checknetflag={true} />
-        <button className="btn btn-primary">Export To Excel</button>
+       
+      </div>
+      <div className="d-flex justify-content-center">
+      <button className="btn btn-primary">Export To Excel</button>
         {/* <button className="btn btn-warning" onClick={(e) => savearpremin(e)}>save</button> */}
         <button className="btn btn-success" onClick={(e) => submitarpremin(e)}>submit</button>
-      </div>
+                </div>
     </div>
   );
 }

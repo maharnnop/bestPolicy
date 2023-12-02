@@ -1,21 +1,16 @@
-export const  numberWithCommas = (field) => {
-    // Get the input field ID
-    let element = document.getElementById(field.id);
-    // Replace all the commas of input field value with empty value
-    // And assign it to amount variable
-    let amount = element.value.replace(/,/g, '');
+export const  numberWithCommas = (input) => { // input number with comma 2 decimal
+    let sanitizedValue = input.value.replace(/[^0-9.]/g, '');
 
-    // Check if the amount contains (-) sign in the beginning
-    if(amount.charAt(0)==='-'){
-    // if amount contains (-) sign, remove first character then replace all
-    // (-) signs from the amount with empty value & concate (-) in amount
-        amount = '-'+amount.substring(1).replace(/-/g, '');
-    }else{
-    // Replace all (-) signs from the amount with empty value
-        amount = amount.replace(/-/g, '');
-    }
-    // First add commas into the amount then update the input field value
-    element.value = amount.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",");
-    return element
+    // Split the value into integer and decimal parts
+    const [integerPart, decimalPart] = sanitizedValue.split('.');
+
+    // Format the integer part with commas
+    const formattedInteger = parseInt(integerPart, 10).toLocaleString('en-US');
+
+    // Combine the formatted integer and the decimal part (if exists)
+    const formattedValue = decimalPart ? `${formattedInteger}.${decimalPart}` : formattedInteger;
+
+    // Update the input value
+    input.value = formattedValue;
 }
   export default numberWithCommas;

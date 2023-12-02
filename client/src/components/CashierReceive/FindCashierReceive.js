@@ -121,7 +121,7 @@ const FindCashierReceive = () => {
                             <div className="col-3">
                                 <label htmlFor="billAdvisorNo" className="form-label">เลขที่ใบวางบิล</label>
                             </div>
-                            <div className="col-7">
+                            <div className="col-4">
                                 <input type="text" id="billAdvisorNo" value={billAdvisorNo} onChange={(e) => setBillAdvisorNo(e.target.value)} className="form-control"/>
                             </div>
                             {/* <div className="col-1 text-center">
@@ -134,7 +134,7 @@ const FindCashierReceive = () => {
                             <div className="col-3">
                                 <label htmlFor="cashierReceiptNo" className="form-label">เลขที่ใบรับเงิน</label>
                             </div>
-                            <div className="col-7">
+                            <div className="col-4">
                                 <input type="text" id="cashierReceiptNo" value={cashierReceiptNo} onChange={(e) => setCashierReceiptNo(e.target.value)} className="form-control"/>
                             </div>
                             <div className="col-1">
@@ -149,7 +149,7 @@ const FindCashierReceive = () => {
                             <div className="col-3">
                                 <label htmlFor="Insurer" className="form-label">รหัสบริษัทประกัน</label>
                             </div>
-                            <div className="col-7">
+                            <div className="col-4">
                                 <input type="text" id="InsurerCode" value={insurercode} readOnly={insurerReadOnly} onChange={(e) => setInsurercode(e.target.value)} className="form-control"/>
                             </div>
                             <div className="col-1">
@@ -162,7 +162,7 @@ const FindCashierReceive = () => {
                             <div className="col-3">
                                 <label htmlFor="Advisor" className="form-label">รหัสผู้แนะนำ</label>
                             </div>
-                            <div className="col-7">
+                            <div className="col-4">
                                 <input type="text" id="Advisor" value={advisorcode} readOnly={advisoryReadOnly}  onChange={(e) => setAdvisorcode(e.target.value)} className="form-control"/>
                             </div>
                             <div className="col-1">
@@ -173,10 +173,10 @@ const FindCashierReceive = () => {
                         {/* Date Select */}
                         <div className="row">
                             <div className="col-3">
-                                <label htmlFor="Date Select" className="form-label">วันที่สร้าง</label>
+                                <label htmlFor="Date Select" className="form-label">วันที่สร้าง จาก</label>
                             </div>
                             <div className="col-4">
-                                <label htmlFor="fromDate">จาก วันที่&nbsp;</label>
+                                {/* <label htmlFor="fromDate" className="form-label">จาก วันที่&nbsp;</label> */}
                                 {/* <input
                                     type="date"
                                     id="fromDate"
@@ -197,8 +197,11 @@ const FindCashierReceive = () => {
                             onChange={(date) => setFromDate(date)}
                                  />
                             </div>
+                            <div className="col-1">
+                            <label htmlFor="toDate">ถึง &nbsp;</label>
+                            </div>
                             <div className="col-4">
-                                <label htmlFor="toDate">ถึง วันที่&nbsp;</label>
+                                
                                 {/* <input
                                     type="date"
                                     id="toDate"
@@ -227,7 +230,7 @@ const FindCashierReceive = () => {
                             <div className="col-3">
                                 <label htmlFor="create user code" className="form-label">รหัสผู้บันทึก</label>
                             </div>
-                            <div className="col-7">
+                            <div className="col-4">
                                 <input type="text" id="create user code" value={createUserCode} onChange={(e) => setCreateUserCode(e.target.value)} className="form-control"/>
                             </div>
                         </div>
@@ -236,7 +239,7 @@ const FindCashierReceive = () => {
                             <div className="col-3">
                                 <label htmlFor="Customer" className="form-label">ชื่อผู้แนะนำ</label>
                             </div>
-                            <div className="col-7">
+                            <div className="col-4">
                                 <input type="text" id="Customer" value={refno} onChange={(e) => setRefno(e.target.value)} className="form-control"/>
                             </div>
                         </div>
@@ -248,7 +251,7 @@ const FindCashierReceive = () => {
                             <div className="col-3">
                                 <label htmlFor="transactionType" className="form-label">ประเภทธุรกรรม</label>
                             </div>
-                            <div className="col-7">
+                            <div className="col-4">
                                 <select
                                     id="transactionType"
                                     value={transactionType}
@@ -270,7 +273,7 @@ const FindCashierReceive = () => {
                             <div className="col-3">
                                 <label htmlFor="Customer" className="form-label">เลขที่ตัดหนี้</label>
                             </div>
-                            <div className="col-7">
+                            <div className="col-4">
                                 <input type="text" id="dfrpreferno" value={dfrpreferno} onChange={(e) => setDfrpreferno(e.target.value)} className="form-control"/>
                             </div>
                         </div>

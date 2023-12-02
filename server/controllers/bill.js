@@ -165,8 +165,8 @@ const findDataByBillAdvisoryNo = async (req, res) => {
         else ti."TITLETHAIBEGIN"||' '||e."t_ogName"||' '||ti."TITLETHAIEND" end )   as receivename,  
         (select (SUM(t.ovamt) - SUM(t.ovtaxamt) + SUM(t.ovamt) - SUM(t.ovtaxamt)) AS ovamt_sum from static_data."Transactions" t where t."premout-dfrpreferno" = bj.dfrpreferno and "transType" in ('OV-IN','COMM-IN')) as amt  ,*
         FROM static_data."Transactions" t   join static_data."Agents" A on t."agentCode" = A."agentCode"  
-        join static_data."Insurers" I on t."insurerCode"  = I."insurerCode"  
-        join static_data.b_jaaraps bj on bj.dfrpreferno  = t.dfrpreferno
+        left join static_data."Insurers" I on t."insurerCode"  = I."insurerCode"  
+        left join static_data.b_jaaraps bj on bj.dfrpreferno  = t.dfrpreferno
         left join static_data."Entities" e  on  e.id = I."entityID"
         left join static_data."Titles" ti  on  ti."TITLEID" = e."titleID"
         WHERE  bj.dfrpreferno  = :filter limit 1`

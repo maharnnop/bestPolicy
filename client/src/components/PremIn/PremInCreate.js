@@ -272,10 +272,11 @@ const submitarpremin = async (e) => {
         <h1>สร้างรายการตัดหนี้</h1>
         {/* billadvisorno */}
         <div className="row my-3">
+        <div className="col-1"></div>
           <label class="col-sm-2 col-form-label" htmlFor="billadvisorno">
-            เลขที่ใบวางบิล_
+            เลขที่ใบวางบิล
           </label>
-          <div className="col-4">
+          <div className="col-3">
             <input
               className="form-control"
               type="text"
@@ -299,10 +300,11 @@ const submitarpremin = async (e) => {
         </div>
         {/* insurerCode  */}
         <div className="row my-3">
+        <div className="col-1"></div>
           <label class="col-sm-2 col-form-label" htmlFor="insurerCode">
             รหัสบริษัทประกัน
           </label>
-          <div className="col-4 ">
+          <div className="col-3 ">
             <input
               className="form-control"
               type="text"
@@ -315,10 +317,11 @@ const submitarpremin = async (e) => {
         </div>
         {/* advisorCode  */}
         <div className="row my-3">
+        <div className="col-1"></div>
           <label class="col-sm-2 col-form-label" htmlFor="agentCode">
             รหัสผู้แนะนำ
           </label>
-          <div className="col-4 ">
+          <div className="col-3 ">
             <input
               className="form-control"
               type="text"
@@ -354,10 +357,11 @@ const submitarpremin = async (e) => {
         </div> */}
               {/* cashierreceiveno */}
         <div className="row my-3">
+        <div className="col-1"></div>
           <label class="col-sm-2 col-form-label" htmlFor="cashierreceiveno">
             เลขที่รับเงิน
           </label>
-          <div className="col-4 ">
+          <div className="col-3 ">
             <input
               className="form-control"
               type="text"
@@ -375,19 +379,21 @@ const submitarpremin = async (e) => {
         </div>
         {/* Amt */}
         <div className="row my-3">
+        <div className="col-1"></div>
           <label class="col-sm-2 col-form-label" htmlFor="amt">
             จำนวนเงินที่รับ
           </label>
-          <div className="col-4 ">
+          <div className="col-3 ">
             <input className="form-control" type="number" name="amt" id="amt" value={filterData.amt} disabled/>
           </div>
         </div>
         {/* actualvalue */}
         <div className="row my-3">
+        <div className="col-1"></div>
           <label class="col-sm-2 col-form-label" htmlFor="actualvalue">
             จำนวนเงินใบวางบิล
           </label>
-          <div className="col-4 ">
+          <div className="col-3 ">
             <input
               className="form-control"
               type="number"
@@ -400,7 +406,7 @@ const submitarpremin = async (e) => {
           <label class="col-sm-2 col-form-label" htmlFor="actualvalue">
             ผลต่าง
           </label>
-          <div className="col-4 ">
+          <div className="col-3 ">
             <input
               className="form-control"
               type="text"

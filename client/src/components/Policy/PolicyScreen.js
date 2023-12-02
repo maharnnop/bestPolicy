@@ -8,6 +8,7 @@ import Select from 'react-select';
 import { useCookies } from "react-cookie";
 import { date, number } from "joi";
 import { numberWithCommas } from '../lib/number';
+import {stringToNumber,NumberToString } from '../lib/stringToNumber';
 import { BiSearchAlt } from "react-icons/bi";
 import Modal from 'react-bootstrap/Modal';
 import ModalSearchAgent from "./ModalSearchAgent";
@@ -109,6 +110,7 @@ const PolicyScreen = (props) => {
 
   const handleChange = async (e) => {
     e.preventDefault();
+    console.log(document.getElementsByName('specdiscamt')[0].value)
     // console.log(e);
     if (e.target.name === 'branch') {
       const value = e.target.value;
@@ -127,14 +129,13 @@ const PolicyScreen = (props) => {
       } else {
         document.getElementsByName('branch')[0].value = value.replace(/[^0-9]/g, '')
       }
-    } else {
+    } 
+    //set dropdown title follow to personType
+    else if (e.target.name === "personType") {
       setFormData((prevState) => ({
         ...prevState,
         [e.target.name]: e.target.value,
       }));
-    }
-    //set dropdown title follow to personType
-    if (e.target.name === "personType") {
       if (e.target.value === "P") {
         axios
           .get(url + "/static/titles/person/all", headers)
@@ -166,18 +167,14 @@ const PolicyScreen = (props) => {
               );
             });
             setTitleDD(array2);
-            const withheldamt = parseFloat(((formData.netgrossprem + formData.duty) * withheld).toFixed(2))
-            setFormData((prevState) => ({
-              ...prevState,
-              withheld: withheldamt,
-            }));
+            
           })
           .catch((err) => { });
       }
     }
 
     //set dropdown distric subdistric
-    if (e.target.name === "province") {
+    else if (e.target.name === "province") {
 
       getDistrict(e.target.value);
     } else if (e.target.name === "district") {
@@ -186,9 +183,17 @@ const PolicyScreen = (props) => {
       getMotormodel(e.target.value);
     }
     //set dropdown subclass when class change
-    if (e.target.name === "class") {
+    else if (e.target.name === "class") {
       const array = [];
-      
+      if (!formData.insurerCode) {
+        alert("กรูณาเลือกบริษัทประกัน")
+        e.target.value = null
+      setFormData((prevState) => ({
+        ...prevState,
+        class : null,
+      }));
+        return 
+      }
       insureTypeDD.forEach((ele,index) => {
         if (e.target.value === ele.class) {
           array.push(
@@ -200,10 +205,52 @@ const PolicyScreen = (props) => {
         }
       });
       setInsureSubClassDD(array);
+      axios
+      .post(url + "/insures/getcommovin", 
+      { insurerCode: formData.insurerCode,
+        class : e.target.value, subClass :  array[0].props.value}, headers)
+      .then((res) => {
+        if (res.data.length > 0) {
+              setFormData((prevState) => ({
+                ...prevState,
+                class : e.target.value,
+                subClass : array[0].props.value,
+                [`commin_rate`]: res.data[0].rateComIn,
+                [`ovin_rate`]: res.data[0].rateOVIn_1,
+
+              }))
+            }
+          }).catch((err) => {
+            alert("Something went wrong, Try Again.");
+            // alert("cant get aumphur");
+          });
       
+    }
+    else if (e.target.name === "subClass") {
+      console.log( e.target.value);
+      axios
+      .post(url + "/insures/getcommovin", 
+      { insurerCode: formData.insurerCode,
+        class : formData.class , subClass :  e.target.value}, headers)
+      .then((res) => {
+        console.log(res.data);
+        if (res.data.length > 0) {
+              setFormData((prevState) => ({
+                ...prevState,
+                subClass : e.target.value,
+                [`commin_rate`]: res.data[0].rateComIn,
+                [`ovin_rate`]: res.data[0].rateOVIn_1,
+
+              }))
+            }
+          }).catch((err) => {
+            alert("Something went wrong, Try Again.");
+            // alert("cant get aumphur");
+          });
+    }else{
       setFormData((prevState) => ({
         ...prevState,
-        subClass: array[0].props.value,
+        [e.target.name]: e.target.value,
       }));
     }
 
@@ -375,13 +422,14 @@ const PolicyScreen = (props) => {
 
     //  set totalprem
     if (e.target.name === 'grossprem') {
-      const netgrosspremamt = e.target.value - formData.specdiscamt
+      const grossprem = stringToNumber(e.target.value)
+      const netgrosspremamt = grossprem - formData.specdiscamt
       const dutyamt = Math.ceil(netgrosspremamt * duty)
       const taxamt = parseFloat(((netgrosspremamt + dutyamt) * tax).toFixed(2))
       const totalpremamt = netgrosspremamt + dutyamt + taxamt
       setFormData((prevState) => ({
         ...prevState,
-        grossprem: e.target.value,
+        grossprem: grossprem,
         netgrossprem: netgrosspremamt,
         duty: dutyamt,
         tax: taxamt,
@@ -393,6 +441,7 @@ const PolicyScreen = (props) => {
       const dutyamt = Math.ceil(netgrosspremamt * duty)
       const taxamt = parseFloat(((netgrosspremamt + dutyamt) * tax).toFixed(2))
       const totalpremamt = netgrosspremamt + dutyamt + taxamt
+     
       setFormData((prevState) => ({
         ...prevState,
         specdiscrate: e.target.value,
@@ -401,39 +450,37 @@ const PolicyScreen = (props) => {
         duty: dutyamt,
         tax: taxamt,
         totalprem: totalpremamt,
-      }));
-    }
-    else {
-      if (e.target.name === 'commin_rate') {
-        setFormData((prevState) => ({
-          ...prevState,
-          [e.target.name]: e.target.value,
-          commin_amt: (formData[`commin_rate`] * formData[`grossprem`]) / 100
-        }));
-      } else if (e.target.name === 'ovin_rate') {
-        setFormData((prevState) => ({
-          ...prevState,
-          [e.target.name]: e.target.value,
-          ovin_amt: (formData[`ovin_rate`] * formData[`grossprem`]) / 100
-        }));
-      } else if (e.target.name === 'commout_rate') {
-        setFormData((prevState) => ({
-          ...prevState,
-          [e.target.name]: e.target.value,
-          commout_amt: (formData[`commout_rate`] * formData[`grossprem`]) / 100
-        }));
-      } else if (e.target.name === 'ovout_rate') {
-        setFormData((prevState) => ({
-          ...prevState,
-          [e.target.name]: e.target.value,
-          ovout_amt: (formData[`ovout_rate`] * formData[`grossprem`]) / 100
-        }));
-      }
-      setFormData((prevState) => ({
-        ...prevState,
-        [e.target.name]: e.target.value,
-      }));
-    }
+      }));}
+    // }else if (e.target.name === 'commin_rate') {
+    //     setFormData((prevState) => ({
+    //       ...prevState,
+    //       [e.target.name]: e.target.value,
+    //       commin_amt: (formData[`commin_rate`] * formData[`grossprem`]) / 100
+    //     }));
+    //   } else if (e.target.name === 'ovin_rate') {
+    //     setFormData((prevState) => ({
+    //       ...prevState,
+    //       [e.target.name]: e.target.value,
+    //       ovin_amt: (formData[`ovin_rate`] * formData[`grossprem`]) / 100
+    //     }));
+    //   } else if (e.target.name === 'commout_rate') {
+    //     setFormData((prevState) => ({
+    //       ...prevState,
+    //       [e.target.name]: e.target.value,
+    //       commout_amt: (formData[`commout_rate`] * formData[`grossprem`]) / 100
+    //     }));
+    //   } else if (e.target.name === 'ovout_rate') {
+    //     setFormData((prevState) => ({
+    //       ...prevState,
+    //       [e.target.name]: e.target.value,
+    //       ovout_amt: (formData[`ovout_rate`] * formData[`grossprem`]) / 100
+    //     }));
+    //   }
+      // setFormData((prevState) => ({
+      //   ...prevState,
+      //   [e.target.name]: e.target.value,
+      // }));
+    
   };
 
 
@@ -742,7 +789,7 @@ const PolicyScreen = (props) => {
         console.log(res.data);
         if (res.data.length > 0) {
           if (i === 1) {
-            if (res.data[0].rateComIn < res.data[0].rateComOut + formData.commout2_rate || res.data[0].rateOVIn_1 < res.data[0].rateOVOut_1 + formData.ovout2_rate) {
+            if (formData.commin_rate < res.data[0].rateComOut + (formData.commout2_rate|| 0) || formData.ovin_rate < res.data[0].rateOVOut_1 + (formData.ovout2_rate || 0)) {
               alert("ค่า comm/ov out > comm/ov in")
               value = null
               setFormData((prevState) => ({
@@ -772,8 +819,8 @@ const PolicyScreen = (props) => {
               setFormData((prevState) => ({
                 ...prevState,
                 [name]: value,
-                [`commin_rate`]: res.data[0].rateComIn,
-                [`ovin_rate`]: res.data[0].rateOVIn_1,
+                // [`commin_rate`]: res.data[0].rateComIn,
+                // [`ovin_rate`]: res.data[0].rateOVIn_1,
                 [`commout${i}_rate`]: res.data[0].rateComOut,
                 [`ovout${i}_rate`]: res.data[0].rateOVOut_1,
                 ['dueDateAgent'] : duedateA,
@@ -782,7 +829,7 @@ const PolicyScreen = (props) => {
               }))
             }
           } else if (i === 2) {
-            if (res.data[0].rateComIn < res.data[0].rateComOut + formData.commout1_rate || res.data[0].rateOVIn_1 < res.data[0].rateOVOut_1 + formData.ovout1_rate) {
+            if (formData.commin_rate < res.data[0].rateComOut + (formData.commout1_rate||0) || formData.ovin_rate < res.data[0].rateOVOut_1 + (formData.ovout1_rate || 0)) {
               alert("ค่า comm/ov out > comm/ov in")
               value = null
               setFormData((prevState) => ({
@@ -795,8 +842,8 @@ const PolicyScreen = (props) => {
               setFormData((prevState) => ({
                 ...prevState,
                 [name]: value,
-                [`commin_rate`]: res.data[0].rateComIn,
-                [`ovin_rate`]: res.data[0].rateOVIn_1,
+                // [`commin_rate`]: res.data[0].rateComIn,
+                // [`ovin_rate`]: res.data[0].rateOVIn_1,
                 [`commout${i}_rate`]: res.data[0].rateComOut,
                 [`ovout${i}_rate`]: res.data[0].rateOVOut_1,
 
@@ -831,38 +878,45 @@ const PolicyScreen = (props) => {
     let t_ogName = null
     let t_firstName = null
     let t_lastName = null
-    let idCardType = "idcard"
+    let idCardType = null
     let idCardNo = null
     let taxNo = null
     if (formData.personType === 'P') {
+      idCardType = "idcard"
       t_firstName = formData.t_fn
       t_lastName = formData.t_ln
       idCardNo = formData.regisNo.toString()
       data.push({ ...formData, t_firstName: t_firstName, t_lastName: t_lastName, idCardNo: idCardNo, idCardType: idCardType, t_ogName: t_ogName, taxNo: taxNo })
     } else {
+      const withheldamt = parseFloat(((formData.netgrossprem + formData.duty) * withheld).toFixed(2))
+           
+              
+            
+
       t_ogName = formData.t_fn
 
       taxNo = formData.regisNo.toString()
-      data.push({ ...formData, t_ogName: t_ogName, taxNo: taxNo, t_firstName: t_firstName, t_lastName: t_lastName, idCardNo: idCardNo, idCardType: idCardType })
+      data.push({ ...formData, t_ogName: t_ogName, taxNo: taxNo, t_firstName: t_firstName, t_lastName: t_lastName, idCardNo: idCardNo, idCardType: idCardType ,withheld: withheldamt,})
     }
-    data[0].specdiscamt = document.getElementsByName('specdiscamt')[0].value
-    data[0].netgrossprem = document.getElementsByName('grossprem')[0].value - document.getElementsByName('specdiscamt')[0].value
-    data[0].tax = document.getElementsByName('tax')[0].value
-    data[0].duty = document.getElementsByName('duty')[0].value
-    data[0].totalprem = document.getElementsByName('totalprem')[0].value
-    data[0].commin_amt = document.getElementsByName('commin_amt')[0].value
-    data[0].ovin_amt = document.getElementsByName('ovin_amt')[0].value
-    data[0].commout1_amt = document.getElementsByName('commout1_amt')[0].value
-    data[0].ovout1_amt = document.getElementsByName('ovout1_amt')[0].value
+    // data[0].specdiscamt = document.getElementsByName('specdiscamt')[0].value
+    // data[0].netgrossprem = document.getElementsByName('grossprem')[0].value - document.getElementsByName('specdiscamt')[0].value
+    // data[0].tax = document.getElementsByName('tax')[0].value
+    // data[0].duty = document.getElementsByName('duty')[0].value
+    // data[0].totalprem = document.getElementsByName('totalprem')[0].value
+    data[0].cover_amt = stringToNumber (document.getElementsByName('cover_amt')[0].value)
+    data[0].commin_amt = stringToNumber (document.getElementsByName('commin_amt')[0].value)
+    data[0].ovin_amt = stringToNumber(document.getElementsByName('ovin_amt')[0].value)
+    data[0].commout1_amt = stringToNumber(document.getElementsByName('commout1_amt')[0].value)
+    data[0].ovout1_amt =stringToNumber( document.getElementsByName('ovout1_amt')[0].value)
     if (document.getElementsByName('commout2_amt')[0]) {
-      data[0].commout2_amt = document.getElementsByName('commout2_amt')[0].value
+      data[0].commout2_amt = stringToNumber(document.getElementsByName('commout2_amt')[0].value)
     }
     if (document.getElementsByName('ovout2_amt')[0]) {
 
-      data[0].ovout2_amt = document.getElementsByName('ovout2_amt')[0].value
+      data[0].ovout2_amt = stringToNumber(document.getElementsByName('ovout2_amt')[0].value)
     }
-    data[0].commout_amt = document.getElementsByName('commout_amt')[0].value
-    data[0].ovout_amt = document.getElementsByName('ovout_amt')[0].value
+    data[0].commout_amt = stringToNumber(document.getElementsByName('commout_amt')[0].value)
+    data[0].ovout_amt = stringToNumber(document.getElementsByName('ovout_amt')[0].value)
 
     //set actdate expdate format time 
     data[0].actDate = data[0].actDate.toLocaleDateString()// Adjust to the desired time zone
@@ -1165,6 +1219,7 @@ const PolicyScreen = (props) => {
                 className="form-control"
                 name={`class`}
                 onChange={handleChange}
+                
               >
                 <option value={formData.class} selected disabled hidden>
                   {formData.class}
@@ -1180,6 +1235,7 @@ const PolicyScreen = (props) => {
                 className="form-control"
                 name={`subClass`}
                 onChange={handleChange}
+                
               >
                 <option value={formData.subClass} selected disabled  hidden>
                   {formData.subClass} 
@@ -1240,11 +1296,12 @@ const PolicyScreen = (props) => {
           </label>
           <input
             className="form-control"
-            type="number"
+            type="text"
             step={0.1}
             defaultValue={formData.cover_amt}
             name={`cover_amt`}
             onChange={handleChange}
+            onInput={(e)=>numberWithCommas(e.target)}
           />
         </div>
         <div class="col-2">
@@ -1254,12 +1311,12 @@ const PolicyScreen = (props) => {
           <input
             className="form-control numbers"
             id="grossprem"
-            type="number"
-            thousandSeparator={true}
-            step={0.1}
-            value={formData.grossprem}
+            type="text"
+            // step={0.1}
             name={`grossprem`}
             onChange={(e) => handleChangePrem(e)}
+            value={NumberToString(formData.grossprem)}
+            onInput={(e)=>numberWithCommas(e.target)}
           />
           {/* <NumberInputWithCommas value={formData.grossprem} name={`grossprem`} onChange={handleChange}  /> */}
 
@@ -1273,7 +1330,7 @@ const PolicyScreen = (props) => {
 
         <div class="col-2">
           <label class="form-label ">
-            ส่วนลด walkin
+            ส่วนลด walkin %
           </label>
           <input
                 className="form-control"
@@ -1290,15 +1347,15 @@ const PolicyScreen = (props) => {
         <label class="form-label ">
             จำนวนเงินส่วนลด
           </label>
+       
               <input
-                className="form-control"
-                type="number"
+                className="form-control bg-warning"
+                type="text"
                 disabled
-                step={0.1}
                 // value={parseFloat((formData[`specdiscrate`] * formData[`grossprem`] / 100).toFixed(2)) || 0}
-                value={formData.specdiscamt}
+                value={NumberToString(formData.specdiscamt)}
                 name={`specdiscamt`}
-                onChange={(e) => handleChange(e)}
+                // onChange={(e) => handleChange(e)}
               />
             </div>
         <div class="col-2">
@@ -1306,13 +1363,10 @@ const PolicyScreen = (props) => {
             เบี้ยสุทธิ
           </label>
           <input
-            type="number" // Use an input element for displaying numbers
-            className="form-control"
-            //value={parseFloat(formData.grossprem) - parseFloat(formData.duty) - parseFloat(formData.tax)}
-            // value={parseFloat(((100 - formData[`specdiscrate`]) * formData[`grossprem`] / 100 * (1 + duty +tax)).toFixed(2)) || ""}
-            value={formData.netgrossprem} // Display the totalprem value from the state
-            step={0.1}
-            name={`withheld`}
+            type="text" // Use an input element for displaying numbers
+            className="form-control bg-warning"
+            value={NumberToString(formData.netgrossprem)} // Display the totalprem value from the state
+            name={`netgrossprem`}
             disabled
           />
         </div>
@@ -1322,15 +1376,12 @@ const PolicyScreen = (props) => {
                 อากร
               </label>
               <input
-                className="form-control"
-                type="number"
-                step={0.1}
+                className="form-control bg-warning"
+                type="text"
                 disabled
-                // netgrossprem * tax 
-                // value={parseFloat(((100 - formData[`specdiscrate`]) * formData[`grossprem`] / 100 * duty).toFixed(2)) || 0}
-                value={formData.duty}
+                value={NumberToString(formData.duty)}
                 name={`duty`}
-                onChange={handleChange}
+                // onChange={handleChange}
               />
           
         </div>
@@ -1339,35 +1390,25 @@ const PolicyScreen = (props) => {
                 ภาษี
               </label>
               <input
-                className="form-control"
-                type="number"
-                step={0.1}
+                className="form-control bg-warning"
+                type="text"
                 disabled
-
-                // value={parseFloat((((100 - formData[`specdiscrate`]) * formData[`grossprem`] / 100 )* tax).toFixed(2)) || ""}
-                value={formData.tax}
+                value={NumberToString(formData.tax)}
                 name={`tax`}
-                onChange={handleChange}
+                // onChange={handleChange}
               />
             </div>
-        
-
-
-
       </div>
       <div class="row">
         <div className="col-1"></div>
       <div class="col-2">
           <label class="form-label ">
-            เบี้ยรวม<span class="text-danger"> *</span>
+            เบี้ยรวม<span class="text-danger "> *</span>
           </label>
           <input
-            type="number" // Use an input element for displaying numbers
-            className="form-control"
-            //value={parseFloat(formData.grossprem) - parseFloat(formData.duty) - parseFloat(formData.tax)}
-            // value={parseFloat(((100 - formData[`specdiscrate`]) * formData[`grossprem`] / 100 * (1 + duty +tax)).toFixed(2)) || ""}
-            value={formData.totalprem} // Display the totalprem value from the state
-            step={0.1}
+            type="text" // Use an input element for displaying numbers
+            className="form-control bg-warning"
+            value={NumberToString(formData.totalprem)} // Display the totalprem value from the state
             name={`totalprem`}
             disabled
           />
@@ -1410,13 +1451,11 @@ const PolicyScreen = (props) => {
 
             <div className="col-8">
               <input
-                className="form-control"
-                type="number"
+                className="form-control bg-warning"
+                type="text"
                 disabled
-                step={0.1}
-                value={parseFloat((formData[`commin_rate`] * (100 - formData[`specdiscrate`]) * formData[`grossprem`] / 10000).toFixed(2)) || ""}
+                value={NumberToString(parseFloat((formData[`commin_rate`] * formData[`netgrossprem`]/100 ).toFixed(2))) || ""}
                 name={`commin_amt`}
-                onChange={(e) => handleChange(e)}
               />
             </div>
           </div>
@@ -1446,19 +1485,18 @@ const PolicyScreen = (props) => {
                 step={0.1}
                 value={formData[`ovin_rate`]}
                 name={`ovin_rate`}
-                onChange={handleChange}
+                onChange={(e) => handleChange(e)}
               />
 
             </div>
             <div className="col-8">
               <input
-                className="form-control"
-                type="number"
+                className="form-control bg-warning"
+                type="text"
                 disabled
-                step={0.1}
                 name={`ovin_amt`}
-                value={parseFloat((formData[`ovin_rate`] * (100 - formData[`specdiscrate`]) * formData[`grossprem`] / 10000).toFixed(2)) || ""}
-                onChange={handleChange}
+                value={NumberToString(parseFloat((formData[`ovin_rate`] * formData[`netgrossprem`] / 100).toFixed(2))) || ""}
+                // onChange={handleChange}
               />
             </div>
           </div>
@@ -1480,7 +1518,7 @@ const PolicyScreen = (props) => {
           <div className="row">
             <div className="col input-group">
               <input
-                className="form-control"
+                className="form-control "
                 type="number"
                 step={0.1}
                 value={formData[`commout1_rate`]}
@@ -1491,13 +1529,12 @@ const PolicyScreen = (props) => {
             </div>
             <div className="col-8">
               <input
-                className="form-control"
-                type="number"
+                className="form-control bg-warning"
+                type="text"
                 disabled
-                step={0.1}
-                value={(formData[`commout1_rate`] * (100 - formData[`specdiscrate`]) * formData[`grossprem`] / 10000).toFixed(2) * 100 / 100 || ""}
+                value={NumberToString((formData[`commout1_rate`] * formData[`netgrossprem`] / 100).toFixed(2))  || ""}
                 name={`commout1_amt`}
-                onChange={handleChange}
+                // onChange={handleChange}
               />
             </div>
 
@@ -1522,14 +1559,13 @@ const PolicyScreen = (props) => {
             </div>
             <div className="col-8">
               <input
-                className="form-control"
-                type="number"
+                className="form-control bg-warning"
+                type="text"
                 disabled
-                step={0.1}
                 name={`ovout1_amt`}
                 //value={(formData[`ovout1_rate`] * formData[`grossprem`]) / 100 || ""}
-                value={parseFloat((formData[`ovout1_rate`] * (100 - formData[`specdiscrate`]) * formData[`grossprem`] / 10000).toFixed(2)) || ""}
-                onChange={handleChange}
+                value={NumberToString(parseFloat((formData[`ovout1_rate`] *  formData[`netgrossprem`] / 100).toFixed(2))) || ""}
+                // onChange={handleChange}
               />
             </div>
 
@@ -1559,7 +1595,7 @@ const PolicyScreen = (props) => {
             <div className="row">
               <div className="col input-group">
                 <input
-                  className="form-control"
+                  className="form-control "
                   type="number"
                   step={0.1}
                   value={formData[`commout2_rate`]}
@@ -1570,14 +1606,12 @@ const PolicyScreen = (props) => {
               </div>
               <div className="col-8">
                 <input
-                  className="form-control"
-                  type="number"
+                  className="form-control bg-warning"
+                  type="text"
                   disabled
-                  step={0.1}
                   //value={(formData[`commin2_rate`] * formData[`grossprem`]) / 100 || ""}
-                  value={parseFloat((formData[`commout2_rate`] * (100 - formData[`specdiscrate`]) * formData[`grossprem`] / 10000).toFixed(2)) || ""}
+                  value={NumberToString(parseFloat((formData[`commout2_rate`] * formData[`netgrossprem`] / 100).toFixed(2))) || ""}
                   name={`commout2_amt`}
-                  onChange={(e) => handleChange(e)}
                 />
               </div>
             </div>
@@ -1603,14 +1637,12 @@ const PolicyScreen = (props) => {
               </div>
               <div className="col-8">
                 <input
-                  className="form-control"
-                  type="number"
+                  className="form-control bg-warning"
+                  type="text"
                   disabled
-                  step={0.1}
                   name={`ovout2_amt`}
-                  //value={(formData[`ovin2_rate`] * formData[`grossprem`]) / 100 || ""}
-                  value={parseFloat((formData[`ovout2_rate`] * (100 - formData[`specdiscrate`]) * formData[`grossprem`] / 10000).toFixed(2)) || ""}
-                  onChange={handleChange}
+                  value={NumberToString(parseFloat((formData[`ovout2_rate`] *  formData[`netgrossprem`] / 100).toFixed(2))) || ""}
+                  
                 />
               </div>
             </div>
@@ -1650,14 +1682,11 @@ const PolicyScreen = (props) => {
             </div>
             <div className="col-8">
               <input
-                className="form-control"
-                type="number"
+                className="form-control bg-warning"
+                type="text"
                 disabled
-                step={0.1}
-                // value={((document.getElementsByName(`commout_rate`)[0] ? document.getElementsByName(`commout_rate`)[0].value : 0) * ((100 - formData[`specdiscrate`]) * formData[`grossprem`] / 10000).toFixed(2)) || ''}
-                value={parseFloat(((parseFloat(formData[`commout1_rate`] || 0) + parseFloat(formData[`commout2_rate`] || 0)) * ((100 - formData[`specdiscrate`]) * formData[`grossprem`] / 10000).toFixed(2)).toFixed(2)) || ''}
+                value={NumberToString(((parseFloat(formData[`commout1_rate`] || 0) + parseFloat(formData[`commout2_rate`] || 0)) *  formData[`netgrossprem`] / 100).toFixed(2)) || ''}
                 name={`commout_amt`}
-                onChange={handleChange}
               />
             </div>
 
@@ -1671,7 +1700,7 @@ const PolicyScreen = (props) => {
           <div className="row">
             <div className="col input-group">
               <input
-                className="form-control"
+                className="form-control "
                 type="number"
                 disabled
                 step={0.1}
@@ -1683,14 +1712,13 @@ const PolicyScreen = (props) => {
             </div>
             <div className="col-8">
               <input
-                className="form-control"
-                type="number"
+                className="form-control bg-warning"
+                type="text"
                 disabled
-                step={0.1}
                 name={`ovout_amt`}
                 // value={((document.getElementsByName(`ovout_rate`)[0] ? document.getElementsByName(`ovout_rate`)[0].value : 0) * ((100 - formData[`specdiscrate`]) * formData[`grossprem`] / 10000).toFixed(2)) || ''}
-                value={parseFloat(((parseFloat(formData[`ovout1_rate`] || 0) + parseFloat(formData[`ovout2_rate`] || 0)) * ((100 - formData[`specdiscrate`]) * formData[`grossprem`] / 10000)).toFixed(2)) || ''}
-                onChange={handleChange}
+                value={NumberToString(((parseFloat(formData[`ovout1_rate`] || 0) + parseFloat(formData[`ovout2_rate`] || 0)) *  formData[`netgrossprem`] / 100).toFixed(2)) || ''}
+                
               />
             </div>
 

@@ -193,8 +193,8 @@ const createbilladvisor = async (req,res) =>{
       req.body.bill.billadvisorno = getCurrentYYMM() +'/'+ String(await getRunNo('bill',null,null,'kw',currentdate,t)).padStart(4, '0');
       const billadvisors = await sequelize.query(
         'INSERT INTO static_data.b_jabilladvisors (insurerno, advisorno, billadvisorno, billdate, createusercode, amt, cashierreceiptno, active ) ' +
-        'VALUES ((select id from static_data."Insurers" where "insurerCode" = :insurerCode limit 1), '+
-        '(select id from static_data."Agents" where "agentCode" = :agentCode limit 1), '+
+        'VALUES ((select id from static_data."Insurers" where "insurerCode" = :insurerCode and lastversion = \'Y\'), '+
+        '(select id from static_data."Agents" where "agentCode" = :agentCode and lastversion = \'Y\'), '+
         ':billadvisorno, :billdate, :createusercode, :amt, :cashierreceiptno, \'Y\') RETURNING "id"',
             {
               replacements: {
@@ -276,14 +276,14 @@ const createbilladvisor = async (req,res) =>{
 const findbilladvisor =async (req,res) =>{
   
   const records = await sequelize.query(
-    'select (select "insurerCode" from static_data."Insurers" where id = insurerno ), '+
-    '(select "agentCode" from static_data."Agents" where id = advisorno ), *  from static_data.b_jabilladvisors '+
-    'where 1=1 and cashierreceiptno is null '+ 
-    'and active =\'Y\' '+
-    'and (case when :insurerid is null then true else insurerno = :insurerid end) '+ 
-    'and (case when :agentid is null then true else advisorno = :agentid end) '+
-    'and (case when :billadvisorno is null then true else billadvisorno = :billadvisorno end) '+
-    'and (case when :billdate is null then true else billdate <= :billdate end) ',
+    `select (select "insurerCode" from static_data."Insurers" where id = insurerno and lastversion = \'Y\'), 
+    (select "agentCode" from static_data."Agents" where id = advisorno and lastversion = \'Y\'), *  from static_data.b_jabilladvisors 
+    where 1=1 and cashierreceiptno is null 
+    and active =\'Y\' 
+    and (case when :insurerid is null then true else insurerno = :insurerid end) 
+    and (case when :agentid is null then true else advisorno = :agentid end) 
+    and (case when :billadvisorno is null then true else billadvisorno = :billadvisorno end) 
+    and (case when :billdate is null then true else billdate <= :billdate end)` ,
         {
           replacements: {
             insurerid: req.body.insurerId,
