@@ -25,6 +25,7 @@ const PolicyCard = (props) => {
   const [formData, setFormData] = useState(props.formData);
  
   const [installment, setInstallment] = useState({ insurer: [], advisor: [] })
+  const [checked , setChecked] = useState({ insurer: false, advisor: false })
   const [hidecard, setHidecard] = useState([false, 0]);
 
   function formatDate(dateString) {
@@ -45,7 +46,7 @@ function formatNumber(input) {
 }
   const handleChange = async (e) => {
     e.preventDefault();
-
+    console.log(document.getElementsByName(`installmentInsurer`)[0].checked)
     setFormData((prevState) => ({
       ...prevState,
       [e.target.name]: e.target.value,
@@ -600,7 +601,9 @@ const handleClose = (e) => {
         <div className="col-1"></div>
         <div className="col-2">
           <div class="form-check">
-            <input class="form-check-input bg-secondary" type="checkbox" name="installmentInsurer" id="flexCheckDefault" />
+            <input class="form-check-input bg-secondary" type="checkbox" name="installmentInsurer" checked={checked.insurer} 
+            onClick={(e)=>{setChecked((prevState) => ({advisor: e.target.checked, insurer: e.target.checked,}))}} 
+            id="flexCheckDefault" />
             <label class="form-check-label" for="flexCheckChecked">
             แบ่งงวด บริษัทประกัน
             </label>
@@ -618,6 +621,7 @@ const handleClose = (e) => {
             type="number"
             defaultValue={formData.seqNoins}
             name={`seqNoins`}
+            disabled={!checked.insurer}
             onChange={handleChange}
             onBlur={(e) =>{setFormData((prevState) => ({
               ...prevState,
@@ -633,7 +637,9 @@ const handleClose = (e) => {
         <div className="col-2 border-left">
 
           <div class="form-check ">
-            <input class="form-check-input bg-secondary" type="checkbox" name="installmentAdvisor" id="flexCheckDefault" />
+            <input class="form-check-input bg-secondary" type="checkbox" name="installmentAdvisor"  checked={checked.advisor} 
+            onClick={(e)=>{setChecked((prevState) => ({...prevState, advisor: e.target.checked}))}}
+            id="flexCheckDefault" />
             <label class="form-check-label" for="flexCheckChecked">
             แบ่งงวด ผู้แนะนำ
             </label>
@@ -651,6 +657,7 @@ const handleClose = (e) => {
             className="form-control"
             type="number"
             value={formData.seqNoagt}
+            disabled={!checked.advisor}
             name={`seqNoagt`}
             onChange={handleChange}
           />
@@ -688,6 +695,7 @@ const handleClose = (e) => {
             value={formData.seqNoinstime}
             name={`seqNoinstime`}
             onChange={handleChange}
+            disabled={!checked.insurer}
             onBlur={(e) =>{setFormData((prevState) => ({
               ...prevState,
               'seqNoagttime': e.target.value,
@@ -700,6 +708,7 @@ const handleClose = (e) => {
             className="form-control"
             name={`seqNoinstype`}
             onChange={handleChange}
+            disabled={!checked.insurer}
             onBlur={(e) =>{setFormData((prevState) => ({
               ...prevState,
               'seqNoagttype': e.target.value.trim(),
@@ -725,6 +734,7 @@ const handleClose = (e) => {
             type="number"
             value={formData.seqNoagttime}
             name={`seqNoagttime`}
+            disabled={!checked.advisor}
             onChange={handleChange}
           />
         </div>
@@ -734,6 +744,7 @@ const handleClose = (e) => {
             className="form-control"
             name={`seqNoagttype`}
             onChange={handleChange}
+            disabled={!checked.advisor}
             // value={formData.seqNoagttype }
           >
             <option value={formData.seqNoagttype} disabled selected hidden>
@@ -759,6 +770,7 @@ const handleClose = (e) => {
                             showIcon
                             className="form-control"
                             todayButton="Vandaag"
+                            disabled={!checked.insurer}
                             // isClearable
                             name="seqNoinsStart"
                             showYearDropdown
@@ -785,6 +797,7 @@ const handleClose = (e) => {
                             todayButton="Vandaag"
                             // isClearable
                             name="seqNoagtStart"
+                            disabled={!checked.advisor}
                             showYearDropdown
                             dateFormat="dd/MM/yyyy"
                             dropdownMode="select"

@@ -3,6 +3,8 @@ import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import jwt_decode from "jwt-decode";
 import Modal from 'react-bootstrap/Modal';
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
 import {
     BrowserRouter,
     Routes,
@@ -92,8 +94,16 @@ const CreateCashierReceive = () => {
         axios.post(window.globalConfig.BEST_POLICY_V1_BASE_URL + "/bills/findDataByBillAdvisoryNo?txtype=" + txtype, data, headers)
             .then((response) => {
                 console.log(response);
-                if (response.data.length <1) {
+                if (response.data.length <1 || response.data[0].transactiontype !== 'PREM-OUT') {
                     alert("เลขที่ใบวางบิลไม่สามารถทำการตัดหนี้ได้")
+                    setInsurer("")
+                setInsurerReadOnly(false)
+                setAdvisoryReadOnly(false)
+                setAdvisor("")
+                setTransactionTypeReadOnly(false)
+                setReceiveFromReadOnly(false)
+                setReceiveName("")
+                setAmount("")
                 }else{
 
                 
@@ -564,7 +574,19 @@ const CreateCashierReceive = () => {
                                     <label htmlFor="cashierDate" className="form-label">วันที่รับเงิน</label>
                                 </div>
                                 <div className="col-7">
-                                    <input type="datetime-local" id="cashierDate" required value={cashierDate} onChange={(e) => setCashierDate(e.target.value)} className="form-control" />
+                                    {/* <input type="datetime-local" id="cashierDate" required value={cashierDate} onChange={(e) => setCashierDate(e.target.value)} className="form-control" /> */}
+                                    <DatePicker
+                                        showIcon
+                                        className="form-control col"
+                                        todayButton="Vandaag"
+                                        id="cashierDate"
+                                        required
+                                        showYearDropdown
+                                        dateFormat="dd/MM/yyyy"
+                                        dropdownMode="select"
+                                        selected={cashierDate}
+                                        onChange={(date) => setCashierDate(date)}
+                                        />
                                 </div>
                             </div>
 
@@ -844,7 +866,8 @@ const CreateCashierReceive = () => {
                                     <label htmlFor="amount" className="form-label">จำนวนเงิน</label>
                                 </div>
                                 <div className="col-7">
-                                    <input type="text" id="amount" required value={amount}
+                                    <input type="text" id="amount" required 
+                                    value={amount.toLocaleString(undefined, { minimumFractionDigits: 2 }) || 0}
                                         disabled={receiveFromReadOnly}
                                         style={{
                                             backgroundColor: receiveFromReadOnly ? 'grey' : 'white',

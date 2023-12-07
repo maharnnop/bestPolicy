@@ -266,7 +266,7 @@ const CreateBillAdvisor = () => {
         for (let i = 0; i < array.length; i++) {
             if (array[i].statementtype ) {
                 array[i].statementtype = 'N'
-                array[i].billpremium = array[i].totalprem - array[i].commout_amt*(1-wht) - array[i].ovout_amt*(1-wht) 
+                array[i].billpremium = array[i].totalprem - array[i].commout_amt - array[i].ovout_amt
             }else{
                 array[i].statementtype = 'G'
                 array[i].billpremium = array[i].totalprem 

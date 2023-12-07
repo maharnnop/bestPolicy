@@ -506,14 +506,34 @@ const createTransection = async (policy,t) => {
 
 }
 
-const getPolicy = (req, res) => {
-  Policy.findOne({
-    where: {
-      policyNo: req.body.policyNo
+const findPolicy =  async (req, res) => {
+  let cond = ``
+  
+  if(req.body.policyNo !== null && req.body.policyNo !== ''){
+    cond = `${cond} and pol."policyNo" like '%${req.body.policyNo}%'`
+  }
+  if(req.body.applicationNo !== null && req.body.applicationNo !== ''){
+    cond = `${cond} and pol."applicationNo" like '%${req.body.applicationNo}%'`
+  }
+  const records = await sequelize.query(
+    `select pol.*, ent.*, lo.*, inst.*,
+    pol."policyNo", pol."applicationNo", pol."insurerCode",pol."agentCode",
+     inst.class || '/' || inst."subClass" as classsubclass
+    from static_data."Policies" pol 
+    join static_data."InsureTypes" inst on inst.id = pol."insureID"
+    join static_data."Insurees" ine on ine."insureeCode" = pol."insureeCode"
+    join static_data."Entities" ent on ent.id = ine."entityID"
+    join static_data."Locations" lo on lo."entityID" = ent.id
+    join static_data."Titles" tt on tt."TITLEID" = ent."titleID"
+    where  ent.lastversion ='Y' 
+    ${cond}
+    order by pol."applicationNo" ASC `,
+    {
+     
+      type: QueryTypes.SELECT
     }
-  }).then((policy) => {
-    res.json(policy);
-  });
+  )
+  res.json(records)
 };
 
 const getPolicyList = async (req, res) => {
@@ -936,12 +956,12 @@ const draftPolicyList = async (req, res) => {
         //create location
         await sequelize.query(
 
-          'INSERT INTO static_data."Locations" ("entityID", "t_location_1", "t_location_2", "t_location_3", "t_location_4", "t_location_5", "provinceID", "districtID", "subDistrictID", "zipcode", "telNum_1","locationType") ' +
+          'INSERT INTO static_data."Locations" ("entityID", "t_location_1", "t_location_2", "t_location_3", "t_location_4", "t_location_5", "provinceID", "districtID", "subDistrictID", "zipcode", "telNum_1","locationType","email") ' +
           'values(:entityID, :t_location_1, :t_location_2,  :t_location_3, :t_location_4, :t_location_5, ' +
           '(select "provinceid" from static_data.provinces where t_provincename = :province limit 1), ' +
           '(select "amphurid" from static_data."Amphurs" where t_amphurname = :district limit 1), ' +
           '(select "tambonid" from static_data."Tambons" where t_tambonname = :tambon limit 1), ' +
-          ':zipcode, :tel_1, :locationType) ',
+          ':zipcode, :tel_1, :locationType, :email) ',
           {
             replacements: {
               entityID: entity[0][0].id,
@@ -955,6 +975,7 @@ const draftPolicyList = async (req, res) => {
               tambon: req.body[i].subdistrict,
               zipcode: req.body[i].zipcode.toString(),
               tel_1: req.body[i].telNum_1,
+              email: req.body[i].email,
               locationType: 'A'
             },
             transaction: t,
@@ -1758,7 +1779,7 @@ await res.json({ status: 'success' })
 
 module.exports = {
 
-  getPolicy,
+  findPolicy,
   getPolicyList,
   newPolicy,
   getTransactionByid,
