@@ -76,6 +76,8 @@ const PolicyScreen = (props) => {
   const [subDistricDD, setSubDistricDD] = useState([]);
   const [zipcodeDD, setZipCodeDD] = useState([]);
   const [titleDD, setTitleDD] = useState([]);
+  const [titlePDD, setTitlePDD] = useState([]) // title for person
+  const [titleODD, setTitleODD] = useState([]) // title for organization
   const [insureTypeDD, setInsureTypeDD] = useState([]);
   const [insureClassDD, setInsureClassDD] = useState([]);
   const [insureSubClassDD, setInsureSubClassDD] = useState([]);
@@ -136,10 +138,24 @@ const handleChangePolicyCard = (e, data) => {
   data.t_ln = data.t_lastName
   data.regisNo = data.idCardNo
  }else{
-  data.t_fn = data.t_ogNames
+  data.t_fn = data.t_ogName
   data.t_ln = data.t_lastName
   data.regisNo = data.taxNo
+  data.suffix = titleODD.find((a) => a.value == data.titleID).label2
  }
+ // set distirctDD
+ getDistrict(data.province, 1)
+ // set subdistrictDD
+ getSubDistrict(data.district, 1)
+ // set zipcodeDD
+ setZipCodeDD([<option value={data.zipcode}>{data.zipcode}</option>])
+ //get compulsorycode
+ getCompulsoryCode(data.voluntaryCode)
+ // get model DD
+ getMotormodel(data.brandname)
+ // get spec DD
+ getMotorspec(data.modelname)
+
   setFormData((prevState) => ({
     ...prevState,
     ...data,
@@ -176,47 +192,47 @@ const handlePolicyClose = (e) => {
       }
     }
     //set dropdown title follow to personType
-    else if (e.target.name === "personType") {
-      setFormData((prevState) => ({
-        ...prevState,
-        [e.target.name]: e.target.value,
-      }));
-      if (e.target.value === "P") {
-        axios
-          .get(url + "/static/titles/person/all", headers)
-          .then((title) => {
-            const array2 = [];
-            title.data.forEach((ele) => {
-              array2.push(
-                // <option key={ele.TITLEID} value={ele.TITLETHAIBEGIN}>
-                //   {ele.TITLETHAIBEGIN}
-                // </option>
-                { label: ele.TITLETHAIBEGIN, value: ele.TITLEID, label2: ele.TITLETHAIEND || '' }
-              );
+    // else if (e.target.name === "personType") {
+    //   setFormData((prevState) => ({
+    //     ...prevState,
+    //     [e.target.name]: e.target.value,
+    //   }));
+    //   if (e.target.value === "P") {
+    //     axios
+    //       .get(url + "/static/titles/person/all", headers)
+    //       .then((title) => {
+    //         const array2 = [];
+    //         title.data.forEach((ele) => {
+    //           array2.push(
+    //             // <option key={ele.TITLEID} value={ele.TITLETHAIBEGIN}>
+    //             //   {ele.TITLETHAIBEGIN}
+    //             // </option>
+    //             { label: ele.TITLETHAIBEGIN, value: ele.TITLEID, label2: ele.TITLETHAIEND || '' }
+    //           );
 
-            });
-            setTitleDD(array2);
-          })
-          .catch((err) => { });
-      } else {
-        axios
-          .get(url + "/static/titles/company/all", headers)
-          .then((title) => {
-            const array2 = [];
-            title.data.forEach((ele) => {
-              array2.push(
-                // <option key={ele.TITLEID} value={ele.TITLETHAIBEGIN}>
-                //   {ele.TITLETHAIBEGIN}
-                // </option>
-                { label: ele.TITLETHAIBEGIN, value: ele.TITLEID, label2: ele.TITLETHAIEND || '' }
-              );
-            });
-            setTitleDD(array2);
+    //         });
+    //         setTitleDD(array2);
+    //       })
+    //       .catch((err) => { });
+    //   } else {
+    //     axios
+    //       .get(url + "/static/titles/company/all", headers)
+    //       .then((title) => {
+    //         const array2 = [];
+    //         title.data.forEach((ele) => {
+    //           array2.push(
+    //             // <option key={ele.TITLEID} value={ele.TITLETHAIBEGIN}>
+    //             //   {ele.TITLETHAIBEGIN}
+    //             // </option>
+    //             { label: ele.TITLETHAIBEGIN, value: ele.TITLEID, label2: ele.TITLETHAIEND || '' }
+    //           );
+    //         });
+    //         setTitleDD(array2);
 
-          })
-          .catch((err) => { });
-      }
-    }
+    //       })
+    //       .catch((err) => { });
+    //   }
+    // }
 
     //set dropdown distric subdistric
     else if (e.target.name === "province") {
@@ -585,6 +601,7 @@ const handlePolicyClose = (e) => {
     getMotorspec(e.value);
   }
   const changeVoluntaryCode = (e) => {
+    console.log(e.value);
     setFormData((prevState) => ({
       ...prevState,
       voluntaryCode: e.value,
@@ -988,10 +1005,6 @@ const handlePolicyClose = (e) => {
       data.push({ ...formData, t_firstName: t_firstName, t_lastName: t_lastName, idCardNo: idCardNo, idCardType: idCardType, t_ogName: t_ogName, taxNo: taxNo })
     } else {
       const withheldamt = parseFloat(((formData.netgrossprem + formData.duty) * withheld).toFixed(2))
-
-
-
-
       t_ogName = formData.t_fn
 
       taxNo = formData.regisNo.toString()
@@ -1062,23 +1075,22 @@ const handlePolicyClose = (e) => {
         });
         setProvinceDD(array);
         // get title
-        axios
-          .get(url + "/static/titles/company/all", headers)
-          .then((title) => {
-            const array2 = [];
-            title.data.forEach((ele) => {
-              array2.push(
-                <option key={ele.TITLEID} value={ele.TITLETHAIBEGIN}>
-                  {ele.TITLETHAIBEGIN}
-                </option>
-              );
-            });
-            setTitleDD(array2);
-          })
-          .catch((err) => { });
+        // axios
+        //   .get(url + "/static/titles/company/all", headers)
+        //   .then((title) => {
+        //     const array2 = [];
+        //     title.data.forEach((ele) => {
+        //       array2.push(
+        //         <option key={ele.TITLEID} value={ele.TITLETHAIBEGIN}>
+        //           {ele.TITLETHAIBEGIN}
+        //         </option>
+        //       );
+        //     });
+        //     setTitleDD(array2);
+        //   })
+        //   .catch((err) => { });
       })
       .catch((err) => { });
-    // get title all of company type
 
     //get insureType
     axios
@@ -1170,6 +1182,36 @@ const handlePolicyClose = (e) => {
         setVcDD(array);
       })
       .catch((err) => { });
+
+      //  get all title person && re-login if token expired
+    axios
+    .get(url + "/static/titles/person/all", headers)
+    .then((title) => {
+      const array2 = []
+      title.data.forEach(ele => {
+        array2.push(
+          // <option key={ele.TITLEID} value={ele.TITLEID}>{ele.TITLETHAIBEGIN}</option>
+          { label: ele.TITLETHAIBEGIN, value: ele.TITLEID, label2: ele.TITLETHAIEND || '' })
+      });
+
+
+      setTitlePDD(array2)
+    }).catch((err) => {
+
+    });
+
+
+  //  get all title organization
+  axios
+    .get(url + "/static/titles/company/all", headers)
+    .then((title) => {
+      const array2 = []
+      title.data.forEach(ele => {
+        array2.push({ label: ele.TITLETHAIBEGIN, value: ele.TITLEID, label2: ele.TITLETHAIEND || '' })
+      });
+      setTitleODD(array2)
+    })
+
 
   }, []);
 
@@ -1934,14 +1976,15 @@ const handlePolicyClose = (e) => {
             <div class="col-1">
               <label class="form-label ">คำนำหน้า<span class="text-danger"> *</span></label>
               <Select
+              value={titlePDD.filter(({ value }) => value === formData.titleID)}
                 styles={customStyles}
                 formatOptionLabel={(option, { context }) => context === 'value' ? option.label : `${option.label}  ${option.label2}`}
-                name={`title`}
+                name={`titleID`}
                 onChange={(e) => setFormData((prevState) => ({
                   ...prevState,
                   titleID: e.value
                 }))}
-                options={titleDD}
+                options={titlePDD}
               />
             </div>
 
@@ -1985,14 +2028,15 @@ const handlePolicyClose = (e) => {
               <label class="form-label ">คำนำหน้า<span class="text-danger"> *</span></label>
               <Select
                 styles={customStyles}
+                value={titleODD.filter(({ value }) => value === formData.titleID)}
                 formatOptionLabel={(option, { context }) => context === 'value' ? option.label : `${option.label} - ${option.label2}`}
-                name={`title`}
+                name={`titleID`}
                 onChange={(e) => setFormData((prevState) => ({
                   ...prevState,
                   titleID: e.value,
-                  suffix: titleDD.find((a) => a.value == e.value).label2
+                  suffix: titleODD.find((a) => a.value == e.value).label2
                 }))}
-                options={titleDD}
+                options={titleODD}
               />
             </div>
             <div class="col-2">
@@ -2114,6 +2158,7 @@ const handlePolicyClose = (e) => {
           /> */}
           <Select
             styles={customStyles}
+            value={provinceDD.filter(({ value }) => value === formData.province)}
             // className="form-control"
             name={`province`}
             onChange={(e) => changeProvince(e)}
@@ -2145,6 +2190,7 @@ const handlePolicyClose = (e) => {
 
           <Select
             // className="form-control"
+            value={districDD.filter(({ value }) => value === formData.district)}
             styles={customStyles}
             name={`district`}
             onChange={(e) => changeDistrict(e)}
@@ -2160,6 +2206,7 @@ const handlePolicyClose = (e) => {
 
           <Select
             // className="form-control"
+            value={subDistricDD.filter(({ value }) => value === formData.subdistrict)}
             styles={customStyles}
             name={`subdistrict`}
             onChange={(e) => changeSubDistrict(e)}
@@ -2279,6 +2326,7 @@ const handlePolicyClose = (e) => {
                 รหัสรถ (V)<span class="text-danger"> </span>
               </label>
               <Select
+              value={vcDD.filter(({ value }) => value === formData.voluntaryCode)}
                 // className="form-control"
                 styles={customStyles}
                 name={`voluntaryCode`}
@@ -2293,6 +2341,7 @@ const handlePolicyClose = (e) => {
               </label>
               <Select
                 // className="form-control"
+                value={ccDD.filter(({ value }) => value === formData.compulsoryCode)}
                 styles={customStyles}
                 name={`compulsoryCode`}
                 onChange={(e) => setFormData((prevState) => ({
@@ -2338,6 +2387,7 @@ const handlePolicyClose = (e) => {
 
               <Select
                 // className="form-control"
+                value={provinceDD.filter(({ value }) => value === formData.motorprovinceID)}
                 name={`motorprovinceID`}
                 onChange={(e) => setFormData((prevState) => ({
                   ...prevState,
@@ -2405,6 +2455,7 @@ const handlePolicyClose = (e) => {
 
               <Select
                 // className="form-control"
+                value={motorbrandDD.filter(({ value }) => value === formData.brandname)}
                 name={`brandname`}
                 onChange={(e) => changeMotorBrand(e)}
                 options={motorbrandDD}
@@ -2429,6 +2480,7 @@ const handlePolicyClose = (e) => {
               </select> */}
 
               <Select
+              value={motormodelDD.filter(({ value }) => value === formData.modelname)}
                 // className="form-control"
                 styles={customStyles}
                 name={`modelname`}
@@ -2444,6 +2496,7 @@ const handlePolicyClose = (e) => {
               </label>
               <Select
                 // className="form-control"
+                value={motorspecDD.filter(({ value }) => value === formData.specname)}
                 styles={customStyles}
                 name={`specname`}
                 onChange={(e) => setFormData((prevState) => ({

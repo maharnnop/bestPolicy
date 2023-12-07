@@ -516,15 +516,21 @@ const findPolicy =  async (req, res) => {
     cond = `${cond} and pol."applicationNo" like '%${req.body.applicationNo}%'`
   }
   const records = await sequelize.query(
-    `select pol.*, ent.*, lo.*, inst.*,
+    `select pol.*, ent.*, lo.*, inst.*, mt.*,
     pol."policyNo", pol."applicationNo", pol."insurerCode",pol."agentCode",
-     inst.class || '/' || inst."subClass" as classsubclass
+     inst.class || '/' || inst."subClass" as classsubclass,
+     (select t_provincename from static_data."provinces" where provinceid = lo."provinceID" limit 1) as province,
+     (select t_amphurname from static_data."Amphurs" where amphurid = lo."districtID" limit 1) as district,
+     (select t_tambonname from static_data."Tambons" where tambonid = lo."subDistrictID" limit 1) as subdistrict,
+     (select t_provincename from static_data."provinces" where provinceid = mt."motorprovinceID" limit 1) as "motorprovinceID",
+     mt.brand  as brandname, mt.model as modelname
     from static_data."Policies" pol 
     join static_data."InsureTypes" inst on inst.id = pol."insureID"
     join static_data."Insurees" ine on ine."insureeCode" = pol."insureeCode"
     join static_data."Entities" ent on ent.id = ine."entityID"
     join static_data."Locations" lo on lo."entityID" = ent.id
     join static_data."Titles" tt on tt."TITLEID" = ent."titleID"
+    left join static_data."Motors" mt on mt."id" = pol."itemList"
     where  ent.lastversion ='Y' 
     ${cond}
     order by pol."applicationNo" ASC `,
@@ -917,16 +923,16 @@ const draftPolicyList = async (req, res) => {
     const t = await sequelize.transaction();
   try {
     let conflict = ''
-    if (req.body[i].personType = 'P') {
+    if (req.body[i].personType === 'P') {
       conflict = `ON CONFLICT ON CONSTRAINT "idCardNo" DO NOTHING `
     } else{
       conflict = `ON CONFLICT ON CONSTRAINT "taxNo" DO NOTHING `
     }
 
     await sequelize.query(
-      `insert into static_data."Entities" ("personType","titleID","t_ogName","t_firstName","t_lastName","idCardType","idCardNo","taxNo") 
+      `insert into static_data."Entities" ("personType","titleID","t_ogName","t_firstName","t_lastName","idCardType","idCardNo","taxNo",email) 
       values (:personType, 
-      (case when :titleID is null then :titleID else (select "TITLEID" from static_data."Titles" where "TITLETHAIBEGIN" = :title limit 1) end ), :t_ogName, :t_firstName, :t_lastName,:idCardType,:idCardNo,:taxNo) 
+      (case when :titleID is not null then :titleID else (select "TITLEID" from static_data."Titles" where "TITLETHAIBEGIN" = :title limit 1) end ), :t_ogName, :t_firstName, :t_lastName,:idCardType,:idCardNo,:taxNo,:email) 
       ${conflict} RETURNING "id" `,
       {
         replacements: {
@@ -938,7 +944,8 @@ const draftPolicyList = async (req, res) => {
           t_lastName: req.body[i].t_lastName,
           idCardType: req.body[i].idCardType,
           idCardNo: req.body[i].idCardNo,
-          taxNo: req.body[i].taxNo
+          taxNo: req.body[i].taxNo,
+          email: req.body[i].email,
         },
         transaction: t,
         type: QueryTypes.INSERT
@@ -956,12 +963,12 @@ const draftPolicyList = async (req, res) => {
         //create location
         await sequelize.query(
 
-          'INSERT INTO static_data."Locations" ("entityID", "t_location_1", "t_location_2", "t_location_3", "t_location_4", "t_location_5", "provinceID", "districtID", "subDistrictID", "zipcode", "telNum_1","locationType","email") ' +
+          'INSERT INTO static_data."Locations" ("entityID", "t_location_1", "t_location_2", "t_location_3", "t_location_4", "t_location_5", "provinceID", "districtID", "subDistrictID", "zipcode", "telNum_1","locationType") ' +
           'values(:entityID, :t_location_1, :t_location_2,  :t_location_3, :t_location_4, :t_location_5, ' +
           '(select "provinceid" from static_data.provinces where t_provincename = :province limit 1), ' +
           '(select "amphurid" from static_data."Amphurs" where t_amphurname = :district limit 1), ' +
           '(select "tambonid" from static_data."Tambons" where t_tambonname = :tambon limit 1), ' +
-          ':zipcode, :tel_1, :locationType, :email) ',
+          ':zipcode, :tel_1, :locationType) ',
           {
             replacements: {
               entityID: entity[0][0].id,
@@ -975,7 +982,6 @@ const draftPolicyList = async (req, res) => {
               tambon: req.body[i].subdistrict,
               zipcode: req.body[i].zipcode.toString(),
               tel_1: req.body[i].telNum_1,
-              email: req.body[i].email,
               locationType: 'A'
             },
             transaction: t,
@@ -1001,7 +1007,7 @@ const draftPolicyList = async (req, res) => {
           INSERT INTO static_data."Motors" ("brand", "voluntaryCode", "model", "specname", "licenseNo", "motorprovinceID", "chassisNo", "modelYear",
           "compulsoryCode", "unregisterflag", "engineNo", "cc", "seat", "gvw"  ) 
           VALUES (:brandname, :voluntaryCode , :modelname , :specname, :licenseNo, 
-           (select id from static_data.provinces  where t_provincename =  :motorprovince limit 1), :chassisNo, :modelYear,
+           (select provinceid from static_data.provinces  where t_provincename =  :motorprovince limit 1), :chassisNo, :modelYear,
           :compulsoryCode, :unregisterflag, :engineNo, :cc, :seat, :gvw  ) ON CONFLICT ("chassisNo") DO NOTHING RETURNING * ) 
           SELECT * FROM inserted UNION ALL SELECT * FROM static_data."Motors" WHERE "chassisNo" = :chassisNo `,
           {
