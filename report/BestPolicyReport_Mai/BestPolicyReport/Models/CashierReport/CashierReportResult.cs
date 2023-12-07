@@ -21,6 +21,5 @@ namespace BestPolicyReport.Models.CashierReport
         public double? ActualValue { get; set; }
         public double? DiffAmt { get; set; }
         public string? Status { get; set; }
-        public int? CashierReceiveSubNo { get; set; }
     }
 }
