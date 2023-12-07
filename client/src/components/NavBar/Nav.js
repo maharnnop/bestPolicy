@@ -58,7 +58,7 @@ function Nav() {
               กรมธรรม์
             </a>
 
-            <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+            <ul className={selected[0] ? "dropdown-menu" :"dropdown-menu "}aria-labelledby="dropdownMenuLink">
               {/* <li><a class="dropdown-item"  href="/findpolicy" onClick={(e)=>handleChangeSelected(e,0)}>ค้นหากรมธรรม์</a></li>
               <li><a class="dropdown-item"  href="/policyexcel">สร้างรายการใหม่ (Excel)</a></li>
               <li><a class="dropdown-item"  href="/policyscreen">สร้างรายการใหม่ (Screen)</a></li>
@@ -75,7 +75,7 @@ function Nav() {
               ใบวางบิล
             </a>
 
-            <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+            <ul className={selected[1] ? "dropdown-menu" :"dropdown-menu "} aria-labelledby="dropdownMenuLink">
               {/* <li><a class="dropdown-item" href="/bill/findbill" onClick={(e)=>handleChangeSelected(e,1)}>ค้นหารายการ</a></li>
               <li><a class="dropdown-item" href="/bill/createbill">สร้างรายการใหม่</a></li> */}
               {/* <li><a class="dropdown-item" href="/policyexcel">แก้ไขรายการ</a></li> */}
@@ -88,7 +88,7 @@ function Nav() {
               รายการรับเงิน
             </a>
 
-            <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+            <ul className={selected[2] ? "dropdown-menu" :"dropdown-menu "} aria-labelledby="dropdownMenuLink">
               {/* <li><a class="dropdown-item" href="/cashier/findcashier" onClick={(e)=>handleChangeSelected(e,2)}>ค้นหารายการ</a></li>
               <li><a class="dropdown-item" href="/cashier/createcashier/premin">สร้างรายการรับเงิน Premin</a></li>
               <li><a class="dropdown-item" href="/cashier/createcashier/commin">สร้างรายการรับเงิน Commin</a></li>
@@ -104,7 +104,7 @@ function Nav() {
               ตัดรับค่าเบี้ย
             </a>
 
-            <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+            <ul className={selected[3] ? "dropdown-menu" :"dropdown-menu "} aria-labelledby="dropdownMenuLink">
               {/* <li><a class="dropdown-item" href="/premout/find">ค้นหารายการตัดหนี้ทั้งหมด</a></li>
               <li><a class="dropdown-item" href="/premin/create">สร้างรายการใหม่</a></li>
               <li><a class="dropdown-item" href="/premin/createdirect">สร้างรายการใหม่ (จ่ายประกันโดยตรง)</a></li>
@@ -126,17 +126,17 @@ function Nav() {
               ตัดจ่ายค่าเบี้ย
             </a>
 
-            <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+            <ul className={selected[4] ? "dropdown-menu" :"dropdown-menu "} aria-labelledby="dropdownMenuLink">
               {/* <li><a class="dropdown-item" href="/premout/create">stament ค่าเบี้ยส่งบริษัทประกัน</a></li> */}
               <li><NavLink className="dropdown-item bg-light" to="/premout/create" style={{color : "black"}} onClick={(e)=>handleChangeSelected(e,4)}>stament ค่าเบี้ยส่งบริษัทประกัน</NavLink></li>
             </ul>
           </div>
           <div class="dropdown">
-            <a class={selected[4] ? "btn btn-warning dropdown-toggle" : "btn btn-primary dropdown-toggle"} href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
+            <a class={selected[5] ? "btn btn-warning dropdown-toggle" : "btn btn-primary dropdown-toggle"} href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
               ตัดรับค่าคอม
             </a>
 
-            <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+            <ul className={selected[5] ? "dropdown-menu" :"dropdown-menu "} aria-labelledby="dropdownMenuLink">
               {/* <li><a class="dropdown-item" href="/commin/create">สร้างรายการใหม่</a></li> */}
               <li><NavLink className="dropdown-item bg-light" to="/commin/create" style={{color : "black"}} onClick={(e)=>handleChangeSelected(e,5)}>สร้างรายการใหม่</NavLink></li>
             </ul>
@@ -147,7 +147,7 @@ function Nav() {
               ตัดจ่ายค่าคอม
             </a>
 
-            <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+            <ul className={selected[6] ? "dropdown-menu" :"dropdown-menu "} aria-labelledby="dropdownMenuLink">
               {/* <li><a class="dropdown-item" href="/commout/create">สร้างรายการใหม่</a></li> */}
               <li><NavLink className="dropdown-item bg-light" to="/commout/create" style={{color : "black"}} onClick={(e)=>handleChangeSelected(e,6)}>สร้างรายการใหม่</NavLink></li>
             </ul>
@@ -157,7 +157,7 @@ function Nav() {
               รายงาน
             </a>
 
-            <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+            <ul className={selected[7] ? "dropdown-menu" :"dropdown-menu "} aria-labelledby="dropdownMenuLink">
               {/* <li><a class="dropdown-item" href="/reports/policy">รายงานบันทึกกรมธรรม์ประจำวัน </a></li>
               <li><a class="dropdown-item" href="/reports/endorse">รายงานบันทึกสลักหลัง </a></li>
               <li><a class="dropdown-item" href="/reports/invoice">รายงานบันทึกใบแจ้งหนี้ </a></li>
@@ -183,7 +183,7 @@ function Nav() {
               ข้อมูลทั่วไป
             </a>
 
-            <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+            <ul className={selected[8] ? "dropdown-menu" :"dropdown-menu "} aria-labelledby="dropdownMenuLink">
               {/* <li><a class="dropdown-item" href="/findperson">ค้นหาบริษัทประกัน/ผู้แนะนำ</a></li>
               <li><a class="dropdown-item" href="/insurer">สร้างบริษัทรับประกัน</a></li>
               <li><a class="dropdown-item" href="/insureType">สร้างแผนประกัน</a></li>
