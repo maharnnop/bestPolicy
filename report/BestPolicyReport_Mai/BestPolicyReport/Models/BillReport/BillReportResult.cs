@@ -37,7 +37,6 @@
         public string? NetFlag { get; set; }
         public double? BillPremium { get; set; }
         public string? BillAdvisorNo { get; set; }
-        public int? BillAdvisorSubNo { get; set;}
         public DateTime? BillDate { get; set; }
 
     }

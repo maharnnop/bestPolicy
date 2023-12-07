@@ -61,7 +61,7 @@ function App() {
           <Route path="/" element={<Index />} />
           <Route path="/login" element={<Login />} />
           {/* <Route path="/admin" element={<Admin />} /> */}
-          {/* <Route path="/signup" element={<SignUp />} /> */}
+          <Route path="/signup" element={<SignUp />} />
           {/* <Route path="/payment" element={<Payment />} /> */}
           <Route path="/findperson" element={<FindPerson />} />
 

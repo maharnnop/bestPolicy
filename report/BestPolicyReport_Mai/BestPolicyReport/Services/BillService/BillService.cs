@@ -41,7 +41,6 @@ namespace BestPolicyReport.Services.BillService
                          p.ovout2_rate as ""ovOutRate2"", p.ovout2_amt as ""ovOutAmt2"", bjd.""comm-out%"" as ""commOutRate"", bjd.""comm-out-amt"" as ""commOutAmt"", 
                          bjd.""ov-out%"" as ""ovOutRate"", bjd.""ov-out-amt"" as ""ovOutAmt"", bjd.netflag as ""netFlag"", bjd.billpremium as ""billPremium"",
                          bj.billadvisorno as ""billAdvisorNo"",
-                         CAST(SUBSTRING(bj.billadvisorno FROM POSITION('{subString}' IN bj.billadvisorno) + LENGTH('{subString}')) AS INTEGER) as ""billAdvisorSubNo"",
                          bj.billdate as ""billDate""
                          from static_data.b_jabilladvisors bj, static_data.b_jabilladvisordetails bjd, static_data.""Transactions"" t, static_data.""Insurees"" i,
                          static_data.""Entities"" e_i, static_data.""Titles"" t_i, static_data.""Policies"" p left join static_data.""Motors"" m on m.id = p.""itemList""
@@ -62,7 +61,7 @@ namespace BestPolicyReport.Services.BillService
             }
             if (!string.IsNullOrEmpty(data.StartBillAdvisorNo) && !string.IsNullOrEmpty(data.EndBillAdvisorNo))
             {
-                sql += $@"and ""billAdvisorSubNo"" between {data.StartBillAdvisorNo} and {data.EndBillAdvisorNo} ";
+                sql += $@"and ""billAdvisorNo"" between '{data.StartBillAdvisorNo}' and '{data.EndBillAdvisorNo}' ";
             }
             string currentDate = DateTime.Now.ToString("yyyy-MM-dd", new System.Globalization.CultureInfo("en-US"));
             if (!string.IsNullOrEmpty(data.StartBillDate?.ToString()))
