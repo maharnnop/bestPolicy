@@ -28,6 +28,8 @@ export default function PremInCreate() {
         policyNoEnd : null,
         createdDateStart : null,
         createdDateEnd : null,
+        actualvalue : 0,
+         amt : 0
 
     })
     const [policiesData, setPoliciesData] = useState([])
@@ -147,11 +149,11 @@ const getData = (e) => {
   e.preventDefault();
   if (e.target.name === 'cashier-btn') {
     axios
-    .post(url + "/araps/getcashierdata", filterData, headers, headers)
+    .post(url + "/araps/getcashierdata", {cashierreceiveno : filterData.cashierreceiveno.trim()}, headers, headers)
     .then((res) => {
         if (res.status === 201) {
             console.log(res.data);
-            alert("dont find cashierreceiveno : " + filterData.cashierreceiveno);
+            alert("dont find cashierreceiveno : " + filterData.cashierreceiveno.trim() );
 
         } else {
           console.log(res.data);
@@ -166,16 +168,16 @@ const getData = (e) => {
     });
   }else if (e.target.name === 'bill-btn'){
     axios
-    .post(url + "/araps/getbilldata", filterData, headers)
+    .post(url + "/araps/getbilldata", {billadvisorno : filterData.billadvisorno.trim()}, headers)
     .then((res) => {
         if (res.status === 201) {
             console.log(res.data);
-            alert("ไม่พบข้อมูลเลขที่ใบวางบิล : " + filterData.billadvisorno);
+            alert("ไม่พบข้อมูลเลขที่ใบวางบิล : " + filterData.billadvisorno.trim());
 
         } else if(res.data.trans.length <1){
-          alert("เลขที่ใบวางบิล : " + filterData.billadvisorno +"ทำการตัดหนี้ไปแล้ว");
+          alert("เลขที่ใบวางบิล : " + filterData.billadvisorno.trim() +" ทำการตัดหนี้ไปแล้ว");
         }else {
-
+            console.log(res.data.billdata[0].amt);
             const data = {...filterData , agentCode : res.data.billdata[0].agentCode, insurerCode : res.data.billdata[0].insurerCode,  actualvalue  : res.data.billdata[0].amt}
             setFilterData(data)
             console.log(res.data.trans);
@@ -219,7 +221,16 @@ const savearpremin = async (e) => {
   }
   const whtcommout = commout * wht
   const whtovout = ovout * wht
-  const data = filterData 
+  const data = {
+    "billadvisorno":filterData.billadvisorno.trim(),
+    "insurerCode": filterData.insurerCode.trim(),
+    "agentCode": filterData.agentCode.trim(),
+    "cashierreceiveno": filterData.cashierreceiveno.trim(),
+    "dueDate" : filterData.dueDate,
+    actualvalue : filterData.actualvalue,
+     amt :  filterData.amt,
+
+}
   data.diffamt = parseFloat(document.getElementsByName('DiffAmt')[0].value.replace(/,/g, ''));
   data.commout = commout
   data.ovout = ovout
@@ -250,7 +261,15 @@ const submitarpremin = async (e) => {
   }
   const whtcommout = commout * wht
   const whtovout = ovout * wht
-  const data = filterData 
+  const data = {
+    "billadvisorno":filterData.billadvisorno.trim(),
+    "insurerCode": filterData.insurerCode.trim(),
+    "agentCode": filterData.agentCode.trim(),
+    "cashierreceiveno": filterData.cashierreceiveno.trim(),
+    actualvalue : filterData.actualvalue,
+     amt :  filterData.amt,
+
+}
   data.diffamt = parseFloat(document.getElementsByName('DiffAmt')[0].value.replace(/,/g, ''));
   data.commout = commout
   data.ovout = ovout
@@ -384,7 +403,7 @@ const submitarpremin = async (e) => {
             จำนวนเงินที่รับ
           </label>
           <div className="col-3 ">
-            <input className="form-control" type="number" name="amt" id="amt" value={filterData.amt} disabled/>
+            <input className="form-control" type="text" name="amt" id="amt" value={filterData.amt.toLocaleString(undefined, { minimumFractionDigits: 2 })|| 0} disabled/>
           </div>
         </div>
         {/* actualvalue */}
@@ -396,9 +415,9 @@ const submitarpremin = async (e) => {
           <div className="col-3 ">
             <input
               className="form-control"
-              type="number"
+              type="text"
               name="actualvalue"
-              value={filterData.actualvalue}
+              value={filterData.actualvalue.toLocaleString(undefined, { minimumFractionDigits: 2 })}
               id="actualvalue"
               disabled
             />
@@ -412,7 +431,7 @@ const submitarpremin = async (e) => {
               type="text"
               name="DiffAmt"
               id="DiffAmt"
-              value={(filterData.actualvalue - filterData.amt).toLocaleString(undefined, { minimumFractionDigits: 2 })}
+              value={(filterData.actualvalue - filterData.amt).toLocaleString(undefined, { minimumFractionDigits: 2 })|| 0}
               disabled
             />
           </div>

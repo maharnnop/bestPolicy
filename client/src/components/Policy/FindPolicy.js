@@ -57,7 +57,7 @@ const FindPolicy = () => {
             "carRegisNo" : null,
             "chassisNo" : null,
             "provinceID" : null,
-            "status" : 'A',
+            "status" : 'I',
             "applicationNo" : null,
 
         })
@@ -330,6 +330,27 @@ const FindPolicy = () => {
                     </div>
 
                 </div>
+                <div className="row">
+                    <div className="col-1"></div>
+                <div class="col-1">
+                        <label class="col-form-label">รหัสผู้แนะนำ</label>
+
+                    </div>
+                    <div class="col-2 ">
+                        <div class="input-group mb-3">
+                            <input type="text" class="form-control" name="agentCode" onChange={handleChange} />
+                            
+
+
+                        </div>
+
+
+                    </div>
+                    <div className="col-1">
+                                <input type="checkbox" name="agentCodeCB" className="form-check-input"/>
+                                <label htmlFor="cashierReceiptCheckbox" className="form-check-label">&nbsp;ALL</label>
+                            </div>
+                </div>
                 <div class="row">
                     <div class="col-1">
 
@@ -360,8 +381,8 @@ const FindPolicy = () => {
                     <div class="col-2 ">
                         <div class="input-group mb-3">
                             <select  class="form-control"  name="status" onChange={handleChange} >
-                            <option selected value='A'>(AA) กรมธรรม์</option>
-                            <option value='I'>(AI) ใบคำขอ</option>
+                            <option selected value='I'>(AI) ใบคำขอ</option>
+                            <option  value='A'>(AA) กรมธรรม์</option>
                             </select>
                             
 
@@ -600,7 +621,29 @@ const FindPolicy = () => {
                     <div class="col-2 ">
                         <input type="text" class="form-control" placeholder="เลขทะเบียนรถ" name="carRegisNo" onChange={handleChange} />
                     </div>
-                    <div class="col-2">
+                    
+                </div>
+
+                <div class="row">
+                    <div class="col-1">
+
+                    </div>
+                    
+                    <div class="col-1">
+                        <label class="col-form-label">เลขคัสซี</label>
+                    </div>
+
+                    <div class="col-2 ">
+                        <div class="input-group mb-3">
+                            <input type="text" class="form-control" placeholder="Chassis Number" name="chassisNo" onChange={handleChange} />
+                            
+                        </div>
+                    </div>
+                    <div className="col-1">
+                                <input type="checkbox" name="chassisNoCB" className="form-check-input"/>
+                                <label htmlFor="cashierReceiptCheckbox" className="form-check-label">&nbsp;ALL</label>
+                            </div>
+                            <div class="col-1">
                         <label class="col-form-label">จังหวัดจดทะเบียนรถ</label>
                     </div>
                     <div class="col-2 ">
@@ -619,45 +662,6 @@ const FindPolicy = () => {
 
 
                     </div>
-                </div>
-
-                <div class="row">
-                    <div class="col-1">
-
-                    </div>
-                    <div class="col-1">
-                        <label class="col-form-label">รหัสผู้แนะนำ</label>
-
-                    </div>
-                    <div class="col-2 ">
-                        <div class="input-group mb-3">
-                            <input type="text" class="form-control" name="agentCode" onChange={handleChange} />
-                            
-
-
-                        </div>
-
-
-                    </div>
-                    <div className="col-1">
-                                <input type="checkbox" name="agentCodeCB" className="form-check-input"/>
-                                <label htmlFor="cashierReceiptCheckbox" className="form-check-label">&nbsp;ALL</label>
-                            </div>
-                    <div class="col-1">
-                        <label class="col-form-label">เลขคัสซี</label>
-                    </div>
-
-                    <div class="col-2 ">
-                        <div class="input-group mb-3">
-                            <input type="text" class="form-control" placeholder="Chassis Number" name="chassisNo" onChange={handleChange} />
-                            
-                        </div>
-                    </div>
-                    <div className="col-1">
-                                <input type="checkbox" name="chassisNoCB" className="form-check-input"/>
-                                <label htmlFor="cashierReceiptCheckbox" className="form-check-label">&nbsp;ALL</label>
-                            </div>
-
 
                 </div>
 

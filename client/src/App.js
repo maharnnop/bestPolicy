@@ -83,7 +83,8 @@ function App() {
           <Route path="/endorse" element={<EndorseScreen />} />
           <Route path="bill/findbill" element={<FindBillAdvisor />} />
           <Route path="bill/createbill" element={<CreateBillAdvisor />} />
-          <Route path="bill/editbill" element={<EditBillAdvisor />} />
+          <Route path="bill/editbill" element={<EditBillAdvisor edit={true}/>} />
+          <Route path="bill/getbill" element={<EditBillAdvisor edit={false}/>} />
           <Route path="cashier/findcashier" element={<FindCashierReceive />} />
           <Route path="cashier/createcashier/:txtype" element={<CreateCashierReceive />} />
           <Route path="cashier/editcashier" element={<EditCashierReceive />} />

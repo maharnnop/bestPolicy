@@ -165,7 +165,12 @@ const findPolicyByBillno = async (req,res) => {
           type: QueryTypes.SELECT
         }
       );
-      const old_keyid = await sequelize.query('select id from static_data.b_jabilladvisors where billadvisorno = :billadvisorno',{
+      const old_keyid = await sequelize.query(
+        `select id, billdate,
+        (select "insurerCode" from static_data."Insurers" where id = insurerno),
+        (select "agentCode" from static_data."Agents" where id = advisorno)
+         from static_data.b_jabilladvisors where billadvisorno = :billadvisorno
+         and active = 'Y'`,{
         replacements: {
           billadvisorno: req.body.billadvisorno
         },
@@ -176,7 +181,11 @@ const findPolicyByBillno = async (req,res) => {
         await res.status(201).json({msg:"not found policy in bill"})
       }else{
 
-        await res.json({data:records, old_keyid: old_keyid[0].id})
+        await res.json({data:records,
+                       old_keyid: old_keyid[0].id,
+                       insurerCode: old_keyid[0].insurerCode,
+                       agentCode: old_keyid[0].agentCode,
+                       billdate: old_keyid[0].billdate,  })
       }
 
 }
@@ -274,16 +283,27 @@ const createbilladvisor = async (req,res) =>{
 
 
 const findbilladvisor =async (req,res) =>{
-  
+  let cond = ''
+  if(req.body.insurerId !== null && req.body.insurerId !== ''){
+    cond = `${cond} and insurerno = :insurerid`
+  }
+  if(req.body.agentId !== null && req.body.agentId !== ''){
+    cond = `${cond} and advisorno = :agentid`
+  }
+  if(req.body.billadvisorno !== null && req.body.billadvisorno !== ''){
+    cond = `${cond} and billadvisorno = :billadvisorno`
+  }
+  if(req.body.billdate !== null && req.body.billdate !== ''){
+    cond = `${cond} and billdate <= :billdate`
+  }
   const records = await sequelize.query(
     `select (select "insurerCode" from static_data."Insurers" where id = insurerno and lastversion = \'Y\'), 
-    (select "agentCode" from static_data."Agents" where id = advisorno and lastversion = \'Y\'), *  from static_data.b_jabilladvisors 
-    where 1=1 and cashierreceiptno is null 
+    (select "agentCode" from static_data."Agents" where id = advisorno and lastversion = \'Y\'), * ,
+    (case when cashierreceiptno is null then true else false end ) as editflag from static_data.b_jabilladvisors 
+    where 1=1 
+    -- and cashierreceiptno is null 
     and active =\'Y\' 
-    and (case when :insurerid is null then true else insurerno = :insurerid end) 
-    and (case when :agentid is null then true else advisorno = :agentid end) 
-    and (case when :billadvisorno is null then true else billadvisorno = :billadvisorno end) 
-    and (case when :billdate is null then true else billdate <= :billdate end)` ,
+    ${cond}` ,
         {
           replacements: {
             insurerid: req.body.insurerId,

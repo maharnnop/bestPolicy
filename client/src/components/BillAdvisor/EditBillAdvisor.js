@@ -38,7 +38,7 @@ const EditBillAdvisor = (props) => {
    // Access query parameters
   const queryParams = new URLSearchParams(location.search);
   
-
+    const editflag = props.edit
     const url = window.globalConfig.BEST_POLICY_V1_BASE_URL;
     const wht = config.wht
     const navigate = useNavigate();
@@ -49,6 +49,7 @@ const EditBillAdvisor = (props) => {
     const [billpremiumData, setBillpremiumData] = useState([]);
     const [billpremiumDataOld, setBillpremiumDataOld] = useState([]);
     const [hidecard, setHidecard] = useState([false, 0]);
+    const [hideAddCard, setHideAddCard] = useState(false);
     const [filterData, setFilterData] = useState(
         {
             "insurerCode": null,
@@ -100,8 +101,8 @@ const EditBillAdvisor = (props) => {
                 setPoliciesDataOld(arrPoldata)
                 setFilterData({...filterData, insurerCode:res.data.data[0].insurerCode, agentCode:res.data.data[0].agentCode ,old_keyid:res.data.old_keyid})
                 setBillpremiumData(array)
+
                 setBillpremiumDataOld(array)
-                alert("found it") 
             }
         })
         .catch((err) => {  alert("Something went wrong, Try Again."); });
@@ -140,7 +141,7 @@ const EditBillAdvisor = (props) => {
 
 
     }, []);
-
+    // for summary modal
     const editCard = (e) => {
         setHidecard([true, 1])
         const array = []
@@ -178,6 +179,14 @@ const EditBillAdvisor = (props) => {
     const handleClose = (e) => {
         setHidecard([false, 0])
     }
+    // for add new policy to bill modal
+    const editAddCard = (e) => {
+        setHideAddCard(true)
+       
+    };
+    const handleAddClose = (e) => {
+        setHideAddCard(false)
+    }
 
     const handleChange = (e) => {
         setFilterData((prevState) => ({
@@ -203,18 +212,6 @@ const EditBillAdvisor = (props) => {
 
     };
 
-
-
-
-    const selectAll = (e) => {
-
-        const array = []
-        console.log(e.target.name);
-        policiesData.forEach(ele => array.push({ ...ele, [e.target.name]: e.target.checked }))
-
-        setPoliciesData(array)
-        console.log(array);
-    };
 
     //for add new policy in bill
     const submitFilter = (e) => {
@@ -316,11 +313,85 @@ const EditBillAdvisor = (props) => {
 
     return (
         <div>
+             <Modal size='l' show={hideAddCard} onHide={handleAddClose}>
+                <Modal.Header closeButton>
+                    <Modal.Title >เพิ่มกรมธรรม์ใหม่ในใบวางบิล</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    
+                <div class="row">
+                    <div class="col-1"></div>
+                    <div class="col-4">
+                        <label class="col-form-label">เลขที่กรมธรรม์</label>
+                    </div>
+                    <div class="col-6 ">
+                        <input type="text" class="form-control " name="policyNo" onChange={handleChange} />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-1"></div>
+                    <div class="col-4">
+                        <label class="col-form-label">เลขที่สลักหลัง</label>
+                    </div>
+                    <div class="col-6 ">
+                        <input type="text" class="form-control " name="endorseNo" onChange={handleChange} />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-1"></div>
+                    <div class="col-4">
+                        <label class="col-form-label">งวดที่</label>
+                    </div>
+                    <div class="col-6 ">
+                        <input type="text" class="form-control " name="seqNo" onChange={handleChange} />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-1"></div>
+                    <div class="col-4">
+                        <label class="col-form-label">เลขที่ใบแจ้งหนี้</label>
+                    </div>
+                    <div class="col-6 ">
+                        <input type="text" class="form-control " name="invoiceNo" onChange={handleChange} />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-1"></div>
+                    <div class="col-4">
+                        <label class="col-form-label">เลขที่ใบกำกับภาษี</label>
+                    </div>
+                    <div class="col-6">
+                        <input type="text" class="form-control " name="taxInvoiceNo" onChange={handleChange} />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-1"></div>
+                    <div class="col-4">
+                        <label class="col-form-label">เลขที่ใบแจ้งหนี้อะมิตี้</label>
+                    </div>
+                    <div class="col-6">
+                        <input type="text" class="form-control " name="invoiceNo" onChange={handleChange} />
+                    </div>
+                </div>
+
+                
+                
+                     
+
+                </Modal.Body>
+                <Modal.Footer>
+                    <button type="button" class="btn btn-primary" onClick={handleAddClose}>ค้นหา</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal" onClick={handleAddClose}>Close</button>
+                </Modal.Footer>
+            </Modal>
 
             {/* <BackdropBox1> */}
-            <form className="container-fluid " onSubmit={submitFilter}>
+            <form className="container-fluid " >
                 {/* insurer table */}
-                <h1 className="text-center">แก้ไขรายการ ใบวางบิล {queryParams.get('billno')}</h1>
+                {editflag ? 
+                <h1 className="text-center">แก้ไขรายการ ใบวางบิล {queryParams.get('billno')}</h1> :
+                <h1 className="text-center">รายการ ใบวางบิล {queryParams.get('billno')}</h1>}
+                
                 <div class="row">
                     <div class="col-1">
 
@@ -345,9 +416,11 @@ const EditBillAdvisor = (props) => {
 
                     </div>
                     <div class="col align-self-end ">
+                        {editflag ? 
                         <div class="input-group mb-3">
-                            <button type="submit" class="btn btn-primary btn-lg" >ADD new</button>
+                            <button  type="button" class="btn btn-primary btn-lg" onClick={(e)=>editAddCard(e)} >ADD new</button>
                         </div>
+                        : null}
                     </div>
 
                 </div>
@@ -510,6 +583,7 @@ const EditBillAdvisor = (props) => {
                     <thead>
                         <tr>
                             <th scope="col">เลือก</th>
+                            <th scope="col">net</th>
                             <th scope="col">เลขที่กรมธรรม์</th>
                             <th scope="col">เลขที่สลักหลัง</th>
                             <th scope="col">เลขที่ใบแจ้งหนี้</th>
@@ -540,16 +614,17 @@ const EditBillAdvisor = (props) => {
                             <th scope="col">จำนวนเงิน</th>
                             <th scope="col">ov-out%</th>
                             <th scope="col">จำนวนเงิน</th>
-                            <th scope="col"><input type="checkbox" name="statementtype"  onClick={selectAll} />net</th>
+                           
                             {/* <th scope="col">billpremium</th> */}
 
                         </tr>
                     </thead>
                     <tbody>
                     {policiesDataOld.map((ele, i) => {
-                            return (<tr>
+                            return (<tr className="table-warning">
                                 <th scope="row" style={{'text-align': 'center'}}><input type="checkbox" name="select" checked={ele.select} id={i} onClick={changestatementtype} />{i + 1}</th>
-                                <td>{ele.policyNo}</td>
+                                <td><input type="checkbox" name="statementtype" checked={ele.statementtype} id={i} onClick={changestatementtype} /></td>
+                                <td >{ele.policyNo}</td>
                                 <td>{ele.endorseNo}</td>
                                 <td>{ele.invoiceNo}</td>
                                 <td>{ele.taxinvoiceNo}</td>
@@ -578,7 +653,7 @@ const EditBillAdvisor = (props) => {
                                 <td>{ele.commout_amt.toLocaleString(undefined, { minimumFractionDigits: 2 })}</td>
                                 <td>{ele.ovout_rate.toLocaleString(undefined, { minimumFractionDigits: 2 })}</td>
                                 <td>{ele.ovout_amt.toLocaleString(undefined, { minimumFractionDigits: 2 })}</td>
-                                <td><input type="checkbox" name="statementtype" checked={ele.statementtype} id={i} onClick={changestatementtype} /></td>
+                                
                                 {/* <td><input type="number" disabled value={billpremiumData[i]} /></td> */}
                             </tr>)
 
@@ -586,6 +661,7 @@ const EditBillAdvisor = (props) => {
                         {policiesData.map((ele, i) => {
                             return (<tr>
                                 <th scope="row" style={{'text-align': 'center'}}><input type="checkbox" name="select" checked={ele.select} id={i} onClick={changestatementtype} />{i + 1}</th>
+                                <td><input type="checkbox" name="statementtype" checked={ele.statementtype} id={i} onClick={changestatementtype} /></td>
                                 <td>{ele.policyNo}</td>
                                 <td>{ele.endorseNo}</td>
                                 <td>{ele.invoiceNo}</td>
@@ -615,7 +691,7 @@ const EditBillAdvisor = (props) => {
                                 <td>{ele.commout_amt.toLocaleString(undefined, { minimumFractionDigits: 2 })}</td>
                                 <td>{ele.ovout_rate.toLocaleString(undefined, { minimumFractionDigits: 2 })}</td>
                                 <td>{ele.ovout_amt.toLocaleString(undefined, { minimumFractionDigits: 2 })}</td>
-                                <td><input type="checkbox" name="statementtype" checked={ele.statementtype} id={i} onClick={changestatementtype} /></td>
+                                
                                 {/* <td><input type="number" disabled value={billpremiumData[i]} /></td> */}
                             </tr>)
 
@@ -625,11 +701,11 @@ const EditBillAdvisor = (props) => {
                     </tbody>
                 </table>
                 </div>
-
+                        {editflag? 
                 <div className="d-flex justify-content-center">
-                    {/* <LoginBtn type="submit">confirm</LoginBtn> */}
                     <button type="button" class="btn btn-primary " onClick={(e) => editCard(e)} >ยืนยัน</button>
                 </div>
+                : null}
             </form>
 
 

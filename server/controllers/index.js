@@ -19,6 +19,7 @@ module.exports = {
     runno :require("./lib/runningno"),
     arap : require("./ARAP"),
     endorses : require("./endorses"),
+    config : require("./static/config")
     // reports : require("./report"),
     
 

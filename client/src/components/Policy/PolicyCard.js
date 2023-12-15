@@ -9,7 +9,7 @@ import jwt_decode from "jwt-decode";
 import { useCookies } from "react-cookie";
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
-import { stringToNumber } from "../lib/stringToNumber";
+import { stringToNumber, NumberToString } from '../lib/stringToNumber';
 
 const config = require("../../config.json");
 
@@ -55,14 +55,18 @@ function formatNumber(input) {
 
   };
 
-  const handleChangeDate = (date,name) => {
+  const handleChangeDate = (date,name,index) => {
+    console.log(name);
+    if (index === undefined ) {
+      
+    
     if (name === 'seqNoinsStart') {
       setFormData((prevState) => ({
         ...prevState,
         seqNoinsStart: date,
         seqNoagtStart: date,
     }));
-    }else{
+    }else {
 
       setFormData((prevState) => ({
         ...prevState,
@@ -70,11 +74,85 @@ function formatNumber(input) {
       }));
     }
   }
-
+    else{
+      const arrI = []
+      const arrA = []
+    installment.insurer.map(ele => {
+      arrI.push(ele)
+    })
+    installment.advisor.map(ele => {
+      arrA.push(ele)
+    })
+    if (name === `dueDateI`){
+      console.log(date);
+      arrI[index] = {
+        ...arrI[index],
+        dueDate : date
+      }
+    }else if (name === `dueDateA`){
+      arrA[index] = {
+        ...arrA[index],
+        dueDate : date
+      }
+    }
+    setInstallment({ insurer: arrI, advisor: arrA })
+    }
+    
+  }
+  const checkCommOV = async (e, type) => {
+    e.preventDefault();
+    console.log(e.target.name + " : " + e.target.value);
+    if (type === 'Comm') {
+      // check comm
+      if (formData.commin_rate < formData.commout1_rate + formData.commout2_rate ) {
+        alert(" ผลรวมของ Comm-out ต้องไม่มากกว่า Comm-in")
+        if (e.target.name === "commin_rate") {
+          console.log("commin_rate");
+          e.target.value = (formData.commout1_rate + formData.commout2_rate )
+          setFormData((prevState) => ({
+            ...prevState,
+            [e.target.name]: e.target.value,
+  
+          }));
+        }else{
+          e.target.value = 0
+          setFormData((prevState) => ({
+            ...prevState,
+            [e.target.name]: e.target.value,
+  
+          }));
+        }
+        
+      }
+    }
+    if (type === 'OV') {
+      // check ov
+      if (formData.ovin_rate < formData.ovout1_rate + formData.ovout2_rate ) {
+        alert(" ผลรวมของ OV-out ต้องไม่มากกว่า OV-in")
+        if (e.target.name === "ovin_rate") {
+          e.target.value = formData.ovout1_rate + formData.ovout2_rate 
+          setFormData((prevState) => ({
+            ...prevState,
+            [e.target.name]: e.target.value,
+  
+          }));
+        }else{
+          e.target.value = 0
+          setFormData((prevState) => ({
+            ...prevState,
+            [e.target.name]: e.target.value,
+  
+          }));
+        }
+        
+      }
+    }
+  }
  
 
   const editInstallment = (e, type, index) => {
     // e.preventDefault();
+    console.log(e.target.name);
     //get tambons in distric selected
     const arrI = []
     const arrA = []
@@ -85,18 +163,28 @@ function formatNumber(input) {
     installment.advisor.map(ele => {
       arrA.push(ele)
     })
+    
     if (type === 'insurer') {
       if (e.target.name === `netgrosspremI-${index}`) {
         const netgrosspremstr = stringToNumber(document.getElementsByName(`netgrosspremI-${index}`)[0].value)
         const netgrossprem = parseFloat(netgrosspremstr)
         const dutyamt = parseFloat(Math.ceil(netgrossprem * duty))
         const taxamt = parseFloat(((netgrossprem + dutyamt) * tax).toFixed(2))
-        const witheldamt = parseFloat(((netgrossprem + dutyamt) * withheld).toFixed(2))
+        let  witheldamt =  0 
+        if (formData.withheld > 0 ) {
+          witheldamt =  parseFloat(((netgrossprem + dutyamt) * withheld).toFixed(2))
+        }
+        //cal reverse grossprem premperseq = gross(100-distrate)/100 --> grosspremseq = (premperseq *100)/(100-distrate)
+        const grosspremseq = parseFloat((netgrossprem *100/(100-formData.specdiscrate)).toFixed(2))
+        const specdiscseq = parseFloat((grosspremseq * formData.specdiscrate/100).toFixed(2))
+
         const commin_amt = parseFloat((formData.commin_rate * netgrossprem / 100).toFixed(2))
         const ovin_amt = parseFloat((formData.ovin_rate * netgrossprem / 100).toFixed(2))
   
         arrI[index] = {
           ...arrI[index],
+          grossprem: grosspremseq,
+          specdiscamt: specdiscseq,
           netgrossprem: netgrosspremstr,
           tax: taxamt,
           duty: dutyamt,
@@ -110,26 +198,42 @@ function formatNumber(input) {
       }else {
         arrI[index] = {
           ...arrI[index],
-          [e.target.name] : e.target.value
+          [e.target.name.split('-')[0]] : e.target.value
         }
       }
      
 
     } else if (type === 'advisor') {
+     
       if (e.target.name === `netgrosspremA-${index}`) {
         const netgrosspremstr = stringToNumber(document.getElementsByName(`netgrosspremA-${index}`)[0].value)
         const netgrossprem = parseFloat(netgrosspremstr)
         const dutyamt = parseFloat(Math.ceil(duty * netgrossprem))
         const taxamt = parseFloat((tax * (netgrossprem + dutyamt)).toFixed(2))
-        const witheldamt = parseFloat(((netgrossprem + dutyamt) * withheld).toFixed(2))
+        let witheldamt = 0
+        console.log(formData.withheld );
+        if (formData.withheld > 0 ) {
+          witheldamt =  parseFloat(((netgrossprem + dutyamt) * withheld).toFixed(2))
+        }
+
+        //cal reverse grossprem premperseq = gross(100-distrate)/100 --> grosspremseq = (premperseq *100)/(100-distrate)
+        const grosspremseq = parseFloat((netgrossprem *100/(100-formData.specdiscrate)).toFixed(2))
+        const specdiscseq = parseFloat((grosspremseq * formData.specdiscrate/100).toFixed(2))
+
         const commin_amt = parseFloat((formData.commin_rate * netgrossprem / 100).toFixed(2))
         const ovin_amt = parseFloat((formData.ovin_rate * netgrossprem / 100).toFixed(2))
         const commout1_amt = parseFloat((formData.commout1_rate * netgrossprem / 100).toFixed(2))
         const ovout1_amt = parseFloat((formData.ovout1_rate * netgrossprem / 100).toFixed(2))
+        const commout2_amt = parseFloat((formData.commout2_rate * netgrossprem / 100).toFixed(2))
+        const ovout2_amt = parseFloat((formData.ovout2_rate * netgrossprem / 100).toFixed(2))
+        const commout_amt = parseFloat((formData.commout_rate * netgrossprem / 100).toFixed(2))
+        const ovout_amt = parseFloat((formData.ovout_rate * netgrossprem / 100).toFixed(2))
   
         // get old installment
         arrA[index] = {
           ...arrA[index],
+          grossprem: grosspremseq,
+          specdiscamt : specdiscseq,
           netgrossprem: netgrossprem,
           tax: taxamt,
           duty: dutyamt,
@@ -140,12 +244,16 @@ function formatNumber(input) {
           ovin_amt: ovin_amt,
           ovin_taxamt: parseFloat((ovin_amt * tax).toFixed(2)),
           commout1_amt: commout1_amt,
-          ovout1_amt: ovout1_amt
+          ovout1_amt: ovout1_amt,
+          commout2_amt: commout2_amt,
+          ovout2_amt: ovout2_amt,
+          commout_amt: commout_amt,
+          ovout_amt: ovout_amt,
         }
       }else{
         arrA[index] = {
           ...arrA[index],
-          [e.target.name] : e.target.value
+          [e.target.name.split('-')[0]] : e.target.value
         }
       }
      
@@ -227,6 +335,8 @@ const handleClose = (e) => {
     const arrI = []
     console.log(formData);
         arrI.push({
+          grossprem: formData.grossprem,
+          specdiscamt:formData.specdiscamt,
           netgrossprem: formData.netgrossprem,
           tax: formData.tax,
           duty: formData.duty,
@@ -240,6 +350,8 @@ const handleClose = (e) => {
         })
     const arrA = []
     arrA.push({
+      grossprem: formData.grossprem,
+      specdiscamt:formData.specdiscamt,
       netgrossprem: formData.netgrossprem,
       tax:  formData.tax,
       duty: formData.duty,
@@ -251,6 +363,10 @@ const handleClose = (e) => {
       ovin_taxamt: formData.ovin_taxamt,
       commout1_amt: formData.commout1_amt,
       ovout1_amt: formData.ovout1_amt,
+      commout2_amt: formData.commout2_amt,
+      ovout2_amt: formData.ovout2_amt,
+      commout_amt: formData.commout_amt,
+      ovout_amt: formData.ovout_amt,
       withheld: formData.withheld,
 
     })
@@ -331,9 +447,13 @@ const handleClose = (e) => {
         //cal tax
         let taxseq = parseFloat((tax * (premperseq + dutyseq)).toFixed(2))
 
+        //cal reverse grossprem premperseq = gross(100-distrate)/100 --> grosspremseq = (premperseq *100)/(100-distrate)
+        let grosspremseq = parseFloat((premperseq *100/(100-formData.specdiscrate)).toFixed(2))
+        let specdiscseq = parseFloat((grosspremseq * formData.specdiscrate/100).toFixed(2))
+
         //cal withheld
         let withheldseq = 0 
-         if (formData.witheld > 0) {
+         if (formData.withheld > 0) {
           withheldseq = parseFloat((withheld * (premperseq + dutyseq)).toFixed(2))  
         }
 
@@ -351,6 +471,8 @@ const handleClose = (e) => {
         let comminseq = parseFloat((formData.commin_rate * premperseq / 100).toFixed(2))
         let ovinseq = parseFloat((formData.ovin_rate * premperseq / 100).toFixed(2))
         arrI.push({
+          grossprem: grosspremseq,
+          specdiscamt : specdiscseq,
           netgrossprem: premperseq,
           tax: taxseq,
           duty: dutyseq,
@@ -368,6 +490,8 @@ const handleClose = (e) => {
       console.log(arrI);
     }else{
       arrI.push({
+        grossprem: formData.grossprem,
+        specdiscamt: formData.specdiscamt,
         netgrossprem: formData.netgrossprem,
         tax: formData.tax,
         duty: formData.duty,
@@ -415,9 +539,13 @@ const handleClose = (e) => {
         //cal tax
         let taxseq = parseFloat((tax * (premperseq + dutyseq)).toFixed(2))
 
+         //cal reverse grossprem premperseq = gross(100-distrate)/100 --> grosspremseq = (premperseq *100)/(100-distrate)
+         let grosspremseq = parseFloat((premperseq *100/(100-formData.specdiscrate)).toFixed(2))
+         let specdiscseq = parseFloat((grosspremseq * formData.specdiscrate/100).toFixed(2))
+
         //cal withheld
         let withheldseq = 0 
-         if (formData.witheld > 0) {
+         if (formData.withheld > 0) {
           withheldseq = parseFloat((withheld * (premperseq + dutyseq)).toFixed(2))  
         }
 
@@ -433,10 +561,18 @@ const handleClose = (e) => {
         //cal comm-ov in
         let comminseq = parseFloat((formData.commin_rate * premperseq / 100).toFixed(2))
         let ovinseq = parseFloat((formData.ovin_rate * premperseq / 100).toFixed(2))
-        //cal comm-ov out
-        let commoutseq = parseFloat((formData.commout1_rate * premperseq / 100).toFixed(2))
-        let ovoutseq = parseFloat((formData.ovout1_rate * premperseq / 100).toFixed(2))
+        //cal comm-ov out1
+        let commout1seq = parseFloat((formData.commout1_rate * premperseq / 100).toFixed(2))
+        let ovout1seq = parseFloat((formData.ovout1_rate * premperseq / 100).toFixed(2))
+        //cal comm-ov out2
+        let commout2seq = parseFloat((formData.commout2_rate * premperseq / 100).toFixed(2))
+        let ovout2seq = parseFloat((formData.ovout2_rate * premperseq / 100).toFixed(2))
+        //cal comm-ov out total
+        let commoutseq = parseFloat((formData.commout_rate * premperseq / 100).toFixed(2))
+        let ovoutseq = parseFloat((formData.ovout_rate * premperseq / 100).toFixed(2))
         arrA.push({
+          grossprem: grosspremseq,
+          specdiscamt: specdiscseq,
           netgrossprem: premperseq,
           tax: taxseq,
           duty: dutyseq,
@@ -444,11 +580,15 @@ const handleClose = (e) => {
           // dueDate: dueDate.toISOString().split('T')[0],
           dueDate: new Date(seqDueDate),
           commin_amt: comminseq,
-          commin_taxamt: comminseq * tax,
+          commin_taxamt: parseFloat((comminseq * tax).toFixed(2)),
           ovin_amt: ovinseq,
-          ovin_taxamt: ovinseq * tax,
-          commout1_amt: commoutseq,
-          ovout1_amt: ovoutseq,
+          ovin_taxamt: parseFloat((ovinseq * tax).toFixed(2)),
+          commout1_amt: commout1seq,
+          ovout1_amt: ovout1seq,
+          commout2_amt: commout2seq,
+          ovout2_amt: ovout2seq,
+          commout_amt: commoutseq,
+          ovout_amt: ovoutseq,
           withheld: withheldseq
 
         })
@@ -457,6 +597,8 @@ const handleClose = (e) => {
       console.log(arrA);
     }else{
       arrA.push({
+        grossprem: formData.grossprem,
+        specdiscamt: formData.specdiscamt,
         netgrossprem: formData.netgrossprem,
         tax:  formData.tax,
         duty: formData.duty,
@@ -468,6 +610,10 @@ const handleClose = (e) => {
         ovin_taxamt: formData.ovin_taxamt,
         commout1_amt: formData.commout1_amt,
         ovout1_amt: formData.ovout1_amt,
+        commout2_amt: formData.commout2_amt,
+        ovout2_amt: formData.ovout2_amt,
+        commout_amt: formData.commout_amt,
+        ovout_amt: formData.ovout_amt,
         withheld: formData.withheld,
 
       })
@@ -591,7 +737,254 @@ const handleClose = (e) => {
           </tbody>
         </table>
       </div>
+      <div class="row">
+        <div className="col-1"></div>
+        <div class="col-2">
 
+          <label class="form-label">
+            Comm/OV IN
+          </label>
+        </div>
+        <div class="col-3">
+          <div className="row">
+            <div className="col">
+              <label class="form-label ">
+                Comm Rate(%)
+              </label>
+            </div>
+            <div className="col-5">
+              <label class="form-label ">
+                Amt<span class="text-danger"> *</span>
+              </label>
+            </div>
+          </div>
+
+          <div className="row">
+            <div className="col">
+              <input
+                className="form-control"
+                type="number"
+                step={0.1}
+                value={formData[`commin_rate`]}
+                name={`commin_rate`}
+                onChange={(e) => handleChange(e)}
+                onBlur={(e) => checkCommOV(e, 'Comm')}
+              />
+
+            </div>
+
+            <div className="col-8">
+              <input
+                className="form-control bg-warning"
+                type="text"
+                disabled
+                value={NumberToString(parseFloat((formData[`commin_rate`] * formData[`netgrossprem`] / 100).toFixed(2))) || ""}
+                name={`commin_amt`}
+              />
+            </div>
+          </div>
+
+        </div>
+
+
+        <div class="col-3">
+
+          <div className="row">
+            <div className="col">
+              <label class="form-label ">
+                OV Rate(%)
+              </label>
+            </div>
+            <div className="col-5">
+              <label class="form-label ">
+                Amt<span class="text-danger"> *</span>
+              </label>
+            </div>
+          </div>
+          <div className="row">
+            <div className="col input-group">
+              <input
+                className="form-control"
+                type="number"
+                step={0.1}
+                value={formData[`ovin_rate`]}
+                name={`ovin_rate`}
+                onChange={(e) => handleChange(e)}
+                onBlur={(e) => checkCommOV(e, 'OV')}
+              />
+
+            </div>
+            <div className="col-8">
+              <input
+                className="form-control bg-warning"
+                type="text"
+                disabled
+                name={`ovin_amt`}
+                value={NumberToString(parseFloat((formData[`ovin_rate`] * formData[`netgrossprem`] / 100).toFixed(2))) || ""}
+              // onChange={handleChange}
+              />
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <div class="row">
+        <div className="col-1"></div>
+        <div class="col-2">
+
+          <label class="form-label">
+            Comm/OV OUT <br /> ผู้แนะนำ 1
+          </label>
+        </div>
+        <div class="col-3">
+          <label class="form-label ">
+            {/* Comm Out% (1)<span class="text-danger"> *</span> */}
+          </label>
+          <div className="row">
+            <div className="col input-group">
+              <input
+                className="form-control "
+                type="number"
+                step={0.1}
+                value={formData[`commout1_rate`]}
+                name={`commout1_rate`}
+                onChange={(e) =>handleChange(e)}
+                onBlur={(e) => checkCommOV(e, 'Comm')}
+              />
+
+            </div>
+            <div className="col-8">
+              <input
+                className="form-control bg-warning"
+                type="text"
+                disabled
+                value={NumberToString((formData[`commout1_rate`] * formData[`netgrossprem`] / 100).toFixed(2)) || ""}
+                name={`commout1_amt`}
+              // onChange={handleChange}
+              />
+            </div>
+
+          </div>
+        </div>
+        <div class="col-3">
+          <label class="form-label ">
+            {/* Ov Out% (1)<span class="text-danger"> *</span> */}
+          </label>
+
+          <div className="row">
+            <div className="col input-group">
+              <input
+                className="form-control"
+                type="number"
+                step={0.1}
+                value={formData[`ovout1_rate`]}
+                name={`ovout1_rate`}
+                onChange={(e) =>handleChange(e)}
+                onBlur={(e) => checkCommOV(e, 'OV')}
+                
+              />
+
+            </div>
+            <div className="col-8">
+              <input
+                className="form-control bg-warning"
+                type="text"
+                disabled
+                name={`ovout1_amt`}
+                //value={(formData[`ovout1_rate`] * formData[`grossprem`]) / 100 || ""}
+                value={NumberToString(parseFloat((formData[`ovout1_rate`] * formData[`netgrossprem`] / 100).toFixed(2))) || ""}
+              // onChange={handleChange}
+              />
+            </div>
+
+          </div>
+        </div>
+        {/* <div class="col-2 align-bottom">
+
+          <button type="button" name="btn_comm1" class="btn btn-primary align-bottom form-control" onClick={getcommov} >ค่า comm/ov : ผู้แนะนำคนที่ 1</button>
+        </div> */}
+
+
+      </div>
+
+      {formData.agentCode2 !== null ?
+        <div class="row">
+          <div className="col-1"></div>
+          <div class="col-2">
+
+            <label class="form-label">
+              Comm/OV OUT <br /> ผู้แนะนำ 2
+            </label>
+          </div>
+          <div class="col-3">
+            <label class="form-label ">
+              {/* Comm Out% (2) */}
+            </label>
+            <div className="row">
+              <div className="col input-group">
+                <input
+                  className="form-control "
+                  type="number"
+                  step={0.1}
+                  value={formData[`commout2_rate`]}
+                  name={`commout2_rate`}
+                  onChange={(e) => handleChange(e)}
+                  onBlur={(e) => checkCommOV(e, 'Comm')}
+                />
+
+              </div>
+              <div className="col-8">
+                <input
+                  className="form-control bg-warning"
+                  type="text"
+                  disabled
+                  //value={(formData[`commin2_rate`] * formData[`grossprem`]) / 100 || ""}
+                  value={NumberToString(parseFloat((formData[`commout2_rate`] * formData[`netgrossprem`] / 100).toFixed(2))) || ""}
+                  name={`commout2_amt`}
+                />
+              </div>
+            </div>
+
+          </div>
+
+
+          <div class="col-3">
+            <label class="form-label ">
+              {/* Ov Out% (2) */}
+            </label>
+            <div className="row">
+              <div className="col input-group">
+                <input
+                  className="form-control"
+                  type="number"
+                  step={0.1}
+                  value={formData[`ovout2_rate`]}
+                  name={`ovout2_rate`}
+                  onChange={(e) =>handleChange(e)}
+                  onBlur={(e) => checkCommOV(e, 'OV')}
+                />
+
+              </div>
+              <div className="col-8">
+                <input
+                  className="form-control bg-warning"
+                  type="text"
+                  disabled
+                  name={`ovout2_amt`}
+                  value={NumberToString(parseFloat((formData[`ovout2_rate`] * formData[`netgrossprem`] / 100).toFixed(2))) || ""}
+
+                />
+              </div>
+            </div>
+
+          </div>
+          {/* <div class="col-2 align-bottom">
+
+          <button type="button" name="btn_comm2" class="btn btn-primary align-bottom" onClick={getcommov} >ค่า comm/ov : ผู้แนะนำคนที่ 2</button>
+        </div> */}
+        </div>
+        : null}
 
 
       {/* end policy data */}
@@ -854,12 +1247,12 @@ const handleClose = (e) => {
                             className="form-control"
                             todayButton="Vandaag"
                             // isClearable
-                            name={`dueDate-${i}`}
+                            name={`dueDateI-${i}`}
                             showYearDropdown
                             dateFormat="dd/MM/yyyy"
                             dropdownMode="select"
                             selected={ele.dueDate || null}
-                            onChange={(date) => handleChangeDate(date,`dueDate-${i}`)}
+                            onChange={(date) =>  handleChangeDate(date,'dueDateI',i)}
                                  />
                   </td>
                   <td  ><input
@@ -875,7 +1268,7 @@ const handleClose = (e) => {
                     className="form-control"
                     type="text"
                     style={{width: "150px"}}
-                    name={`invoiceNo`}
+                    name={`invoiceNo-${i}`}
                     value={ele.invoiceNo}
                     onChange={e => editInstallment(e, 'insurer', i)}
                   /></td>
@@ -884,7 +1277,7 @@ const handleClose = (e) => {
                     type="text"
                     style={{width: "150px"}}
                     value={ele.taxInvoiceNo}
-                    name={`taxInvoiceNo`}
+                    name={`taxInvoiceNo-${i}`}
                     onChange={e => editInstallment(e, 'insurer', i)}
                   /></td>
                   
@@ -930,7 +1323,7 @@ const handleClose = (e) => {
 
       {installment.advisor.length > 0 ?
           <>
-          <h4 className="text-left" style={{padding:`20px`}} >แบ่งงวด ผู้แนะนำ 1</h4>
+          <h4 className="text-left" style={{padding:`20px`}} >แบ่งงวด ผู้แนะนำ </h4>
         <div className="table-responsive overflow-scroll"  >
           <table class="table  table-striped">
             <thead>
@@ -945,6 +1338,10 @@ const handleClose = (e) => {
                 <th >WHT 1%</th>
                 <th >Comm in</th>
                 <th >Ov in</th>
+                <th >Comm out 1</th>
+                <th >Ov out 1</th>
+                <th >Comm out 2</th>
+                <th >Ov out 2</th>
                 <th >Comm out</th>
                 <th >Ov out</th>
                 {/* <th >แก้ไข</th> */}
@@ -954,7 +1351,7 @@ const handleClose = (e) => {
 
               {installment.advisor.map((ele, i) => {
                 return (<tr>
-                  <th scope="row">ผู้แนะนำ 1</th>
+                  <th scope="row">ผู้แนะนำ </th>
                   <td>{i + 1}</td>
                   {/* <td scope="col-2"><input
                     className="form-control"
@@ -976,7 +1373,7 @@ const handleClose = (e) => {
                             dateFormat="dd/MM/yyyy"
                             dropdownMode="select"
                             selected={ele.dueDate || null}
-                            onChange={(date) => handleChangeDate(date,`dueDate-${i}`)}
+                            onChange={(date) => handleChangeDate(date,'dueDateA',i)}
                                  />
                                  </td>
                   <td ><input
@@ -985,14 +1382,14 @@ const handleClose = (e) => {
                     type="text"
                     value={ele.netgrossprem.toLocaleString()}
                     name={`netgrosspremA-${i}`}
-                    onChange={e => editInstallment(e, 'advisor', i)}
+                    onChange={(e) => editInstallment(e, 'advisor', i)}
                   /></td>
                   <td scope="col-2"><input
                     className="form-control  bg-warning"
                     type="text"
                     disabled
                     name={`invoiceNoA-${i}`}
-                    onChange={e => editInstallment(e, 'advisor', i)}
+                    onChange={(e) => editInstallment(e, 'advisor', i)}
                   /></td>
                   {/* <td scope="col-1"><input type="number" name={`duty-${i}`} step={.01} defaultValue={ele.duty}></input></td>
               <td scope="col-1"><input type="number" name={`tax-${i}`} step={.01} defaultValue={ele.tax}></input></td>
@@ -1007,13 +1404,17 @@ const handleClose = (e) => {
                   <td scope="col-1">{ele.ovin_amt.toLocaleString('en-US', { minimumFractionDigits: 2 })}</td>
                   <td scope="col-1">{ele.commout1_amt.toLocaleString('en-US', { minimumFractionDigits: 2 })}</td>
                   <td scope="col-1">{ele.ovout1_amt.toLocaleString('en-US', { minimumFractionDigits: 2 })}</td>
+                  <td scope="col-1">{ele.commout2_amt.toLocaleString('en-US', { minimumFractionDigits: 2 })}</td>
+                  <td scope="col-1">{ele.ovout2_amt.toLocaleString('en-US', { minimumFractionDigits: 2 })}</td>
+                  <td scope="col-1">{ele.commout_amt.toLocaleString('en-US', { minimumFractionDigits: 2 })}</td>
+                  <td scope="col-1">{ele.ovout_amt.toLocaleString('en-US', { minimumFractionDigits: 2 })}</td>
                   {/* <td scope="col-1"><button onClick={e => editInstallment(e, 'advisor', i)}>แก้ไข</button></td> */}
                 </tr>)
               })}
 
               {installment.advisor.length > 0 ?
                 <tr>
-                  <th scope="row">รวม ผู้แนะนำ 1</th>
+                  <th scope="row">รวม ผู้แนะนำ </th>
                   <td></td>
                   <td></td>
                   <td scope="col-1">{installment.advisor.reduce((prev, curr) => prev + parseFloat(curr.netgrossprem.toFixed(2)), 0).toLocaleString(undefined, { minimumFractionDigits: 2 })}</td>
@@ -1025,6 +1426,10 @@ const handleClose = (e) => {
                   <td scope="col-1">{installment.advisor.reduce((prev, curr) => prev + parseFloat(curr.ovin_amt.toFixed(2)), 0).toLocaleString(undefined, { minimumFractionDigits: 2 })}</td>
                   <td scope="col-1">{installment.advisor.reduce((prev, curr) => prev + parseFloat(curr.commout1_amt.toFixed(2)), 0).toLocaleString(undefined, { minimumFractionDigits: 2 })}</td>
                   <td scope="col-1">{installment.advisor.reduce((prev, curr) => prev + parseFloat(curr.ovout1_amt.toFixed(2)), 0).toLocaleString(undefined, { minimumFractionDigits: 2 })}</td>
+                  <td scope="col-1">{installment.advisor.reduce((prev, curr) => prev + parseFloat(curr.commout2_amt.toFixed(2)), 0).toLocaleString(undefined, { minimumFractionDigits: 2 })}</td>
+                  <td scope="col-1">{installment.advisor.reduce((prev, curr) => prev + parseFloat(curr.ovout2_amt.toFixed(2)), 0).toLocaleString(undefined, { minimumFractionDigits: 2 })}</td>
+                  <td scope="col-1">{installment.advisor.reduce((prev, curr) => prev + parseFloat(curr.commout_amt.toFixed(2)), 0).toLocaleString(undefined, { minimumFractionDigits: 2 })}</td>
+                  <td scope="col-1">{installment.advisor.reduce((prev, curr) => prev + parseFloat(curr.ovout_amt.toFixed(2)), 0).toLocaleString(undefined, { minimumFractionDigits: 2 })}</td>
                 </tr>
                 : null}
 
@@ -1047,8 +1452,12 @@ const handleClose = (e) => {
               <th scope="col-1">WHT 1%</th>
               <th scope="col-1">Comm in</th>
               <th scope="col-1">Ov in</th>
+              <th scope="col-1">Comm out 1</th>
+              <th scope="col-1">Ov out 1 </th>
+              <th scope="col-1">Comm out 2</th>
+              <th scope="col-1">Ov out 2 </th>
               <th scope="col-1">Comm out</th>
-              <th scope="col-1">Ov out</th>
+              <th scope="col-1">Ov out </th>
             </tr>
           </thead>
           <tbody>
@@ -1065,12 +1474,16 @@ const handleClose = (e) => {
                 <td scope="col-1">{installment.insurer.reduce((prev, curr) => prev + parseFloat(curr.ovin_amt.toFixed(2)), 0).toLocaleString(undefined, { minimumFractionDigits: 2 })}</td>
                 <td></td>
                 <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
               </tr>
               : null}
 
             {installment.advisor.length > 0 ?
               <tr>
-                <th scope="row">รวม ผู้แนะนำ 1</th>
+                <th scope="row">รวม ผู้แนะนำ</th>
                 <td>{installment.advisor.length}</td>
                 <td scope="col-1">{installment.advisor.reduce((prev, curr) => prev + parseFloat(curr.netgrossprem.toFixed(2)), 0).toLocaleString(undefined, { minimumFractionDigits: 2 })}</td>
                 <td scope="col-1">{installment.advisor.reduce((prev, curr) => prev + parseFloat(curr.duty.toFixed(2)), 0).toLocaleString(undefined, { minimumFractionDigits: 2 })}</td>
@@ -1080,9 +1493,13 @@ const handleClose = (e) => {
                 <td scope="col-1">{installment.advisor.reduce((prev, curr) => prev + parseFloat(curr.ovin_amt.toFixed(2)), 0).toLocaleString(undefined, { minimumFractionDigits: 2 })}</td>
                 <td scope="col-1">{installment.advisor.reduce((prev, curr) => prev + parseFloat(curr.commout1_amt.toFixed(2)), 0).toLocaleString(undefined, { minimumFractionDigits: 2 })}</td>
                 <td scope="col-1">{installment.advisor.reduce((prev, curr) => prev + parseFloat(curr.ovout1_amt.toFixed(2)), 0).toLocaleString(undefined, { minimumFractionDigits: 2 })}</td>
+                <td scope="col-1">{installment.advisor.reduce((prev, curr) => prev + parseFloat(curr.commout2_amt.toFixed(2)), 0).toLocaleString(undefined, { minimumFractionDigits: 2 })}</td>
+                <td scope="col-1">{installment.advisor.reduce((prev, curr) => prev + parseFloat(curr.ovout2_amt.toFixed(2)), 0).toLocaleString(undefined, { minimumFractionDigits: 2 })}</td>
+                <td scope="col-1">{installment.advisor.reduce((prev, curr) => prev + parseFloat(curr.commout_amt.toFixed(2)), 0).toLocaleString(undefined, { minimumFractionDigits: 2 })}</td>
+                <td scope="col-1">{installment.advisor.reduce((prev, curr) => prev + parseFloat(curr.ovout_amt.toFixed(2)), 0).toLocaleString(undefined, { minimumFractionDigits: 2 })}</td>
               </tr>
               : null}
-{formData.agentCode2 !== null ?
+{/* {formData.agentCode2 !== null ?
               <tr>
                 <th scope="row">รวม ผู้แนะนำ 2</th>
                 <td>1</td>
@@ -1095,7 +1512,7 @@ const handleClose = (e) => {
               <td>{formData.commout2_amt.toLocaleString(undefined, { minimumFractionDigits: 2 })}</td>
               <td>{formData.ovout2_amt.toLocaleString(undefined, { minimumFractionDigits: 2 })}</td>
                </tr>
-              : null}
+              : null} */}
 
             <tr>
               <th scope="row">กรมธรรม์</th>
@@ -1106,6 +1523,10 @@ const handleClose = (e) => {
               <td>{formData.withheld.toLocaleString(undefined, { minimumFractionDigits: 2 })}</td>
               <td>{formData.commin_amt.toLocaleString(undefined, { minimumFractionDigits: 2 })}</td>
               <td>{formData.ovin_amt.toLocaleString(undefined, { minimumFractionDigits: 2 })}</td>
+              <td>{formData.commout1_amt.toLocaleString(undefined, { minimumFractionDigits: 2 })}</td>
+              <td>{formData.ovout1_amt.toLocaleString(undefined, { minimumFractionDigits: 2 })}</td>
+              <td>{(formData.commout2_amt || 0).toLocaleString(undefined, { minimumFractionDigits: 2 }) }</td>
+              <td>{(formData.ovout2_amt || 0).toLocaleString(undefined, { minimumFractionDigits: 2 }) }</td>
               <td>{formData.commout_amt.toLocaleString(undefined, { minimumFractionDigits: 2 })}</td>
               <td>{formData.ovout_amt.toLocaleString(undefined, { minimumFractionDigits: 2 })}</td>
             </tr>

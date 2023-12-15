@@ -56,7 +56,9 @@ table th,table td {
   border-collapse: collapse;
   
 }
-
+.text-left{
+  text-align: left;
+}
 .my-modal {
   min-width: 80vw;
 }

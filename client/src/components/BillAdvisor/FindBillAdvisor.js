@@ -335,7 +335,7 @@ const FindBillAdvisor = () => {
                             <th scope="col">วันที่</th>
                             <th scope="col">จำนวนเงิน</th>
                             <th scope="col">รหัสผู้สร้าง</th>
-                            <th scope="col">แก้ไข</th>
+                            <th scope="col"></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -348,7 +348,8 @@ const FindBillAdvisor = () => {
                                 <td>{ele.billdate}</td>
                                 <td>{ele.amt.toLocaleString(undefined, { minimumFractionDigits: 2 })}</td>
                                 <td>{ele.createusercode}</td>
-                                <td><button onClick={() =>navigate('/bill/editbill?billno=' + ele.billadvisorno)}>แก้ไข</button></td>
+                                <td>{ele.editflag ? <button onClick={() =>navigate('/bill/editbill?billno=' + ele.billadvisorno)}>แก้ไข</button> 
+                                :  <button onClick={() =>navigate('/bill/getbill?billno=' + ele.billadvisorno)}>ดูรายละเอียด</button> }</td>
                             </tr>)
 
                         })}

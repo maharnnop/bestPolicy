@@ -94,7 +94,7 @@ const CreateCashierReceive = () => {
         axios.post(window.globalConfig.BEST_POLICY_V1_BASE_URL + "/bills/findDataByBillAdvisoryNo?txtype=" + txtype, data, headers)
             .then((response) => {
                 console.log(response);
-                if (response.data.length <1 || response.data[0].transactiontype !== 'PREM-OUT') {
+                if (response.data.length <1 || (response.data[0].transactiontype !== 'PREM-OUT' && txtype === 'comin')) {
                     alert("เลขที่ใบวางบิลไม่สามารถทำการตัดหนี้ได้")
                     setInsurer("")
                 setInsurerReadOnly(false)
@@ -530,7 +530,8 @@ const CreateCashierReceive = () => {
                                             backgroundColor: receiveFromReadOnly ? 'grey' : 'white',
                                             color: receiveFromReadOnly ? 'white' : null
                                         }}
-                                        onChange={(e) => setInsurer(e.target.value)} className="form-control" />
+                                        onChange={(e) => setInsurer(e.target.value)} 
+                                        className="form-control text-left" />
                                 </div>
                             </div>
                             {/* Advisor */}
@@ -544,7 +545,7 @@ const CreateCashierReceive = () => {
                                         style={{
                                             backgroundColor: receiveFromReadOnly ? 'grey' : 'white',
                                             color: receiveFromReadOnly ? 'white' : null
-                                        }} onChange={(e) => setAdvisor(e.target.value)} className="form-control" />
+                                        }} onChange={(e) => setAdvisor(e.target.value)} className="form-control text-left" />
                                 </div>
                             </div>
 
@@ -638,7 +639,7 @@ const CreateCashierReceive = () => {
                                             backgroundColor: receiveFromReadOnly ? 'grey' : 'white',
                                             color: receiveFromReadOnly ? 'white' : null
                                         }}
-                                        onChange={(e) => setReceiveName(e.target.value)} className="form-control" />
+                                        onChange={(e) => setReceiveName(e.target.value)} className="form-control text-left" />
                                 </div>
                             </div>
                             {/* Receive Type */}

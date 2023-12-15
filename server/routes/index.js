@@ -18,6 +18,8 @@ module.exports = {
     arap : require("./ARAP"),
     bills :require("./bill"),
     endorses :require('./endorses'),
+    config :require("./static/config"),
+    
     // reports : require("./report"),
     
 

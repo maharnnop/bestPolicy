@@ -76,6 +76,7 @@ const PolicyScreen = (props) => {
   const [subDistricDD, setSubDistricDD] = useState([]);
   const [zipcodeDD, setZipCodeDD] = useState([]);
   const [titleDD, setTitleDD] = useState([]);
+  const [idcardtypeDD, setIdcardtypeDD] = useState([]);
   const [titlePDD, setTitlePDD] = useState([]) // title for person
   const [titleODD, setTitleODD] = useState([]) // title for organization
   const [insureTypeDD, setInsureTypeDD] = useState([]);
@@ -128,10 +129,12 @@ const handleChangePolicyCard = (e, data) => {
   data.actDate = new Date(data.actDate)
   data.expDate = new Date(data.expDate)
   if (data.duedateagent !== null) {
-    data.dueDateAgent = new Date(convertDateFormat(data.duedateagent,false))
+    // data.dueDateAgent = new Date(convertDateFormat(data.duedateagent,false))
+    data.dueDateAgent = new Date(data.duedateagent)
   }  
  if (data.duedateinsurer !== null) {
-  data.dueDateInsurer = new Date(convertDateFormat(data.duedateinsurer,false) )
+  // data.dueDateInsurer = new Date(convertDateFormat(data.duedateinsurer,false) )
+  data.dueDateInsurer = new Date(data.duedateinsurer )
  } 
  if (data.personType === 'P') {
   data.t_fn = data.t_firstName
@@ -266,6 +269,12 @@ const handlePolicyClose = (e) => {
         }
       });
       setInsureSubClassDD(array);
+      // setFormData((prevState) => ({
+      //           ...prevState,
+      //           class: e.target.value,
+      //           subClass:null
+      //         }))
+      // default subclass after select class
       axios
         .post(url + "/insures/getcommovin",
           {
@@ -290,12 +299,13 @@ const handlePolicyClose = (e) => {
 
     }
     else if (e.target.name === "subClass") {
-      console.log(e.target.value);
+      console.log(formData.class);
       axios
         .post(url + "/insures/getcommovin",
           {
             insurerCode: formData.insurerCode,
-            class: formData.class, subClass: e.target.value
+            class: formData.class,
+            subClass: e.target.value
           }, headers)
         .then((res) => {
           console.log(res.data);
@@ -938,16 +948,17 @@ const handlePolicyClose = (e) => {
 
 
   }
-  const checkCommOV = async (e, type) => {
+  const checkCommOV =  (e, type) => {
     e.preventDefault();
     console.log(e.target.name + " : " + e.target.value);
+    console.log(`${formData.commin_rate} < ${formData.commout1_rate} + ${formData.commout2_rate}`);
     if (type === 'Comm') {
       // check comm
-      if (formData.commin_rate < formData.commout1_rate + formData.commout2_rate ) {
+      if (formData.commin_rate < parseFloat(formData.commout1_rate) + parseFloat(formData.commout2_rate) ) {
         alert(" ผลรวมของ Comm-out ต้องไม่มากกว่า Comm-in")
         if (e.target.name === "commin_rate") {
           console.log("commin_rate");
-          e.target.value = (formData.commout1_rate + formData.commout2_rate )
+          e.target.value = (parseFloat(formData.commout1_rate) + parseFloat(formData.commout2_rate) )
           setFormData((prevState) => ({
             ...prevState,
             [e.target.name]: e.target.value,
@@ -966,10 +977,10 @@ const handlePolicyClose = (e) => {
     }
     if (type === 'OV') {
       // check ov
-      if (formData.ovin_rate < formData.ovout1_rate + formData.ovout2_rate ) {
+      if (formData.ovin_rate < parseFloat(formData.ovout1_rate) + parseFloat(formData.ovout2_rate) ) {
         alert(" ผลรวมของ OV-out ต้องไม่มากกว่า OV-in")
         if (e.target.name === "ovin_rate") {
-          e.target.value = formData.ovout1_rate + formData.ovout2_rate 
+          e.target.value = parseFloat(formData.ovout1_rate) + parseFloat(formData.ovout2_rate )
           setFormData((prevState) => ({
             ...prevState,
             [e.target.name]: e.target.value,
@@ -995,10 +1006,11 @@ const handlePolicyClose = (e) => {
     let t_firstName = null
     let t_lastName = null
     let idCardType = null
+    let t_branchName = null
     let idCardNo = null
     let taxNo = null
     if (formData.personType === 'P') {
-      idCardType = "idcard"
+      idCardType = formData.idCradType
       t_firstName = formData.t_fn
       t_lastName = formData.t_ln
       idCardNo = formData.regisNo.toString()
@@ -1006,7 +1018,7 @@ const handlePolicyClose = (e) => {
     } else {
       const withheldamt = parseFloat(((formData.netgrossprem + formData.duty) * withheld).toFixed(2))
       t_ogName = formData.t_fn
-
+      t_branchName = formData.t_ln
       taxNo = formData.regisNo.toString()
       data.push({ ...formData, t_ogName: t_ogName, taxNo: taxNo, t_firstName: t_firstName, t_lastName: t_lastName, idCardNo: idCardNo, idCardType: idCardType, withheld: withheldamt, })
     }
@@ -1123,6 +1135,23 @@ const handlePolicyClose = (e) => {
         setInsureClassDD(array);
       })
       .catch((err) => { });
+    
+     //get idcardtype
+     axios
+     .get(url + "/config/showallidcardtype", headers)
+     .then((idcardtype) => {
+
+       const array = idcardtype.data.map((ele, index) => (
+         <option key={index} value={ele.textvalue}>
+           {ele.textvalue}
+         </option>
+       ));
+
+       
+       setIdcardtypeDD(array);
+     })
+     .catch((err) => { });
+
 
     //get insurer
     axios
@@ -2009,6 +2038,21 @@ const handlePolicyClose = (e) => {
               />
             </div>
             <div class="col-2">
+          <label class="form-label ">
+            ประเภทบัตร<span class="text-danger"> *</span>
+          </label>
+          <select
+            className="form-control"
+            name={`idCradType`}
+            onChange={handleChange}
+          >
+            <option value={formData.idCradType} disabled selected hidden>
+              {formData.idCradType}
+            </option>
+            {idcardtypeDD}
+          </select>
+        </div>
+            <div class="col-2">
               <label class="form-label ">
                 เลขที่บัตรประชาชน<span class="text-danger"> *</span>
               </label>
@@ -2050,6 +2094,21 @@ const handlePolicyClose = (e) => {
               />
             </div>
             <div class="col-2">
+              <label class="form-label ">คำลงท้าย<span class="text-danger"> *</span></label>
+              <input type="text" disabled className="form-control" value={formData.suffix} />
+
+            </div>
+            <div class="col-2">
+              <label class="form-label ">สาขา</label>
+              <input
+                className="form-control"
+                type="text"
+                name="t_ln"
+                defaultValue={formData.t_ln}
+                onChange={handleChange}
+              />
+            </div>
+            <div class="col-2">
               <label class="form-label ">ลำดับสาขา<span class="text-danger"> *</span></label>
               <input
                 className="form-control"
@@ -2059,12 +2118,9 @@ const handlePolicyClose = (e) => {
                 onChange={handleChange}
               />
             </div>
-            <div class="col-2">
-              <label class="form-label ">คำลงท้าย<span class="text-danger"> *</span></label>
-              <input type="text" disabled className="form-control" value={formData.suffix} />
-
-            </div>
-            <div class="col-2">
+            <div className="row">
+              <div className="col-1"></div>
+              <div class="col-2">
               <label class="form-label ">
                 เลขที่จดทะเบียน<span class="text-danger"> *</span>
               </label>
@@ -2076,6 +2132,8 @@ const handlePolicyClose = (e) => {
                 onChange={handleChange}
               />
             </div>
+            </div>
+            
           </>}
 
       </div>

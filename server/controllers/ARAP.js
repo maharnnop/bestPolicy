@@ -39,7 +39,7 @@ const getbilldata = async (req, res) => {
       "where active ='Y' and billadvisorno = :billadvisorno ",
     {
       replacements: {
-        billadvisorno: req.body.billadvisorno,
+        billadvisorno: req.body.billadvisorno.trim(),
       },
       type: QueryTypes.SELECT,
     }
@@ -61,7 +61,7 @@ const getbilldata = async (req, res) => {
         and t.dfrpreferno is null`,
     {
       replacements: {
-        billadvisorno: req.body.billadvisorno,
+        billadvisorno: req.body.billadvisorno.trim(),
       },
       type: QueryTypes.SELECT,
     }
@@ -79,7 +79,7 @@ const getcashierdata = async (req, res) => {
       "where cashierreceiveno = :cashierreceiveno ",
     {
       replacements: {
-        cashierreceiveno: req.body.cashierreceiveno,
+        cashierreceiveno: req.body.cashierreceiveno.trim(),
       },
       type: QueryTypes.SELECT,
     }
@@ -95,22 +95,22 @@ const getcashierdata = async (req, res) => {
 const getARPremindata = async (req, res) => {
   let cond = ''
   if (req.body.billadvisorno  !== null && req.body.billadvisorno !== '') {
-    cond = cond + ` and a.billadvisorno = '${req.body.billadvisorno}'`
+    cond = cond + ` and a.billadvisorno = '${req.body.billadvisorno.trim()}'`
   }
   if (req.body.insurercode  !== null && req.body.insurercode !== '') {
-    cond = cond + ` and a.insurerno = (select id from static_data."Insurers" where "insurerCode" = '${req.body.insurercode}')`
+    cond = cond + ` and a.insurerno = (select id from static_data."Insurers" where "insurerCode" = '${req.body.insurercode.trim()}')`
   }
   if (req.body.advisorcode   !== null && req.body.advisorcode !== '' ) {
-    cond = cond + ` and a.advisorno = (select id from static_data."Agents" where "agentCode" = '${req.body.advisorcode}')`
+    cond = cond + ` and a.advisorno = (select id from static_data."Agents" where "agentCode" = '${req.body.advisorcode.trim()}')`
   }
   if (req.body.cashierreceiveno   !== null && req.body.cashierreceiveno !== '' ) {
-    cond = cond + ` and a.cashierreceiveno = '${req.body.cashierreceiveno}'`
+    cond = cond + ` and a.cashierreceiveno = '${req.body.cashierreceiveno.trim()}'`
   }
   if (req.body.refno  !== null && req.body.refno !== '') {
-    cond = cond + ` and a.refno = '${req.body.refno}'`
+    cond = cond + ` and a.refno = '${req.body.refno.trim()}'`
   }
   if (req.body.arno  !== null && req.body.arno !== '') {
-    cond = cond + ` and a.dfrpreferno = '${req.body.arno}'`
+    cond = cond + ` and a.dfrpreferno = '${req.body.arno.trim()}'`
   }
   if (req.body.ardatestart  !== null && req.body.ardatestart !== '') {
     cond = cond +` and a.rprefdate >= '${req.body.ardate}'`
@@ -119,7 +119,7 @@ const getARPremindata = async (req, res) => {
     cond = cond +` and a.rprefdate <= '${req.body.ardate}'`
   }
   if (req.body.arcreateusercode  !== null && req.body.arcreateusercode !== '') {
-    cond = cond +` and a.createusercode ='${req.body.arcreateusercode}'`
+    cond = cond +` and a.createusercode ='${req.body.arcreateusercode.trim()}'`
   }
   const records = await sequelize.query(
     `select a.billadvisorno, 

@@ -102,7 +102,8 @@ app.use("/v1/bills",authenticateToken, routes.bills);
 // app.use("/v1/reports", routes.reports);
 app.use("/v1/getrunno",authenticateToken, routes.runno);  
 app.use("/v1/araps",authenticateToken, routes.arap); 
-app.use("/v1/endorses",authenticateToken, routes.endorses);  
+app.use("/v1/endorses",authenticateToken, routes.endorses); 
+app.use("/v1/config",authenticateToken, routes.config);  
 
 
 

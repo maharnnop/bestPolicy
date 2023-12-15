@@ -509,6 +509,7 @@ const CreateBillAdvisor = () => {
                     <thead>
                         <tr>
                             <th scope="col">เลือก</th>
+                            <th scope="col">net</th>
                             <th scope="col">เลขที่กรมธรรม์</th>
                             <th scope="col">เลขที่สลักหลัง</th>
                             <th scope="col">เลขที่ใบแจ้งหนี้</th>
@@ -539,7 +540,7 @@ const CreateBillAdvisor = () => {
                             <th scope="col">จำนวนเงิน</th>
                             <th scope="col">ov-out%</th>
                             <th scope="col">จำนวนเงิน</th>
-                            <th scope="col"><input type="checkbox" name="statementtype"  onClick={selectAll} />net</th>
+                            
                             {/* <th scope="col">billpremium</th> */}
 
                         </tr>
@@ -548,6 +549,7 @@ const CreateBillAdvisor = () => {
                         {policiesData.map((ele, i) => {
                             return (<tr>
                                 <th scope="row" style={{'text-align': 'center'}}><input type="checkbox" name="select" checked={ele.select} id={i} onClick={changestatementtype} />{i + 1}</th>
+                                <td><input type="checkbox" name="statementtype" checked={ele.statementtype} id={i} onClick={changestatementtype} /></td>
                                 <td>{ele.policyNo}</td>
                                 <td>{ele.endorseNo}</td>
                                 <td>{ele.invoiceNo}</td>
@@ -577,7 +579,7 @@ const CreateBillAdvisor = () => {
                                 <td>{ele.commout_amt.toLocaleString(undefined, { minimumFractionDigits: 2 })}</td>
                                 <td>{ele.ovout_rate.toLocaleString(undefined, { minimumFractionDigits: 2 })}</td>
                                 <td>{ele.ovout_amt.toLocaleString(undefined, { minimumFractionDigits: 2 })}</td>
-                                <td><input type="checkbox" name="statementtype" checked={ele.statementtype} id={i} onClick={changestatementtype} /></td>
+                                
                                 {/* <td><input type="number" disabled value={billpremiumData[i]} /></td> */}
                             </tr>)
 
