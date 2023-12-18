@@ -4,6 +4,7 @@ import axios from "axios";
 import jwt_decode from "jwt-decode";
 import Modal from 'react-bootstrap/Modal';
 import DatePicker from 'react-datepicker';
+import {convertDateFormat} from "../lib/convertdateformat";
 import 'react-datepicker/dist/react-datepicker.css';
 import {
     BrowserRouter,
@@ -97,9 +98,10 @@ const EditBillAdvisor = (props) => {
                         arrPoldata.push({...res.data.data[i], 'select':true,'statementtype':false})
                     }
                 }
+                console.log(new Date(res.data.billdate));
                 // setPoliciesData(arrPoldata)
                 setPoliciesDataOld(arrPoldata)
-                setFilterData({...filterData, insurerCode:res.data.data[0].insurerCode, agentCode:res.data.data[0].agentCode ,old_keyid:res.data.old_keyid})
+                setFilterData({...filterData, insurerCode:res.data.insurerCode, agentCode:res.data.agentCode , billdate:new Date(res.data.billdate), old_keyid:res.data.old_keyid})
                 setBillpremiumData(array)
 
                 setBillpremiumDataOld(array)
@@ -147,10 +149,35 @@ const EditBillAdvisor = (props) => {
         const array = []
         const net = { no: 0, prem: 0, comm_out: 0, withheld: 0, whtcom: 0, ov_out: 0, whtov: 0, }
         const gross = { no: 0, prem: 0, withheld: 0 }
+
+        // old policy 
+        for (let i = 0; i < policiesDataOld.length; i++) {
+            if (policiesDataOld[i].select) {
+                if (policiesDataOld[i].statementtype) {
+                    net.no++
+                    net.bill = net.bill + policiesDataOld[i].totalprem - policiesDataOld[i].commout_amt - policiesDataOld[i].ovout_amt - policiesDataOld[i].withheld
+                    net.prem = net.prem + policiesDataOld[i].totalprem
+                    net.withheld = net.withheld + policiesDataOld[i].withheld
+                    net.comm_out = net.comm_out + policiesDataOld[i].commout_amt
+                    net.whtcom = net.comm_out * wht
+                    net.ov_out = net.ov_out + policiesDataOld[i].ovout_amt
+                    net.whtov = net.ov_out * wht
+                } else {
+                    gross.no++
+                    gross.prem = gross.prem + policiesDataOld[i].totalprem
+                    gross.withheld = gross.withheld + policiesDataOld[i].withheld
+                }
+
+            }
+
+        }
+
+        // new policy added
         for (let i = 0; i < policiesData.length; i++) {
             if (policiesData[i].select) {
                 if (policiesData[i].statementtype) {
                     net.no++
+                    net.bill = net.bill + policiesData[i].totalprem - policiesData[i].commout_amt - policiesData[i].ovout_amt - policiesData[i].withheld
                     net.prem = net.prem + policiesData[i].totalprem
                     net.withheld = net.withheld + policiesData[i].withheld
                     net.comm_out = net.comm_out + policiesData[i].commout_amt
@@ -169,13 +196,13 @@ const EditBillAdvisor = (props) => {
 
         const total = {
             no: net.no + gross.no,
-            prem: net.prem + gross.prem,
-            withheld : net.withheld + gross.withheld,
-            comm_out: net.comm_out,
-            whtcom: net.whtcom,
-            ov_out: net.ov_out,
-            whtov: net.whtov,
-            billprem: net.prem + gross.prem + net.comm_out + net.whtcom + net.ov_out + net.whtov
+            prem: (net.prem + gross.prem).toFixed(2),
+            withheld : (net.withheld + gross.withheld).toFixed(2),
+            comm_out: (net.comm_out).toFixed(2),
+            whtcom: (net.whtcom).toFixed(2),
+            ov_out: (net.ov_out).toFixed(2),
+            whtov: (net.whtov).toFixed(2),
+            billprem: (net.prem + gross.prem + net.comm_out + net.whtcom + net.ov_out + net.whtov).toFixed(2),
         }
         setPoliciesRender({ net: net, gross: gross, total: total })
     };
@@ -215,18 +242,18 @@ const EditBillAdvisor = (props) => {
             setBillpremiumDataOld(array2)
             console.log(array);
         }else if (type = 'new'){
-            const array = policiesData
-            array[e.target.id] = { ...policiesData[e.target.id], [e.target.name]: e.target.checked }
+            const array = policiesData.map((ele)=>ele)
+            array[e.target.id] = { ...array[e.target.id], [e.target.name]: e.target.checked }
             setPoliciesData(array)
             const array2 = billpremiumData
             if (e.target.checked) {
                 array2[e.target.id] = array[e.target.id].totalprem - array[e.target.id].commout_amt - array[e.target.id].ovout_amt
-
+    
             } else {
                 array2[e.target.id] = array[e.target.id].totalprem
             }
             setBillpremiumData(array2)
-            console.log(array2);
+            console.log(array);
         }
     };
 
@@ -239,20 +266,20 @@ const EditBillAdvisor = (props) => {
             "insurerCode": filterData.insurerCode,
             "agentCode": filterData.agentCode,
             "dueDate": filterData.dueDate,
-            "policyNoStart": filterData.policyNoStart,
+            "policyNoStart": filterData.policyNo,
             "policyNoEnd": filterData.policyNoEnd,
             "createdDateStart": filterData.createdDateStart,
             "createdDateEnd": filterData.createdDateEnd,
      
         }
-        if (document.getElementsByName("policyNoCB")[0].checked) {
-            data.policyNoStart = null
-            data.policyNoEnd = null
-        }
-        if (document.getElementsByName("createdDateCB")[0].checked) {
-            data.createdDateStart = null
-            data.createdDateEnd = null
-        }
+        // if (document.getElementsByName("policyNoCB")[0].checked) {
+        //     data.policyNoStart = null
+        //     data.policyNoEnd = null
+        // }
+        // if (document.getElementsByName("createdDateCB")[0].checked) {
+        //     data.createdDateStart = null
+        //     data.createdDateEnd = null
+        // }
     console.log(data);
         axios
             .post(url + "/payments/findpolicyinDue", data, headers)
@@ -288,6 +315,7 @@ const EditBillAdvisor = (props) => {
                     // console.log(array);
                     // setPoliciesData(...res.data, ...policiesData)
                     // setBillpremiumData(array)
+                    setHideAddCard(false)
                     alert("find data success")
                 }
             })
@@ -299,26 +327,32 @@ const EditBillAdvisor = (props) => {
     };
     const editbill = (e) => {
         e.preventDefault();
-        const array = policiesData.filter((ele) => ele.select)
+        const array = [...policiesData, ...policiesDataOld].filter((ele) => ele.select)
         for (let i = 0; i < array.length; i++) {
             if (array[i].statementtype ) {
                 array[i].statementtype = 'N'
-                array[i].billpremium = array[i].totalprem - array[i].duty - array[i].tax
+                array[i].billpremium = array[i].totalprem - array[i].withheld - array[i].duty - array[i].tax
             }else{
                 array[i].statementtype = 'G'
-                array[i].billpremium = array[i].totalprem 
+                array[i].billpremium = array[i].totalprem - array[i].withheld
             }
             
         }
+       
         console.log(array);
         console.log({ bill:{...filterData,amt:policiesRender.total.billprem}, detail:array })
         axios
-            .post(url + "/payments/editbill", { bill:{...filterData,amt:policiesRender.total.billprem}, detail:array }, headers)
+            .post(url + "/payments/editbill", { bill:
+                {insurerCode: filterData.insurerCode,
+                agentCode: filterData.agentCode, 
+                amt:policiesRender.total.billprem, 
+                billadvisorno: queryParams.get('billno'), 
+                old_keyid: filterData.old_keyid}, detail:array }, headers)
             .then((res) => {
                 // let token = res.data.jwt;
                 // let decode = jwt_decode(token);
                 // navigate("/");
-                // window.location.reload();
+                window.location.reload();
                 // localStorage.setItem("jwt", token);
                 console.log(res.data);
                 alert("edit billadvisor success")
@@ -399,7 +433,7 @@ const EditBillAdvisor = (props) => {
 
                 </Modal.Body>
                 <Modal.Footer>
-                    <button type="button" class="btn btn-primary" onClick={handleAddClose}>ค้นหา</button>
+                    <button type="button" class="btn btn-primary" onClick={(e)=>submitFilter(e)}>ค้นหา</button>
                     <button type="button" class="btn btn-secondary" data-dismiss="modal" onClick={handleAddClose}>Close</button>
                 </Modal.Footer>
             </Modal>
@@ -471,13 +505,48 @@ const EditBillAdvisor = (props) => {
 
                     </div>
                     <div class="col-2">
+                        <label class="col-form-label">Bill Date</label>
+
+                    </div>
+                    <div class="col-2 ">
+
+                        <div class="input-group mb-3">
+                            
+                            <DatePicker
+                            style={{textAlign: 'center'}}
+                            showIcon
+                            className="form-control"
+                            todayButton="Vandaag"
+                            // isClearable
+                            showYearDropdown
+                            dateFormat="dd/MM/yyyy"
+                            dropdownMode="select"
+                            disabled
+                            selected={filterData.billdate}
+                            onChange={(date) => setFilterData((prevState) => ({
+                                ...prevState,
+                                dueDate: date,
+                            }))}
+                                 />
+                        </div>
+
+                    </div>
+
+
+
+                </div>
+                {/* <div class="row">
+                    <div class="col-1">
+
+                    </div>
+                    <div class="col-2">
                         <label class="col-form-label">Due Date</label>
 
                     </div>
                     <div class="col-2 ">
 
                         <div class="input-group mb-3">
-                            {/* <input required type="date" class="form-control " name="dueDate" onChange={handleChange} /> */}
+                            
                             <DatePicker
                             style={{textAlign: 'center'}}
                             showIcon
@@ -535,7 +604,6 @@ const EditBillAdvisor = (props) => {
 
                 </div>
 
-                
                 <div class="row">
                     <div class="col-1">
 
@@ -549,7 +617,7 @@ const EditBillAdvisor = (props) => {
                     </div>
                     <div class="col-2 ">
                         <div class="input-group mb-3">
-                            {/* <input type="text" class="form-control " name="createdDateStart" onChange={handleChange} /> */}
+                            
                             <DatePicker
                             showIcon
                             className="form-control"
@@ -571,7 +639,7 @@ const EditBillAdvisor = (props) => {
                     </div>
                     <div class="col-2 ">
                         <div class="input-group mb-3">
-                            {/* <input type="text" class="form-control" name="createdDateEnd" onChange={handleChange} /> */}
+                            
                             <DatePicker
                             showIcon
                             className="form-control"
@@ -594,7 +662,8 @@ const EditBillAdvisor = (props) => {
                                 <label htmlFor="cashierReceiptCheckbox" className="form-check-label">&nbsp;ALL</label>
                             </div>
 
-                </div>
+                </div> */}
+
             </form>
             <form className="container-fluid " >
             <div className="table-responsive overflow-scroll"  >
@@ -641,8 +710,12 @@ const EditBillAdvisor = (props) => {
                     <tbody>
                     {policiesDataOld.map((ele, i) => {
                             return (<tr className="table-warning">
-                                <th scope="row" style={{'text-align': 'center'}}><input type="checkbox" name="select" checked={ele.select} id={i} onClick={(e)=>changestatementtype(e,'old')} />{i + 1}</th>
-                                <td><input type="checkbox" name="statementtype" checked={ele.statementtype} id={i} onClick={(e)=>changestatementtype(e,'old')} /></td>
+                                <th scope="row" style={{'text-align': 'center'}}>
+                                    {editflag ? <input type="checkbox" name="select" checked={ele.select} id={i} onClick={(e)=>changestatementtype(e,'old')} />: null}
+                                    {i + 1}</th>
+                                <td>{editflag ? 
+                                    <input type="checkbox" name="statementtype" checked={ele.statementtype} id={i} onClick={(e)=>changestatementtype(e,'old')} /> 
+                                    :<input type="checkbox" name="statementtype" checked={ele.statementtype} disabled id={i} onClick={(e)=>changestatementtype(e,'old')} />}</td>
                                 <td >{ele.policyNo}</td>
                                 <td>{ele.endorseNo}</td>
                                 <td>{ele.invoiceNo}</td>
@@ -681,6 +754,7 @@ const EditBillAdvisor = (props) => {
                             return (<tr>
                                 <th scope="row" style={{'text-align': 'center'}}><input type="checkbox" name="select" checked={ele.select} id={i} onClick={(e)=>changestatementtype(e,'new')} />{i + 1}</th>
                                 <td><input type="checkbox" name="statementtype" checked={ele.statementtype} id={i} onClick={(e) => changestatementtype(e,'new')} /></td>
+                                
                                 <td>{ele.policyNo}</td>
                                 <td>{ele.endorseNo}</td>
                                 <td>{ele.invoiceNo}</td>
@@ -780,18 +854,18 @@ const EditBillAdvisor = (props) => {
                             <tr>
                                 <td>net</td>
                                 <td>{policiesRender.net.no}</td>
-                                <td>{policiesRender.net.prem}</td>
-                                <td>{policiesRender.net.withheld}</td>
-                                <td>{policiesRender.net.comm_out}</td>
-                                <td>{policiesRender.net.whtcom}</td>
-                                <td>{policiesRender.net.ov_out}</td>
-                                <td>{policiesRender.net.whtov}</td>
+                                <td>{policiesRender.net.prem.toLocaleString(undefined, { minimumFractionDigits: 2 })}</td>
+                                <td>{policiesRender.net.withheld.toLocaleString(undefined, { minimumFractionDigits: 2 })}</td>
+                                <td>{policiesRender.net.comm_out.toLocaleString(undefined, { minimumFractionDigits: 2 })}</td>
+                                <td>{policiesRender.net.whtcom.toLocaleString(undefined, { minimumFractionDigits: 2 })}</td>
+                                <td>{policiesRender.net.ov_out.toLocaleString(undefined, { minimumFractionDigits: 2 })}</td>
+                                <td>{policiesRender.net.whtov.toLocaleString(undefined, { minimumFractionDigits: 2 })}</td>
                             </tr>
                             <tr>
                                 <td>gross</td>
                                 <td>{policiesRender.gross.no}</td>
-                                <td>{policiesRender.gross.prem}</td>
-                                <td>{policiesRender.gross.withheld}</td>
+                                <td>{policiesRender.gross.prem.toLocaleString(undefined, { minimumFractionDigits: 2 })}</td>
+                                <td>{policiesRender.gross.withheld.toLocaleString(undefined, { minimumFractionDigits: 2 })}</td>
                                 <td>-</td>
                                 <td>-</td>
                                 <td>-</td>
@@ -800,11 +874,12 @@ const EditBillAdvisor = (props) => {
                             <tr>
                                 <td>รวมทั้งสิ้น</td>
                                 <td>{policiesRender.total.no}</td>
-                                <td>{policiesRender.total.prem}</td>
-                                <td>{policiesRender.total.comm_out}</td>
-                                <td>{policiesRender.total.whtcom}</td>
-                                <td>{policiesRender.total.ov_out}</td>
-                                <td>{policiesRender.total.whtov}</td>
+                                <td>{policiesRender.total.prem.toLocaleString(undefined, { minimumFractionDigits: 2 })}</td>
+                                <td>{policiesRender.total.withheld.toLocaleString(undefined, { minimumFractionDigits: 2 })}</td>
+                                <td>{policiesRender.total.comm_out.toLocaleString(undefined, { minimumFractionDigits: 2 })}</td>
+                                <td>{policiesRender.total.whtcom.toLocaleString(undefined, { minimumFractionDigits: 2 })}</td>
+                                <td>{policiesRender.total.ov_out.toLocaleString(undefined, { minimumFractionDigits: 2 })}</td>
+                                <td>{policiesRender.total.whtov.toLocaleString(undefined, { minimumFractionDigits: 2 })}</td>
                             </tr>
                         </tbody>
                     </table>

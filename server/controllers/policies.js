@@ -1610,7 +1610,7 @@ if (policy.installment.insurer.length === 0 ) {
       commout1_rate, commout1_amt, ovout1_rate, ovout1_amt,
       commout2_rate, commout2_amt, ovout2_rate, ovout2_amt, 
       commout_rate, commout_amt, ovout_rate, ovout_amt, 
-      commout1_taxamt,  ovout1_taxamt, commout2_taxamt,  ovout2_taxamt, commout_taxamt,  ovout_taxamt,
+      -- commout1_taxamt,  ovout1_taxamt, commout2_taxamt,  ovout2_taxamt, commout_taxamt,  ovout_taxamt,
       createusercode, polid, withheld)
       values(:policyNo, :endorseNo, :invoiceNo, :taxInvoiceNo, :installmenttype, :seqNo, 
      :grossprem, :specdiscrate, :specdiscamt, 
@@ -1620,7 +1620,7 @@ if (policy.installment.insurer.length === 0 ) {
       :commout1_rate, :commout1_amt, :ovout1_rate, :ovout1_amt, 
       :commout2_rate, :commout2_amt, :ovout2_rate, :ovout2_amt,  
       :commout_rate, :commout_amt, :ovout_rate, :ovout_amt,
-      :commout1_taxamt,  :ovout1_taxamt, :commout2_taxamt,  :ovout2_taxamt, :commout_taxamt,  :ovout_taxamt, 
+      -- :commout1_taxamt,  :ovout1_taxamt, :commout2_taxamt,  :ovout2_taxamt, :commout_taxamt,  :ovout_taxamt, 
       :createusercode, (select id from static_data."Policies" where "policyNo" = :policyNo),
       :withheld )`,
       {

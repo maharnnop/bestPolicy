@@ -147,13 +147,13 @@ const CreateBillAdvisor = () => {
 
         const total = {
             no: net.no + gross.no,
-            prem: net.prem + gross.prem,
-            withheld : net.withheld + gross.withheld,
-            comm_out: net.comm_out,
-            whtcom: net.whtcom,
-            ov_out: net.ov_out,
-            whtov: net.whtov,
-            billprem: net.prem + gross.prem - net.comm_out + net.whtcom - net.ov_out + net.whtov
+            prem: (net.prem + gross.prem).toFixed(2),
+            withheld : (net.withheld + gross.withheld).toFixed(2),
+            comm_out: (net.comm_out).toFixed(2),
+            whtcom: (net.whtcom).toFixed(2),
+            ov_out: (net.ov_out).toFixed(2),
+            whtov: (net.whtov).toFixed(2),
+            billprem:( net.prem + gross.prem - net.comm_out + net.whtcom - net.ov_out + net.whtov).toFixed(2),
         }
         setPoliciesRender({ net: net, gross: gross, total: total })
     };
@@ -269,10 +269,10 @@ const CreateBillAdvisor = () => {
         for (let i = 0; i < array.length; i++) {
             if (array[i].statementtype ) {
                 array[i].statementtype = 'N'
-                array[i].billpremium = array[i].totalprem - array[i].commout_amt - array[i].ovout_amt
+                array[i].billpremium = array[i].totalprem - array[i].withheld - array[i].commout_amt - array[i].ovout_amt
             }else{
                 array[i].statementtype = 'G'
-                array[i].billpremium = array[i].totalprem 
+                array[i].billpremium = array[i].totalprem - array[i].withheld
             }
             
         }
@@ -685,8 +685,8 @@ const CreateBillAdvisor = () => {
                                 <td>net</td>
                                 <td>{policiesRender.net.no}</td>
                                 <td>{policiesRender.net.prem.toLocaleString(undefined, { minimumFractionDigits: 2 })}</td>
-                                <td>{policiesRender.net.comm_out.toLocaleString(undefined, { minimumFractionDigits: 2 })}</td>
                                 <td>{policiesRender.net.withheld.toLocaleString(undefined, { minimumFractionDigits: 2 })}</td>
+                                <td>{policiesRender.net.comm_out.toLocaleString(undefined, { minimumFractionDigits: 2 })}</td>
                                 <td>{policiesRender.net.whtcom.toLocaleString(undefined, { minimumFractionDigits: 2 })}</td>
                                 <td>{policiesRender.net.ov_out.toLocaleString(undefined, { minimumFractionDigits: 2 })}</td>
                                 <td>{policiesRender.net.whtov.toLocaleString(undefined, { minimumFractionDigits: 2 })}</td>

@@ -1485,10 +1485,11 @@ const handlePolicyClose = (e) => {
           <input
             className="form-control"
             type="text"
-            step={0.1}
-            value={NumberToString(formData.cover_amt)}
+            // step={0.1}
             name={`cover_amt`}
             onChange={handleChange}
+            value={formData.cover_amt}
+            // value={NumberToString(formData.cover_amt)}
             onInput={(e) => numberWithCommas(e.target)}
           />
         </div>

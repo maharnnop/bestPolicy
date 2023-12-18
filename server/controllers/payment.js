@@ -122,7 +122,8 @@ const findPolicyByPreminDue = async (req,res) => {
       (select "entityID" from static_data."Insurees" where "insureeCode" = p."insureeCode" ) ) as insureeName , 
       j.polid, motor."licenseNo", motor."chassisNo", (select t_provincename from static_data."provinces" where provinceid = motor."motorprovinceID" ) as "motorprovince",
       j.grossprem, j.specdiscrate, j.specdiscamt, j.netgrossprem, j.duty, j.tax, j.totalprem, j.commout_rate,
-      j.commout_amt, j.ovout_rate, j.ovout_amt, t.netflag, t.remainamt, (case when a."stamentType" = 'Net' then true else false end) as "statementtype",
+      j.commout_amt, j.ovout_rate, j.ovout_amt, t.netflag, t.remainamt, 
+      (case when a."stamentType" = 'Net' then true else false end) as "statementtype",
       true as "select"
       from static_data."Transactions" t 
       left join static_data.b_jupgrs j on t.polid = j.polid and t."seqNo" = j."seqNo" 
@@ -164,7 +165,8 @@ const findPolicyByBillno = async (req,res) => {
      (case when ent."personType" = 'O' then tt."TITLETHAIBEGIN" ||' ' || ent."t_ogName"|| ' ' || tt."TITLETHAIEND"  else tt."TITLETHAIBEGIN" || ' ' || ent."t_firstName"||' '||ent."t_lastName"  end) as "insureeName",
      mt."licenseNo", (select t_provincename from static_data.provinces where provinceid = mt."motorprovinceID")as "motorprovince",
      mt."chassisNo" , jupgr.grossprem , jupgr.specdiscrate ,jupgr.specdiscamt ,jupgr.netgrossprem ,jupgr.duty , jupgr.tax ,jupgr.totalprem ,jupgr.withheld,
-     jupgr.commout_rate,jupgr.commout_amt, jupgr.ovout_rate , jupgr.ovout_amt 
+     jupgr.commout_rate,jupgr.commout_amt, jupgr.ovout_rate , jupgr.ovout_amt ,
+     bd.netflag
      from  static_data.b_jabilladvisors bill
 	left join static_data.b_jabilladvisordetails bd on bd.keyidm = bill.id 
     left join static_data."b_jupgrs" jupgr on bd.polid  = jupgr.polid  and jupgr."seqNo" = bd."seqno" 
@@ -367,12 +369,12 @@ const editbilladvisor = async (req,res) =>{
   try{
     const currentdate = getCurrentDate()
     // req.body.bill.billadvisorno = 'BILL' + await getRunNo('bill',null,null,'kw',currentdate,t);
-    req.body.bill.billadvisorno = getCurrentYYMM() +'/'+ String(await getRunNo('bill',null,null,'kw',currentdate,t)).padStart(4, '0');
+    // req.body.bill.billadvisorno = getCurrentYYMM() +'/'+ String(await getRunNo('bill',null,null,'kw',currentdate,t)).padStart(4, '0');
   const billadvisors = await sequelize.query(
-    'INSERT INTO static_data.b_jabilladvisors (insurerno, advisorno, billadvisorno, billdate, createusercode, amt, cashierreceiptno, active, old_keyid ) ' +
-    'VALUES ((select id from static_data."Insurers" where "insurerCode" = :insurerCode), '+
-    '(select id from static_data."Agents" where "agentCode" = :agentCode), '+
-    ':billadvisorno, :billdate, :createusercode, :amt, :cashierreceiptno, \'Y\', :old_keyid) RETURNING "id"',
+    `INSERT INTO static_data.b_jabilladvisors (insurerno, advisorno, billadvisorno, billdate, createusercode, amt, cashierreceiptno, active, old_keyid )
+    VALUES ((select id from static_data."Insurers" where "insurerCode" = :insurerCode and lastversion = 'Y' ), 
+    (select id from static_data."Agents" where "agentCode" = :agentCode and lastversion = 'Y' ), 
+    :billadvisorno, :billdate, :createusercode, :amt, :cashierreceiptno, \'Y\', :old_keyid) RETURNING "id" `,
         {
           replacements: {
             insurerCode:req.body.bill.insurerCode,
@@ -395,7 +397,7 @@ const editbilladvisor = async (req,res) =>{
             {
               replacements: {
                 inactivedate: new Date(),
-                inactiveusercode: "kewneditja",
+                inactiveusercode: "usercode",
                 old_keyid: req.body.bill.old_keyid,
               },
               transaction: t ,
@@ -406,17 +408,18 @@ const editbilladvisor = async (req,res) =>{
   for (let i = 0; i < req.body.detail.length; i++) {
       //insert to deteil of jabilladvisor
       await sequelize.query(
-        'insert into static_data.b_jabilladvisordetails (keyidm, polid, customerid, motorid, grossprem, duty, tax, totalprem, "comm-out%", "comm-out-amt", '+
-        ' "ov-out%", "ov-out-amt", netflag, billpremium,updateusercode, seqno) '+
-        'values (:keyidm, (select id from static_data."Policies" where "policyNo" = :policyNo), (select id from static_data."Insurees" where "insureeCode" = :insureeCode), :motorid, '+
-        ':grossprem, :duty, :tax, :totalprem, :commout_rate, :commout_amt, :ovout_rate, :ovout_amt, :netflag, :billpremium, :updateusercode, :seqno) ',
+        `insert into static_data.b_jabilladvisordetails (keyidm, polid, customerid, motorid, grossprem, duty, tax, totalprem, "comm-out%", "comm-out-amt", 
+         "ov-out%", "ov-out-amt", netflag, billpremium, updateusercode, seqno) 
+        values (:keyidm, (select id from static_data."Policies" where "policyNo" = :policyNo and "lastVersion" = 'Y' ),
+        (select id from static_data."Insurees" where "insureeCode" = :insureeCode ), :motorid, 
+        :grossprem, :duty, :tax, :totalprem, :commout_rate, :commout_amt, :ovout_rate, :ovout_amt, :netflag, :billpremium, :updateusercode, :seqno) `,
             {
               replacements: {
                 keyidm: billadvisors[0][0].id,
                 policyNo: req.body.detail[i].policyNo,
                 insureeCode: req.body.detail[i].insureeCode,
-                motorid: req.body.detail[i].itemList,
-                grossprem: req.body.detail[i].grossprem,
+                motorid: req.body.detail[i].itemList || null,
+                grossprem: req.body.detail[i].netgrossprem,
                 duty: req.body.detail[i].duty,
                 tax: req.body.detail[i].tax,
                 totalprem: req.body.detail[i].totalprem,
@@ -424,7 +427,7 @@ const editbilladvisor = async (req,res) =>{
                 commout_amt: req.body.detail[i].commout_amt,
                 ovout_rate: req.body.detail[i].ovout_rate,
                 ovout_amt: req.body.detail[i].ovout_amt,
-                netflag: req.body.detail[i].netflag,
+                netflag: req.body.detail[i].statementtype,
                 billpremium: req.body.detail[i].billpremium,
                 updateusercode: "kewn",
                 seqno: req.body.detail[i].seqNo,
