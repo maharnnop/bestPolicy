@@ -64,9 +64,9 @@ const EditBillAdvisor = (props) => {
     const [policiesData, setPoliciesData] = useState([])
     const [policiesDataOld, setPoliciesDataOld] = useState([])
     const [policiesRender, setPoliciesRender] = useState({
-        net:{ no: 0, prem: 0, comm_out: 0, whtcom: 0, ov_out: 0, whtov: 0, },
-        gross:{ no: 0, prem: 0 },
-        total:{ no: 0, prem: 0, comm_out: 0, whtcom: 0, ov_out: 0, whtov: 0, billprem:0 },
+        net:{ no: 0, prem: 0, withheld: 0, comm_out: 0, whtcom: 0, ov_out: 0, whtov: 0, },
+        gross:{ no: 0, prem: 0 ,withheld: 0 },
+        total:{ no: 0, prem: 0, withheld: 0, comm_out: 0, whtcom: 0, ov_out: 0, whtov: 0, billprem:0 },
     })
     const [insurerDD, setInsurerDD] = useState([]);
     const [agentDD, setAgentDD] = useState([]);
@@ -145,13 +145,14 @@ const EditBillAdvisor = (props) => {
     const editCard = (e) => {
         setHidecard([true, 1])
         const array = []
-        const net = { no: 0, prem: 0, comm_out: 0, whtcom: 0, ov_out: 0, whtov: 0, }
-        const gross = { no: 0, prem: 0 }
+        const net = { no: 0, prem: 0, comm_out: 0, withheld: 0, whtcom: 0, ov_out: 0, whtov: 0, }
+        const gross = { no: 0, prem: 0, withheld: 0 }
         for (let i = 0; i < policiesData.length; i++) {
             if (policiesData[i].select) {
                 if (policiesData[i].statementtype) {
                     net.no++
                     net.prem = net.prem + policiesData[i].totalprem
+                    net.withheld = net.withheld + policiesData[i].withheld
                     net.comm_out = net.comm_out + policiesData[i].commout_amt
                     net.whtcom = net.comm_out * wht
                     net.ov_out = net.ov_out + policiesData[i].ovout_amt
@@ -159,6 +160,7 @@ const EditBillAdvisor = (props) => {
                 } else {
                     gross.no++
                     gross.prem = gross.prem + policiesData[i].totalprem
+                    gross.withheld = gross.withheld + policiesData[i].withheld
                 }
 
             }
@@ -168,6 +170,7 @@ const EditBillAdvisor = (props) => {
         const total = {
             no: net.no + gross.no,
             prem: net.prem + gross.prem,
+            withheld : net.withheld + gross.withheld,
             comm_out: net.comm_out,
             whtcom: net.whtcom,
             ov_out: net.ov_out,
@@ -195,23 +198,39 @@ const EditBillAdvisor = (props) => {
         }));
     };
 
-    const changestatementtype = (e) => {
-        // e.preventDefault();
-        const array = policiesData
-        array[e.target.id] = { ...policiesData[e.target.id], [e.target.name]: e.target.checked }
-        setPoliciesData(array)
-        const array2 = billpremiumData
-        if (e.target.checked) {
-            array2[e.target.id] = array[e.target.id].totalprem - array[e.target.id].commout_amt - array[e.target.id].ovout_amt
+    const changestatementtype = (e,type) => {
+        //e.preventDefault();
+        
+        if (type === 'old') {
+            const array = policiesDataOld.map((ele)=>ele)
+            array[e.target.id] = { ...array[e.target.id], [e.target.name]: e.target.checked }
+            setPoliciesDataOld(array)
+            const array2 = billpremiumDataOld
+            if (e.target.checked) {
+                array2[e.target.id] = array[e.target.id].totalprem - array[e.target.id].commout_amt - array[e.target.id].ovout_amt
+    
+            } else {
+                array2[e.target.id] = array[e.target.id].totalprem
+            }
+            setBillpremiumDataOld(array2)
+            console.log(array);
+        }else if (type = 'new'){
+            const array = policiesData
+            array[e.target.id] = { ...policiesData[e.target.id], [e.target.name]: e.target.checked }
+            setPoliciesData(array)
+            const array2 = billpremiumData
+            if (e.target.checked) {
+                array2[e.target.id] = array[e.target.id].totalprem - array[e.target.id].commout_amt - array[e.target.id].ovout_amt
 
-        } else {
-            array2[e.target.id] = array[e.target.id].totalprem
+            } else {
+                array2[e.target.id] = array[e.target.id].totalprem
+            }
+            setBillpremiumData(array2)
+            console.log(array2);
         }
-        setBillpremiumData(array2)
-        console.log(array2);
-
     };
 
+  
 
     //for add new policy in bill
     const submitFilter = (e) => {
@@ -594,7 +613,7 @@ const EditBillAdvisor = (props) => {
                             <th scope="col">รหัสผู้แนะนำ</th>
                             <th scope="col">Due date</th>
 
-                            <th scope="col">รหัสผู้อาประกัน</th>
+                            <th scope="col">รหัสผู้เอาประกัน</th>
                             <th scope="col">ชื่อผู้เอาประกัน</th>
                             <th scope="col">เลขทะเบียนรถ</th>
                             <th scope="col">จังหวัดที่จดทะเบียน</th>
@@ -622,8 +641,8 @@ const EditBillAdvisor = (props) => {
                     <tbody>
                     {policiesDataOld.map((ele, i) => {
                             return (<tr className="table-warning">
-                                <th scope="row" style={{'text-align': 'center'}}><input type="checkbox" name="select" checked={ele.select} id={i} onClick={changestatementtype} />{i + 1}</th>
-                                <td><input type="checkbox" name="statementtype" checked={ele.statementtype} id={i} onClick={changestatementtype} /></td>
+                                <th scope="row" style={{'text-align': 'center'}}><input type="checkbox" name="select" checked={ele.select} id={i} onClick={(e)=>changestatementtype(e,'old')} />{i + 1}</th>
+                                <td><input type="checkbox" name="statementtype" checked={ele.statementtype} id={i} onClick={(e)=>changestatementtype(e,'old')} /></td>
                                 <td >{ele.policyNo}</td>
                                 <td>{ele.endorseNo}</td>
                                 <td>{ele.invoiceNo}</td>
@@ -660,8 +679,8 @@ const EditBillAdvisor = (props) => {
                         })}
                         {policiesData.map((ele, i) => {
                             return (<tr>
-                                <th scope="row" style={{'text-align': 'center'}}><input type="checkbox" name="select" checked={ele.select} id={i} onClick={changestatementtype} />{i + 1}</th>
-                                <td><input type="checkbox" name="statementtype" checked={ele.statementtype} id={i} onClick={changestatementtype} /></td>
+                                <th scope="row" style={{'text-align': 'center'}}><input type="checkbox" name="select" checked={ele.select} id={i} onClick={(e)=>changestatementtype(e,'new')} />{i + 1}</th>
+                                <td><input type="checkbox" name="statementtype" checked={ele.statementtype} id={i} onClick={(e) => changestatementtype(e,'new')} /></td>
                                 <td>{ele.policyNo}</td>
                                 <td>{ele.endorseNo}</td>
                                 <td>{ele.invoiceNo}</td>
@@ -673,7 +692,7 @@ const EditBillAdvisor = (props) => {
                                 <td>{ele.dueDate}</td>
 
                                 <td>{ele.insureeCode}</td>
-                                <td>{ele.insureename}</td>
+                                <td>{ele.insureeName}</td>
                                 <td>{ele.licenseNo}</td>
                                 <td>{ele.motorprovince}</td>
                                 <td>{ele.chassisNo}</td>
@@ -748,7 +767,8 @@ const EditBillAdvisor = (props) => {
 
                                 <th scope="col">ชำระแบบ</th>
                                 <th scope="col">รายการ</th>
-                                <th scope="col">จำนวนเงินค่าเบี้ย</th>
+                                <th scope="col">ค่าเบี้ยประกันรวม</th>
+                                <th scope="col">ภาษีหัก ณ ที่จ่าย(1%)</th>
                                 <th scope="col">comm-out</th>
                                 <th scope="col"> WHT 3%</th>
                                 <th scope="col">ov-out</th>
@@ -761,6 +781,7 @@ const EditBillAdvisor = (props) => {
                                 <td>net</td>
                                 <td>{policiesRender.net.no}</td>
                                 <td>{policiesRender.net.prem}</td>
+                                <td>{policiesRender.net.withheld}</td>
                                 <td>{policiesRender.net.comm_out}</td>
                                 <td>{policiesRender.net.whtcom}</td>
                                 <td>{policiesRender.net.ov_out}</td>
@@ -770,6 +791,7 @@ const EditBillAdvisor = (props) => {
                                 <td>gross</td>
                                 <td>{policiesRender.gross.no}</td>
                                 <td>{policiesRender.gross.prem}</td>
+                                <td>{policiesRender.gross.withheld}</td>
                                 <td>-</td>
                                 <td>-</td>
                                 <td>-</td>

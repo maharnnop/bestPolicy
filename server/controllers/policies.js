@@ -1113,12 +1113,15 @@ const draftPolicyList = async (req, res) => {
 
       //set defualt comm ov if null 
       const commov = await sequelize.query(
-      'select * FROM static_data."CommOVOuts" comout ' +
-      'JOIN static_data."CommOVIns" comin ' +
-      'ON comin."insurerCode" = comout."insurerCode" and comin."insureID" = comout."insureID" ' +
-      'where comout."agentCode" = :agentcode ' +
-      'and comout."insureID" = (select "id" from static_data."InsureTypes" where "class" = :class and  "subClass" = :subClass) '+
-      'and comout."insurerCode" = :insurerCode',
+      `select (select vatflag  from static_data."Agents" where "agentCode" = comout."agentCode"and lastversion='Y'), * 
+      FROM static_data."CommOVOuts" comout 
+      JOIN static_data."CommOVIns" comin 
+      ON comin."insurerCode" = comout."insurerCode" and comin."insureID" = comout."insureID" 
+      where comout."agentCode" = :agentcode 
+      and comout."insureID" = (select "id" from static_data."InsureTypes" where "class" = :class and  "subClass" = :subClass) 
+      and comout."insurerCode" = :insurerCode 
+     	and comout.lastversion = 'Y'
+     and comin.lastversion = 'Y'`,
       {
         replacements: {
           agentcode: req.body[i].agentCode,
@@ -1139,7 +1142,7 @@ const draftPolicyList = async (req, res) => {
         req.body[i][`ovin_rate`] = commov[0].rateOVIn_1
         req.body[i][`ovin_amt`] = commov[0].rateOVIn_1 * req.body[i][`netgrossprem`] /100
       }
-
+    // tax commov in
       req.body[i][`commin_taxamt`] = parseFloat((req.body[i][`commin_amt`] *tax).toFixed(2))
       req.body[i][`ovin_taxamt`] =  parseFloat((req.body[i][`ovin_amt`] *tax).toFixed(2))
       
@@ -1154,13 +1157,28 @@ const draftPolicyList = async (req, res) => {
       req.body[i][`ovout1_amt`] = commov[0].rateOVOut_1 * req.body[i][`netgrossprem`]/100
     }  
 
+    //tax comm/ov out 1
+    if (commov[0].vatflag === 'Y') {
+      req.body[i][`commout1_taxamt`] = parseFloat((req.body[i][`commout1_amt`] *tax).toFixed(2))
+      req.body[i][`ovout1_taxamt`] = parseFloat((req.body[i][`ovout1_amt`] *tax).toFixed(2))
+    }else{
+      req.body[i][`commout1_taxamt`] = 0
+      req.body[i][`ovout1_taxamt`] = 0
+    }
+   
+
       //check agentcode2
       if( req.body[i][`agentCode2`] ){
         const commov2 = await sequelize.query(
-          'select * FROM static_data."CommOVOuts" comout ' +
-          'where comout."agentCode" = :agentcode ' +
-          'and comout."insureID" = (select "id" from static_data."InsureTypes" where "class" = :class and  "subClass" = :subClass) '+
-          'and comout."insurerCode" = :insurerCode',
+          `select (select vatflag  from static_data."Agents" where "agentCode" = comout."agentCode"and lastversion='Y'), * 
+          FROM static_data."CommOVOuts" comout 
+          JOIN static_data."CommOVIns" comin 
+          ON comin."insurerCode" = comout."insurerCode" and comin."insureID" = comout."insureID" 
+          where comout."agentCode" = :agentcode 
+          and comout."insureID" = (select "id" from static_data."InsureTypes" where "class" = :class and  "subClass" = :subClass) 
+          and comout."insurerCode" = :insurerCode 
+           and comout.lastversion = 'Y'
+         and comin.lastversion = 'Y'`,
           {
             replacements: {
               agentcode: req.body[i].agentCode2,
@@ -1177,21 +1195,33 @@ const draftPolicyList = async (req, res) => {
         req.body[i][`ovout2_rate`] = commov2[0].rateOVOut_1
         req.body[i][`ovout2_amt`] = commov2[0].rateOVOut_1 * req.body[i][`netgrossprem`]/100
        }
+       //tax comm/ov out 2
+    if (commov2[0].vatflag === 'Y') {
+      req.body[i][`commout2_taxamt`] = parseFloat((req.body[i][`commout2_amt`] *tax).toFixed(2))
+      req.body[i][`ovout2_taxamt`] = parseFloat((req.body[i][`ovout2_amt`] *tax).toFixed(2))
+    }else{
+      req.body[i][`commout2_taxamt`] = 0
+      req.body[i][`ovout2_taxamt`] = 0
+    }
        req.body[i][`commout_rate`] = req.body[i][`commout1_rate`] + req.body[i][`commout2_rate`] 
         req.body[i][`commout_amt`] = parseFloat(req.body[i][`commout1_amt`]) +parseFloat(req.body[i][`commout2_amt`])
         req.body[i][`ovout_rate`] = req.body[i][`ovout1_rate`] + req.body[i][`ovout2_rate`]
         req.body[i][`ovout_amt`] = parseFloat(req.body[i][`ovout1_amt`]) + parseFloat(req.body[i][`ovout2_amt`])
+        req.body[i][`commout_taxamt`] = parseFloat(req.body[i][`commout1_taxamt`]) +parseFloat(req.body[i][`commout2_taxamt`])
+      req.body[i][`ovout_taxamt`] = parseFloat(req.body[i][`ovout1_taxamt`]) +parseFloat(req.body[i][`ovout2_taxamt`])
         
       }else{
         req.body[i][`agentCode2`] = null
-        req.body[i][`commout2_rate`] = null
-        req.body[i][`commout2_amt`] = null
-        req.body[i][`ovout2_rate`] = null
-        req.body[i][`ovout2_amt`] = null
+        req.body[i][`commout2_rate`] = 0
+        req.body[i][`commout2_amt`] = 0
+        req.body[i][`ovout2_rate`] = 0
+        req.body[i][`ovout2_amt`] = 0
         req.body[i][`commout_rate`] = req.body[i][`commout1_rate`] 
         req.body[i][`commout_amt`] = req.body[i][`commout1_amt`]
         req.body[i][`ovout_rate`] = req.body[i][`ovout1_rate`]
         req.body[i][`ovout_amt`] = req.body[i][`ovout1_amt`]
+        req.body[i][`commout_taxamt`] = req.body[i][`commout1_taxamt`]
+        req.body[i][`ovout_taxamt`] = req.body[i][`ovout1_taxamt`] 
       }
 
          //cal withheld 1% 
@@ -1210,7 +1240,9 @@ const draftPolicyList = async (req, res) => {
       //insert policy
       await sequelize.query(
        ` insert into static_data."Policies" ("applicationNo","insureeCode","insurerCode","agentCode","agentCode2","insureID","actDate", "expDate" ,grossprem, duty, tax, totalprem, 
-        commin_rate, commin_amt, ovin_rate, ovin_amt, commin_taxamt, ovin_taxamt, commout_rate, commout_amt, ovout_rate, ovout_amt, createusercode, "itemList","status", 
+        commin_rate, commin_amt, ovin_rate, ovin_amt, commin_taxamt, ovin_taxamt, commout_rate, commout_amt, ovout_rate, ovout_amt,
+        commout1_taxamt, ovout1_taxamt, commout2_taxamt, ovout2_taxamt, commout_taxamt, ovout_taxamt,
+        createusercode, "itemList","status", 
         commout1_rate, commout1_amt, ovout1_rate, ovout1_amt, commout2_rate, commout2_amt, ovout2_rate, ovout2_amt, netgrossprem, specdiscrate, specdiscamt, cover_amt, withheld,
         duedateinsurer, duedateagent) 
         -- 'values (:policyNo, (select "insureeCode" from static_data."Insurees" where "entityID" = :entityInsuree), '+
@@ -1218,7 +1250,9 @@ const draftPolicyList = async (req, res) => {
         (select "insurerCode" from static_data."Insurers" where "insurerCode" = :insurerCode and lastversion =\'Y\'), 
         :agentCode, :agentCode2, (select "id" from static_data."InsureTypes" where "class" = :class and  "subClass" = :subClass ), 
         :actDate, :expDate, :grossprem, :duty, :tax, :totalprem, 
-        :commin_rate, :commin_amt, :ovin_rate, :ovin_amt, :commin_taxamt, :ovin_taxamt, :commout_rate, :commout_amt, :ovout_rate, :ovout_amt, :createusercode, :itemList ,\'I\', 
+        :commin_rate, :commin_amt, :ovin_rate, :ovin_amt, :commin_taxamt, :ovin_taxamt, :commout_rate, :commout_amt, :ovout_rate, :ovout_amt,
+        :commout1_taxamt, :ovout1_taxamt, :commout2_taxamt, :ovout2_taxamt, :commout_taxamt, :ovout_taxamt,
+        :createusercode, :itemList ,\'I\', 
         :commout1_rate, :commout1_amt, :ovout1_rate, :ovout1_amt,  :commout2_rate, :commout2_amt, :ovout2_rate, :ovout2_amt, :netgrossprem,  :specdiscrate, :specdiscamt, :cover_amt, :withheld,
         :dueDateInsurer, :dueDateAgent )`
         ,
@@ -1267,6 +1301,13 @@ const draftPolicyList = async (req, res) => {
             withheld: req.body[i].withheld,
             dueDateInsurer:req.body[i].dueDateInsurer,
             dueDateAgent: req.body[i].dueDateAgent,
+            commout1_taxamt: req.body[i][`commout1_taxamt`],
+            ovout1_taxamt: req.body[i][`ovout1_taxamt`],
+            commout2_taxamt: req.body[i][`commout2_taxamt`],
+            ovout2_taxamt: req.body[i][`ovout2_taxamt`],
+            commout_taxamt: req.body[i][`commout_taxamt`],
+            ovout_taxamt: req.body[i][`ovout_taxamt`],
+            
             
           },
           transaction: t,
@@ -1565,14 +1606,21 @@ if (policy.installment.insurer.length === 0 ) {
       `insert into static_data.b_jupgrs ("policyNo", "endorseNo", "invoiceNo", "taxInvoiceNo", "installmenttype", "seqNo", 
        grossprem, specdiscrate, specdiscamt, 
       netgrossprem, tax, duty, totalprem, commin_rate, commin_amt, commin_taxamt, ovin_rate, ovin_amt, ovin_taxamt, 
-      "agentCode", "agentCode2", commout1_rate, commout1_amt, ovout1_rate, ovout1_amt,
-       commout2_rate, commout2_amt, ovout2_rate, ovout2_amt, commout_rate, 
-      commout_amt, ovout_rate, ovout_amt, createusercode, polid, withheld)
+      "agentCode", "agentCode2", 
+      commout1_rate, commout1_amt, ovout1_rate, ovout1_amt,
+      commout2_rate, commout2_amt, ovout2_rate, ovout2_amt, 
+      commout_rate, commout_amt, ovout_rate, ovout_amt, 
+      commout1_taxamt,  ovout1_taxamt, commout2_taxamt,  ovout2_taxamt, commout_taxamt,  ovout_taxamt,
+      createusercode, polid, withheld)
       values(:policyNo, :endorseNo, :invoiceNo, :taxInvoiceNo, :installmenttype, :seqNo, 
      :grossprem, :specdiscrate, :specdiscamt, 
         :netgrossprem, 
-      :tax, :duty, :totalprem, :commin_rate, :commin_amt, :commin_taxamt, :ovin_rate, :ovin_amt, :ovin_taxamt, :agentCode, :agentCode2, :commout1_rate, :commout1_amt, 
-      :ovout1_rate, :ovout1_amt, :commout2_rate, :commout2_amt, :ovout2_rate, :ovout2_amt,  :commout_rate, :commout_amt, :ovout_rate, :ovout_amt, 
+      :tax, :duty, :totalprem, :commin_rate, :commin_amt, :commin_taxamt, :ovin_rate, :ovin_amt, :ovin_taxamt,
+      :agentCode, :agentCode2,
+      :commout1_rate, :commout1_amt, :ovout1_rate, :ovout1_amt, 
+      :commout2_rate, :commout2_amt, :ovout2_rate, :ovout2_amt,  
+      :commout_rate, :commout_amt, :ovout_rate, :ovout_amt,
+      :commout1_taxamt,  :ovout1_taxamt, :commout2_taxamt,  :ovout2_taxamt, :commout_taxamt,  :ovout_taxamt, 
       :createusercode, (select id from static_data."Policies" where "policyNo" = :policyNo),
       :withheld )`,
       {
@@ -1609,11 +1657,20 @@ if (policy.installment.insurer.length === 0 ) {
           ovout2_amt: advisor[i][`ovout2_amt`],
 
           commout_rate: policy[`commout_rate`],
-          commout_amt: parseFloat((advisor[i].netgrossprem *policy[`commout_rate`]/100).toFixed(2)),
+          // commout_amt: parseFloat((advisor[i].netgrossprem *policy[`commout_rate`]/100).toFixed(2)),
+          commout_amt: advisor[i][`commout_amt`],
           ovout_rate: policy[`ovout_rate`],
-          ovout_amt: parseFloat((advisor[i].netgrossprem *policy[`ovout_rate`]/100).toFixed(2)),
+          // ovout_amt: parseFloat((advisor[i].netgrossprem *policy[`ovout_rate`]/100).toFixed(2)),
+          ovout_amt: advisor[i][`ovout_amt`],
           createusercode: usercode,
-          withheld : advisor[i]['withheld']
+          withheld : advisor[i]['withheld'],
+          // tax wth3%
+          commout1_taxamt: advisor[i][`commout1_taxamt`],
+          ovout1_taxamt: advisor[i][`ovout1_taxamt`],
+          commout2_taxamt: advisor[i][`commout2_taxamt`],
+          ovout2_taxamt: advisor[i][`ovout2_taxamt`],
+          commout_taxamt: advisor[i][`commout_taxamt`],
+          ovout_taxamt: advisor[i][`ovout_taxamt`],
           
         },
         

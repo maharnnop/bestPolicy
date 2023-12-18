@@ -245,6 +245,9 @@ const newAgent = async (req, res) => {
     req.body.agent.contactPersonID = contact.id
     req.body.contactPerson.entityID = contact.id
     const locationContact = await Location.create(req.body.contactPerson, { transaction: t }) // location contact person
+  } 
+  if (req.body.entity.vatRegis) {
+    req.body.agent.vatflag = 'Y'
   }
     const agent = await Agent.create(req.body.agent, { transaction: t })
     

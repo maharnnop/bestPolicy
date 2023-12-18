@@ -87,6 +87,7 @@ const findTransaction = async (req,res) => {
   
 }
 
+// ค้นหารายการ เพื่อสร้างใบวางบิล
 const findPolicyByPreminDue = async (req,res) => {
 
   let cond =''
@@ -124,7 +125,7 @@ const findPolicyByPreminDue = async (req,res) => {
       j.commout_amt, j.ovout_rate, j.ovout_amt, t.netflag, t.remainamt, (case when a."stamentType" = 'Net' then true else false end) as "statementtype",
       true as "select"
       from static_data."Transactions" t 
-      join static_data.b_jupgrs j on t.polid = j.polid and t."seqNo" = j."seqNo" 
+      left join static_data.b_jupgrs j on t.polid = j.polid and t."seqNo" = j."seqNo" 
       join static_data."Policies" p on p.id = j.polid
       left join static_data."Agents" a on a."agentCode" = t."mainaccountcode"
       left join static_data."Motors" motor on motor.id = p."itemList"
@@ -157,7 +158,25 @@ const findPolicyByPreminDue = async (req,res) => {
 const findPolicyByBillno = async (req,res) => {
     console.log(req.body.billadvisorno)
   const records = await sequelize.query(
-    'select * from   static_data."Transactions"  tran join static_data."Policies" pol   on tran."policyNo" = pol."policyNo" where tran.billadvisorno = :billadvisorno  and "transType" = \'PREM-IN\'',
+    ` select 
+    jupgr."policyNo", jupgr."endorseNo", jupgr."invoiceNo", jupgr."taxInvoiceNo",
+     jupgr."seqNo", pol."insurerCode", jupgr."agentCode", tran."dueDate", pol."insureeCode",
+     (case when ent."personType" = 'O' then tt."TITLETHAIBEGIN" ||' ' || ent."t_ogName"|| ' ' || tt."TITLETHAIEND"  else tt."TITLETHAIBEGIN" || ' ' || ent."t_firstName"||' '||ent."t_lastName"  end) as "insureeName",
+     mt."licenseNo", (select t_provincename from static_data.provinces where provinceid = mt."motorprovinceID")as "motorprovince",
+     mt."chassisNo" , jupgr.grossprem , jupgr.specdiscrate ,jupgr.specdiscamt ,jupgr.netgrossprem ,jupgr.duty , jupgr.tax ,jupgr.totalprem ,jupgr.withheld,
+     jupgr.commout_rate,jupgr.commout_amt, jupgr.ovout_rate , jupgr.ovout_amt 
+     from  static_data.b_jabilladvisors bill
+	left join static_data.b_jabilladvisordetails bd on bd.keyidm = bill.id 
+    left join static_data."b_jupgrs" jupgr on bd.polid  = jupgr.polid  and jupgr."seqNo" = bd."seqno" 
+    left join static_data."Policies" pol on pol."policyNo" = jupgr."policyNo"  
+    left join static_data."Motors" mt on mt.id = pol."itemList"
+    left join static_data."Insurees" insuree on insuree."insureeCode" = pol."insureeCode"
+    left join static_data."Entities" ent on ent.id = insuree."entityID"
+    left join static_data."Titles" tt on tt."TITLEID" = ent."titleID"
+    left join static_data."Transactions" tran on tran.polid =jupgr.polid  and jupgr."seqNo" = tran."seqNo" 
+    where bill.billadvisorno = :billadvisorno  
+   	and jupgr.installmenttype ='A'
+   and tran."transType" = 'PREM-IN';`,
         {
           replacements: {
             billadvisorno: req.body.billadvisorno
@@ -297,9 +316,13 @@ const findbilladvisor =async (req,res) =>{
     cond = `${cond} and billdate <= :billdate`
   }
   const records = await sequelize.query(
-    `select (select "insurerCode" from static_data."Insurers" where id = insurerno and lastversion = \'Y\'), 
-    (select "agentCode" from static_data."Agents" where id = advisorno and lastversion = \'Y\'), * ,
-    (case when cashierreceiptno is null then true else false end ) as editflag from static_data.b_jabilladvisors 
+    `select 
+    -- (select "insurerCode" from static_data."Insurers" where id = insurerno and lastversion = \'Y\'), 
+    -- (select "agentCode" from static_data."Agents" where id = advisorno and lastversion = \'Y\'),
+    ins."insurerCode" , agt."agentCode",  bill.* ,
+    (case when cashierreceiptno is null then true else false end ) as editflag from static_data.b_jabilladvisors  bill
+    join static_data."Agents" agt on agt.id = bill.advisorno 
+    join static_data."Insurers" ins on ins.id = bill.insurerno
     where 1=1 
     -- and cashierreceiptno is null 
     and active =\'Y\' 

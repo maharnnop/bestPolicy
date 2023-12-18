@@ -74,9 +74,9 @@ const CreateBillAdvisor = () => {
     const [policiesData, setPoliciesData] = useState([])
     const [policiesRender, setPoliciesRender] = useState({
         
-        net:{ no: 0, prem: 0, comm_out: 0, whtcom: 0, ov_out: 0, whtov: 0, },
-        gross:{ no: 0, prem: 0 },
-        total:{ no: 0, prem: 0, comm_out: 0, whtcom: 0, ov_out: 0, whtov: 0, billprem:0 },
+        net:{ no: 0, prem: 0, comm_out: 0, withheld:0, whtcom: 0, ov_out: 0, whtov: 0, },
+        gross:{ no: 0, prem: 0, withheld:0 },
+        total:{ no: 0, prem: 0, withheld:0, comm_out: 0, whtcom: 0, ov_out: 0, whtov: 0, billprem:0 },
     })
     const [insurerDD, setInsurerDD] = useState([]);
     const [agentDD, setAgentDD] = useState([]);
@@ -122,14 +122,15 @@ const CreateBillAdvisor = () => {
     const editCard = (e) => {
         setHidecard([true, 1])
         const array = []
-        const net = { no: 0, prem: 0, comm_out: 0, whtcom: 0, ov_out: 0, whtov: 0, bill:0}
-        const gross = { no: 0, prem: 0 }
+        const net = { no: 0, prem: 0, comm_out: 0, withheld:0, whtcom: 0, ov_out: 0, whtov: 0, bill:0}
+        const gross = { no: 0, prem: 0, withheld:0, }
         for (let i = 0; i < policiesData.length; i++) {
             if (policiesData[i].select) {
                 if (policiesData[i].statementtype) {
                     net.no++
                     net.bill = net.bill + policiesData[i].totalprem - policiesData[i].commout_amt - policiesData[i].ovout_amt - policiesData[i].withheld
                     net.prem = net.prem + policiesData[i].totalprem
+                    net.withheld = net.withheld + policiesData[i].withheld
                     net.comm_out = net.comm_out + policiesData[i].commout_amt
                     net.whtcom = net.comm_out * wht
                     net.ov_out = net.ov_out + policiesData[i].ovout_amt
@@ -137,6 +138,7 @@ const CreateBillAdvisor = () => {
                 } else {
                     gross.no++
                     gross.prem = gross.prem + policiesData[i].totalprem
+                    gross.withheld = gross.withheld + policiesData[i].withheld
                 }
 
             }
@@ -146,6 +148,7 @@ const CreateBillAdvisor = () => {
         const total = {
             no: net.no + gross.no,
             prem: net.prem + gross.prem,
+            withheld : net.withheld + gross.withheld,
             comm_out: net.comm_out,
             whtcom: net.whtcom,
             ov_out: net.ov_out,
@@ -668,7 +671,8 @@ const CreateBillAdvisor = () => {
 
                                 <th scope="col">ชำระแบบ</th>
                                 <th scope="col">รายการ</th>
-                                <th scope="col">จำนวนเงินค่าเบี้ย</th>
+                                <th scope="col">ค่าเบี้ยประกันรวม</th>
+                                <th scope="col">ภาษีหัก ณ ที่จ่าย (1%)</th>
                                 <th scope="col">comm-out</th>
                                 <th scope="col"> WHT 3%</th>
                                 <th scope="col">ov-out</th>
@@ -682,6 +686,7 @@ const CreateBillAdvisor = () => {
                                 <td>{policiesRender.net.no}</td>
                                 <td>{policiesRender.net.prem.toLocaleString(undefined, { minimumFractionDigits: 2 })}</td>
                                 <td>{policiesRender.net.comm_out.toLocaleString(undefined, { minimumFractionDigits: 2 })}</td>
+                                <td>{policiesRender.net.withheld.toLocaleString(undefined, { minimumFractionDigits: 2 })}</td>
                                 <td>{policiesRender.net.whtcom.toLocaleString(undefined, { minimumFractionDigits: 2 })}</td>
                                 <td>{policiesRender.net.ov_out.toLocaleString(undefined, { minimumFractionDigits: 2 })}</td>
                                 <td>{policiesRender.net.whtov.toLocaleString(undefined, { minimumFractionDigits: 2 })}</td>
@@ -690,6 +695,7 @@ const CreateBillAdvisor = () => {
                                 <td>gross</td>
                                 <td>{policiesRender.gross.no}</td>
                                 <td>{policiesRender.gross.prem.toLocaleString(undefined, { minimumFractionDigits: 2 })}</td>
+                                <td>{policiesRender.gross.withheld.toLocaleString(undefined, { minimumFractionDigits: 2 })}</td>
                                 <td>-</td>
                                 <td>-</td>
                                 <td>-</td>
@@ -699,6 +705,7 @@ const CreateBillAdvisor = () => {
                                 <td>รวมทั้งสิ้น</td>
                                 <td>{policiesRender.total.no}</td>
                                 <td>{policiesRender.total.prem.toLocaleString(undefined, { minimumFractionDigits: 2 })}</td>
+                                <td>{policiesRender.total.withheld.toLocaleString(undefined, { minimumFractionDigits: 2 })}</td>
                                 <td>{policiesRender.total.comm_out.toLocaleString(undefined, { minimumFractionDigits: 2 })}</td>
                                 <td>{policiesRender.total.whtcom.toLocaleString(undefined, { minimumFractionDigits: 2 })}</td>
                                 <td>{policiesRender.total.ov_out.toLocaleString(undefined, { minimumFractionDigits: 2 })}</td>

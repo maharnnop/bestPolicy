@@ -48,7 +48,7 @@ const Agent = () => {
     premCreditUnit: 'D',
     stamentType: 'Net'
   });
-  const [entityData, setEntityData] = useState({ personType: "P" });
+  const [entityData, setEntityData] = useState({ personType: "P",vatRegis:false });
   const [locationData, setLocationData] = useState({ entityID: null, locationType: 'A' });
   const [contactData, setContactData] = useState({
     entityID: null,
