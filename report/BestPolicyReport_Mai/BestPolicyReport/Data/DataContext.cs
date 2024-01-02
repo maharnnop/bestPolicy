@@ -5,6 +5,8 @@ using BestPolicyReport.Models.CashierReport;
 using BestPolicyReport.Models.OutputVatCommInReport;
 using BestPolicyReport.Models.OutputVatOvInReport;
 using BestPolicyReport.Models.ArApReport;
+using BestPolicyReport.Models.PremInDirectReport;
+using BestPolicyReport.Models.WhtReport;
 
 namespace BestPolicyReport.Data
 {
@@ -23,8 +25,12 @@ namespace BestPolicyReport.Data
             modelBuilder.Entity<OutputVatCommInReportResult>().HasNoKey();
             modelBuilder.Entity<OutputVatOvInReportResult>().HasNoKey();
             modelBuilder.Entity<CommOutOvOutReportResult>().HasNoKey();
-            modelBuilder.Entity<PremOutReportResult>().HasNoKey();
+            modelBuilder.Entity<PremOutCommInOvInReportResult>().HasNoKey();
+            modelBuilder.Entity<PremInReportResult>().HasNoKey();
             modelBuilder.Entity<PolicyGroupBillReportResult>().HasNoKey();
+            modelBuilder.Entity<PremInDirectReportResult>().HasNoKey();
+            modelBuilder.Entity<WhtCommOutReportResult>().HasNoKey();
+            modelBuilder.Entity<WhtOvOutReportResult>().HasNoKey();
         }
 
         public DbSet<DailyPolicyReportResult> DailyPolicyReportResults { get; set; }
@@ -33,7 +39,11 @@ namespace BestPolicyReport.Data
         public DbSet<OutputVatCommInReportResult> OutputVatCommInReportResults { get; set; }
         public DbSet<OutputVatOvInReportResult> OutputVatOvInReportResults { get; set; }
         public DbSet<CommOutOvOutReportResult> CommOutOvOutReportResults { get; set; }
-        public DbSet<PremOutReportResult> PremOutReportResults { get; set; }
+        public DbSet<PremOutCommInOvInReportResult> PremOutCommInOvInReportResults { get; set; }
+        public DbSet<PremInReportResult> PremInReportResults { get; set; }
         public DbSet<PolicyGroupBillReportResult> PolicyGroupBillReportResults { get; set; }
+        public DbSet<PremInDirectReportResult> PremInDirectReportResults { get; set; }
+        public DbSet<WhtCommOutReportResult> WhtCommOutReportResults { get; set; }
+        public DbSet<WhtOvOutReportResult> WhtOvOutReportResults { get; set; }
     }
 }
