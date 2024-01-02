@@ -128,13 +128,14 @@ const CreateBillAdvisor = () => {
             if (policiesData[i].select) {
                 if (policiesData[i].statementtype) {
                     net.no++
-                    net.bill = net.bill + policiesData[i].totalprem - policiesData[i].commout_amt - policiesData[i].ovout_amt - policiesData[i].withheld
+                    net.bill = net.bill + policiesData[i].totalprem - policiesData[i].commout1_amt - policiesData[i].ovout1_amt - policiesData[i].withheld
                     net.prem = net.prem + policiesData[i].totalprem
                     net.withheld = net.withheld + policiesData[i].withheld
-                    net.comm_out = net.comm_out + policiesData[i].commout_amt
-                    net.whtcom = net.comm_out * wht
-                    net.ov_out = net.ov_out + policiesData[i].ovout_amt
-                    net.whtov = net.ov_out * wht
+                    net.comm_out = net.comm_out + policiesData[i].commout1_amt
+                    net.ov_out = net.ov_out + policiesData[i].ovout1_amt
+                    // net.whtcom = net.whtcom + policiesData[i].commout_taxamt
+                    // net.whtov = net.whtov + policiesData[i].ovout_taxamt
+                    
                 } else {
                     gross.no++
                     gross.prem = gross.prem + policiesData[i].totalprem
@@ -144,16 +145,21 @@ const CreateBillAdvisor = () => {
             }
 
         }
+        if (filterData.vatflag === 'Y') {
+            
+            net.whtcom = parseFloat((net.comm_out * wht).toFixed(2))
+            net.whtov = parseFloat((net.ov_out * wht).toFixed(2))
+        }
 
         const total = {
             no: net.no + gross.no,
-            prem: (net.prem + gross.prem).toFixed(2),
-            withheld : (net.withheld + gross.withheld).toFixed(2),
-            comm_out: (net.comm_out).toFixed(2),
-            whtcom: (net.whtcom).toFixed(2),
-            ov_out: (net.ov_out).toFixed(2),
-            whtov: (net.whtov).toFixed(2),
-            billprem:( net.prem + gross.prem - net.comm_out + net.whtcom - net.ov_out + net.whtov).toFixed(2),
+            prem: parseFloat((net.prem + gross.prem).toFixed(2)),
+            withheld : parseFloat((net.withheld + gross.withheld).toFixed(2)),
+            comm_out: parseFloat((net.comm_out).toFixed(2)),
+            whtcom: parseFloat((net.whtcom).toFixed(2)),
+            ov_out: parseFloat((net.ov_out).toFixed(2)),
+            whtov: parseFloat((net.whtov).toFixed(2)),
+            billprem: parseFloat(( net.prem + gross.prem - net.comm_out + net.whtcom - net.ov_out + net.whtov - net.withheld - gross.withheld).toFixed(2)),
         }
         setPoliciesRender({ net: net, gross: gross, total: total })
     };
@@ -180,14 +186,14 @@ const CreateBillAdvisor = () => {
         const array = policiesData.map((ele)=>ele)
         array[e.target.id] = { ...policiesData[e.target.id], [e.target.name]: e.target.checked }
         setPoliciesData(array)
-        const array2 = billpremiumData
-        if (e.target.checked) {
-            array2[e.target.id] = array[e.target.id].totalprem - array[e.target.id].commout_amt - array[e.target.id].ovout_amt
+        // const array2 = billpremiumData
+        // if (e.target.checked) {
+        //     array2[e.target.id] = array[e.target.id].totalprem - array[e.target.id].commout_amt - array[e.target.id].ovout_amt
 
-        } else {
-            array2[e.target.id] = array[e.target.id].totalprem
-        }
-        setBillpremiumData(array2)
+        // } else {
+        //     array2[e.target.id] = array[e.target.id].totalprem
+        // }
+        // setBillpremiumData(array2)
         console.log(array);
 
     };
@@ -238,21 +244,22 @@ const CreateBillAdvisor = () => {
             .post(url + "/payments/findpolicyinDue", data, headers)
             .then((res) => {
                 if (res.status === 201) {
-                    console.log(res.data);
+                    console.log(res.data.records);
                     alert("ไม่พบรายการ")
 
                 } else {
 
 
                     const array = []
-                    for (let i = 0; i < res.data.length; i++) {
+                    for (let i = 0; i < res.data.records.length; i++) {
                         // console.log(statementtypeData[i].statementtype == null? res.data[i].totalprem -res.data[i].commout_amt-res.data[i].ovout_amt: res.data[i].totalprem);
-                        array.push(res.data[i].totalprem)
+                        array.push(res.data.records[i].totalprem)
 
                     }
-                    console.log(array);
+                    console.log({...data, ...res.data.vatflag[0]});
                     console.log(res.data);
-                    setPoliciesData(res.data)
+                    setFilterData({...data, ...res.data.vatflag[0]})
+                    setPoliciesData(res.data.records)
                     setBillpremiumData(array)
                     alert("find data success")
                 }
@@ -276,11 +283,22 @@ const CreateBillAdvisor = () => {
             }
             
         }
-        console.log({bill:{...filterData,amt:policiesRender.total.billprem}, detail:array });
+        const bill ={
+            agentCode : filterData.agentCode,
+            insurerCode : filterData.insurerCode,
+            amt : policiesRender.total.billprem,
+            totalprem : policiesRender.total.prem,
+            withheld : policiesRender.total.withheld,
+            commout_amt : policiesRender.total.comm_out,
+            ovout_amt : policiesRender.total.ov_out,
+            commout_whtamt : policiesRender.total.whtcom,
+            ovout_whtamt : policiesRender.total.whtov,
+        }
+        console.log({ bill:{...bill}, detail:array });
         console.log(Date.now)
     
         axios
-            .post(url + "/payments/createbill", { bill:{...filterData,amt:policiesRender.total.billprem}, detail:array }, headers)
+            .post(url + "/payments/createbill", { bill:{...bill}, detail:array }, headers)
             .then((res) => {
                 // let token = res.data.jwt;
                 // let decode = jwt_decode(token);
@@ -334,7 +352,7 @@ const CreateBillAdvisor = () => {
 
                     <div class="col align-self-end ">
                         <div class="input-group mb-3">
-                            <button type="submit" class="btn btn-primary btn-lg" >ค้นหา</button>
+                            <button type="submit" class="btn btn-primary btn-lg" >ค้นหารายการ</button>
                         </div>
                     </div>
 
@@ -515,9 +533,9 @@ const CreateBillAdvisor = () => {
                             <th scope="col">net</th>
                             <th scope="col">เลขที่กรมธรรม์</th>
                             <th scope="col">เลขที่สลักหลัง</th>
-                            <th scope="col">เลขที่ใบแจ้งหนี้</th>
-                            <th scope="col">เลขที่ใบกำกับภาษี</th>
-                            <th scope="col">ลำดับที่</th>
+                            <th scope="col">เลขที่ใบแจ้งหนี้ (อะมิตี้)</th>
+                            {/* <th scope="col">เลขที่ใบกำกับภาษี</th> */}
+                            <th scope="col">งวด</th>
 
                             <th scope="col">รหัสบริษัทประกัน</th>
                             <th scope="col">รหัสผู้แนะนำ</th>
@@ -556,7 +574,7 @@ const CreateBillAdvisor = () => {
                                 <td>{ele.policyNo}</td>
                                 <td>{ele.endorseNo}</td>
                                 <td>{ele.invoiceNo}</td>
-                                <td>{ele.taxinvoiceNo}</td>
+                                {/* <td>{ele.taxinvoiceNo}</td> */}
                                 <td>{ele.seqNo}</td>
 
                                 <td style={{'text-align': 'center'}} >{ele.insurerCode}</td>
@@ -578,10 +596,10 @@ const CreateBillAdvisor = () => {
                                 <td>{ele.tax.toLocaleString(undefined, { minimumFractionDigits: 2 })}</td>
                                 <td>{ele.totalprem.toLocaleString(undefined, { minimumFractionDigits: 2 })}</td>
                                 <td>{ele.withheld ? ele.withheld.toLocaleString(undefined, { minimumFractionDigits: 2 }): 0}</td>
-                                <td>{ele.commout_rate.toLocaleString(undefined, { minimumFractionDigits: 2 })}</td>
-                                <td>{ele.commout_amt.toLocaleString(undefined, { minimumFractionDigits: 2 })}</td>
-                                <td>{ele.ovout_rate.toLocaleString(undefined, { minimumFractionDigits: 2 })}</td>
-                                <td>{ele.ovout_amt.toLocaleString(undefined, { minimumFractionDigits: 2 })}</td>
+                                <td>{ele.commout1_rate.toLocaleString(undefined, { minimumFractionDigits: 2 })}</td>
+                                <td>{ele.commout1_amt.toLocaleString(undefined, { minimumFractionDigits: 2 })}</td>
+                                <td>{ele.ovout1_rate.toLocaleString(undefined, { minimumFractionDigits: 2 })}</td>
+                                <td>{ele.ovout1_amt.toLocaleString(undefined, { minimumFractionDigits: 2 })}</td>
                                 
                                 {/* <td><input type="number" disabled value={billpremiumData[i]} /></td> */}
                             </tr>)
@@ -666,16 +684,16 @@ const CreateBillAdvisor = () => {
                          </div>
                     </div> */}
                     <table class="table table-hover">
-                        <thead>
+                        <thead className="table-success">
                             <tr>
 
                                 <th scope="col">ชำระแบบ</th>
                                 <th scope="col">รายการ</th>
                                 <th scope="col">ค่าเบี้ยประกันรวม</th>
                                 <th scope="col">ภาษีหัก ณ ที่จ่าย (1%)</th>
-                                <th scope="col">comm-out</th>
+                                <th scope="col">Comm Out</th>
                                 <th scope="col"> WHT 3%</th>
-                                <th scope="col">ov-out</th>
+                                <th scope="col">OV Out</th>
                                 <th scope="col"> WHT 3%</th>
 
                             </tr>
@@ -701,7 +719,7 @@ const CreateBillAdvisor = () => {
                                 <td>-</td>
                                 <td>-</td>
                             </tr>
-                            <tr>
+                            <tr className="table-info">
                                 <td>รวมทั้งสิ้น</td>
                                 <td>{policiesRender.total.no}</td>
                                 <td>{policiesRender.total.prem.toLocaleString(undefined, { minimumFractionDigits: 2 })}</td>

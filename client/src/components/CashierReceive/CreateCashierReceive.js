@@ -20,6 +20,7 @@ import {
 } from "../StylesPages/LoginStyles";
 import { Button } from "react-bootstrap";
 import { useCookies } from "react-cookie";
+import {convertDate2} from '../lib/convertdateformat'
 
 const config = require("../../config.json");
 
@@ -44,7 +45,7 @@ const CreateCashierReceive = () => {
     const [billAdvisorNo, setBillAdvisorNo] = useState("-")
     const [dfrpreferno, setDfrpreferno] = useState("-");
     const [Insurer, setInsurer] = useState("");
-    const [Advisor, setAdvisor] = useState("")
+    const [Advisor, setAdvisor] = useState("-")
     const [Customer, setCustomer] = useState("0");
     const [cashierReceiptNo, setCashierReceiptNo] = useState("");
     const [cashierDate, setCashierDate] = useState("");
@@ -89,13 +90,18 @@ const CreateCashierReceive = () => {
         console.log(billAdvisorNo)
 
         let data = JSON.stringify({
-            "filter": txtype === 'premin' ? billAdvisorNo : dfrpreferno
+            "filter": txtype === 'premin' ? billAdvisorNo.trim() : dfrpreferno.trim()
         });
         axios.post(window.globalConfig.BEST_POLICY_V1_BASE_URL + "/bills/findDataByBillAdvisoryNo?txtype=" + txtype, data, headers)
             .then((response) => {
                 console.log(response);
-                if (response.data.length <1 || (response.data[0].transactiontype !== 'PREM-OUT' && txtype === 'comin')) {
-                    alert("เลขที่ใบวางบิลไม่สามารถทำการตัดหนี้ได้")
+                if (response.data.length <1 || (response.data[0].transactiontype !== 'PREM-OUT' && txtype === 'commin')) {
+                    if (txtype === 'premin' ) {
+                        alert("เลขที่ใบวางบิล ไม่สามารถสร้างรายการรับเงินได้")
+                        
+                    }else{
+                        alert("เลขที่ตัดหนี้ ไม่สามารถสร้างรายการรับเงินได้")
+                    }
                     setInsurer("")
                 setInsurerReadOnly(false)
                 setAdvisoryReadOnly(false)
@@ -252,11 +258,10 @@ const CreateCashierReceive = () => {
     const handleSubmit = () => {
         let data = {
             // keyid: Joi.string().required(),
-            billadvisorno: billAdvisorNo,
-            dfrpreferno: dfrpreferno,
+            billadvisorno: billAdvisorNo.trim(),
+            dfrpreferno: dfrpreferno.trim(),
             // cashierreceiveno: cashierReceiptNo,
-            cashierdate: cashierDate,
-            dfrpreferno: dfrpreferno,
+            cashierdate: convertDate2(cashierDate,1),
             transactiontype: transactionType,
             insurercode: Insurer,
             advisorcode: Advisor,
@@ -535,6 +540,7 @@ const CreateCashierReceive = () => {
                                 </div>
                             </div>
                             {/* Advisor */}
+                            {txtype === 'premin' ?
                             <div className="row mb-3">
                                 <div className="col-4">
                                     <label htmlFor="Advisor" className="form-label">ผู้แนะนำ</label>
@@ -548,6 +554,7 @@ const CreateCashierReceive = () => {
                                         }} onChange={(e) => setAdvisor(e.target.value)} className="form-control text-left" />
                                 </div>
                             </div>
+                            :null}
 
                             {/* Customer */}
                             {/* <div className="row mb-3">
@@ -868,7 +875,7 @@ const CreateCashierReceive = () => {
                                 </div>
                                 <div className="col-7">
                                     <input type="text" id="amount" required 
-                                    value={amount.toLocaleString(undefined, { minimumFractionDigits: 2 }) || 0}
+                                    value={(amount || 0).toLocaleString(undefined, { minimumFractionDigits: 2 }) }
                                         disabled={receiveFromReadOnly}
                                         style={{
                                             backgroundColor: receiveFromReadOnly ? 'grey' : 'white',

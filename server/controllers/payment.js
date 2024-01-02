@@ -121,8 +121,9 @@ const findPolicyByPreminDue = async (req,res) => {
       (select "t_firstName"||' '||"t_lastName"  as insureeName from static_data."Entities" where id =
       (select "entityID" from static_data."Insurees" where "insureeCode" = p."insureeCode" ) ) as insureeName , 
       j.polid, motor."licenseNo", motor."chassisNo", (select t_provincename from static_data."provinces" where provinceid = motor."motorprovinceID" ) as "motorprovince",
-      j.grossprem, j.specdiscrate, j.specdiscamt, j.netgrossprem, j.duty, j.tax, j.totalprem, j.commout_rate,
-      j.commout_amt, j.ovout_rate, j.ovout_amt, t.netflag, t.remainamt, 
+      j.grossprem, j.specdiscrate, j.specdiscamt, j.netgrossprem, j.duty, j.tax, j.totalprem, 
+      j.commout_rate,j.commout_amt, j.ovout_rate, j.ovout_amt, t.netflag, t.remainamt, j.commout_taxamt, j.ovout_taxamt,
+      j.commout1_rate,j.commout1_amt, j.ovout1_rate, j.ovout1_amt,
       (case when a."stamentType" = 'Net' then true else false end) as "statementtype",
       true as "select"
       from static_data."Transactions" t 
@@ -147,11 +148,21 @@ const findPolicyByPreminDue = async (req,res) => {
             type: QueryTypes.SELECT
           }
         );
+        const vatflag = await sequelize.query(
+          `select vatflag from static_data."Agents" where "agentCode" = :agentCode and lastversion = 'Y' ` ,
+          {
+            replacements: {
+              agentCode:req.body.agentCode
+            },
+            type: QueryTypes.SELECT
+          }
+        );
+        
         if (records.length === 0) {
           await res.status(201).json({msg:"not found policy"})
         }else{
 
-          await res.json(records)
+          await res.json({records : records, vatflag: vatflag})
         }
   
 }
@@ -176,7 +187,8 @@ const findPolicyByBillno = async (req,res) => {
     left join static_data."Entities" ent on ent.id = insuree."entityID"
     left join static_data."Titles" tt on tt."TITLEID" = ent."titleID"
     left join static_data."Transactions" tran on tran.polid =jupgr.polid  and jupgr."seqNo" = tran."seqNo" 
-    where bill.billadvisorno = :billadvisorno  
+    where bill.billadvisorno = :billadvisorno 
+    and bill.active ='Y' 
    	and jupgr.installmenttype ='A'
    and tran."transType" = 'PREM-IN';`,
         {
@@ -222,20 +234,27 @@ const createbilladvisor = async (req,res) =>{
       const currentdate = getCurrentDate()
       req.body.bill.billadvisorno = getCurrentYYMM() +'/'+ String(await getRunNo('bill',null,null,'kw',currentdate,t)).padStart(4, '0');
       const billadvisors = await sequelize.query(
-        'INSERT INTO static_data.b_jabilladvisors (insurerno, advisorno, billadvisorno, billdate, createusercode, amt, cashierreceiptno, active ) ' +
-        'VALUES ((select id from static_data."Insurers" where "insurerCode" = :insurerCode and lastversion = \'Y\'), '+
-        '(select id from static_data."Agents" where "agentCode" = :agentCode and lastversion = \'Y\'), '+
-        ':billadvisorno, :billdate, :createusercode, :amt, :cashierreceiptno, \'Y\') RETURNING "id"',
+        `INSERT INTO static_data.b_jabilladvisors (insurerno, advisorno, billadvisorno, billdate, createusercode, amt, cashierreceiptno, active,
+          withheld, totalprem, commout_amt, commout_whtamt, ovout_amt, ovout_whtamt  ) 
+        VALUES ((select id from static_data."Insurers" where "insurerCode" = :insurerCode and lastversion = 'Y'), 
+        (select id from static_data."Agents" where "agentCode" = :agentCode and lastversion = 'Y'), 
+        :billadvisorno, :billdate, :createusercode, :amt, :cashierreceiptno, 'Y' ,
+        :withheld, :totalprem, :commout_amt, :commout_whtamt, :ovout_amt, :ovout_whtamt ) RETURNING "id" `,
             {
               replacements: {
                 insurerCode:req.body.bill.insurerCode,
                 agentCode:req.body.bill.agentCode,
                  billadvisorno: req.body.bill.billadvisorno,
-               
                 billdate: billdate,
                 createusercode: usercode,
                 amt:req.body.bill.amt,
                 cashierreceiptno:null,
+                withheld    : req.body.bill.withheld, 
+                totalprem   : req.body.bill.totalprem, 
+                commout_amt : req.body.bill.commout_amt, 
+                commout_whtamt : req.body.bill.commout_whtamt, 
+                ovout_amt   : req.body.bill.ovout_amt,
+                ovout_whtamt   : req.body.bill.ovout_whtamt,
               },
               transaction: t ,
               type: QueryTypes.INSERT
@@ -245,9 +264,9 @@ const createbilladvisor = async (req,res) =>{
           //insert to deteil of jabilladvisor
           sequelize.query(
             'insert into static_data.b_jabilladvisordetails (keyidm, polid, customerid, motorid, grossprem, duty, tax, totalprem, "comm-out%", "comm-out-amt", '+
-            ' "ov-out%", "ov-out-amt", netflag, billpremium,updateusercode, seqno) '+
+            ' "ov-out%", "ov-out-amt", netflag, billpremium,updateusercode, seqno, withheld) '+
             'values (:keyidm, (select id from static_data."Policies" where "policyNo" = :policyNo limit 1), (select id from static_data."Insurees" where "insureeCode" = :insureeCode limit 1), :motorid, '+
-            ':grossprem, :duty, :tax, :totalprem, :commout_rate, :commout_amt, :ovout_rate, :ovout_amt, :netflag, :billpremium, :updateusercode, :seqno) ',
+            ':grossprem, :duty, :tax, :totalprem, :commout_rate, :commout_amt, :ovout_rate, :ovout_amt, :netflag, :billpremium, :updateusercode, :seqno, :withheld) ',
                 {
                   replacements: {
                     keyidm: billadvisors[0][0].id,
@@ -266,6 +285,7 @@ const createbilladvisor = async (req,res) =>{
                     billpremium: req.body.detail[i].billpremium,
                     updateusercode: usercode,
                     seqno: req.body.detail[i].seqNo,
+                    withheld: req.body.detail[i].withheld,
                   },
                   transaction: t ,
                   type: QueryTypes.INSERT

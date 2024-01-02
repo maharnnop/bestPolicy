@@ -23,7 +23,7 @@ export const  convertDateFormat = (inputDate,withT =true) => {
 }
 export const  getDateReport = (type) => {
   // Parse the input date string
-  let inputDate = new Date().toISOString()
+  let inputDate = new Date().toLocaleDateString()
   let dateParts = inputDate.split('T')[0].split("-");
   const year = dateParts[0];
   const month = dateParts[1];
@@ -44,5 +44,40 @@ let formattedDate
 
   console.log(formattedDate);
   return formattedDate;
+}
+
+// date obj to yyyy-mm-dd
+export const  convertDate2= (date,format,nextday = false) => {
+  // Parse the input date string
+  try{
+    
+    if (nextday) {
+      date.setDate(date.getDate() + 1);
+     
+    }
+    let inputDate = date.toLocaleDateString() // MM/dd/yyyy 
+      let dateParts
+      if (format === 1) { // for pattern MM/dd/yyyy  => yyyy-mm-dd
+        dateParts = inputDate.split('/');
+        
+      }
+      const year = dateParts[2];
+      const month = dateParts[0];
+      const day = dateParts[1];
+
+      // Create a Date object with the parsed values
+      const parsedDate = new Date(year, month - 1, day);
+
+      // Format the date in "dd/MM/yyyy" format
+      let formattedDate = null
+      if (format === 1) {
+        formattedDate = `${parsedDate.getFullYear()}-${String(parsedDate.getMonth() + 1).padStart(2, '0')}-${String(parsedDate.getDate()).padStart(2, '0')}`;
+        
+      }
+
+      return formattedDate;}
+  catch{
+    return null
+  }
 }
   export default convertDateFormat;

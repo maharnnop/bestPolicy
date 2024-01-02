@@ -1,5 +1,6 @@
-import React, {useEffect, useRef, useState} from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { useNavigate, useParams, useLocation } from "react-router-dom";
+
 import axios from "axios";
 import jwt_decode from "jwt-decode";
 import Modal from 'react-bootstrap/Modal';
@@ -18,7 +19,7 @@ import {
     LoginBtn,
     BackdropBox1,
 } from "../StylesPages/LoginStyles";
-import {Button, Form} from "react-bootstrap";
+import { Button } from "react-bootstrap";
 import { useCookies } from "react-cookie";
 
 const config = require("../../config.json");
@@ -27,41 +28,34 @@ const NormalText = {
     color: "white",
     paddingBottom: "10px",
 };
+// import joi from joi;
+const Joi = require('joi');
 /* eslint-disable react-hooks/exhaustive-deps */
 
-const EditCashierReceive = (props) => {
+const EditCashierReceive = () => {
     const [cookies] = useCookies(["jwt"]);
     const headers = {
     headers: { 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${cookies["jwt"]}` }
 };
+const location = useLocation();
+    const queryParams = new URLSearchParams(location.search);
     const url = window.globalConfig.BEST_POLICY_V1_BASE_URL;
     const navigate = useNavigate();
-    const searchButtonRef = useRef(null);
-
-
-
-    const [tableData, setTableData] = useState([])
-    const [billAdvisorNo, setBillAdvisorNo] = useState("")
-    const [insurercode, setInsurercode] = useState("");
-    const [advisorcode, setAdvisorcode] = useState("")
-    const [refno, setRefno] = useState("");
-    const [cashierReceiptNo, setCashierReceiptNo] = useState("");
-    const [transactionType, setTransactionType] = useState({});
-    const [checkboxValue, setCheckboxValue] = useState();
-    const [createUserCode, setCreateUserCode] = useState();
-    const [fromDate, setFromDate] = useState('');
-    const [toDate, setToDate] = useState('');
-    const [dfrpreferno, setDfrpreferno] = useState();
-    
-
+    // const { txtype } = useParams();
+    const [txtype, setTxtype] = useState("")
+    const [billAdvisorNo, setBillAdvisorNo] = useState("-")
+    const [dfrpreferno, setDfrpreferno] = useState("-");
     const [Insurer, setInsurer] = useState("");
     const [Advisor, setAdvisor] = useState("")
-    const [Customer, setCustomer] = useState("");
+    const [Customer, setCustomer] = useState("0");
+    const [cashierReceiptNo, setCashierReceiptNo] = useState("");
     const [cashierDate, setCashierDate] = useState("");
     const [receiveForm, setReceiveForm] = useState("Advisor");
     const [receiveName, setReceiveName] = useState("");
-    const [receiveType, setReceiveType] = useState("เงินโอน");
+    const [receiveType, setReceiveType] = useState("");
+    const [refno, setRefno] = useState("");
+    const [transactionType, setTransactionType] = useState("PREM-IN");
     const [bankPartner, setBankPartner] = useState("");
     const [bankBranchPartner, setBankBranchPartner] = useState("");
     const [bankNoPartner, setBankNoPartner] = useState("");
@@ -69,6 +63,9 @@ const EditCashierReceive = (props) => {
     const [bankBranchAmity, setBankBranchAmity] = useState("");
     const [bankNo, setBankNo] = useState("");
     const [amount, setAmount] = useState("");
+    const [ID, setID] = useState();
+    const [status, setStatus] = useState("I");
+    
 
     //select data
     const [bankAmityBrandData, setBankAmityBrandData] = useState([]);
@@ -80,10 +77,15 @@ const EditCashierReceive = (props) => {
     const [bankPartnerNoData, setBankPartnerNoData] = useState([]);
 
     //read only
-    const [advisoryReadOnly, setAdvisoryReadOnly] = useState(false)
-    const [insurerReadOnly, setInsurerReadOnly] = useState(false)
-    const [transactionTypeReadOnly, setTransactionTypeReadOnly] = useState(false)
-    const [receiveFromReadOnly, setReceiveFromReadOnly] = useState(false)
+    // const [advisoryReadOnly, setAdvisoryReadOnly] = useState(false)
+    // const [insurerReadOnly, setInsurerReadOnly] = useState(false)
+    // const [transactionTypeReadOnly, setTransactionTypeReadOnly] = useState(false)
+    // const [receiveFromReadOnly, setReceiveFromReadOnly] = useState(false)
+    const [advisoryReadOnly, setAdvisoryReadOnly] = useState(true)
+    const [insurerReadOnly, setInsurerReadOnly] = useState(true)
+    const [transactionTypeReadOnly, setTransactionTypeReadOnly] = useState(true)
+    const [receiveFromReadOnly, setReceiveFromReadOnly] = useState(true)
+
 
     //modal
     const [show, setShow] = useState(false);
@@ -91,41 +93,60 @@ const EditCashierReceive = (props) => {
     const handleShow = () => setShow(true);
     const [modalText, setModalText] = useState()
 
-    //select cashier
-    const [selectId, setSelectId] = useState("123");
-    
-    
-    const onSearch = (e) =>{
+
+
+    const onSearch = (e) => {
         e.preventDefault()
         console.log(billAdvisorNo)
 
         let data = JSON.stringify({
-            "billadvisorno": billAdvisorNo
+            "filter": txtype === 'premin' ? billAdvisorNo : dfrpreferno
         });
-        axios.post(window.globalConfig.BEST_POLICY_V1_BASE_URL+"/bills/findDataByBillAdvisoryNo",data, headers)
+        axios.post(window.globalConfig.BEST_POLICY_V1_BASE_URL + "/bills/findDataByBillAdvisoryNo?txtype=" + txtype, data, headers)
             .then((response) => {
-                // console.log(response);
+                console.log(response);
+                if (response.data.length <1 || (response.data[0].transactiontype !== 'PREM-OUT' && txtype === 'comin')) {
+                    alert("เลขที่ใบวางบิลไม่สามารถทำการตัดหนี้ได้")
+                    setInsurer("")
+                setInsurerReadOnly(false)
+                setAdvisoryReadOnly(false)
+                setAdvisor("")
+                setTransactionTypeReadOnly(false)
+                setReceiveFromReadOnly(false)
+                setReceiveName("")
+                setAmount("")
+                }else{
+
+                
                 setInsurer(response.data[0].insurerCode)
                 setInsurerReadOnly(true)
                 setAdvisoryReadOnly(true)
                 setAdvisor(response.data[0].agentCode)
                 setTransactionTypeReadOnly(true)
                 setReceiveFromReadOnly(true)
-                setReceiveForm("Advisor")
-
+                if (txtype === 'premin') {
+                    setReceiveForm("Advisor")
+                } else {
+                    setReceiveForm("Insurer")
+                }
+                setReceiveName(response.data[0].receivename)
+                setAmount(response.data[0].amt)
+            }
 
             })
 
             .catch((error) => {
-                alert("Something went wrong, Try Again.");
                 console.log(error);
+                alert("Something went wrong, Try Again.");
             });
 
     }
 
     useEffect(() => {
-        let data={}
-        axios.get(window.globalConfig.BEST_POLICY_V1_BASE_URL+"/static/bank/BankAmityBrand", headers)
+
+        console.log(txtype);
+        let data = {}
+        axios.get(window.globalConfig.BEST_POLICY_V1_BASE_URL + "/static/bank/BankAmityBrand",  headers)
             .then((response) => {
                 console.log(response.data);
                 setBankAmityBrandData(response.data)
@@ -134,11 +155,11 @@ const EditCashierReceive = (props) => {
             })
 
             .catch((error) => {
-                alert("Something went wrong, Try Again.");
                 console.log(error);
+                alert("Something went wrong, Try Again.");
             });
 
-        axios.get(window.globalConfig.BEST_POLICY_V1_BASE_URL+"/static/bank/BankPartnerBrand?"+"type=I", headers)
+        axios.get(window.globalConfig.BEST_POLICY_V1_BASE_URL + "/static/bank/BankPartnerBrand?" + "type=I",  headers)
             .then((response) => {
                 console.log(response.data);
                 setBankPartnerBrandData(response.data)
@@ -147,16 +168,58 @@ const EditCashierReceive = (props) => {
             })
 
             .catch((error) => {
-                alert("Something went wrong, Try Again.");
                 console.log(error);
+                alert("Something went wrong, Try Again.");
             });
+
+        
+        const cashno = queryParams.get('cashno');
+        console.log(cashno);
+        axios.post(window.globalConfig.BEST_POLICY_V1_BASE_URL + "/bills/findatabycashierno" ,{cashierreceiveno : cashno},  headers)
+        .then((response) => {
+            console.log(response.data);
+            const data = response.data[0]
+             setBillAdvisorNo(data.billadvisorno)
+             setDfrpreferno(data.dfrpreferno)
+             setInsurer(data.insurercode)
+             setAdvisor(data.advisorcode)
+             setCashierDate(new Date (data.cashierdate))
+             setReceiveForm (data.receivefrom)
+             setReceiveName (data.receivename)
+             setReceiveType (data.receivetype)
+             setRefno(data.refno)
+             setTransactionType(data.transactiontype)
+             setID(data.id)
+             setStatus(data.status)
+             setCashierReceiptNo(data.cashierreceiveno)
+             if (data.transactiontype === 'PREM-IN') {
+                setTxtype('premin')
+            } else if (data.transactiontype === 'COMM-IN') {
+                setTxtype('commin')
+            }
+             if (data.partnerBank !== null) {
+                
+                 setBankPartner(data.partnerBank)
+                 setBankBranchPartner (data.partnerBankbranch)
+                 setBankNoPartner (data.partnerAccountno)
+                }
+            if (data.amityBank !== null) {
+
+                setBankAmity (data.amityBank)
+                setBankBranchAmity (data.amityBankbranch)
+                setBankNo(data.amityAccountno)
+            }
+             setAmount (data.amt)
+
+        })
+
     }, []);
 
 
     useEffect(() => {
-        let data={}
-        if (bankAmity!="")
-            axios.get(window.globalConfig.BEST_POLICY_V1_BASE_URL+"/static/bank/BankAmityBranch?brand="+bankAmity, headers)
+        let data = {}
+        if (bankAmity != "")
+            axios.get(window.globalConfig.BEST_POLICY_V1_BASE_URL + "/static/bank/BankAmityBranch?brand=" + bankAmity, headers)
                 .then((response) => {
                     console.log(response.data);
                     setBankAmityBranchData(response.data)
@@ -164,17 +227,17 @@ const EditCashierReceive = (props) => {
                 })
 
                 .catch((error) => {
-                    alert("Something went wrong, Try Again.");
                     console.log(error);
+                    alert("Something went wrong, Try Again.");
                 });
 
 
     }, [bankAmity]);
     useEffect(() => {
-        let data={}
+        let data = {}
         console.log(bankBranchAmity)
-        if (bankBranchAmity!="")
-            axios.get(window.globalConfig.BEST_POLICY_V1_BASE_URL+"/static/bank/BankAmityBranch?branch="+bankBranchAmity+"&brand="+bankAmity, headers)
+        if (bankBranchAmity != "")
+            axios.get(window.globalConfig.BEST_POLICY_V1_BASE_URL + "/static/bank/BankAmityBranch?branch=" + bankBranchAmity + "&brand=" + bankAmity, headers)
                 .then((response) => {
                     // console.log(response.data);
                     setBankAmityNoData(response.data)
@@ -190,9 +253,9 @@ const EditCashierReceive = (props) => {
     }, [bankBranchAmity]);
 
     useEffect(() => {
-        let data={}
-        if (bankPartner!="")
-            axios.get(window.globalConfig.BEST_POLICY_V1_BASE_URL+"/static/bank/BankPartnerBranch?brand="+bankPartner+"&type=I", headers)
+        let data = {}
+        if (bankPartner != "")
+            axios.get(window.globalConfig.BEST_POLICY_V1_BASE_URL + "/static/bank/BankPartnerBranch?brand=" + bankPartner + "&type=I", headers)
                 .then((response) => {
                     console.log(response.data);
                     setBankPartnerBranchData(response.data)
@@ -207,10 +270,10 @@ const EditCashierReceive = (props) => {
 
     }, [bankPartner]);
     useEffect(() => {
-        let data={}
+        let data = {}
         console.log(bankBranchAmity)
-        if (bankBranchPartner!="")
-            axios.get(window.globalConfig.BEST_POLICY_V1_BASE_URL+"/static/bank/BankAmityBranch?branch="+bankBranchPartner+"&brand="+bankPartner+"&type=I", headers)
+        if (bankBranchPartner != "")
+            axios.get(window.globalConfig.BEST_POLICY_V1_BASE_URL + "/static/bank/BankAmityBranch?branch=" + bankBranchPartner + "&brand=" + bankPartner + "&type=I",  headers)
                 .then((response) => {
                     // console.log(response.data);
                     setBankPartnerNoData(response.data)
@@ -225,44 +288,97 @@ const EditCashierReceive = (props) => {
 
     }, [bankBranchPartner]);
 
-    
-    const handleSubmit = () => {
-        let data={
-            id:selectData.id,
+
+
+
+    useEffect(() => {
+
+
+    }, [receiveForm]);
+
+    const handleEdit = () => {
+        let data = {
             // keyid: Joi.string().required(),
-            billadvisorno: billAdvisorNo,
-            cashierreceiveno: cashierReceiptNo,
-            cashierdate: cashierDate,
-            // dfrpreferno: Joi.string().required(),
-            transactiontype: transactionType,
-            insurercode: insurercode,
-            advisorcode: advisorcode,
-            customerid: Customer,
-            receivefrom: receiveForm,
-            receivename: receiveName,
-            receivetype: receiveType,
-            PartnerBank: bankPartner,
-            PartnerBankbranch: bankPartner,
-            PartnerAccountno: bankNoPartner,
-            AmityBank: bankAmity,
-            AmityBankBranch: bankBranchAmity,
-            AmityAccountno: bankNo,
-            Amt: amount,
+            id : ID,
+            billadvisorno : billAdvisorNo,
+            cashierreceiveno : cashierReceiptNo,
+            cashierdate : cashierDate,
+            dfrpreferno : dfrpreferno,
+            transactiontype : transactionType,
+            insurercode : Insurer,
+            advisorcode : Advisor,
+            // customerid : Customer,
+            receivefrom : receiveForm,
+            receivename : receiveName,
+            receivetype : receiveType,
+            PartnerBank : bankPartner,
+            PartnerBankbranch : bankPartner,
+            PartnerAccountno : bankNoPartner,
+            AmityBank : bankAmity,
+            AmityBankBranch : bankBranchAmity,
+            AmityAccountno : bankNo,
+            refno : refno,
+            Amt : amount
+          
         }
-        axios.post(window.globalConfig.BEST_POLICY_V1_BASE_URL+"/bills/editsubmitCasheir",data, headers)
+
+        // const joidata = {
+        //     // keyid: Joi.string().required(),
+        //     billadvisorno: Joi.string(),
+        //     // cashierreceiveno: Joi.required(),
+        //     cashierdate: Joi.date().required(),
+        //     dfrpreferno: Joi.string(),
+        //     transactiontype: Joi.string().required(),
+        //     insurercode: Joi.string().required(),
+        //     advisorcode: Joi.string().required(),
+        //     customerid: Joi.string().required(),
+        //     receivefrom: Joi.string().required(),
+        //     receivename: Joi.string().required(),
+        //     receivetype: Joi.string().required(),
+        //     Amt: Joi.number().required(),
+           
+        // }
+        // if (receiveType === "Cheque" || receiveType === "Bank-Transfer") {
+        //     joidata.refno = Joi.string().required()
+        //     joidata.PartnerBank = Joi.string().required()
+        //     joidata.PartnerBankbranch = Joi.string().required()
+        //     joidata.PartnerAccountno = Joi.string().required()
+        //     joidata.AmityBank = Joi.string().required()
+        //     joidata.AmityBankBranch = Joi.string().required()
+        //     joidata.AmityAccountno = Joi.string().required()
+
+        //     // data
+        //     data.PartnerBank = bankPartner
+        //     data.PartnerBankbranch = bankPartner
+        //     data.PartnerAccountno = bankNoPartner
+        //     data.AmityBank = bankAmity
+        //     data.AmityBankBranch = bankBranchAmity
+        //     data.AmityAccountno = bankNo
+        //     data.refno = refno
+        // }
+        // const schema = Joi.object(joidata);
+
+
+        // const { error } = schema.validate(data);
+        // if (error) {
+        //     console.log(data)
+        //     console.log(error)
+        //     setModalText(error.toString())
+        //     setShow(true)
+        //     return
+        // }
+
+        console.log(data);  
+        axios.post(window.globalConfig.BEST_POLICY_V1_BASE_URL + "/bills/editCasheir", data, headers)
             .then((response) => {
 
-                if (response.status==200) {
+                if (response.status == 200) {
                     console.log("Success")
-                    setModalText("Success")
-                    // if (searchButtonRef.current) {
-                    //     searchButtonRef.current.click();
-                    // }
-                    // setTableData([])
-                    window.location.reload()
-                    setShowSuccess(true)
-                    
-                }else{
+                    alert(`สร้างใบเสร็จรับเงินเลขที่ ${response.data.CashierReceiveNo}`)
+                    // setModalText(`สร้างใบเสร็จรับเงินเลขที่ ${response.data.CashierReceiveNo}`)
+                    // setShow(true)
+                    window.location.reload(false);
+                } else {
                     setModalText(response.data.error)
                     setShow(true)
                 }
@@ -274,20 +390,53 @@ const EditCashierReceive = (props) => {
 
     };
     const handleSave = () => {
-        let data={
-            id:selectData.id,
+        const schema = Joi.object({
             // keyid: Joi.string().required(),
+            // billadvisorno: Joi.string().required(),
+            // cashierreceiveno: Joi.string().required(),
+            // cashierdate: Joi.date().required(),
+            // dfrpreferno: Joi.string().required(),
+            transactiontype: Joi.string().required(),
+            insurercode: Joi.string().required(),
+            advisorcode: Joi.string().required(),
+            customerid: Joi.string().required(),
+            receivefrom: Joi.string().required(),
+            receivename: Joi.string().required(),
+            refno: Joi.string().required(),
+            receivetype: Joi.string().required(),
+            PartnerBank: Joi.string().required(),
+            PartnerBankbranch: Joi.string().required(),
+            PartnerAccountno: Joi.string().required(),
+            AmityBank: Joi.string().required(),
+            AmityBankBranch: Joi.string().required(),
+            AmityAccountno: Joi.string().required(),
+            Amt: Joi.number().required(),
+            // createdate: Joi.date().required(),
+            // createtime: Joi.string().required(),
+            // createusercode: Joi.string().required(),
+            // updatedate: Joi.date().required(),
+            // updatetime: Joi.string().required(),
+            // updateusercode: Joi.string().required(),
+            // canceldate: Joi.date().required(),
+            // canceltime: Joi.string().required(),
+            // cancelusercode: Joi.string().required(),
+            // status: Joi.string().valid('I').required()
+        });
+        let data = {
+            // keyid: Joi.string().required(),
+            dfrpreferno: dfrpreferno,
             billadvisorno: billAdvisorNo,
             // cashierreceiveno: Joi.string().required(),
             // cashierdate: Joi.date().required(),
             // dfrpreferno: Joi.string().required(),
             transactiontype: transactionType,
-            insurercode: insurercode,
-            advisorcode: advisorcode,
+            insurercode: Insurer,
+            advisorcode: Advisor,
             customerid: Customer,
             receivefrom: receiveForm,
             receivename: receiveName,
             receivetype: receiveType,
+            refno: refno,
             PartnerBank: bankPartner,
             PartnerBankbranch: bankPartner,
             PartnerAccountno: bankNoPartner,
@@ -295,18 +444,28 @@ const EditCashierReceive = (props) => {
             AmityBankBranch: bankBranchAmity,
             AmityAccountno: bankNo,
             Amt: amount
+            // createdate: Joi.date().required(),
+            // createtime: Joi.string().required(),
+            // createusercode: Joi.string().required(),
+            // updatedate: Joi.date().required(),
+            // updatetime: Joi.string().required(),
+            // updateusercode: Joi.string().required(),
+            // canceldate: Joi.date().required(),
+            // canceltime: Joi.string().required(),
+            // cancelusercode: Joi.string().required(),
+            // status: Joi.string().valid('I').required()
         }
-        axios.post(window.globalConfig.BEST_POLICY_V1_BASE_URL+"/bills/editsaveCasheir",data, headers)
+        const { error } = schema.validate(data);
+        if (error) {
+            setModalText(error)
+            return
+        }
+        axios.post(window.globalConfig.BEST_POLICY_V1_BASE_URL + "/bills/saveCasheir", data, headers)
             .then((response) => {
                 console.log(response)
-                if (response.status==200) {
+                if (response.status == 200) {
                     setModalText("Success")
-                    // setTableData([])
-                    window.location.reload()
-                    setShowSuccess(true)
-                    // if (searchButtonRef.current) {
-                    //     searchButtonRef.current.click();
-                    // }
+                    setShow(true)
                     console.log("Success")
                 }
             })
@@ -316,24 +475,22 @@ const EditCashierReceive = (props) => {
             });
 
     };
-
-
-    const searchBill = (e) =>{
+    const searchBill = (e) => {
         e.preventDefault()
         let data = JSON.stringify({
             "billadvisorno": billAdvisorNo
         });
-        axios.post(window.globalConfig.BEST_POLICY_V1_BASE_URL+"/bills/findDataByBillAdvisoryNo",data, headers)
+        axios.post(window.globalConfig.BEST_POLICY_V1_BASE_URL + "/bills/findDataByBillAdvisoryNo", data, headers)
             .then((response) => {
                 // console.log(response.data);
-                if (response.data[0])
-                {
-                    setInsurercode(response.data[0].insurerCode)
-                    setAdvisorcode(response.data[0].agentCode)
+                if (response.data[0]) {
+                    Insurer(response.data[0].insurerCode)
+                    Advisor(response.data[0].agentCode)
                     setTransactionType("PREM-IN")
                     setInsurerReadOnly(true)
                     setAdvisoryReadOnly(true)
                     setTransactionTypeReadOnly(true)
+                    setModalText("Success")
                 }
 
             })
@@ -342,75 +499,10 @@ const EditCashierReceive = (props) => {
                 console.log(error);
             });
     }
-    const searchdata = (e) =>{
-        e.preventDefault()
-        let data = JSON.stringify({
-            
-            "billadvisorno": billAdvisorNo,
-            "insurercode":insurercode,
-            "advisorcode":advisorcode,
-            "refno":refno,
-            "cashierReceiptNo":cashierReceiptNo,
-            "transactionType":transactionType,
-            "createUserCode":createUserCode,
-            "fromDate":fromDate,
-            "toDate":toDate,
-            "dfrpreferno":dfrpreferno
-        });
-        axios.post(window.globalConfig.BEST_POLICY_V1_BASE_URL+"/bills/findbill",data, headers)
-            .then((response) => {
-                // console.log(response.data);
-                setTableData(response.data)
-            })
-            .catch((error) => {
-                alert("Something went wrong, Try Again.");
-                console.log(error);
-            });
-    }
-
-    const [selectData, setSelectData] = useState({});
-    const click=(rowData)=>{
-        setShow(true)
-        setSelectId(rowData.billadvisorno)
-        setSelectData(rowData);
-        
-    }
-    useEffect(() => {
-        if (selectData) {
-            setBillAdvisorNo(selectData.billadvisorno || "");
-            if(selectData.insurercode)
-            setInsurercode(selectData.insurercode || "");
-            if (selectData.advisorcode)
-            setAdvisorcode(selectData.advisorcode || "");
-            setRefno(selectData.dfrprederno || "");
-            setCashierReceiptNo(selectData.cashierreceiveno || "");
-            if (selectData.transactiontype)
-            setTransactionType(selectData.transactiontype || {});
-            setCreateUserCode(selectData.createusercode || "");
-            setDfrpreferno(selectData.dfrprederno || "");
-
-            // Set the rest of the state variables based on the keys in selectData
-            setInsurer(selectData.insurer || "");
-            setAdvisor(selectData.advisor || "");
-            setCustomer(selectData.customerid || "");
-            setCashierDate(selectData.cashierdate || "");
-            setReceiveForm(selectData.receivefrom || "Advisor");
-            setReceiveName(selectData.receivename || "");
-            setReceiveType(selectData.receivetype || "เงินโอน");
-            setBankPartner(selectData.partnerBank || "");
-            setBankBranchPartner(selectData.partnerBankbranch || "");
-            setBankNoPartner(selectData.partnerAccountno || "");
-            setBankAmity(selectData.amityBank || "");
-            setBankBranchAmity(selectData.amityBankbranch || "");
-            setBankNo(selectData.amityAccountno || "");
-            setAmount(selectData.amt || "");
-        }
-    }, [selectData]);
-    const [showSuccess, setShowSuccess] = useState(false);
 
     return (
         <>
-            <Modal show={showSuccess} onHide={handleClose}>
+            <Modal show={show} onHide={handleClose}>
                 <Modal.Header closeButton>
                     <Modal.Title>Modal Heading</Modal.Title>
                 </Modal.Header>
@@ -418,594 +510,435 @@ const EditCashierReceive = (props) => {
                     {modalText}
                 </Modal.Body>
                 <Modal.Footer>
-                    <Button variant="secondary" onClick={()=>{
-                        handleClose()
-                        setShowSuccess(false)
-                    }}>
+                    <Button variant="secondary" onClick={handleClose}>
                         Close
                     </Button>
                 </Modal.Footer>
             </Modal>
-            <Modal show={show} onHide={handleClose} size={"xl"}>
-                <Modal.Header closeButton>
-                    <Modal.Title>Bill Advisory Number {selectId}</Modal.Title>
-                </Modal.Header>
-                <Modal.Body>
-                    <form>
-                        <h2 className="text-center" style={{marginBottom:"30px"}}>สร้างรายการ Cashier ใหม่</h2>
+            <div className="container" style={{ paddingTop: "30px", paddingBottom: "30px" }}>
+                <div className="row justify-content-center">
+                    <div className="col-lg-6">
+                        <form>
+                            {txtype === 'premin' ?
+                                <h2 className="text-center" style={{ marginBottom: "30px" }}>รายการรับเงิน PREM-IN : {queryParams.get('cashno')}</h2>
+                                :
+                                <h2 className="text-center" style={{ marginBottom: "30px" }}>รายการรับเงิน COMM-IN : {queryParams.get('cashno')}</h2>
+                            }
+                            {/* Bill Advisor No */}
+                            {txtype === 'premin' ?
+                                <div className="row mb-3">
+                                    <div className="col-4">
+                                        <label htmlFor="billAdvisorNo" className="form-label">Bill Advisor No</label>
+                                    </div>
+                                    <div className="col-7">
+                                        <input type="text" required id="billAdvisorNo" disabled={status === 'A'? true :false }value={billAdvisorNo} onChange={(e) => setBillAdvisorNo(e.target.value)} className="form-control" />
+                                    </div>
+                                    {status === 'A'? null
+                                    :
+                                    <div className="col-1 text-center">
+                                        <button type="submit" className="btn btn-primary" onClick={onSearch}>ค้นหา</button>
+                                    </div>
+                                    }
+                                </div>
+                                :
 
-                        {/* Bill Advisor No */}
-                        <div className="row mb-3">
-                            <div className="col-4">
-                                <label htmlFor="billAdvisorNo" className="form-label">Bill Advisor No</label>
-                            </div>
-                            <div className="col-4">
-                                <input type="text" id="billAdvisorNo" required value={billAdvisorNo} onChange={(e) => setBillAdvisorNo(e.target.value)} className="form-control"/>
-                            </div>
-                            <div className="col-1 text-center" style={{paddingRight:"20px"}}>
-                                <button type="submit" ref={searchButtonRef} className="btn btn-primary" id={"click"} onClick={onSearch}>Search</button>
-                            </div>
-                        </div>
+                                <div className="row mb-3">
+                                    <div className="col-4">
+                                        <label htmlFor="dfrpreferno" className="form-label">เลขที่ตัดจ่าย Prem Out</label>
+                                    </div>
+                                    <div className="col-7">
+                                        <input type="text" required id="dfrpreferno" value={dfrpreferno} onChange={(e) => setDfrpreferno(e.target.value)} className="form-control" />
+                                    </div>
+                                    <div className="col-1 text-center">
+                                        <button type="submit" className="btn btn-primary" onClick={onSearch}>ค้นหา</button>
+                                    </div>
+                                </div>
+                            }
 
-                        {/* Insurer */}
-                        <div className="row mb-3">
-                            <div className="col-4">
-                                <label htmlFor="Insurer" className="form-label">Insurer</label>
-                            </div>
-                            <div className="col-4">
-                                <input type="text" id="Insurer" required value={insurercode} readOnly={insurerReadOnly} onChange={(e) => setInsurer(e.target.value)} className="form-control"/>
-                            </div>
-                        </div>
-                        {/* Advisor */}
-                        <div className="row mb-3">
-                            <div className="col-4">
-                                <label htmlFor="Advisor" className="form-label">Advisor</label>
-                            </div>
-                            <div className="col-4">
-                                <input type="text" id="Advisor" required value={advisorcode} readOnly={advisoryReadOnly} onChange={(e) => setAdvisor(e.target.value)} className="form-control"/>
-                            </div>
-                        </div>
 
-                        {/* Customer */}
-                        <div className="row mb-3">
-                            <div className="col-4">
-                                <label htmlFor="Customer" className="form-label">Customer</label>
-                            </div>
-                            <div className="col-4">
-                                <input type="text" id="Customer" required value={Customer} onChange={(e) => setCustomer(e.target.value)} className="form-control"/>
-                            </div>
-                        </div>
 
-                        {/* Cashier Receipt No */}
-                        <div className="row mb-3">
-                            <div className="col-4">
-                                <label htmlFor="cashierReceiptNo" className="form-label">Cashier Receipt No</label>
-                            </div>
-                            <div className="col-4">
-                                <input type="text" id="cashierReceiptNo" required value={cashierReceiptNo} onChange={(e) => setCashierReceiptNo(e.target.value)} className="form-control"/>
-                            </div>
-                        </div>
-
-                        {/* Cashier Date */}
-                        <div className="row mb-3">
-                            <div className="col-4">
-                                <label htmlFor="cashierDate" className="form-label">Cashier Date</label>
-                            </div>
-                            <div className="col-4">
-                                <input type="datetime-local" id="cashierDate" required value={cashierDate} onChange={(e) => setCashierDate(e.target.value)} className="form-control"/>
-                            </div>
-                        </div>
-
-                        {/* Receive Form */}
-                        <div className="row mb-3">
-                            <div className="col-4">
-                                <label htmlFor="receiveForm" className="form-label">Receive Form</label>
-                            </div>
-                            <div className="col-4">
-                                <select type="text" id="receiveForm" value={receiveForm} onChange={(e) => setReceiveForm(e.target.value)}
-                                        className="form-control"
+                            {/* Insurer */}
+                            <div className="row mb-3">
+                                <div className="col-4">
+                                    <label htmlFor="Insurer" className="form-label">บริษัทประกัน</label>
+                                </div>
+                                <div className="col-7">
+                                    <input type="text" id="Insurer" required value={Insurer} readOnly={insurerReadOnly}
                                         disabled={receiveFromReadOnly}
-                                        style={{ backgroundColor: receiveFromReadOnly ? 'grey' : 'white' }}
-                                >
-                                    <option value="" disabled>Select Transaction Type</option>
-                                    <option value="PREM-IN">Advisor</option>
-                                    <option value="PREM-OUT">Insurer</option>
-                                    <option value="COMM-OUT">Customer</option>
-                                </select>
-                            </div>
-                        </div>
 
-                        {/* Receive Name */}
-                        <div className="row mb-3">
-                            <div className="col-4">
-                                <label htmlFor="receiveName" className="form-label">Receive Name</label>
+                                        style={{
+                                            backgroundColor: receiveFromReadOnly ? 'grey' : 'white',
+                                            color: receiveFromReadOnly ? 'white' : null
+                                        }}
+                                        onChange={(e) => setInsurer(e.target.value)} 
+                                        className="form-control text-left" />
+                                </div>
                             </div>
-                            <div className="col-4">
-                                <input type="text" id="receiveName" required value={receiveName} onChange={(e) => setReceiveName(e.target.value)} className="form-control"/>
+                            {/* Advisor */}
+                            <div className="row mb-3">
+                                <div className="col-4">
+                                    <label htmlFor="Advisor" className="form-label">ผู้แนะนำ</label>
+                                </div>
+                                <div className="col-7">
+                                    <input type="text" id="Advisor" required value={Advisor} readOnly={advisoryReadOnly}
+                                        disabled={receiveFromReadOnly}
+                                        style={{
+                                            backgroundColor: receiveFromReadOnly ? 'grey' : 'white',
+                                            color: receiveFromReadOnly ? 'white' : null
+                                        }} onChange={(e) => setAdvisor(e.target.value)} className="form-control text-left" />
+                                </div>
                             </div>
-                        </div>
-                        {/* Receive Type */}
-                        <div className="row mb-3">
-                            <div className="col-4">
-                                <label htmlFor="receiveType" className="form-label">Receive Type</label>
-                            </div>
-                            <div className="col-4">
-                                <select  id="receiveType" value={receiveType} onChange={(e) => setReceiveType(e.target.value)} className="form-control">
-                                    <option value="" disabled>Select Transaction Type</option>
-                                    <option value="PREM-IN">เงินโอน</option>
-                                    <option value="PREM-OUT">เช็ค</option>
-                                    <option value="COMM-OUT">เงินสด</option>
-                                    <option value="COMM-IN">draft</option>
-                                    <option value="COMM-IN">อื่นๆ</option>
-                                </select>
-                            </div>
-                        </div>
 
-                        {/* Transaction Type */}
-                        <div className="row mb-3">
-                            <div className="col-4">
-                                <label htmlFor="transactionType" className="form-label">Transaction Type</label>
-                            </div>
-                            <div className="col-4">
-                                <select
-                                    id="transactionType"
-                                    value={transactionType}
-                                    onChange={(e) => setTransactionType(e.target.value)}
-                                    className="form-control"
-                                    disabled={transactionTypeReadOnly}
-                                    style={{ backgroundColor: transactionTypeReadOnly ? 'grey' : 'white' }}
-                                >
-                                    <option value="" disabled>Select Transaction Type</option>
-                                    <option value="PREM-IN">PREM-IN</option>
-                                    <option value="PREM-OUT">PREM-OUT</option>
-                                    <option value="COMM-OUT">COMM-OUT</option>
-                                    <option value="COMM-IN">COMM-IN</option>
-                                </select>
-                            </div>
-                        </div>
+                            {/* Customer */}
+                            {/* <div className="row mb-3">
+                                <div className="col-4">
+                                    <label htmlFor="CustomerId" className="form-label">ID ลูกค้า</label>
+                                </div>
+                                <div className="col-7">
+                                    <input type="number" id="Customer" value={Customer} required onChange={(e) => setCustomer(e.target.value)} className="form-control" />
+                                </div>
+                            </div> */}
 
+                            {/* Cashier Receipt No */}
+                            {/* <div className="row mb-3">
+                                <div className="col-4">
+                                    <label htmlFor="cashierReceiptNo" className="form-label">Cashier Receipt No</label>
+                                </div>
+                                <div className="col-7">
+                                    <input type="number" id="cashierReceiptNo" required value={cashierReceiptNo} onChange={(e) => setCashierReceiptNo(e.target.value)} className="form-control" />
+                                </div>
+                            </div> */}
 
-                        {/* Bank Partner */}
-                        <div className="row mb-3">
-                            <div className="col-4">
-                                <label htmlFor="bankPartner" className="form-label">Bank Partner</label>
+                            {/* Cashier Date */}
+                            <div className="row mb-3">
+                                <div className="col-4">
+                                    <label htmlFor="cashierDate" className="form-label">วันที่รับเงิน</label>
+                                </div>
+                                <div className="col-7">
+                                    {/* <input type="datetime-local" id="cashierDate" required value={cashierDate} onChange={(e) => setCashierDate(e.target.value)} className="form-control" /> */}
+                                    <DatePicker
+                                        showIcon
+                                        disabled={status === 'A'? true :false }
+                                        className="form-control col"
+                                        todayButton="Vandaag"
+                                        id="cashierDate"
+                                        required
+                                        showYearDropdown
+                                        dateFormat="dd/MM/yyyy"
+                                        dropdownMode="select"
+                                        selected={cashierDate}
+                                        onChange={(date) => setCashierDate(date)}
+                                        />
+                                </div>
                             </div>
-                            <div className="col-4">
-                                <select
-                                    id="bankPartner"
-                                    value={bankPartner}
-                                    onChange={(e) => {
-                                        setBankPartner(e.target.value)
-                                    }
-                                    }
-                                    className="form-control"
-                                >
-                                    <option value="" disabled>Select Partner Bank</option>
-                                    {
 
-                                        bankPartnerBrandData.map((bank, index) => (
-                                            <option key={index} value={bank.bankBrand}>
-                                                {`${bank.bankBrand} `}
-                                            </option>
-                                        ))
-                                    }
-                                </select>
-                            </div>
-                        </div>
+                            {/* Receive Form */}
+                            <div className="row mb-3">
+                                <div className="col-4">
+                                    <label htmlFor="receiveForm" className="form-label">รับเงิน จาก</label>
+                                </div>
+                                <div className="col-7">
+                                    {txtype === 'premin' ?
+                                        <select type="text" id="receiveForm" value={receiveForm} onChange={(e) => setReceiveForm(e.target.value)}
+                                            className="form-control"
+                                            disabled={receiveFromReadOnly}
+                                            style={{
+                                                backgroundColor: receiveFromReadOnly ? 'grey' : 'white',
+                                                color: receiveFromReadOnly ? 'white' : null
+                                            }}
 
-                        {/* Bank Branch Partner */}
-                        <div className="row mb-3">
-                            <div className="col-4">
-                                <label htmlFor="bankBranchPartner" className="form-label">Bank Branch Partner</label>
-                            </div>
-                            <div className="col-4">
-                                <select
-                                    id="bankBranchPartner"
-                                    value={bankBranchPartner}
-                                    onChange={(e) => {
-                                        setBankBranchPartner(e.target.value)
-                                    }
-                                    }
-                                    className="form-control"
-                                >
-                                    <option value="" disabled>Select Partner Bank Branch</option>
-                                    {
-                                        bankPartnerBranchData.map((bank, index) => (
-                                            <option key={index} value={bank.bankBranch}>
-                                                {`${bank.bankBranch} `}
-                                            </option>
-                                        ))
-                                    }
-                                </select>
-                            </div>
-                        </div>
+                                        >
+                                            <option value="" disabled>Select Transaction Type</option>
+                                            <option value="Advisor">ผู้แนะนำ</option>
 
-                        {/* Bank No Partner */}
-                        <div className="row mb-3">
-                            <div className="col-4">
-                                <label htmlFor="bankNoPartner" className="form-label">Bank No Partner</label>
-                            </div>
-                            <div className="col-4">
-                                <select
-                                    id="bankNoPartner"
-                                    value={bankNoPartner}
-                                    onChange={(e) => {
-                                        setBankNoPartner(e.target.value)
-                                    }
-                                    }
-                                    className="form-control"
-                                >
-                                    <option value="" disabled>Select Partner Bank No</option>
-                                    {
-                                        bankPartnerBranchData.map((bank, index) => (
-                                            <option key={index} value={bank.bankNo}>
-                                                {`${bank.bankNo} `}
-                                            </option>
-                                        ))
-                                    }
-                                </select>
-                            </div>
-                        </div>
+                                            <option value="Customer">ผู้เอาประกัน</option>
+                                        </select>
+                                        :
+                                        <select type="text" id="receiveForm" value={receiveForm} onChange={(e) => setReceiveForm(e.target.value)}
+                                            className="form-control" disabled
 
-                        {/* Bank Amity */}
-                        <div className="row mb-3">
-                            <div className="col-4">
-                                <label htmlFor="bankAmity" className="form-label">Bank Amity</label>
-                            </div>
-                            <div className="col-4">
-                                <select
-                                    id="bankAmity"
-                                    value={bankAmity}
-                                    onChange={(e) => {
-                                        setBankAmity(e.target.value)
-                                    }
-                                    }
-                                    className="form-control"
-                                >
-                                    <option value="" disabled>Select Amity Bank</option>
-                                    {
+                                            style={{ backgroundColor: 'grey', color: 'white' }}
 
-                                        bankAmityBrandData.map((bank, index) => (
-                                            <option key={index} value={bank.bankBrand}>
-                                                {`${bank.bankBrand} `}
-                                            </option>
-                                        ))
-                                    }
-                                </select>
-                            </div>
-                        </div>
+                                        >
+                                            <option value="" disabled>Select Transaction Type</option>
 
-                        {/* Bank Branch Amity */}
-                        <div className="row mb-3">
-                            <div className="col-4">
-                                <label htmlFor="bankBranchAmity" className="form-label">Bank Branch Amity</label>
-                            </div>
-                            <div className="col-4">
-                                <select
-                                    id="bankBranchAmity"
-                                    value={bankBranchAmity}
-                                    onChange={(e) => {
-                                        setBankBranchAmity(e.target.value)
-                                    }
-                                    }
-                                    className="form-control"
-                                >
-                                    <option value="" disabled>Select Amity Bank Branch</option>
-                                    {
-                                        bankAmityBranchData.map((bank, index) => (
-                                            <option key={index} value={bank.bankBranch}>
-                                                {`${bank.bankBranch} `}
-                                            </option>
-                                        ))
-                                    }
-                                </select>
-                            </div>
-                        </div>
+                                            <option value="Insurer">บริษัทประกัน</option>
 
-                        {/* Bank No */}
-                        <div className="row mb-3">
-                            <div className="col-4">
-                                <label htmlFor="bankNo" className="form-label">Bank No</label>
+                                        </select>}
+                                </div>
                             </div>
-                            <div className="col-4">
-                                <select
-                                    id="bankAmityNo"
-                                    value={bankNo}
-                                    onChange={(e) => {
-                                        setBankNo(e.target.value)
-                                    }
-                                    }
-                                    className="form-control"
-                                >
-                                    <option value="" disabled>Select Amity Bank No</option>
-                                    {
-                                        bankAmityNoData.map((bank, index) => (
-                                            <option key={index} value={bank.bankNo}>
-                                                {`${bank.bankNo} `}
-                                            </option>
-                                        ))
-                                    }
-                                </select>
-                            </div>
-                        </div>
 
-                        {/* Amount */}
-                        <div className="row mb-3">
-                            <div className="col-4">
-                                <label htmlFor="amount" className="form-label">Amount</label>
+                            {/* Receive Name */}
+                            <div className="row mb-3">
+                                <div className="col-4">
+                                    <label htmlFor="receiveName" className="form-label">ชื่อผู้จ่าย</label>
+                                </div>
+                                <div className="col-7">
+                                    <input type="text" id="receiveName" value={receiveName} required
+                                        disabled={receiveFromReadOnly}
+                                        style={{
+                                            backgroundColor: receiveFromReadOnly ? 'grey' : 'white',
+                                            color: receiveFromReadOnly ? 'white' : null
+                                        }}
+                                        onChange={(e) => setReceiveName(e.target.value)} className="form-control text-left" />
+                                </div>
                             </div>
-                            <div className="col-4">
-                                <input type="text" id="amount" required value={amount} onChange={(e) => setAmount(e.target.value)} className="form-control"/>
+                            {/* Receive Type */}
+                            <div className="row mb-3">
+                                <div className="col-4">
+                                    <label htmlFor="receiveType" className="form-label">รูปแบบการชำระ</label>
+                                </div>
+                                <div className="col-7">
+                                    <select id="receiveType" value={receiveType} disabled={status === 'A'? true :false } onChange={(e) => setReceiveType(e.target.value)} className="form-control">
+                                        <option value="" disabled>Select Transaction Type</option>
+                                        <option value="Bank-Transfer">เงินโอน</option>
+                                        <option value="Cheque">เช็ค</option>
+                                        <option value="Cash">เงินสด</option>
+                                        <option value="Draft">draft</option>
+                                        <option value="ETC">อื่นๆ</option>
+                                    </select>
+                                </div>
                             </div>
-                        </div>
 
-                    </form>
-                </Modal.Body>
-                <Modal.Footer>
-                    <div className="row" style={{ marginTop: '20px' }}>
-                        <div className="col-12 text-center">
-                            <button type="submit" className="btn btn-primary btn-lg" onClick={handleSubmit}>Submit</button>
-                        </div>
-                    </div>
+                            {/* Transaction Type */}
+                            <div className="row mb-3">
+                                <div className="col-4">
+                                    <label htmlFor="transactionType" className="form-label">ประเภทธุรกรรม</label>
+                                </div>
+                                <div className="col-7">
+                                    <select
+                                        id="transactionType"
+                                        value={transactionType}
+                                        onChange={(e) => setTransactionType(e.target.value)}
+                                        className="form-control"
+                                        disabled
+                                        style={{ backgroundColor: 'grey', color: 'white' }}
+                                    >
+                                        <option value="" disabled>Select Transaction Type</option>
+                                        <option value="PREM-IN">PREM-IN</option>
+                                        <option value="PREM-OUT">PREM-OUT</option>
+                                        <option value="COMM-OUT">COMM-OUT</option>
+                                        <option value="COMM-IN">COMM-IN</option>
+                                    </select>
+                                </div>
+                            </div>
 
-                    <div className="row" style={{ marginTop: '20px' }}>
-                        <div className="col-12 text-center">
-                            <button type="submit" className="btn btn-primary btn-lg" onClick={handleSave}>Save</button>
-                        </div>
-                    </div>
+                            {receiveType === 'Bank-Transfer' || receiveType === 'Cheque' ?
+                                <>
 
-                    <div className="row" style={{ marginTop: '20px' }}>
-                        <div className="col-12 text-center">
-                            <button type="submit" className="btn btn-primary btn-lg" onClick={handleClose}>Close</button>
-                        </div>
-                    </div>
-
-                </Modal.Footer>
-            </Modal>
-        <div className="container" style={{paddingTop:"30px",paddingBottom:"30px"}}>
-            <div className="row justify-content-center">
-                <div className="col-lg-10">
-                    <form>
-                        <h2 className="text-center" style={{marginBottom:"30px"}}>แก้ไข ใบรับเงิน</h2>
-
-                        {/* Bill advisorcode No */}
-                        <div className="row mb-3">
-                            <div className="col-3">
-                                <label htmlFor="billAdvisorNo" className="form-label">เลขที่ใบวางบิล</label>
-                            </div>
-                            <div className="col-4">
-                                <input type="text" id="billAdvisorNo" value={billAdvisorNo} onChange={(e) => setBillAdvisorNo(e.target.value)} className="form-control"/>
-                            </div>
-                            <div className="col-1 text-center">
-                                <button type="submit" className="btn btn-primary" onClick={searchBill}>ค้นหา</button>
-                            </div>
-                        </div>
-
-                        {/* Cashier Receipt No */}
-                        <div className="row mb-3">
-                            <div className="col-3">
-                                <label htmlFor="cashierReceiptNo" className="form-label">เลขที่ใบรับเงิน</label>
-                            </div>
-                            <div className="col-4">
-                                <input type="text" id="cashierReceiptNo" value={cashierReceiptNo} onChange={(e) => setCashierReceiptNo(e.target.value)} className="form-control"/>
-                            </div>
-                            <div className="col-1">
-                                <input type="checkbox" id="cashierReceiptCheckbox" value={checkboxValue} onChange={(e) => setCheckboxValue(e.target.checked)} className="form-check-input"/>
-                                <label htmlFor="cashierReceiptCheckbox" className="form-check-label">&nbsp;ALL</label>
-                            </div>
-                        </div>
+                                    {/* Ref no  */}
+                                    <div className="row mb-3">
+                                        <div className="col-4">
+                                            <label htmlFor="refno" className="form-label">เลขที่อ้างอิง</label>
+                                        </div>
+                                        <div className="col-7">
+                                            <input type="text" id="refno" required value={refno} onChange={(e) => setRefno(e.target.value)} className="form-control" />
+                                        </div>
+                                    </div>
 
 
-                        {/* insurercode */}
-                        <div className="row mb-3">
-                            <div className="col-3">
-                                <label htmlFor="Insurer" className="form-label">รหัสบริษัทประกัน</label>
-                            </div>
-                            <div className="col-4">
-                                <input type="text" id="InsurerCode" value={insurercode} readOnly={insurerReadOnly} onChange={(e) => setInsurercode(e.target.value)} className="form-control"/>
-                            </div>
-                            <div className="col-1">
-                                <input type="checkbox" id="cashierReceiptCheckbox" value={checkboxValue}  onChange={(e) => setCheckboxValue(e.target.checked)} className="form-check-input"/>
-                                <label htmlFor="cashierReceiptCheckbox" className="form-check-label">&nbsp;ALL</label>
-                            </div>
-                        </div>
-                        {/* advisorcode */}
-                        <div className="row mb-3">
-                            <div className="col-3">
-                                <label htmlFor="Advisor" className="form-label">รหัสผู้แนะนำ</label>
-                            </div>
-                            <div className="col-4">
-                                <input type="text" id="Advisor" value={advisorcode} readOnly={advisoryReadOnly}  onChange={(e) => setAdvisorcode(e.target.value)} className="form-control"/>
-                            </div>
-                            <div className="col-1">
-                                <input type="checkbox" id="cashierReceiptCheckbox" value={checkboxValue} onChange={(e) => setCheckboxValue(e.target.checked)} className="form-check-input"/>
-                                <label htmlFor="cashierReceiptCheckbox" className="form-check-label">&nbsp;ALL</label>
-                            </div>
-                        </div>
-                        {/* Date Select */}
-                        <div className="row">
-                            <div className="col-3">
-                                <label htmlFor="Date Select" className="form-label">วันที่สร้าง จาก</label>
-                            </div>
-                            <div className="col-4">
-                                
-                                {/* <input
-                                    type="date"
-                                    id="fromDate"
-                                    value={fromDate}
-                                    onChange={(e) => setFromDate(e.target.value)}
-                                /> */}
-                                <DatePicker
-                            style={{textAlign: 'center'}}
-                            showIcon
-                            className="form-control"
-                            todayButton="Vandaag"
-                            // isClearable
-                            showYearDropdown
-                            dateFormat="dd/MM/yyyy"
-                            dropdownMode="select"
-                            id="fromDate"
-                            selected={fromDate}
-                            onChange={(date) => setFromDate(date)}
-                                 />
-                            </div>
-                            <div className="col-1">
-                            <label htmlFor="toDate">ถึง &nbsp;</label>
-                            </div>
-                            <div className="col-4">
-                                
-                                {/* <input
-                                    type="date"
-                                    id="toDate"
-                                    value={toDate}
-                                    onChange={(e) => setToDate(e.target.value)}
-                                /> */}
-                                <DatePicker
-                            style={{textAlign: 'center'}}
-                            showIcon
-                            className="form-control"
-                            todayButton="Vandaag"
-                            // isClearable
-                            showYearDropdown
-                            dateFormat="dd/MM/yyyy"
-                            dropdownMode="select"
-                            id="toDate"
-                            selected={toDate}
-                            onChange={(date) => setToDate(date)}
-                                 />
-                            </div>
-                        </div>
+                                    {/* Bank Partner */}
+                                    <div className="row mb-3">
+                                        <div className="col-4">
+                                            <label htmlFor="bankPartner" className="form-label">จากธนาคาร</label>
+                                        </div>
+                                        <div className="col-7">
+                                            <select
+                                                id="bankPartner"
+                                                value={bankPartner}
+                                                onChange={(e) => {
+                                                    setBankPartner(e.target.value)
+                                                }
+                                                }
+                                                className="form-control"
+                                            >
+                                                <option value="" disabled>Select Partner Bank</option>
+                                                {
 
-                        {/* create user code */}
-                        <div className="row mb-3" style={{marginTop:"20px"}}>
-                            <div className="col-3">
-                                <label htmlFor="create user code" className="form-label">รหัสผู้บันทึก</label>
-                            </div>
-                            <div className="col-4">
-                                <input type="text" id="create user code" value={createUserCode} onChange={(e) => setCreateUserCode(e.target.value)} className="form-control"/>
-                            </div>
-                        </div>
-                        {/* refno */}
-                        <div className="row mb-3">
-                            <div className="col-3">
-                                <label htmlFor="Customer" className="form-label">ชื่อผู้แนะนำ</label>
-                            </div>
-                            <div className="col-4">
-                                <input type="text" id="Customer" value={refno} onChange={(e) => setRefno(e.target.value)} className="form-control"/>
-                            </div>
-                        </div>
+                                                    bankPartnerBrandData.map((bank, index) => (
+                                                        <option key={index} value={bank.bankBrand}>
+                                                            {`${bank.bankBrand} `}
+                                                        </option>
+                                                    ))
+                                                }
+                                            </select>
+                                        </div>
+                                    </div>
 
+                                    {/* Bank Branch Partner */}
+                                    <div className="row mb-3">
+                                        <div className="col-4">
+                                            <label htmlFor="bankBranchPartner" className="form-label">สาขา</label>
+                                        </div>
+                                        <div className="col-7">
+                                            <select
+                                                id="bankBranchPartner"
+                                                value={bankBranchPartner}
+                                                onChange={(e) => {
+                                                    setBankBranchPartner(e.target.value)
+                                                }
+                                                }
+                                                className="form-control"
+                                            >
+                                                <option value="" disabled>Select Partner Bank Branch</option>
+                                                {
+                                                    bankPartnerBranchData.map((bank, index) => (
+                                                        <option key={index} value={bank.bankBranch}>
+                                                            {`${bank.bankBranch} `}
+                                                        </option>
+                                                    ))
+                                                }
+                                            </select>
+                                        </div>
+                                    </div>
 
+                                    {/* Bank No Partner */}
+                                    <div className="row mb-3">
+                                        <div className="col-4">
+                                            <label htmlFor="bankNoPartner" className="form-label">เลขที่บัญชี</label>
+                                        </div>
+                                        <div className="col-7">
+                                            <select
+                                                id="bankNoPartner"
+                                                value={bankNoPartner}
+                                                onChange={(e) => {
+                                                    setBankNoPartner(e.target.value)
+                                                }
+                                                }
+                                                className="form-control"
+                                            >
+                                                <option value="" disabled>Select Partner Bank No</option>
+                                                {
+                                                    bankPartnerBranchData.map((bank, index) => (
+                                                        <option key={index} value={bank.bankNo}>
+                                                            {`${bank.bankNo} `}
+                                                        </option>
+                                                    ))
+                                                }
+                                            </select>
+                                        </div>
+                                    </div>
 
-                        {/* Transaction Type */}
-                        <div className="row mb-3">
-                            <div className="col-3">
-                                <label htmlFor="transactionType" className="form-label">ประเภทธุรกรรม</label>
+                                    {/* Bank Amity */}
+                                    <div className="row mb-3">
+                                        <div className="col-4">
+                                            <label htmlFor="bankAmity" className="form-label">ธนาคาร (Amity)</label>
+                                        </div>
+                                        <div className="col-7">
+                                            <select
+                                                id="bankAmity"
+                                                value={bankAmity}
+                                                onChange={(e) => {
+                                                    setBankAmity(e.target.value)
+                                                }
+                                                }
+                                                className="form-control"
+                                            >
+                                                <option value="" disabled>Select Amity Bank</option>
+                                                {
+
+                                                    bankAmityBrandData.map((bank, index) => (
+                                                        <option key={index} value={bank.bankBrand}>
+                                                            {`${bank.bankBrand} `}
+                                                        </option>
+                                                    ))
+                                                }
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    {/* Bank Branch Amity */}
+                                    <div className="row mb-3">
+                                        <div className="col-4">
+                                            <label htmlFor="bankBranchAmity" className="form-label">สาขา (Amity)</label>
+                                        </div>
+                                        <div className="col-7">
+                                            <select
+                                                id="bankBranchAmity"
+                                                value={bankBranchAmity}
+                                                onChange={(e) => {
+                                                    setBankBranchAmity(e.target.value)
+                                                }
+                                                }
+                                                className="form-control"
+                                            >
+                                                <option value="" disabled>Select Amity Bank Branch</option>
+                                                {
+                                                    bankAmityBranchData.map((bank, index) => (
+                                                        <option key={index} value={bank.bankBranch}>
+                                                            {`${bank.bankBranch} `}
+                                                        </option>
+                                                    ))
+                                                }
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    {/* Bank No */}
+                                    <div className="row mb-3">
+                                        <div className="col-4">
+                                            <label htmlFor="bankNo" className="form-label">เลขที่บัญชี (Amity)</label>
+                                        </div>
+                                        <div className="col-7">
+                                            <select
+                                                id="bankAmityNo"
+                                                value={bankNo}
+                                                onChange={(e) => {
+                                                    setBankNo(e.target.value)
+                                                }
+                                                }
+                                                className="form-control"
+                                            >
+                                                <option value="" disabled>Select Amity Bank No</option>
+                                                {
+                                                    bankAmityNoData.map((bank, index) => (
+                                                        <option key={index} value={bank.bankNo}>
+                                                            {`${bank.bankNo} `}
+                                                        </option>
+                                                    ))
+                                                }
+                                            </select>
+                                        </div>
+                                    </div>
+                                </>
+                                : null}
+                            {/* Amount */}
+                            <div className="row mb-3">
+                                <div className="col-4">
+                                    <label htmlFor="amount" className="form-label">จำนวนเงิน</label>
+                                </div>
+                                <div className="col-7">
+                                    <input type="text" id="amount" required 
+                                    value={amount.toLocaleString(undefined, { minimumFractionDigits: 2 }) || 0}
+                                        disabled={receiveFromReadOnly}
+                                        style={{
+                                            backgroundColor: receiveFromReadOnly ? 'grey' : 'white',
+                                            color: receiveFromReadOnly ? 'white' : null
+                                        }}
+                                        onChange={(e) => setAmount(e.target.value)} className="form-control" />
+                                </div>
                             </div>
-                            <div className="col-4">
-                                <select
-                                    id="transactionType"
-                                    value={transactionType}
-                                    onChange={(e) => setTransactionType(e.target.value)}
-                                    className="form-control"
-                                    disabled={transactionTypeReadOnly}
-                                    style={{ backgroundColor: transactionTypeReadOnly ? 'grey' : 'white' }}
-                                >
-                                    <option value="" disabled>เลือกประเภทธุรกรรม</option>
-                                    <option value="PREM-IN">PREM-IN</option>
-                                    <option value="PREM-OUT">PREM-OUT</option>
-                                    <option value="COMM-OUT">COMM-OUT</option>
-                                    <option value="COMM-IN">COMM-IN</option>
-                                </select>
-                            </div>
-                        </div>
-                        {/* dfrpreferno */}
-                        <div className="row mb-3">
-                            <div className="col-3">
-                                <label htmlFor="Customer" className="form-label">เลขที่ตัดหนี้</label>
-                            </div>
-                            <div className="col-4">
-                                <input type="text" id="dfrpreferno" value={dfrpreferno} onChange={(e) => setDfrpreferno(e.target.value)} className="form-control"/>
-                            </div>
-                        </div>
+
+                        </form>
+
 
                         <div className="row" style={{ marginTop: '20px' }}>
-                            <div className="col-12 text-center">
-                                <button type="submit" className="btn btn-primary btn-lg" onClick={searchdata} >ค้นหา</button>
-                            </div>
+                            {/* <div className="col-12 text-center">
+                                <button type="submit" className="btn btn-primary btn-lg" onClick={handleSave}>Save</button>
+                            </div> */}
                         </div>
-
-
-                    </form>
-                </div>
-                <div className="col-lg-12">
-                    <div style={{ overflowY: 'auto', overflowX: 'auto', height: '400px' , marginTop:"50px" }}>
-                        {tableData.length!=0?<table className="table table-striped table-bordered">
-                                <thead className="sticky-header">
-                                <tr>
-                                    <th>ปุ่มแก้ไข</th>
-                                    <th>เลขที่ใบวางบิล</th>
-                                    <th>DFR Preder No</th>
-                                    <th>รหัสบริษัทประกัน</th>
-                                    <th>รหัสผู้แนะนำ</th>
-                                    <th>เลขที่ใบรับเงิน</th>
-                                    <th>วันที่รับเงิน</th>
-                                    <th>เลขที่ตัดหนี้</th>
-                                    <th>จ่ายโดย</th>
-                                    <th>ชื่อผู้จ่าย</th>
-                                    <th>รหัสผู้สร้าง</th>
-                                    <th>วันที่สร้าง</th>
-                                    <th>จำนวนเงิน</th>
-                                    <th>ประเภทการจ่าย</th>
-                                    <th>เลขบัญชี Amity</th>
-                                    <th>ธนาคาร Amity</th>
-                                    <th>สาขาธนาคาร Amity </th>
-                                    <th>เลขที่อ้างอิง</th>
-                                    <th>ธนาคาร</th>
-                                    <th>สาขาธนาคาร</th>
-                                    <th>สถานะ</th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                {tableData.map((row, index) => (
-                                    <tr key={index}>
-                                        <td>{row.status=="I"?<button onClick={()=>click(row)}>แก้ไข</button>:<></>}</td>
-                                        <td>{row.billadvisorno}</td>
-                                        <td>{row.dfrprederno ? row.dfrprederno : 'N/A'}</td>
-                                        <td>{row.insurercode}</td>
-                                        <td>{row.advisorcode}</td>
-                                        <td>{row.cashierreceiveno ? row.cashierreceiveno : 'N/A'}</td>
-                                        <td>{row.cashierdate ? row.cashierdate : 'N/A'}</td>
-                                        {/*<td>{row.ARNO ? row.ARNO : 'N/A'}</td>*/}
-                                        <td>{row.receivefrom}</td>
-                                        <td>{row.receivename}</td>
-                                        <td>{row.createusercode}</td>
-                                        <td>{row.createdAt}</td>
-                                        <td>{row.amt}</td>
-                                        <td>{row.receivetype}</td>
-                                        <td>{row.amityAccountno}</td>
-                                        <td>{row.amityBank}</td>
-                                        <td>{row.amityBankbranch}</td>
-                                        <td>{row.partnerAccountno ? row.partnerAccountno : 'N/A'}</td>
-                                        <td>{row.partnerBank}</td>
-                                        <td>{row.partnerBankbranch}</td>
-                                        <td>{row.status}</td>
-
-                                    </tr>
-                                ))}
-                                </tbody>
-                            </table>:
-                            <div className="container" style={{marginTop:"30px"}}>
-                                <div className="row justify-content-center">
-                                    <h2 className={"text-center"}>ไม่มีข้อมูล</h2>
-                                </div>
-                            </div>}
+                        <div className="row" style={{ marginTop: '20px' }}>
+                        {status === 'A'? null 
+                        :
+                            <div className="col-12 text-center">
+                                <button type="submit" className="btn btn-primary btn-lg" onClick={handleEdit}>Submit</button>
+                            </div>
+                            }
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-            </>
+        </>
     );
 };
-
 export default EditCashierReceive;

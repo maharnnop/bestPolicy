@@ -1,7 +1,7 @@
 import styled from "styled-components";
 
 export const HeaderProfile = styled.h1 `
-    color: #0f0e9f;
+    color: #05276B;
     padding-bottom: 7px;
 `
 export const EditBtn = styled.button `

@@ -6,6 +6,9 @@ import jwt_decode from "jwt-decode";
 import { CenterPage } from "../StylesPages/AdminStyles";
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
+import { FormProvider, useForm } from 'react-hook-form';
+import { Input } from '../lib/Input.jsx';
+import { name_validation } from '../utils/inputValidation.js'
 
 
 
@@ -33,6 +36,7 @@ const NormalText = {
 /* eslint-disable react-hooks/exhaustive-deps */
 
 const Agent = () => {
+  const methods = useForm()
   const params = useParams()
   const [cookies, setCookie, removeCookie] = useCookies(["jwt"]);
   const headers = {
@@ -48,7 +52,7 @@ const Agent = () => {
     premCreditUnit: 'D',
     stamentType: 'Net'
   });
-  const [entityData, setEntityData] = useState({ personType: "P",vatRegis:false });
+  const [entityData, setEntityData] = useState({ personType: "P", vatRegis: false });
   const [locationData, setLocationData] = useState({ entityID: null, locationType: 'A' });
   const [contactData, setContactData] = useState({
     entityID: null,
@@ -485,10 +489,10 @@ const Agent = () => {
         // let token = res.data.jwt;
         // let decode = jwt_decode(token);
         // navigate("/");
-        // window.location.reload();
         // localStorage.setItem("jwt", token);
         console.log(res.data);
         alert("create new advisor success : " + agentData.agentCode)
+        window.location.reload();
       })
       .catch((err) => {
 
@@ -548,7 +552,8 @@ const Agent = () => {
   return (
     <CenterPage>
       {/* <BackdropBox1> */}
-      <form onSubmit={params.agentCode ? handleUpdate : handleSubmit}>
+      
+      <form onSubmit={params.agentCode ? handleUpdate  : handleSubmit}>
         {/* insurer table */}
         <h1 className="text-center" >ผู้แนะนำ</h1>
         <div class="row form-group form-inline">
@@ -564,6 +569,17 @@ const Agent = () => {
               name="agentCode"
               onChange={changeAgent}
             />
+            {/* <Input
+          name="agentCode"
+          label="Agent Code"
+          type="text"
+          placeholder="Enter agent code"
+          validation={{
+            required: 'This field is required',
+            minLength: { value: 6, message: 'Minimum length is 6 characters' },
+          }}
+        /> */}
+       
           </div>
           <div class="col-2">
             <label class="form-label ">ประเภทการชำระ<span class="text-danger"> *</span></label>
@@ -753,7 +769,7 @@ const Agent = () => {
           <div class="col-1 "></div>
           <div class="col-2">
             <label class="form-label ">
-              ประเภทภาษีหัก ณ ที่จ่าย
+              ประเภทภาษีหัก ณ ที่จ่าย<span class="text-danger"> *</span>
             </label>
             <select
             required={entityData.personType === 'O' ? true : false}
@@ -771,7 +787,7 @@ const Agent = () => {
 
           <div class="col-2">
             <label class="form-label ">
-              อัตราภาษีหัก ณ ที่จ่าย
+              อัตราภาษีหัก ณ ที่จ่าย<span class="text-danger"> *</span>
             </label>
             <div class="input-group mb-3">
               <input
@@ -793,7 +809,7 @@ const Agent = () => {
 
           <div class="col-2">
             <label class="form-label ">
-              เลขที่จดทะเบียน
+              เลขที่จดทะเบียน<span class="text-danger"> *</span>
             </label>
             <input
             required={entityData.personType === 'O' ? true : false}
@@ -1362,7 +1378,7 @@ const Agent = () => {
         </div>
 
       </form>
-
+      
       {/* <Link to="/signup" style={NormalText}>
           First time here ? Let's sign up
         </Link> */}

@@ -2,7 +2,7 @@ import styled from "styled-components";
 
 export const FooterBody = styled.div `
     z-index: -1000;
-    background-color: #0f0e9f;
+    background-color: #05276B;
     position: absolute;
     height: 200px;
     width: 100%;

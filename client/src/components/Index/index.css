@@ -1,7 +1,7 @@
 
 .slider {
     border-radius: 30px;
-    background-color: #0f0e9f;
+    background-color: #05276B;
     color: aliceblue;
     width: 100%;
     padding-bottom: 25px;
@@ -15,7 +15,7 @@ ul li {
 }
 .head-of-slider {
     padding: 45px 0;
-    color: #0f0e9f;
+    color: #05276B;
 }
 .carousel .carousel-status {
     opacity: 0;
@@ -31,9 +31,9 @@ ul li {
 }
 
 .btnHover:hover {
-    color: #0f0e9f;
+    color: #05276B;
     background-color: #fff;
-    border: 2px solid #0f0e9f;
+    border: 2px solid #05276B;
     font-weight: bold;
     box-shadow: rgb(15,14,159,0.5) 0px 2px 8px 0px;
 }
@@ -43,14 +43,14 @@ ul li {
 }
 
 #Option::after {
-    background-color: #0f0e9f !important;
+    background-color: #05276B !important;
 }
 
 .container h1 {
    margin:0;
    padding: 15px;
     text-align: center;
-    color: #0f0e9f;
+    color: #05276B;
 }
 div.container{
     padding: 3rem 2rem;

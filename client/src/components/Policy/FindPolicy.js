@@ -45,6 +45,7 @@ const FindPolicy = () => {
     const [locationData, setLocationData] = useState({ entityID: null, locationType: 'A' });
     // dropdown
     const [provinceDD, setProvinceDD] = useState([])
+    const [agentDD, setAgentDD] = useState([]);
     const [filterData, setFilterData] = useState(
         {
             "insurerCode": null,
@@ -123,6 +124,23 @@ const FindPolicy = () => {
                 setInsurerDD(array);
             })
             .catch((err) => { });
+            
+        // get agent all
+        axios
+        .get(url + "/persons/agentall", headers)
+        .then((agent) => {
+            const array = [];
+            agent.data.forEach((ele) => {
+                array.push(
+                    // <option key={ele.id} value={ele.agentCode}>
+                    //     {ele.agentCode}
+                    // </option>
+                    { label: ele.agentCode, value: ele.agentCode }
+                );
+            });
+            setAgentDD(array);
+        })
+        .catch((err) => { });
 
 
     }, []);
@@ -337,12 +355,22 @@ const FindPolicy = () => {
 
                     </div>
                     <div class="col-2 ">
-                        <div class="input-group mb-3">
-                            <input type="text" class="form-control" name="agentCode" onChange={handleChange} />
-                            
+                      
+                            {/* <input type="text" class="form-control" name="agentCode" onChange={handleChange} /> */}
+                            <Select
+                                
+                                class="form-control "
+                                name={`agentCode`}
+                                onChange={(e) => setFilterData((prevState) => ({
+                                    ...prevState,
+                                    agentCode: e.value,
+                                  }))}
+                                options={agentDD}
+
+                            />
 
 
-                        </div>
+                      
 
 
                     </div>
@@ -677,7 +705,7 @@ const FindPolicy = () => {
                             <th scope="col">เลขที่ใบคำขอ</th>
                             <th scope="col">เลขที่กรมธรรม์</th>
                             <th scope="col">เลขที่สลักหลัง</th>
-                            <th scope="col">เลขที่ใบแจ้งหนี้</th>
+                            <th scope="col">เลขที่ใบแจ้งหนี้ </th>
                             <th scope="col">เลขที่ใบกำกับภาษี</th>
                             <th scope="col">ลำดับที่</th>
                             <th scope="col">บริษัทรับประกัน</th>
