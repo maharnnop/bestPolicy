@@ -3,7 +3,8 @@ WORKDIR /usr/src/app
 
 # Copy package files and install only production dependencies
 COPY package*.json ./
-RUN npm install --only=production
+# RUN npm install --only=production
+# RUN npm install
 
 # Copy the rest of your application
 COPY . .

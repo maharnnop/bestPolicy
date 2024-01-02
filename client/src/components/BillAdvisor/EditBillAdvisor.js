@@ -202,7 +202,7 @@ const EditBillAdvisor = (props) => {
             whtcom: (net.whtcom).toFixed(2),
             ov_out: (net.ov_out).toFixed(2),
             whtov: (net.whtov).toFixed(2),
-            billprem: (net.prem + gross.prem + net.comm_out + net.whtcom + net.ov_out + net.whtov).toFixed(2),
+            billprem: (net.prem + gross.prem + net.comm_out + net.whtcom + net.ov_out + net.whtov - net.withheld - gross.withheld).toFixed(2),
         }
         setPoliciesRender({ net: net, gross: gross, total: total })
     };
@@ -289,33 +289,33 @@ const EditBillAdvisor = (props) => {
                     alert("not found policy")
 
                 } else {
-
                     const array = billpremiumDataOld.map((ele)=>ele)
                     // const arrPoldata = policiesDataOld.map((ele)=>ele)
                     const arrPoldata =[]
-                    for (let i = 0; i < res.data.length; i++) {
+                    for (let i = 0; i < res.data.records.length; i++) {
                         // console.log(statementtypeData[i].statementtype == null? res.data[i].totalprem -res.data[i].commout_amt-res.data[i].ovout_amt: res.data[i].totalprem);
-                        array.push(res.data[i].totalprem)
+                        array.push(res.data.records[i].totalprem)
                         
-                            arrPoldata.push(res.data[i])
+                        arrPoldata.push(res.data.records[i])
                         
                     }
                     
                     setPoliciesData(arrPoldata)
-                    setFilterData({...filterData, insurerCode:res.data[0].insurerCode, agentCode:res.data[0].agentCode })
+                    console.log(res.data);
+                    setFilterData({...filterData, ...res.data.vatflag[0] })
                     setBillpremiumData(array)
-
-
+                    
+                    
                     // const array = []
                     // for (let i = 0; i < res.data.length; i++) {
-                    //     // console.log(statementtypeData[i].statementtype == null? res.data[i].totalprem -res.data[i].commout_amt-res.data[i].ovout_amt: res.data[i].totalprem);
-                    //     array.push(res.data[i].totalprem)
-
-                    // }
-                    // console.log(array);
-                    // setPoliciesData(...res.data, ...policiesData)
-                    // setBillpremiumData(array)
-                    setHideAddCard(false)
+                        //     // console.log(statementtypeData[i].statementtype == null? res.data[i].totalprem -res.data[i].commout_amt-res.data[i].ovout_amt: res.data[i].totalprem);
+                        //     array.push(res.data[i].totalprem)
+                        
+                        // }
+                        // console.log(array);
+                        // setPoliciesData(...res.data, ...policiesData)
+                        // setBillpremiumData(array)
+                        setHideAddCard(false)
                     alert("find data success")
                 }
             })
@@ -674,8 +674,8 @@ const EditBillAdvisor = (props) => {
                             <th scope="col">net</th>
                             <th scope="col">เลขที่กรมธรรม์</th>
                             <th scope="col">เลขที่สลักหลัง</th>
-                            <th scope="col">เลขที่ใบแจ้งหนี้</th>
-                            <th scope="col">เลขที่ใบกำกับภาษี</th>
+                            <th scope="col">เลขที่ใบแจ้งหนี้ (อะมิตี้)</th>
+                            {/* <th scope="col">เลขที่ใบกำกับภาษี</th> */}
                             <th scope="col">ลำดับที่</th>
 
                             <th scope="col">รหัสบริษัทประกัน</th>
@@ -719,7 +719,7 @@ const EditBillAdvisor = (props) => {
                                 <td >{ele.policyNo}</td>
                                 <td>{ele.endorseNo}</td>
                                 <td>{ele.invoiceNo}</td>
-                                <td>{ele.taxinvoiceNo}</td>
+                                {/* <td>{ele.taxinvoiceNo}</td> */}
                                 <td>{ele.seqNo}</td>
 
                                 <td style={{'text-align': 'center'}} >{ele.insurerCode}</td>
@@ -758,7 +758,7 @@ const EditBillAdvisor = (props) => {
                                 <td>{ele.policyNo}</td>
                                 <td>{ele.endorseNo}</td>
                                 <td>{ele.invoiceNo}</td>
-                                <td>{ele.taxinvoiceNo}</td>
+                                {/* <td>{ele.taxinvoiceNo}</td> */}
                                 <td>{ele.seqNo}</td>
 
                                 <td style={{'text-align': 'center'}} >{ele.insurerCode}</td>

@@ -40,7 +40,11 @@ const PolicyCard = (props) => {
 
   const submitFilter = (e) =>{
     e.preventDefault();
-    axios.post(url + "/policies/findpolicy",filterData,headers)
+    const data = {
+      policyNo: filterData.policyNo.trim(),
+      applicationNo: filterData.applicationNo.trim(),
+    }
+    axios.post(url + "/policies/findpolicy",data,headers)
           .then((pols) => {  
             // data =   agents.data.map(ele =>{
             //   let duedateA = new Date()
@@ -58,7 +62,7 @@ const PolicyCard = (props) => {
             if (pols.data.length === 0) {
               alert('ไม่กรมธรรม์นี้')
             }
-            console.log(data);
+            // console.log(data);
           })
           .catch((err) => { 
             alert(err.data)

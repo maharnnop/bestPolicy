@@ -51,7 +51,7 @@ const Login = () => {
         window.location.reload();
         // localStorage.setItem("jwt", token);
         setCookie("jwt", token)
-        
+        localStorage.setItem('navSelect', ['N','N','N','N','N','N','N','N','N','N']);
       })
       .catch((err) => {
         if (err.response.status === 401) {

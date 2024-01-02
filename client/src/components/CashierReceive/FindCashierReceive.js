@@ -4,6 +4,7 @@ import axios from "axios";
 import jwt_decode from "jwt-decode";
 import EditCashierReceive from "./EditCashierReceive";
 import DatePicker from 'react-datepicker';
+import {convertDateFormat , convertDate2} from "../lib/convertdateformat";
 import 'react-datepicker/dist/react-datepicker.css';
 import {
     BrowserRouter,
@@ -42,12 +43,13 @@ const FindCashierReceive = () => {
     const [advisorcode, setAdvisorcode] = useState("")
     const [refno, setRefno] = useState("");
     const [cashierReceiptNo, setCashierReceiptNo] = useState("");
+    const [status, setStatus] = useState("I");
     const [transactionType, setTransactionType] = useState("PREM-IN");
     const [checkboxValue, setCheckboxValue] = useState();
-    const [createUserCode, setCreateUserCode] = useState();
+    const [createUserCode, setCreateUserCode] = useState("");
     const [fromDate, setFromDate] = useState('');
     const [toDate, setToDate] = useState('');
-    const [dfrpreferno, setDfrpreferno] = useState();
+    const [dfrpreferno, setDfrpreferno] = useState("");
     const [advisoryReadOnly, setAdvisoryReadOnly] = useState(false)
     const [insurerReadOnly, setInsurerReadOnly] = useState(false)
     const [transactionTypeReadOnly, setTransactionTypeReadOnly] = useState(false)
@@ -83,17 +85,22 @@ const FindCashierReceive = () => {
     }
     const searchdata = (e) =>{
         e.preventDefault()
+        console.log(new Date(fromDate))
+
+        const startdate = convertDate2(fromDate,1)
+        const enddate = convertDate2(toDate,1,true)
         let data = JSON.stringify({
-            "billadvisorno": billAdvisorNo,
+            "billadvisorno": billAdvisorNo.trim(),
+            "cashierReceiptNo":cashierReceiptNo.trim(),
+            "status" :status,
             "insurercode":insurercode,
             "advisorcode":advisorcode,
-            "refno":refno,
-            "cashierReceiptNo":cashierReceiptNo,
+            "fromDate":startdate,
+            "toDate":enddate,
+            "createUserCode":createUserCode.trim(),
             "transactionType":transactionType,
-            "createUserCode":createUserCode,
-            "fromDate":fromDate,
-            "toDate":toDate,
-            "dfrpreferno":dfrpreferno
+            "dfrpreferno":dfrpreferno.trim(),
+            "refno":refno.trim(),
         });
         axios.post(url+"/bills/findbill",data,headers)
             .then((response) => {
@@ -127,6 +134,9 @@ const FindCashierReceive = () => {
                             {/* <div className="col-1 text-center">
                                 <button type="submit" className="btn btn-primary" onClick={searchBill}>ค้นหา</button>
                             </div> */}
+                            <div className="col-2 text-center">
+                                <button type="submit" className="btn btn-primary btn-lg" onClick={searchdata} >ค้นหารายการ</button>
+                            </div>
                         </div>
                         
                         {/* Cashier Receipt No */}
@@ -141,6 +151,20 @@ const FindCashierReceive = () => {
                                 <input type="checkbox" id="cashierReceiptCheckbox" value={checkboxValue} onChange={(e) => setCheckboxValue(e.target.checked)} className="form-check-input"/>
                                 <label htmlFor="cashierReceiptCheckbox" className="form-check-label">&nbsp;ALL</label>
                             </div>
+                            <div class="col-1">
+                        <label class="col-form-label">สถานะใบรับเงิน</label>
+
+                    </div>
+                    <div class="col-2 ">
+                        <div class="input-group mb-3">
+                            <select  class="form-control"  name="status" value={status} onChange={(e) => setStatus(e.target.value)} >
+                            <option selected value='I'>(I) Inprocess</option>
+                            <option  value='A'>(A) Approve</option>
+                            </select>
+                            
+
+                        </div>
+                        </div>
                         </div>
 
 
@@ -235,14 +259,14 @@ const FindCashierReceive = () => {
                             </div>
                         </div>
                         {/* refno */}
-                        <div className="row mb-3">
+                        {/* <div className="row mb-3">
                             <div className="col-3">
                                 <label htmlFor="Customer" className="form-label">ชื่อผู้แนะนำ</label>
                             </div>
                             <div className="col-4">
                                 <input type="text" id="Customer" value={refno} onChange={(e) => setRefno(e.target.value)} className="form-control"/>
                             </div>
-                        </div>
+                        </div> */}
 
 
 
@@ -279,9 +303,7 @@ const FindCashierReceive = () => {
                         </div>
 
                         <div className="row" style={{ marginTop: '20px' }}>
-                            <div className="col-12 text-center">
-                                <button type="submit" className="btn btn-primary btn-lg" onClick={searchdata} >Search</button>
-                            </div>
+                            
                         </div>
                         
 
@@ -293,50 +315,55 @@ const FindCashierReceive = () => {
                             <thead>
                             <tr>
                                 <th>เลขที่ใบวางบิล</th>
-                                <th>DFR Preder No</th>
+                                {/* <th>DFR Preder No</th> */}
                                 <th>รหัสบริษัทประกัน</th>
                                 <th>รหัสผู้แนะนำ</th>
                                 <th>เลขที่ใบรับเงิน</th>
                                 <th>วันที่รับเงิน</th>
                                 <th>เลขที่ตัดหนี้</th>
+                                <th>วันที่ตัดหนี้</th>
                                 <th>จ่ายโดย</th>
                                 <th>ชื่อผู้จ่าย</th>
                                 <th>รหัสผู้สร้าง</th>
                                 <th>วันที่สร้าง</th>
                                 <th>จำนวนเงิน</th>
-                                <th>ประเภทการจ่าย</th>
+                                {/* <th>ประเภทการจ่าย</th>
                                 <th>เลขบัญชี Amity</th>
                                 <th>ธนาคาร Amity</th>
                                 <th>สาขาธนาคาร Amity </th>
                                 <th>เลขที่อ้างอิง</th>
                                 <th>ธนาคาร</th>
-                                <th>สาขาธนาคาร</th>
+                                <th>สาขาธนาคาร</th> */}
                                 <th>สถานะ</th>
+                                <th></th>
                             </tr>
                             </thead>
                             <tbody>
                             {tableData.map((row, index) => (
                                 <tr key={index}>
                                     <td>{row.billadvisorno}</td>
-                                    <td>{row.dfrprederno ? row.dfrprederno : 'N/A'}</td>
+                                    {/* <td>{row.dfrprederno ? row.dfrprederno : 'N/A'}</td> */}
                                     <td>{row.insurercode}</td>
                                     <td>{row.advisorcode}</td>
                                     <td>{row.cashierreceiveno ? row.cashierreceiveno : 'N/A'}</td>
-                                    <td>{row.cashierdate ? row.cashierdate : 'N/A'}</td>
+                                    <td>{row.cashierdate ? convertDateFormat(row.cashierdate) : 'N/A'}</td>
                                     <td>{row.dfrpreferno ? row.dfrpreferno : 'N/A'}</td>
+                                    <td>{row.rprefdate ? row.rprefdate : 'N/A'}</td>
                                     <td>{row.receivefrom}</td>
                                     <td>{row.receivename}</td>
                                     <td>{row.createusercode}</td>
-                                    <td>{row.createdAt}</td>
+                                    <td>{convertDateFormat(row.createdAt)}</td>
                                     <td>{row.amt}</td>
-                                    <td>{row.receivetype}</td>
+                                    {/* <td>{row.receivetype}</td>
                                     <td>{row.amityAccountno}</td>
                                     <td>{row.amityBank}</td>
                                     <td>{row.amityBankbranch}</td>
                                     <td>{row.partnerAccountno ? row.partnerAccountno : 'N/A'}</td>
                                     <td>{row.partnerBank}</td>
-                                    <td>{row.partnerBankbranch}</td>
+                                    <td>{row.partnerBankbranch}</td> */}
                                     <td>{row.status}</td>
+                                    <td>{row.status === 'I' ? <button onClick={() =>navigate('/cashier/editcashier?cashno=' + row.cashierreceiveno)}>แก้ไข</button> 
+                                :  <button onClick={() =>navigate('/cashier/editcashier?cashno=' + row.cashierreceiveno)}>ดูรายละเอียด</button> }</td>
                                 </tr>
                             ))}
                             </tbody>

@@ -31,30 +31,30 @@ export const TxtLorem = styled.p `
 `
 
 export const H1 = styled.h1 `
-    color: #0f0e9f;
+    color: #05276B;
     text-transform: uppercase;
     letter-spacing: 1px;
 `
 
 export const H2UpperCase = styled.h2 `
-    color: #0f0e9f;
+    color: #05276B;
     text-transform: uppercase;
     font-size: 22px;
 `
 export const H2 = styled.h2 `
-    color: #0f0e9f;
+    color: #05276B;
 `
 
 export const H3 = styled.h3 `
-    color: #0f0e9f;
+    color: #05276B;
 `
 
 export const BuyBtn = styled.input `
-    background-color: #0f0e9f;
+    background-color: #05276B;
     color: #fff;
     border-radius: 8px;
     margin-left: 5px;
-    border: 1px solid #0f0e9f;
+    border: 1px solid #05276B;
 `
 
 export const CarList = styled.select `

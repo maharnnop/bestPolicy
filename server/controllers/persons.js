@@ -116,7 +116,7 @@ const getInsurerAll = (req, res) => {
     FROM static_data."Insurers" ins
      JOIN static_data."Entities" e ON ins."entityID" = e."id"
      join static_data."Titles" t on e."titleID" = t."TITLEID" 
-     where ins.lastversion ='Y';`,
+     where ins.lastversion ='Y' order by ins."insurerCode" ;`,
     { type: QueryTypes.SELECT }).then((insurer) => {
       res.json(insurer);
     });
@@ -224,9 +224,16 @@ const updateInsurer = async (req, res) => {
 
 //get agent all
 const getAgentAll = (req, res) => {
-  Agent.findAll().then((agent) => {
-    res.json(agent);
-  });
+  sequelize.query(
+    `select *,(t."TITLETHAIBEGIN" ||' '|| e."t_firstName"||' '|| e."t_lastName" ||' '||t."TITLETHAIEND") as fullname , agt.id as id
+    FROM static_data."Agents" agt
+     JOIN static_data."Entities" e ON agt."entityID" = e."id"
+     join static_data."Titles" t on e."titleID" = t."TITLEID" 
+     where agt.lastversion ='Y' order by agt."agentCode" ;`,
+    { type: QueryTypes.SELECT }).then((agent) => {
+      res.json(agent);
+    });
+  
 };
 
 //use create agent

@@ -1,4 +1,5 @@
 export const  stringToNumber = (value) => { // input number with comma 2 decimal
+  // console.log(value);
   const integerValue = parseFloat(value.replace(/,/g, ''), 10);
   return integerValue
 }

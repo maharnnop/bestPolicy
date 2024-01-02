@@ -25,61 +25,42 @@ export default function CommOutCreate() {
         "policyNostart" : null,
         "policyNoend" : null,
         "dueDate" : null,
+        "AR_PREM_IN" : null,
+        "AR_PREM_OUT" : null,
+        "AR_COMM_IN" : null,
 
     })
     const [policiesData, setPoliciesData] = useState([])
     const [hidecard, setHidecard] = useState([false, 0]);
-  const colsData = [
-    "select",
-    "insurerCode",
-    "advisorCode",
-    "Duedate",
-    "Policyno",
-    "Endorseno",
-    "Invoiceno",
-    "seqno",
-    "customerid",
-    "insuredname",
-    "licenseno",
-    "province",
-    "chassisno",
-    "grossprem",
-    "duty",
-    "tax",
-    "totalamt",
-    "comm-out%",
-    "comm-out-amt",
-    "ov-out%",
-    "ov-out-amt",
-    "[] net",
-    "billpremium",
-  ];
+  
   const cols2Data = {
     select : "เลือก",
     insurerCode:"รหัสบริษัทประกัน",
     agentCode:"รหัสผู้แนะนำ",
-    dueDate:"Duedate",
-    policyNo:"เลขกรมธรรม์",
-    endorseNo: "เลขสลักหลัง",
-    invoiceNo: "เลขใบแจ้งหนี้",
+    dueDate:"Due Date",
+    policyNo:"เลขที่กรมธรรม์",
+    endorseNo: "เลขที่สลักหลัง",
+    invoiceNo: "เลขที่ใบแจ้งหนี้ Amity",
     seqNo: "งวด",
-    customerid: "ID",
+    // customerid: "ID",
     insureename:  "ชื่อ ผู้เอาประกัน",
     licenseNo: "เลขทะเบียนรถ",
     // province: "province", // nodata
     chassisNo: "เลขคัชซี",
-    netgrossprem: "เบี้ยประกัน",
+    grossprem:"เบี้ย",
+    specdiscamt : "ส่วนลด",
+    netgrossprem: "เบี้ยสุทธิ",
     duty: "อากร",
     tax: "ภาษี",
+    totalprem: "เบี้ยรวม",
     withheld: "WHT 1%",
-    totalprem: "เบี้ยประกันรวม",
     commout_rate: "Comm Out %",
     commout_amt: "จำนวน",
-    // commout_taxamt: "vat-comm-out",
+    commout_taxamt: "Vat Comm Out",
     // commout_total: "comm-out-total",
-    ovout_rate: "Ov Out %",
+    ovout_rate: "OV Out %",
     ovout_amt: "จำนวน",
-    // ovout_taxamt: "vat-ov-out",
+    ovout_taxamt: "Vat OV Out",
     // ovout_total: "ov-out-total",
     'premin-rprefdate': "วันที่รับ Prem In",
     'premin-dfrpreferno': "เลขตัดหนี้ Prem In",
@@ -180,8 +161,9 @@ const saveapcommout = async (e) => {
 };
 
 const submitapcommout = async (e) => {
-  console.log({master :  filterData, trans : policiesData});
-  await axios.post(url + "/araps/submitapcommout", {master :filterData, trans : policiesData}, headers).then((res) => {
+  const array = policiesData.filter((ele) => ele.select)
+  console.log({master :  filterData, trans : array});
+  await axios.post(url + "/araps/submitapcommout", {master :filterData, trans : array}, headers).then((res) => {
     alert(res.data.msg)
     
     window.location.reload(false);
@@ -210,6 +192,9 @@ const submitapcommout = async (e) => {
               onChange={handleChange}
             />
           </div>
+          <div className="col-3 d-flex justify-content-center">
+          <input type="submit" className="btn btn-success"  value={'ค้นหารายการ'}/>
+        </div>
         </div>
        {/* advisorCode  */}
        <div className="row my-3"><div class="col-1"></div>
@@ -227,6 +212,52 @@ const submitapcommout = async (e) => {
               onChange={handleChange}
             />
           </div>
+        </div>
+        {/* ARAP PREM-IN  */}
+       <div className="row my-3"><div class="col-1"></div>
+          <label class="col-sm-2 col-form-label" htmlFor="agentCode">
+            เลขที่ตัดหนี้ PREM-IN
+          </label>
+          <div className="col-3 ">
+            <input
+            
+              className="form-control"
+              type="text"
+              name="AR_PREM_IN"
+              value={filterData.AR_PREM_IN}
+              onChange={handleChange}
+            />
+          </div>
+        </div>
+        {/* ARAP PREM-OUT/ COMM-IN  */}
+       <div className="row my-3"><div class="col-1"></div>
+          <label class="col-sm-2 col-form-label" htmlFor="agentCode">
+            เลขที่ตัดหนี้ PREM-OUT
+          </label>
+          <div className="col-3 ">
+            <input
+            
+              className="form-control"
+              type="text"
+              name="AR_PREM_OUT"
+              value={filterData.AR_PREM_OUT}
+              onChange={handleChange}
+            />
+          </div>
+          <label class="col-sm-2 col-form-label" htmlFor="agentCode">
+            เลขที่ตัดหนี้ COMM-IN
+          </label>
+          <div className="col-3 ">
+            <input
+            
+              className="form-control"
+              type="text"
+              name="AR_COMM_IN"
+              value={filterData.AR_COMM_IN}
+              onChange={handleChange}
+            />
+          </div>
+          
         </div>
           {/* PolicyNo*/}
         <div className="row my-3"><div class="col-1"></div>
@@ -331,9 +362,7 @@ const submitapcommout = async (e) => {
         </div>
        
         
-        <div className="d-flex justify-content-center">
-          <input type="submit" className="btn btn-success"  value={'ค้นหา'}/>
-        </div>
+        
       </form>
       <Modal size='m' show={hidecard[0]} onHide={handleClose}>
                 <Modal.Header closeButton>

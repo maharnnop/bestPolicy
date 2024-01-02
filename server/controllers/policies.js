@@ -408,9 +408,8 @@ const createTransection = async (policy,t) => {
           type: QueryTypes.INSERT
         }
       );
-     }
 
-     // case 2 advisor amity -> advisor2 (comm/ov-out)
+      // case 2 advisor amity -> advisor2 (comm/ov-out)
      
      if (policy.agentCode2 ) {
       date = new Date()
@@ -444,18 +443,18 @@ const createTransection = async (policy,t) => {
             agentCode: policy.agentCode,
             agentCode2: policy.agentCode2,
             policyNo: policy.policyNo,
-            commamt: policy.commout_amt,
+            commamt: jupgr.advisor[i].commout2_amt,
             commtaxamt: null,
-            totalamt: totalamt,
-            duedate: dueDate,
-            netgrossprem: policy.netgrossprem,
-            duty: policy.duty,
-            tax: policy.tax,
+            totalamt: jupgr.advisor[i].commout2_amt,
+            duedate: jupgr.advisor[i].dueDate,
+            netgrossprem: jupgr.advisor[i].netgrossprem,
+            duty: jupgr.advisor[i].duty,
+            tax: jupgr.advisor[i].tax,
             totalprem: policy.totalprem,
             txtype2 :1,
-            seqno:1,
+            seqno:i +1 ,
             mainaccountcode: policy.agentCode2,
-            withheld: 0
+            withheld : jupgr.advisor[i].withheld,
 
           },
           transaction: t ,
@@ -481,18 +480,18 @@ const createTransection = async (policy,t) => {
             agentCode: policy.agentCode,
             agentCode2: policy.agentCode2,
             policyNo: policy.policyNo,
-            ovamt: policy.ovout_amt,
+            ovamt: jupgr.advisor[i].ovout2_amt,
             ovtaxamt: null,
-            totalamt: totalamt,
-            duedate: dueDate,
-            netgrossprem: policy.netgrossprem,
-            duty: policy.duty,
-            tax: policy.tax,
-            totalprem: policy.totalprem,
+            totalamt: jupgr.advisor[i].ovout2_amt,
+            duedate: jupgr.advisor[i].dueDate,
+            netgrossprem: jupgr.advisor[i].netgrossprem,
+            duty: jupgr.advisor[i].duty,
+            tax: jupgr.advisor[i].tax,
+            totalprem: jupgr.advisor[i].totalprem,
             txtype2 :1,
-            seqno:1,
+            seqno:i +1 ,
             mainaccountcode: policy.agentCode2,
-            withheld : 0 
+            withheld:jupgr.advisor[i].withheld,
     
           },
           transaction: t ,
@@ -501,6 +500,10 @@ const createTransection = async (policy,t) => {
       );
       
      }
+
+     }
+
+     
    
 
 
@@ -1067,9 +1070,29 @@ const draftPolicyList = async (req, res) => {
         )
       } else {
         //select insuree
+        let conInsuree = ''
+        if (req.body[i].personType === "P") {
+          conInsuree = `ent."personType" = 'P' and ent."idCardNo" = :idCardNo 
+                        and ent."titleID" = :titleID and ent."t_firstName" = :t_firstName 
+                        and ent."t_lastName" = :t_lastName and ent."idCardType" = :idCardType`
+        }else[
+          conInsuree = `ent."personType" = 'O' and ent."taxNo" = :taxNo 
+                        and ent."titleID" = :titleID and ent."t_ogName" = :t_ogName 
+                        and ent."branch" = :branch `
+        ]
         const insuree = await sequelize.query(
-          'select * FROM static_data."Insurees" ins JOIN static_data."Entities" ent ON ins."entityID" = ent."id" WHERE (CASE WHEN trim(ent."personType") = \'P\' THEN "idCardNo" ELSE "taxNo" END) = :idNo ',
-          { replacements: { idNo: req.body[i].personType === "P" ? req.body[i].idCardNo : req.body[i].taxNo },  transaction: t, type: QueryTypes.SELECT })
+          `select * FROM static_data."Insurees" ins JOIN static_data."Entities" ent ON ins."entityID" = ent."id"
+           WHERE ${conInsuree}`,
+          { replacements: { 
+                          idCardNo: req.body[i].idCardNo ,
+                          taxNo: req.body[i].taxNo ,
+                          titleID: req.body[i].titleID ,
+                          t_firstName: req.body[i].t_firstName ,
+                          t_lastName: req.body[i].t_lastName ,
+                          t_ogName: req.body[i].t_ogName ,
+                          branch: req.body[i].branch ,
+                          idCardType: req.body[i].idCardType ,
+          },  transaction: t, type: QueryTypes.SELECT })
           
        insureeCode = insuree[0].insureeCode
         
@@ -1214,8 +1237,10 @@ const draftPolicyList = async (req, res) => {
         req.body[i][`agentCode2`] = null
         req.body[i][`commout2_rate`] = 0
         req.body[i][`commout2_amt`] = 0
+        req.body[i][`commout2_taxamt`] = 0
         req.body[i][`ovout2_rate`] = 0
         req.body[i][`ovout2_amt`] = 0
+        req.body[i][`ovout2_taxamt`] = 0
         req.body[i][`commout_rate`] = req.body[i][`commout1_rate`] 
         req.body[i][`commout_amt`] = req.body[i][`commout1_amt`]
         req.body[i][`ovout_rate`] = req.body[i][`ovout1_rate`]
@@ -1231,7 +1256,6 @@ const draftPolicyList = async (req, res) => {
       req.body[i].withheld
     }
     
-     
     //get application no
     const currentdate = getCurrentDate()
     req.body[i].applicationNo = 'APP' + await getRunNo('app',null,null,'kw',currentdate,t);
@@ -1610,7 +1634,7 @@ if (policy.installment.insurer.length === 0 ) {
       commout1_rate, commout1_amt, ovout1_rate, ovout1_amt,
       commout2_rate, commout2_amt, ovout2_rate, ovout2_amt, 
       commout_rate, commout_amt, ovout_rate, ovout_amt, 
-      -- commout1_taxamt,  ovout1_taxamt, commout2_taxamt,  ovout2_taxamt, commout_taxamt,  ovout_taxamt,
+      commout1_taxamt,  ovout1_taxamt, commout2_taxamt,  ovout2_taxamt, commout_taxamt,  ovout_taxamt,
       createusercode, polid, withheld)
       values(:policyNo, :endorseNo, :invoiceNo, :taxInvoiceNo, :installmenttype, :seqNo, 
      :grossprem, :specdiscrate, :specdiscamt, 
@@ -1620,7 +1644,7 @@ if (policy.installment.insurer.length === 0 ) {
       :commout1_rate, :commout1_amt, :ovout1_rate, :ovout1_amt, 
       :commout2_rate, :commout2_amt, :ovout2_rate, :ovout2_amt,  
       :commout_rate, :commout_amt, :ovout_rate, :ovout_amt,
-      -- :commout1_taxamt,  :ovout1_taxamt, :commout2_taxamt,  :ovout2_taxamt, :commout_taxamt,  :ovout_taxamt, 
+      :commout1_taxamt,  :ovout1_taxamt, :commout2_taxamt,  :ovout2_taxamt, :commout_taxamt,  :ovout_taxamt, 
       :createusercode, (select id from static_data."Policies" where "policyNo" = :policyNo),
       :withheld )`,
       {
@@ -1693,15 +1717,21 @@ if (policy.installment.insurer.length === 0 ) {
 
       //insert jupgr
       const ins =  await sequelize.query(
-       `insert into static_data.b_jupgrs ("policyNo", "endorseNo", "invoiceNo", "taxInvoiceNo", "installmenttype", "seqNo",
-        grossprem, specdiscrate, specdiscamt, 
-        netgrossprem, tax, duty, totalprem, commin_rate, commin_amt, commin_taxamt, ovin_rate, ovin_amt, ovin_taxamt, 
-       "agentCode", "agentCode2", createusercode, polid, withheld)
-       values(:policyNo, :endorseNo, :invoiceNo, :taxInvoiceNo, :installmenttype, :seqNo, 
-        :grossprem, :specdiscrate, :specdiscamt, 
-        :netgrossprem, 
-       :tax, :duty, :totalprem, :commin_rate, :commin_amt, :commin_taxamt, :ovin_rate, :ovin_amt, :ovin_taxamt, :agentCode, :agentCode2, :createusercode, 
-       (select id from static_data."Policies" where "policyNo" = :policyNo), :withheld)`,
+      `insert into static_data.b_jupgrs ("policyNo", "endorseNo", "invoiceNo", "taxInvoiceNo", "installmenttype", "seqNo",
+      grossprem, specdiscrate, specdiscamt, 
+      netgrossprem, tax, duty, totalprem, commin_rate, commin_amt, commin_taxamt, ovin_rate, ovin_amt, ovin_taxamt, 
+      "agentCode", "agentCode2", createusercode, polid, withheld,
+      commout1_rate, commout1_amt, ovout1_rate, ovout1_amt,
+      commout2_rate, commout2_amt, ovout2_rate, ovout2_amt, 
+      commout_rate, commout_amt, ovout_rate, ovout_amt )
+      values(:policyNo, :endorseNo, :invoiceNo, :taxInvoiceNo, :installmenttype, :seqNo, 
+      :grossprem, :specdiscrate, :specdiscamt, 
+      :netgrossprem, 
+      :tax, :duty, :totalprem, :commin_rate, :commin_amt, :commin_taxamt, :ovin_rate, :ovin_amt, :ovin_taxamt, :agentCode, :agentCode2, :createusercode, 
+      (select id from static_data."Policies" where "policyNo" = :policyNo), :withheld,
+      :commout1_rate, :commout1_amt, :ovout1_rate, :ovout1_amt,
+      :commout2_rate, :commout2_amt, :ovout2_rate, :ovout2_amt, 
+      :commout_rate, :commout_amt, :ovout_rate, :ovout_amt )`,
        {
          replacements: {
            policyNo: policy.policyNo,
@@ -1726,7 +1756,22 @@ if (policy.installment.insurer.length === 0 ) {
            agentCode: policy.agentCode,
            agentCode2: policy.agentCode2,
            createusercode: usercode,
-           withheld : insurer[i]['withheld']
+           withheld : insurer[i]['withheld'],
+
+           commout1_rate: policy[`commout1_rate`],
+           commout1_amt: insurer[i][`commout1_amt`],
+           ovout1_rate: policy[`ovout1_rate`],
+           ovout1_amt: insurer[i][`ovout1_amt`],
+ 
+           commout2_rate: policy[`commout2_rate`],
+           commout2_amt: insurer[i][`commout2_amt`],
+           ovout2_rate: policy[`ovout2_rate`],
+           ovout2_amt: insurer[i][`ovout2_amt`],
+ 
+           commout_rate: policy[`commout_rate`],
+           commout_amt: insurer[i][`commout_amt`],
+           ovout_rate: policy[`ovout_rate`],
+           ovout_amt: insurer[i][`ovout_amt`],
           
          },
          

@@ -38,7 +38,7 @@ export const DescriptTxt = styled.div `
     margin: 25px;
     padding: 10px;
     box-shadow: rgba(99, 99, 99, 0.2) 0px 8px 8px 0px;
-    color: #0f0e9f;
+    color: #05276B;
     height: 70px;
     background-color: rgb(15, 14 ,159 ,0.05)
 `

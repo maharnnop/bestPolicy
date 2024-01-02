@@ -2,6 +2,7 @@ import React, { useEffect, useState }  from "react";
 import PremInTable from "./PremInTable";
 import axios from "axios";
 import { useCookies } from "react-cookie";
+import jwt_decode from "jwt-decode";
 import Modal from 'react-bootstrap/Modal';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
@@ -35,35 +36,41 @@ export default function PremInCreate() {
     const [policiesData, setPoliciesData] = useState([])
     const [policiesRender, setPoliciesRender] = useState({
         
-      net:{ no: 0, prem: 0, comm_out: 0, whtcom: 0, ov_out: 0, whtov: 0, },
-      gross:{ no: 0, prem: 0 },
-      total:{ no: 0, prem: 0, comm_out: 0, whtcom: 0, ov_out: 0, whtov: 0, billprem:0 },
+      net:{ no: 0, prem: 0, comm_out: 0, withheld:0, whtcom: 0, ov_out: 0, whtov: 0, },
+      gross:{ no: 0, prem: 0, withheld:0 },
+      total:{ no: 0, prem: 0,  withheld:0, comm_out: 0, whtcom: 0, ov_out: 0, whtov: 0, billprem:0 },
   })
   const [hidecard, setHidecard] = useState([false, 0]);
   const colsData = {
+    netflag:"[] Net",
     insurerCode: "รหัสบริษัทประกัน",
     agentCode: "รหัสผู้แนะนำ",
-    dueDate:"Duedate",
-    policyNo:"เลขกรมธรรม์",
-    endorseNo:"เลขสลักหลัง",
-    invoiceNo:"เลขใบแจ้งหนี้",
+    dueDate:"Due Date",
+    policyNo:"เลขที่กรมธรรม์",
+    endorseNo:"เลขที่สลักหลัง",
+    invoiceNo:"เลขที่ใบแจ้งหนี้ Amity",
+    // taxInvoiceNo:"เลขที่ใบแจ้งหนี้",
     seqNo: "งวด",
-    customerid:"id",
+    // customerid:"id",
     insureename:"ชื่อผู้เอาประกัน",
     licenseNo:"เลขทะเบียนรถ",
     // "province",
     chassisNo:"เลขคัชซี",
-    netgrossprem:"เบี้ยประกัน",
+    grossprem:"เบี้ย",
+    specdiscamt : "ส่วนลด",
+    netgrossprem:"เบี้ยสุทธิ",
     duty:"อากร",
     tax:"ภาษี",
     // withheldrate:"withheld rate",
-    withheld:"withheld amt",
-    totalprem:"เบี้ยประกันรวม",
+    totalprem:"เบี้ยรวม",
+    withheld:"WHT 1%",
     commout_rate:"Comm Out %",
     commout_amt:"จำนวน",
+    // commout_taxamt:"Vat Comm Out",
     ovout_rate:"Ov Out %",
     ovout_amt:"จำนวน",
-    netflag:"[] Net",
+    // ovout_taxamt:"Vat OV Out",
+    
     remainamt:"รวม (บาท)",
 
 };
@@ -71,34 +78,41 @@ export default function PremInCreate() {
 const editCard = (e) => {
   setHidecard([true, 1])
   const array = []
-  const net = { no: 0, prem: 0, comm_out: 0, whtcom: 0, ov_out: 0, whtov: 0, }
-  const gross = { no: 0, prem: 0 }
+  const net = { no: 0, prem: 0, comm_out: 0, withheld:0, whtcom: 0, ov_out: 0, whtov: 0, }
+  const gross = { no: 0, prem: 0 , withheld:0}
   for (let i = 0; i < policiesData.length; i++) {
       
           if (policiesData[i].netflag === "N") {
               net.no++
               net.prem = net.prem + policiesData[i].totalprem 
               net.comm_out = net.comm_out + policiesData[i].commout_amt
-              net.whtcom = net.comm_out * wht
               net.ov_out = net.ov_out + policiesData[i].ovout_amt
-              net.whtov = net.ov_out * wht
+              net.withheld = net.withheld + policiesData[i].withheld
+              // net.whtcom = net.whtcom + policiesData[i].commout_taxamt
+              // net.whtov = net.whtov + policiesData[i].ovout_taxamt
+              
           } else {
               gross.no++
               gross.prem = gross.prem + policiesData[i].totalprem
+              gross.withheld = gross.withheld + policiesData[i].withheld
           }
 
-      
-
   }
+  if (filterData.vatflag === 'Y') {
+            
+    net.whtcom = parseFloat((net.comm_out * wht).toFixed(2))
+    net.whtov = parseFloat((net.ov_out * wht).toFixed(2))
+}
 
   const total = {
       no: net.no + gross.no,
-      prem: net.prem + gross.prem,
-      comm_out: net.comm_out,
-      whtcom: net.whtcom,
-      ov_out: net.ov_out,
-      whtov: net.whtov,
-      billprem: net.prem + gross.prem - net.comm_out + net.whtcom - net.ov_out + net.whtov
+      prem: parseFloat((net.prem + gross.prem).toFixed(2)),
+      withheld : parseFloat((net.withheld + gross.withheld).toFixed(2)),
+      comm_out: parseFloat((net.comm_out).toFixed(2)),
+      whtcom: parseFloat((net.whtcom).toFixed(2)),
+      ov_out: parseFloat((net.ov_out).toFixed(2)),
+      whtov: parseFloat((net.whtov).toFixed(2)),
+      billprem: parseFloat(( net.prem + gross.prem - net.comm_out + net.whtcom - net.ov_out + net.whtov - net.withheld - gross.withheld).toFixed(2)),
   }
   setPoliciesRender({ net: net, gross: gross, total: total })
 };
@@ -149,7 +163,7 @@ const getData = (e) => {
   e.preventDefault();
   if (e.target.name === 'cashier-btn') {
     axios
-    .post(url + "/araps/getcashierdata", {cashierreceiveno : filterData.cashierreceiveno.trim()}, headers, headers)
+    .post(url + "/araps/getcashierdata", {cashierreceiveno : filterData.cashierreceiveno.trim(),cashierttype: 'PREM-IN'}, headers, headers)
     .then((res) => {
         if (res.status === 201) {
             console.log(res.data);
@@ -248,33 +262,35 @@ const savearpremin = async (e) => {
 };
 
 const submitarpremin = async (e) => {
-  let commout = 0
-  let ovout = 0 
-  let netflag = 'G'
-  for (let i = 0; i < policiesData.length; i++) {
-    if (policiesData[i].netflag === 'N') {
-      netflag = 'N'
-      commout = commout + policiesData[i].commout_amt
-      ovout = ovout + policiesData[i].ovout_amt
-    }
+  // let commout = 0
+  // let ovout = 0 
+  // let netflag = 'G'
+  // for (let i = 0; i < policiesData.length; i++) {
+  //   if (policiesData[i].netflag === 'N') {
+  //     netflag = 'N'
+  //     commout = commout + policiesData[i].commout_amt
+  //     ovout = ovout + policiesData[i].ovout_amt
+  //   }
     
-  }
-  const whtcommout = commout * wht
-  const whtovout = ovout * wht
+  // }
+  // const whtcommout = commout * wht
+  // const whtovout = ovout * wht
   const data = {
     "billadvisorno":filterData.billadvisorno.trim(),
-    "insurerCode": filterData.insurerCode.trim(),
-    "agentCode": filterData.agentCode.trim(),
+    "insurerCode": filterData.insurerCode,
+    "agentCode": filterData.agentCode,
     "cashierreceiveno": filterData.cashierreceiveno.trim(),
     actualvalue : filterData.actualvalue,
-     amt :  filterData.amt,
-
+    amt     :  filterData.amt,
+    diffamt : parseFloat(document.getElementsByName('DiffAmt')[0].value.replace(/,/g, '')),
+    netprem : policiesRender.total.prem,
+    commout : policiesRender.total.comm_out,
+    ovout   : policiesRender.total.ov_out,
+    whtcommout  : policiesRender.total.whtcom,
+    whtovout    : policiesRender.total.whtov,
+    withheld :  policiesRender.total.withheld,
 }
-  data.diffamt = parseFloat(document.getElementsByName('DiffAmt')[0].value.replace(/,/g, ''));
-  data.commout = commout
-  data.ovout = ovout
-  data.whtcommout = whtcommout
-  data.whtovout = whtovout
+  
 
   console.log({master :  data, trans : policiesData});
   await axios.post(url + "/araps/submitarpremin", {master : data, trans : policiesData}, headers)
@@ -293,11 +309,12 @@ const submitarpremin = async (e) => {
         <div className="row my-3">
         <div className="col-1"></div>
           <label class="col-sm-2 col-form-label" htmlFor="billadvisorno">
-            เลขที่ใบวางบิล
+            เลขที่ใบวางบิล<span class="text-danger"> *</span>
           </label>
           <div className="col-3">
             <input
               className="form-control"
+              required
               type="text"
               name="billadvisorno"
               id="billadvisorno"
@@ -325,6 +342,7 @@ const submitarpremin = async (e) => {
           </label>
           <div className="col-3 ">
             <input
+              disabled
               className="form-control"
               type="text"
               name="insurerCode"
@@ -342,6 +360,7 @@ const submitarpremin = async (e) => {
           </label>
           <div className="col-3 ">
             <input
+              disabled
               className="form-control"
               type="text"
               name="agentCode"
@@ -378,7 +397,7 @@ const submitarpremin = async (e) => {
         <div className="row my-3">
         <div className="col-1"></div>
           <label class="col-sm-2 col-form-label" htmlFor="cashierreceiveno">
-            เลขที่รับเงิน
+            เลขที่รับเงิน<span class="text-danger"> *</span>
           </label>
           <div className="col-3 ">
             <input
@@ -422,7 +441,7 @@ const submitarpremin = async (e) => {
               disabled
             />
           </div>
-          <label class="col-sm-2 col-form-label" htmlFor="actualvalue">
+          <label class="col-sm-1 col-form-label" htmlFor="actualvalue">
             ผลต่าง
           </label>
           <div className="col-3 ">
@@ -451,7 +470,7 @@ const submitarpremin = async (e) => {
                         <div class="col-2">
                             <label class="col-form-label">จำนวนเงินสุทธิ</label>
                         </div>
-                        <div class="col-2"> {policiesRender.total.prem.toLocaleString(undefined, { minimumFractionDigits: 2 })}</div>
+                        <div class="col-2">{policiesRender.total.billprem.toLocaleString(undefined, { minimumFractionDigits: 2 })}</div>
                     </div>
                     <div class="row">
                         <div class="col-2">
@@ -464,20 +483,21 @@ const submitarpremin = async (e) => {
                             <label class="col-form-label">create by </label>
                         </div>
                         <div class="col-2">
-                            <label class="col-form-label">Kwanmhn</label>
+                            <label class="col-form-label">{jwt_decode(cookies["jwt"]).USERNAME}</label>
                         </div>
                     </div>
                     
                     <table class="table table-hover">
-                        <thead>
+                        <thead className="table-success">
                             <tr>
 
                                 <th scope="col">ชำระแบบ</th>
                                 <th scope="col">รายการ</th>
-                                <th scope="col">จำนวนเงินค่าเบี้ย</th>
-                                <th scope="col">comm-out</th>
+                                <th scope="col">ค่าเบี้ยประกันรวม</th>
+                                <th scope="col">ภาษีหัก ณ ที่จ่าย (1%)</th>
+                                <th scope="col">Comm Out</th>
                                 <th scope="col"> WHT 3%</th>
-                                <th scope="col">ov-out</th>
+                                <th scope="col">OV Out</th>
                                 <th scope="col"> WHT 3%</th>
 
                             </tr>
@@ -487,6 +507,7 @@ const submitarpremin = async (e) => {
                                 <td>net</td>
                                 <td>{policiesRender.net.no}</td>
                                 <td>{policiesRender.net.prem.toLocaleString(undefined, { minimumFractionDigits: 2 })}</td>
+                                <td>{policiesRender.net.withheld.toLocaleString(undefined, { minimumFractionDigits: 2 })}</td>
                                 <td>{policiesRender.net.comm_out.toLocaleString(undefined, { minimumFractionDigits: 2 })}</td>
                                 <td>{policiesRender.net.whtcom.toLocaleString(undefined, { minimumFractionDigits: 2 })}</td>
                                 <td>{policiesRender.net.ov_out.toLocaleString(undefined, { minimumFractionDigits: 2 })}</td>
@@ -496,15 +517,17 @@ const submitarpremin = async (e) => {
                                 <td>gross</td>
                                 <td>{policiesRender.gross.no}</td>
                                 <td>{policiesRender.gross.prem.toLocaleString(undefined, { minimumFractionDigits: 2 })}</td>
+                                <td>{policiesRender.gross.withheld.toLocaleString(undefined, { minimumFractionDigits: 2 })}</td>
                                 <td>-</td>
                                 <td>-</td>
                                 <td>-</td>
                                 <td>-</td>
                             </tr>
-                            <tr>
+                            <tr className="table-info">
                                 <td>รวมทั้งสิ้น</td>
                                 <td>{policiesRender.total.no}</td>
                                 <td>{policiesRender.total.prem.toLocaleString(undefined, { minimumFractionDigits: 2 })}</td>
+                                <td>{policiesRender.total.withheld.toLocaleString(undefined, { minimumFractionDigits: 2 })}</td>
                                 <td>{policiesRender.total.comm_out.toLocaleString(undefined, { minimumFractionDigits: 2 })}</td>
                                 <td>{policiesRender.total.whtcom.toLocaleString(undefined, { minimumFractionDigits: 2 })}</td>
                                 <td>{policiesRender.total.ov_out.toLocaleString(undefined, { minimumFractionDigits: 2 })}</td>
@@ -516,7 +539,7 @@ const submitarpremin = async (e) => {
                         <div class="col-2">
                             <label class="col-form-label">จำนวนเงินตัดหนี้</label>
                         </div>
-                        <div class="col-2"> {(policiesRender.total.prem + policiesRender.total.whtov + policiesRender.total.whtcom - policiesRender.total.comm_out -  policiesRender.total.ov_out).toLocaleString(undefined, { minimumFractionDigits: 2 })}</div>
+                        <div class="col-2"> {(policiesRender.total.billprem).toLocaleString(undefined, { minimumFractionDigits: 2 })}</div>
                     </div>
 
                 </Modal.Body>

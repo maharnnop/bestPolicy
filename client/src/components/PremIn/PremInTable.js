@@ -14,22 +14,19 @@ export default function PremInTable({
 
   const changestatementtype = (e) => {
     console.log(e.target.name);
-    const updatedRows = rows.map((row, index) => {
-      if (index === e.target.id) {
-        return { ...row, [e.target.name]: e.target.checked };
-      }
+    const updatedRows = rows.map((row, index) => { 
       return row;
     });
+    updatedRows[e.target.id][e.target.name] = e.target.checked 
+    console.log(updatedRows);
     setPoliciesData(updatedRows);
   };
 
   const changenetflag = (e) => {
     const updatedRows = rows.map((row, index) => {
-      if (index === e.target.id) {
-        row.netflag = e.target.checked ? "N" : "G";
-      }
       return row;
     });
+    updatedRows[e.target.id][e.target.name] = e.target.checked ? "N" : "G";
     setPoliciesData(updatedRows);
   };
   // useEffect(() => {
@@ -61,11 +58,13 @@ export default function PremInTable({
   const getRecord2 = (item, index) => {
     return Object.entries(cols).map(([keym, valuem]) => {
       if (keym === "select") {
+        // console.log(index);
         return (
+          
           <td key={keym}>
             <input
               type="checkbox"
-              defaultChecked
+              defaultChecked = {item[`${keym}`] ?true : false}
               name="select"
               id={index}
               onChange={changestatementtype}
@@ -77,13 +76,15 @@ export default function PremInTable({
           <td key={keym}>
             <input
               type="checkbox"
-              defaultChecked
+              defaultChecked = {valuem === 'N'?true : false}
               name="netflag"
               id={index}
               onChange={changenetflag}
             />
           </td>
         );
+      } else if (keym ==='seqNo'){
+        return <td key={keym}> {item[keym]}</td>;
       }
       return <td key={keym}>{typeof(item[keym]) === 'number'? item[keym].toLocaleString(undefined, { minimumFractionDigits: 2 }) : item[keym]}</td>;
     });
@@ -104,7 +105,7 @@ export default function PremInTable({
       cellSpacing="0"
       width="100%"
     >
-      <thead>
+      <thead className="table-success">
         <tr>{colsElement}</tr>
       </thead>
       <tbody>{rowsElement2}</tbody>

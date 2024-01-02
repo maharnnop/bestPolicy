@@ -4,6 +4,7 @@ import axios from "axios";
 
 import jwt_decode from "jwt-decode";
 import EditBillAdvisor from "./EditBillAdvisor";
+import Select from 'react-select';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import {
@@ -66,9 +67,10 @@ const FindBillAdvisor = () => {
                 const array = [];
                 agent.data.forEach((ele) => {
                     array.push(
-                        <option key={ele.id} value={ele.id}>
-                            {ele.agentCode}
-                        </option>
+                        // <option key={ele.id} value={ele.id}>
+                        //     {ele.agentCode}
+                        // </option>
+                        { label: ele.agentCode, value: ele.id }
                     );
                 });
                 setAgentDD(array);
@@ -229,7 +231,7 @@ const FindBillAdvisor = () => {
                             </div>
                     <div class="col align-self-end ">
                         <div class="input-group mb-3">
-                            <button type="submit" class="btn btn-primary btn-lg" >ค้นหา</button>
+                            <button type="submit" class="btn btn-primary btn-lg" >ค้นหารายการ</button>
                         </div>
                     </div>
 
@@ -243,13 +245,22 @@ const FindBillAdvisor = () => {
                         
                     </div>
                     <div class="col-2 ">
-                        <div class="input-group mb-3">
-                            <select  name="agentId"  class="form-control" onChange={handleChange} >
+                            {/* <select  name="agentId"  class="form-control" onChange={handleChange} >
                                 <option value="" disabled selected hidden>รหัสผู้แนะนำ</option>
                                 {agentDD}
-                            </select>
+                            </select> */}
                             
-                        </div>
+                            <Select
+                                class="form-control col"
+                                name={`agentId`}
+                                onChange={(e) => setFilterData((prevState) => ({
+                                    ...prevState,
+                                    agentId: e.value,
+                                  }))}
+                                options={agentDD}
+
+                            />
+                        
 
 
                     </div>

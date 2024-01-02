@@ -10,6 +10,7 @@ import { useCookies } from "react-cookie";
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { stringToNumber, NumberToString } from '../lib/stringToNumber';
+import {numberWithCommas} from "../lib/number";
 
 const config = require("../../config.json");
 
@@ -167,7 +168,8 @@ const PolicyCard = (props) => {
     if (type === 'insurer') {
       if (e.target.name === `netgrosspremI-${index}`) {
         const netgrosspremstr = stringToNumber(document.getElementsByName(`netgrosspremI-${index}`)[0].value)
-        const netgrossprem = parseFloat(netgrosspremstr)
+        // const netgrossprem = parseFloat(netgrosspremstr)
+        const netgrossprem = netgrosspremstr
         const dutyamt = parseFloat(Math.ceil(netgrossprem * duty))
         const taxamt = parseFloat(((netgrossprem + dutyamt) * tax).toFixed(2))
         let witheldamt = 0
@@ -277,10 +279,14 @@ const PolicyCard = (props) => {
     setHidecard([false, 0])
   }
   const validateNetgrossprem = (e) => {
+    
     // sum advisor
-    const sumads = installment.advisor.reduce((prev, curr) => prev + parseFloat(curr.netgrossprem.toFixed(2)), 0)
+    const sumads = parseFloat(installment.advisor.reduce((prev, curr) => prev + parseFloat(curr.netgrossprem.toFixed(2)), 0).toFixed(2))
+    // alert("sumagent : " + sumads);
     // sum insurer
-    const sumins = installment.insurer.reduce((prev, curr) => prev + parseFloat(curr.netgrossprem.toFixed(2)), 0)
+    const sumins = parseFloat(installment.insurer.reduce((prev, curr) => prev + parseFloat(curr.netgrossprem.toFixed(2)), 0).toFixed(2))
+    // alert("sumagent : " + sumins);
+
     if (sumins !== formData.netgrossprem && sumads !== formData.netgrossprem ) {
       alert('ผลรวมเบี้ยประกันสุทธิ แบ่งงวดบริษัทประกัน และผู้แนะนำ ไม่เท่าเบี้ยประกันสุทธิกรมธรรม์')
     }else if (sumins !== formData.netgrossprem ){
@@ -361,6 +367,12 @@ const PolicyCard = (props) => {
       commin_taxamt: formData.commin_taxamt,
       ovin_amt: formData.ovin_amt,
       ovin_taxamt: formData.ovin_taxamt,
+      commout1_amt: formData.commout1_amt,
+      ovout1_amt: formData.ovout1_amt,
+      commout2_amt: formData.commout2_amt,
+      ovout2_amt: formData.ovout2_amt,
+      commout_amt: formData.commout_amt,
+      ovout_amt: formData.ovout_amt,
       withheld: formData.withheld,
     })
     const arrA = []
@@ -377,11 +389,17 @@ const PolicyCard = (props) => {
       ovin_amt: formData.ovin_amt,
       ovin_taxamt: formData.ovin_taxamt,
       commout1_amt: formData.commout1_amt,
+      commout1_taxamt: formData.commout1_taxamt,
       ovout1_amt: formData.ovout1_amt,
+      ovout1_taxamt: formData.ovout1_taxamt,
       commout2_amt: formData.commout2_amt,
+      commout2_taxamt: formData.commout2_taxamt,
       ovout2_amt: formData.ovout2_amt,
+      ovout2_taxamt: formData.ovout2_taxamt,
       commout_amt: formData.commout_amt,
+      commout_taxamt: formData.commout_taxamt,
       ovout_amt: formData.ovout_amt,
+      ovout_taxamt: formData.ovout_taxamt,
       withheld: formData.withheld,
 
     })
@@ -482,9 +500,20 @@ const PolicyCard = (props) => {
           seqDueDate = dueDate.setMonth(dueDate.getMonth())
         }
         console.log(seqDueDate);
+        
         //cal comm-ov in
         let comminseq = parseFloat((formData.commin_rate * premperseq / 100).toFixed(2))
         let ovinseq = parseFloat((formData.ovin_rate * premperseq / 100).toFixed(2))
+        //cal comm-ov out1
+        let commout1seq = parseFloat((formData.commout1_rate * premperseq / 100).toFixed(2))
+        let ovout1seq = parseFloat((formData.ovout1_rate * premperseq / 100).toFixed(2))
+        //cal comm-ov out2
+        let commout2seq = parseFloat((formData.commout2_rate * premperseq / 100).toFixed(2))
+        let ovout2seq = parseFloat((formData.ovout2_rate * premperseq / 100).toFixed(2))
+        //cal comm-ov out total
+        let commoutseq = parseFloat((formData.commout_rate * premperseq / 100).toFixed(2))
+        let ovoutseq = parseFloat((formData.ovout_rate * premperseq / 100).toFixed(2))
+        
         arrI.push({
           grossprem: grosspremseq,
           specdiscamt: specdiscseq,
@@ -498,6 +527,12 @@ const PolicyCard = (props) => {
           commin_taxamt: parseFloat((comminseq * tax).toFixed(2)),
           ovin_amt: ovinseq,
           ovin_taxamt: parseFloat((ovinseq * tax).toFixed(2)),
+          commout1_amt: commout1seq,
+          ovout1_amt: ovout1seq,
+          commout2_amt: commout2seq,
+          ovout2_amt: ovout2seq,
+          commout_amt: commoutseq,
+          ovout_amt: ovoutseq,
           withheld: withheldseq
         })
 
@@ -516,6 +551,12 @@ const PolicyCard = (props) => {
         commin_taxamt: formData.commin_taxamt,
         ovin_amt: formData.ovin_amt,
         ovin_taxamt: formData.ovin_taxamt,
+        commout1_amt: formData.commout1_amt,
+        ovout1_amt: formData.ovout1_amt,
+        commout2_amt: formData.commout2_amt,
+        ovout2_amt: formData.ovout2_amt,
+        commout_amt: formData.commout_amt,
+        ovout_amt: formData.ovout_amt,
         withheld: formData.withheld,
         
       })
@@ -533,6 +574,7 @@ const PolicyCard = (props) => {
       } else {
         dueDate = formatDate(seqNoagtStart)
       }
+
       console.log('seqNoagtStart : ' + dueDate);
       for (let i = 1; i <= seqNoagt; i++) {
         let dutyseq = 0
@@ -1302,10 +1344,10 @@ const PolicyCard = (props) => {
                       className="form-control"
                       style={{ width: "150px" }}
                       type="text"
-                      value={ele.netgrossprem.toLocaleString()}
+                      value={ele.netgrossprem}
                       name={`netgrosspremI-${i}`}
                       onChange={e => editInstallment(e, 'insurer', i)}
-                      onInput={(e) => formatNumber(e.target)}
+                      onInput={(e) => numberWithCommas(e.target)}
                     /></td>
                     <td ><input
                       className="form-control"
@@ -1426,6 +1468,7 @@ const PolicyCard = (props) => {
                       value={ele.netgrossprem.toLocaleString()}
                       name={`netgrosspremA-${i}`}
                       onChange={(e) => editInstallment(e, 'advisor', i)}
+
                     /></td>
                     <td scope="col-2"><input
                       className="form-control  bg-warning"

@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 
 import { useParams } from "react-router-dom";
 import PremInTable from "../PremIn/PremInTable";
+import Select from 'react-select';
 import axios from "axios";
 import { useCookies } from "react-cookie";
 import DatePicker from 'react-datepicker';
@@ -27,12 +28,14 @@ export default function PremInPaid() {
 
     })
   const [policiesData, setPoliciesData] = useState([])
+  const [insurerDD, setInsurerDD] = useState([]);
+    const [agentDD, setAgentDD] = useState([]);
   const colData = {
     dfrpreferno : "เลขที่ตัดหนี้",
     transType : "ประเภท",
     rprefdate : "วันที่ตัดหนี้",
-    dfrpreferno : "เลขที่ตัดหนี้ PREM-IN",
-    'premin-dfrpreferno' : "เลขที่ตัดหนี้ PREM-OUT",
+    
+    'premin-dfrpreferno' : "เลขที่ตัดหนี้ PREM-IN",
     'premout-dfrpreferno' : "เลขที่ตัดหนี้ PREM-OUT",
     insurerCode: "รหัสบริษัทประกัน",
     agentCode: "รหัสผู้แนะนำ",
@@ -44,6 +47,45 @@ export default function PremInPaid() {
     
 
   };
+
+  useEffect(() => {
+
+    // get agent all
+    axios
+        .get(url + "/persons/agentall", headers)
+        .then((agent) => {
+            const array = [];
+            agent.data.forEach((ele) => {
+                array.push(
+                    // <option key={ele.id} value={ele.agentCode}>
+                    //     {ele.agentCode}
+                    // </option>
+                    { label: ele.agentCode, value: ele.agentCode }
+                );
+            });
+            setAgentDD(array);
+        })
+        .catch((err) => { });
+
+    // get insurer all
+    axios
+        .get(url + "/persons/insurerall", headers)
+        .then((insurer) => {
+            const array = [];
+            insurer.data.forEach((ele) => {
+                array.push(
+                    <option key={ele.id} value={ele.insurerCode}>
+                        {ele.insurerCode}
+                    </option>
+                );
+            });
+            setInsurerDD(array);
+        })
+        .catch((err) => { });
+
+
+}, []);
+
   const handleChange = (e) => {
     
     setFilterData((prevState) => ({
@@ -78,6 +120,16 @@ export default function PremInPaid() {
       "type": filterData.type
 
     }
+    if (document.getElementsByName("insurerCodecb")[0].checked) {
+          data.insurerCode = null
+      }
+      if (document.getElementsByName("agentCodecb")[0].checked) {
+        data.agentCode = null
+    }
+    if (document.getElementsByName("receiptnocb")[0].checked) {
+      data.receiptno = null
+  }
+
     // if (filterData.rprefdatestart !== null) {
     //   data.rprefdatestart = convertDateFormat(filterData.rprefdatestart.toISOString())
     // }
@@ -105,6 +157,7 @@ export default function PremInPaid() {
 
       });
   }
+
   return (
     <div className="container d-fle justify-content-center ">
       <form onSubmit={(e) => searchHandler(e)}>
@@ -123,6 +176,9 @@ export default function PremInPaid() {
               onChange={handleChange}
             />
           </div>
+          <div className="col-2 d-flex justify-content-center">
+          <button className="btn btn-success">ค้นหารายการ</button>
+        </div>
         </div>
         {/* Insurercode  */}
         <div className="row my-3"><div className="col-1"></div>
@@ -130,22 +186,20 @@ export default function PremInPaid() {
             รหัสบริษัทประกัน
           </label>
           <div className="col-3 ">
-            <input
-              className="form-control"
-              type="text"
-              name="insurerCode"
-              onChange={handleChange}
-            />
+            {/* <input className="form-control" type="text" name="insurerCode" onChange={handleChange} /> */}
+            <select  name="insurerCode"  class="form-control" onChange={handleChange} >
+                <option value=""   disabled selected hidden>รหัสบริษัทประกัน</option>
+                {insurerDD}
+            </select>
           </div>
           <div class="col-4 form-check d-flex align-items-center text-center  ">
             <div>
               <input
                 class="form-check-input "
                 type="checkbox"
-                value=""
-                id="Insurercode"
-                name="Insurercode"
-                checked
+                id="insurerCodecb"
+                name="insurerCodecb"
+                // defaultChecked
               />
               <label class="form-check-label" for="Insurercode">
                 All
@@ -159,11 +213,16 @@ export default function PremInPaid() {
             รหัสผู้แนะนำ
           </label>
           <div className="col-3 ">
-            <input
-              className="form-control"
-              type="text"
-              name="agentCode"
-              onChange={handleChange}
+            {/* <input className="form-control" type="text" name="agentCode" onChange={handleChange} /> */}
+            <Select
+                class="form-control"
+                name={`agentCode`}
+                onChange={(e) => setFilterData((prevState) => ({
+                    ...prevState,
+                    agentCode: e.value,
+                  }))}
+                options={agentDD}
+
             />
           </div>
           <div class="col-4 form-check d-flex align-items-center text-center  ">
@@ -171,10 +230,9 @@ export default function PremInPaid() {
               <input
                 class="form-check-input "
                 type="checkbox"
-                value=""
-                id="Advisorcode"
-                checked
-                name="Advisorcode"
+                id="agentCodecb"
+                // defaultChecked
+                name="agentCodecb"
               />
               <label class="form-check-label" for="Advisorcode">
                 All
@@ -200,10 +258,9 @@ export default function PremInPaid() {
               <input
                 class="form-check-input "
                 type="checkbox"
-                value=""
-                id="flexCheckChecked"
-                name="CashierReceiveNo"
-                checked
+                id="receiptnocb"
+                name="receiptnocb"
+                // defaultChecked
               />
               <label class="form-check-label" for="CashierReceiveNo">
                 All
@@ -233,7 +290,7 @@ export default function PremInPaid() {
             />
 
           </div>
-          <label class="col-sm-2 col-form-label" htmlFor="ARNO">
+          <label class="col-1 col-form-label" htmlFor="ARNO">
             ถึง
           </label>
           <div className="col-3 ">
@@ -266,7 +323,7 @@ export default function PremInPaid() {
             >
               <option value="ALL" >ALL</option>
               <option value="prem_in">ตัดรับค่าเบี้ย (PREM-IN)</option>
-              <option value="prem_out">ตัดรับค่าเบี้ย (PREM-OUT)</option>
+              <option value="prem_out">ตัดจ่ายค่าเบี้ย (PREM-OUT)</option>
 
               <option value="comm/ov_in">ตัดรับค่าคอม (Comm/OV-IN)</option>
 
@@ -276,9 +333,7 @@ export default function PremInPaid() {
 
         </div>
 
-        <div className="d-flex justify-content-center">
-          <button className="btn btn-success">ค้นหา</button>
-        </div>
+        
       </form>
       <div>
         <PremInTable cols={colData} rows={policiesData} />

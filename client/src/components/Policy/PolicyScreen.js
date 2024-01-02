@@ -7,7 +7,7 @@ import { async } from "q";
 import Select from 'react-select';
 import { useCookies } from "react-cookie";
 import { date, number } from "joi";
-import { numberWithCommas } from '../lib/number';
+import { numberWithCommas, numberpercentfixdigit } from '../lib/number';
 import { stringToNumber, NumberToString } from '../lib/stringToNumber';
 import { BiSearchAlt } from "react-icons/bi";
 import Modal from 'react-bootstrap/Modal';
@@ -30,8 +30,8 @@ const PolicyScreen = (props) => {
   const duty = config.duty;
   const withheld = config.witheld;
   const motorcode = config.motorcode;
-  let datenow = new Date()
-  datenow = datenow.toISOString().substring(0, 10);
+  // let datenow = new Date()
+  // datenow = datenow.toISOString().substring(0, 10);
 
   //style react-select
   const customStyles = {
@@ -50,7 +50,8 @@ const PolicyScreen = (props) => {
 
   //import excel
   const [formData, setFormData] = useState({
-    grossprem: 0,
+    grossprem: '0',
+    cover_amt: '0',
     specdiscamt: 0,
     netgrossprem: 0,
     specdiscrate: 0,
@@ -69,6 +70,7 @@ const PolicyScreen = (props) => {
     expTime: "16:30",
     cover_amt: null,
     email:null,
+    t_ln : null
   });
   const [alertflag, setAlertflag] = useState(false)
   const [provinceDD, setProvinceDD] = useState([]);
@@ -128,6 +130,8 @@ const handleChangePolicyCard = (e, data) => {
   console.log(data);
   data.actDate = new Date(data.actDate)
   data.expDate = new Date(data.expDate)
+  data.cover_amt = NumberToString(data.cover_amt)
+  data.grossprem = NumberToString(data.grossprem)
   if (data.duedateagent !== null) {
     // data.dueDateAgent = new Date(convertDateFormat(data.duedateagent,false))
     data.dueDateAgent = new Date(data.duedateagent)
@@ -142,7 +146,7 @@ const handleChangePolicyCard = (e, data) => {
   data.regisNo = data.idCardNo
  }else{
   data.t_fn = data.t_ogName
-  data.t_ln = data.t_lastName
+  data.t_ln = data.t_branchName
   data.regisNo = data.taxNo
   data.suffix = titleODD.find((a) => a.value == data.titleID).label2
  }
@@ -163,6 +167,7 @@ const handleChangePolicyCard = (e, data) => {
     ...prevState,
     ...data,
   }))
+
   setHidepolicycard(false)
 
 
@@ -493,26 +498,32 @@ const handlePolicyClose = (e) => {
   }
   const handleChangePrem = async (e) => {
     e.preventDefault();
-    // console.log(e);
-
+    console.log(formData.grossprem);
+    
     //  set totalprem
     if (e.target.name === 'grossprem') {
       const grossprem = stringToNumber(e.target.value)
+      // const grossprem = e.target.value
+      // console.log(grossprem);
       const netgrosspremamt = grossprem - formData.specdiscamt
       const dutyamt = Math.ceil(netgrosspremamt * duty)
       const taxamt = parseFloat(((netgrosspremamt + dutyamt) * tax).toFixed(2))
       const totalpremamt = netgrosspremamt + dutyamt + taxamt
       setFormData((prevState) => ({
         ...prevState,
-        grossprem: grossprem,
+        grossprem: e.target.value,
         netgrossprem: netgrosspremamt,
         duty: dutyamt,
         tax: taxamt,
         totalprem: totalpremamt,
       }));
     } else if (e.target.name === 'specdiscrate') {
-      const specdiscamt = parseFloat((e.target.value * formData.grossprem / 100).toFixed(2))
-      const netgrosspremamt = formData.grossprem - specdiscamt
+      // const specdiscrate =parseFloat( e.target.value)
+      const specdiscrate = e.target.value
+      // stringToNumber(0)
+      const grossprem = stringToNumber(formData.grossprem)
+      const specdiscamt = parseFloat((specdiscrate * grossprem / 100).toFixed(2))
+      const netgrosspremamt = grossprem - specdiscamt
       const dutyamt = Math.ceil(netgrosspremamt * duty)
       const taxamt = parseFloat(((netgrosspremamt + dutyamt) * tax).toFixed(2))
       const totalpremamt = netgrosspremamt + dutyamt + taxamt
@@ -1010,7 +1021,7 @@ const handlePolicyClose = (e) => {
     let idCardNo = null
     let taxNo = null
     if (formData.personType === 'P') {
-      idCardType = formData.idCradType
+      idCardType = formData.idCardType
       t_firstName = formData.t_fn
       t_lastName = formData.t_ln
       idCardNo = formData.regisNo.toString()
@@ -1020,13 +1031,16 @@ const handlePolicyClose = (e) => {
       t_ogName = formData.t_fn
       t_branchName = formData.t_ln
       taxNo = formData.regisNo.toString()
-      data.push({ ...formData, t_ogName: t_ogName, taxNo: taxNo, t_firstName: t_firstName, t_lastName: t_lastName, idCardNo: idCardNo, idCardType: idCardType, withheld: withheldamt, })
+      data.push({ ...formData, t_ogName: t_ogName, t_branchName: t_branchName, taxNo: taxNo, t_firstName: t_firstName, t_lastName: t_lastName, idCardNo: idCardNo, idCardType: idCardType, withheld: withheldamt })
     }
     // data[0].specdiscamt = document.getElementsByName('specdiscamt')[0].value
     // data[0].netgrossprem = document.getElementsByName('grossprem')[0].value - document.getElementsByName('specdiscamt')[0].value
     // data[0].tax = document.getElementsByName('tax')[0].value
     // data[0].duty = document.getElementsByName('duty')[0].value
     // data[0].totalprem = document.getElementsByName('totalprem')[0].value
+
+    //cast type data
+    data[0].grossprem = stringToNumber(formData.grossprem)
     data[0].cover_amt = stringToNumber(document.getElementsByName('cover_amt')[0].value)
     data[0].commin_amt = stringToNumber(document.getElementsByName('commin_amt')[0].value)
     data[0].ovin_amt = stringToNumber(document.getElementsByName('ovin_amt')[0].value)
@@ -1504,7 +1518,8 @@ const handlePolicyClose = (e) => {
             // step={0.1}
             name={`grossprem`}
             onChange={(e) => handleChangePrem(e)}
-            value={NumberToString(formData.grossprem)}
+            // value={NumberToString(formData.grossprem)}
+            value={formData.grossprem}
             onInput={(e) => numberWithCommas(e.target)}
           />
           {/* <NumberInputWithCommas value={formData.grossprem} name={`grossprem`} onChange={handleChange}  /> */}
@@ -1523,11 +1538,14 @@ const handlePolicyClose = (e) => {
           </label>
           <input
             className="form-control"
-            type="number"
+            type="text"
             step={0.1}
-            value={parseFloat(formData[`specdiscrate`])}
             name={`specdiscrate`}
+            // value={parseFloat(formData[`specdiscrate`])}
+            value={formData[`specdiscrate`]}
             onChange={(e) => handleChangePrem(e)}
+            // onInput={(e) => numberWithCommas(e.target)}
+            onInput={(e) => numberpercentfixdigit(e.target)}
           />
 
 
@@ -1635,6 +1653,7 @@ const handlePolicyClose = (e) => {
                 name={`commin_rate`}
                 onChange={(e) => handleChange(e)}
                 onBlur={(e) => checkCommOV(e, 'Comm')}
+                
               />
 
             </div>
@@ -2047,8 +2066,8 @@ const handlePolicyClose = (e) => {
             name={`idCradType`}
             onChange={handleChange}
           >
-            <option value={formData.idCradType} disabled selected hidden>
-              {formData.idCradType}
+            <option value={formData.idCardType} disabled selected hidden>
+              {formData.idCardType}
             </option>
             {idcardtypeDD}
           </select>
@@ -2551,7 +2570,7 @@ const handlePolicyClose = (e) => {
             </div>
             <div class="col-2">
               <label class="form-label ">
-                รุ่นย่อย<span class="text-danger"> </span>
+                รุ่นย่อย<span class="text-danger"> *</span>
               </label>
               <Select
                 // className="form-control"
