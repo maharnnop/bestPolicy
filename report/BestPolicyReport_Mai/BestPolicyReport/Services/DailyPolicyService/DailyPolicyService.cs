@@ -16,74 +16,104 @@ namespace BestPolicyReport.Services.DailyPolicyService
         public async Task<List<DailyPolicyReportResult>?> GetDailyPolicyReportJson(DailyPolicyReportInput data)
         {
 
-            var sql = $@"select p.""applicationNo"", p.""policyNo"", p.""policyDate"", p.""actDate"", p.""expDate"", p.""issueDate"", p.createusercode, 
-                         u.""userName"", a1.""contactPersonID"" as ""contactPersonId1"",
+            var sql = $@"select p.""applicationNo"", 
+                         p.""policyNo"",
+                         p.""policyDate"", 
+                         p.""actDate"", 
+                         p.""expDate"", 
+                         p.""issueDate"", 
+                         p.createusercode as ""CreateUserCode"", 
+                         u.""userName"" as ""Username"",
+                         a1.""contactPersonID"" as ""contactPersonId1"",
                          case
                          	when e_cp1.""personType"" = 'O' then concat(t_cp1.""TITLETHAIBEGIN"", ' ', e_cp1.""t_ogName"", ' ', t_cp1.""TITLETHAIEND"") 
                          	when e_cp1.""personType"" = 'P' then concat(t_cp1.""TITLETHAIBEGIN"", ' ', e_cp1.""t_firstName"", ' ', e_cp1.""t_lastName"", ' ', t_cp1.""TITLETHAIEND"") 
                          	else null
-                         end as ""contactPersonName1"",
+                         end
+                         as ""contactPersonName1"",
                          a2.""contactPersonID"" as ""contactPersonId2"",
                          case 
                          	when e_cp2.""personType"" = 'O' then concat(t_cp2.""TITLETHAIBEGIN"", ' ', e_cp2.""t_ogName"", ' ', t_cp2.""TITLETHAIEND"") 
                          	when e_cp2.""personType"" = 'P' then concat(t_cp2.""TITLETHAIBEGIN"", ' ', e_cp2.""t_firstName"", ' ', e_cp2.""t_lastName"", ' ', t_cp2.""TITLETHAIEND"") 
                          	else null
-                         end	as ""contactPersonName2"",
+                         end	
+                         as ""contactPersonName2"",
                          p.""agentCode"" as ""agentCode1"", 
                          case 
                          	when e_a1.""personType"" = 'O' then concat(t_a1.""TITLETHAIBEGIN"", ' ', e_a1.""t_ogName"", ' ', t_a1.""TITLETHAIEND"") 
                          	when e_a1.""personType"" = 'P' then concat(t_a1.""TITLETHAIBEGIN"", ' ', e_a1.""t_firstName"", ' ', e_a1.""t_lastName"", ' ', t_a1.""TITLETHAIEND"") 
                          	else null
-                         end	as ""agentName1"",
+                         end	
+                         as ""agentName1"",
                          p.""agentCode2"", 
                          case 
                          	when e_a2.""personType"" = 'O' then concat(t_a2.""TITLETHAIBEGIN"", ' ', e_a2.""t_ogName"", ' ', t_a2.""TITLETHAIEND"") 
                          	when e_a2.""personType"" = 'P' then concat(t_a2.""TITLETHAIBEGIN"", ' ', e_a2.""t_firstName"", ' ', e_a2.""t_lastName"", ' ', t_a2.""TITLETHAIEND"") 
                          	else null
-                         end	as ""agentName2"",
+                         end	
+                         as ""agentName2"",
                          p.""insureeCode"",
                          case 
                          	when e_i.""personType"" = 'O' then concat(t_i.""TITLETHAIBEGIN"", ' ', e_i.""t_ogName"", ' ', t_i.""TITLETHAIEND"") 
                          	when e_i.""personType"" = 'P' then concat(t_i.""TITLETHAIBEGIN"", ' ', e_i.""t_firstName"", ' ', e_i.""t_lastName"", ' ', t_i.""TITLETHAIEND"") 
                          	else null
-                         end	as ""insureeName"",
-                         it.""class"", it.""subClass"",
+                         end	
+                         as ""insureeName"",
+                         it.""class"",
+                         it.""subClass"",
                          case 
                          	when p.""itemList"" is not null then m.""licenseNo""
                          	else null
-                         end	as ""licenseNo"",
+                         end	
+                         as ""licenseNo"",
                          case 
                          	when p.""itemList"" is not null then pv.t_provincename
                          	else null
-                         end	as province,
+                         end	
+                         as province,
                          case 
                          	when p.""itemList"" is not null then m.""chassisNo""
                          	else null
-                         end	as ""chassisNo"",
-                         p.grossprem as ""grossPrem"", p.specdiscrate as ""specDiscRate"", p.specdiscamt as ""specDiscAmt"", p.netgrossprem as ""netGrossPrem"", 
-                         p.duty, p.tax, p.totalprem as ""totalPrem"", p.commin_rate as ""commInRate"", p.commin_amt as ""commInAmt"", 
-                         p.commin_taxamt as ""commInTaxAmt"", p.ovin_rate as ""ovInRate"", p.ovin_amt as ""ovInAmt"", p.ovin_taxamt as ""ovInTaxAmt"", 
-                         p.commout_rate as ""commOutRate"", p.commout_amt as ""commOutAmt"", p.ovout_rate as ""ovOutRate"", p.ovout_amt as ""ovOutAmt"", 
-                         p.""insurerCode""
+                         end	
+                         as ""chassisNo"",
+                         p.grossprem as ""grossPrem"", 
+                         p.specdiscrate as ""specDiscRate"", 
+                         p.specdiscamt as ""specDiscAmt"", 
+                         p.netgrossprem as ""netGrossPrem"", 
+                         p.duty, 
+                         p.tax, 
+                         p.totalprem as ""totalPrem"", 
+                         p.commin_rate as ""commInRate"", 
+                         p.commin_amt as ""commInAmt"", 
+                         p.commin_taxamt as ""commInTaxAmt"", 
+                         p.ovin_rate as ""ovInRate"", 
+                         p.ovin_amt as ""ovInAmt"", 
+                         p.ovin_taxamt as ""ovInTaxAmt"", 
+                         p.commout_rate as ""commOutRate"", 
+                         p.commout_amt as ""commOutAmt"", 
+                         p.ovout_rate as ""ovOutRate"", 
+                         p.ovout_amt as ""ovOutAmt"",
+                         p.""insurerCode"" 
                          from static_data.""Policies"" p
-                         inner join static_data.""Users"" u on u.""empCode"" = p.createusercode
-                         left join static_data.""Agents"" a1 on (p.""agentCode"" is not null and a1.""agentCode"" = p.""agentCode"")
-                         left join static_data.""Entities"" e_a1 on (p.""agentCode"" is not null and e_a1.id = a1.""entityID"")
-                         left join static_data.""Titles"" t_a1 on (p.""agentCode"" is not null and e_a1.""titleID"" = t_a1.""TITLEID"")
-                         left join static_data.""Entities"" e_cp1 on (p.""agentCode"" is not null and e_cp1.id = a1.""contactPersonID"")
-                         left join static_data.""Titles"" t_cp1 on (p.""agentCode"" is not null and e_cp1.""titleID"" = t_cp1.""TITLEID"")
-                         left join static_data.""Agents"" a2 on (p.""agentCode2"" is not null and a2.""agentCode"" = p.""agentCode2"")
-                         left join static_data.""Entities"" e_a2 on (p.""agentCode2"" is not null and e_a2.id = a2.""entityID"")
-                         left join static_data.""Titles"" t_a2 on (p.""agentCode2"" is not null and e_a2.""titleID"" = t_a2.""TITLEID"")
-                         left join static_data.""Entities"" e_cp2 on (p.""agentCode2"" is not null and e_cp2.id = a2.""contactPersonID"")
-                         left join static_data.""Titles"" t_cp2 on (p.""agentCode2"" is not null and e_cp2.""titleID"" = t_cp2.""TITLEID"")
-                         left join static_data.""Insurees"" i on (p.""insureeCode"" is not null and p.""insureeCode"" = i.""insureeCode"")
-                         left join static_data.""Entities"" e_i on (p.""insureeCode"" is not null and i.""entityID"" = e_i.id)
-                         left join static_data.""Titles"" t_i on (p.""insureeCode"" is not null and e_i.""titleID"" = t_i.""TITLEID"")
-                         inner join static_data.""InsureTypes"" it on it.id = p.""insureID""
-                         left join static_data.""Motors"" m on (p.""itemList"" is not null and m.id = p.""itemList"")
-                         left join static_data.provinces pv on (p.""itemList"" is not null and m.""motorprovinceID"" = pv.provinceid)
-                         where p.""endorseNo"" is null ";
+                         left join static_data.""Users"" u on u.""empCode"" = p.createusercode
+                         left join static_data.""Agents"" a1 on (a1.""agentCode"" = p.""agentCode"" and a1.lastversion = 'Y')
+                         left join static_data.""Entities"" e_a1 on e_a1.id = a1.""entityID""
+                         left join static_data.""Titles"" t_a1 on e_a1.""titleID"" = t_a1.""TITLEID""
+                         left join static_data.""Entities"" e_cp1 on e_cp1.id = a1.""contactPersonID""
+                         left join static_data.""Titles"" t_cp1 on e_cp1.""titleID"" = t_cp1.""TITLEID""
+                         left join static_data.""Agents"" a2 on (a2.""agentCode"" = p.""agentCode2"" and a2.lastversion = 'Y')
+                         left join static_data.""Entities"" e_a2 on e_a2.id = a2.""entityID""
+                         left join static_data.""Titles"" t_a2 on e_a2.""titleID"" = t_a2.""TITLEID""
+                         left join static_data.""Entities"" e_cp2 on e_cp2.id = a2.""contactPersonID""
+                         left join static_data.""Titles"" t_cp2 on e_cp2.""titleID"" = t_cp2.""TITLEID""
+                         left join static_data.""Insurees"" i on p.""insureeCode"" = i.""insureeCode""
+                         left join static_data.""Entities"" e_i on i.""entityID"" = e_i.id
+                         left join static_data.""Titles"" t_i on e_i.""titleID"" = t_i.""TITLEID""
+                         left join static_data.""InsureTypes"" it on it.id = p.""insureID""
+                         left join static_data.""Motors"" m on m.id = p.""itemList""
+                         left join static_data.provinces pv on m.""motorprovinceID"" = pv.provinceid
+                         where p.""endorseNo"" is null 
+                         and p.""lastVersion"" = 'Y' ";
             string currentDate = DateTime.Now.ToString("yyyy-MM-dd", new System.Globalization.CultureInfo("en-US"));
             if (!string.IsNullOrEmpty(data.StartPolicyDate?.ToString()))
             {
@@ -134,7 +164,7 @@ namespace BestPolicyReport.Services.DailyPolicyService
             }
             if (!string.IsNullOrEmpty(data.OrderBy?.ToString()))
             {
-                if (data.OrderBy == "ผู้บันทึก")
+                if (data.OrderBy.ToString() == "ผู้บันทึก")
                 {
                     sql += $@"order by p.createusercode asc";
                 }

@@ -1,6 +1,6 @@
 ﻿namespace BestPolicyReport.Models.ArApReport
 {
-    public class PremOutReportResult
+    public class PremOutCommInOvInReportResult
     {
         public string? PolicyNo { get; set; }
         public string? EndorseNo { get; set; }

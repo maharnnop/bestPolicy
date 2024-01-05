@@ -1,6 +1,6 @@
-﻿namespace BestPolicyReport.Models.OutputVatOvInReport
+﻿namespace BestPolicyReport.Models.OutputVatReport
 {
-    public class OutputVatOvInReportInput
+    public class OutputVatReportInput
     {
         public string? InsurerCode { get; set; }
         public string? StartRpRefDate { get; set; }

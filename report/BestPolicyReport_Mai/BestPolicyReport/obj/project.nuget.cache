@@ -154,42 +154,12 @@
   ],
   "logs": [
     {
-<<<<<<< HEAD
-      "code": "NU1301",
-      "level": "Error",
-      "message": "Failed to retrieve information about 'Microsoft.EntityFrameworkCore.SqlServer' from remote source 'https://www.nuget.org/api/v2/FindPackagesById()?id='Microsoft.EntityFrameworkCore.SqlServer'&semVerLevel=2.0.0'.",
-      "libraryId": "Microsoft.EntityFrameworkCore.SqlServer"
+      "code": "Undefined",
+      "level": "Warning",
+      "warningLevel": 1,
+      "message": "Problem reading the cache file D:\\Onedrive-Dhipaya\\OneDrive - Dhipaya Insurance Public Company Limited\\Best Policy\\bestPolicy\\report\\BestPolicyReport_Mai\\BestPolicyReport\\obj\\project.nuget.cache : Invalid property identifier character: <. Path 'logs[0]', line 157, position 0."
     },
     {
-      "code": "NU1301",
-      "level": "Error",
-      "message": "Failed to retrieve information about 'Microsoft.EntityFrameworkCore' from remote source 'https://www.nuget.org/api/v2/FindPackagesById()?id='Microsoft.EntityFrameworkCore'&semVerLevel=2.0.0'.",
-      "libraryId": "Microsoft.EntityFrameworkCore"
-    },
-    {
-      "code": "NU1301",
-      "level": "Error",
-      "message": "Failed to retrieve information about 'EPPlus' from remote source 'https://www.nuget.org/api/v2/FindPackagesById()?id='EPPlus'&semVerLevel=2.0.0'.",
-      "libraryId": "EPPlus"
-    },
-    {
-      "code": "NU1301",
-      "level": "Error",
-      "message": "Failed to retrieve information about 'Microsoft.AspNet.Cors' from remote source 'https://www.nuget.org/api/v2/FindPackagesById()?id='Microsoft.AspNet.Cors'&semVerLevel=2.0.0'.",
-      "libraryId": "Microsoft.AspNet.Cors"
-    },
-    {
-      "code": "NU1301",
-      "level": "Error",
-      "message": "Failed to retrieve information about 'Npgsql.EntityFrameworkCore.PostgreSQL' from remote source 'https://www.nuget.org/api/v2/FindPackagesById()?id='Npgsql.EntityFrameworkCore.PostgreSQL'&semVerLevel=2.0.0'.",
-      "libraryId": "Npgsql.EntityFrameworkCore.PostgreSQL"
-    },
-    {
-      "code": "NU1301",
-      "level": "Error",
-      "message": "Failed to retrieve information about 'ClosedXML' from remote source 'https://www.nuget.org/api/v2/FindPackagesById()?id='ClosedXML'&semVerLevel=2.0.0'.",
-      "libraryId": "ClosedXML"
-=======
       "code": "NU1701",
       "level": "Warning",
       "warningLevel": 1,
@@ -198,7 +168,6 @@
       "targetGraphs": [
         "net6.0"
       ]
->>>>>>> 893699244cfaa2ac73de8df10e4ae16991aa1f4c
     }
   ]
 }
