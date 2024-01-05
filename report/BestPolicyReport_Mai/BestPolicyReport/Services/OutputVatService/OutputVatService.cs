@@ -51,7 +51,7 @@ namespace BestPolicyReport.Services.OutputVatService
                          ar.status as ""arApStatus"",
                          ar.transactiontype as ""transactionType""
                          from static_data.b_jaaraps ar
-                         left join static_data.""Insurers"" i on p.""insurerCode"" = i.""insurerCode"" 
+                         left join static_data.""Insurers"" i on ar.insurerno  = i.id 
                          left join static_data.""Entities"" e_i on i.""entityID"" = e_i.id
                          left join static_data.""Titles"" t_i on e_i.""titleID"" = t_i.""TITLEID""
                          where ar.status = 'A'

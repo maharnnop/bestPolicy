@@ -52,7 +52,7 @@ namespace BestPolicyReport.Services.DailyPolicyService
                          	else null
                          end	
                          as ""agentName2"",
-                         p.""insureeCode"" as ""รหัสผู้เอาประกัน"",
+                         p.""insureeCode"",
                          case 
                          	when e_i.""personType"" = 'O' then concat(t_i.""TITLETHAIBEGIN"", ' ', e_i.""t_ogName"", ' ', t_i.""TITLETHAIEND"") 
                          	when e_i.""personType"" = 'P' then concat(t_i.""TITLETHAIBEGIN"", ' ', e_i.""t_firstName"", ' ', e_i.""t_lastName"", ' ', t_i.""TITLETHAIEND"") 
@@ -164,7 +164,7 @@ namespace BestPolicyReport.Services.DailyPolicyService
             }
             if (!string.IsNullOrEmpty(data.OrderBy?.ToString()))
             {
-                if (data.OrderBy == "ผู้บันทึก")
+                if (data.OrderBy.ToString() == "ผู้บันทึก")
                 {
                     sql += $@"order by p.createusercode asc";
                 }
