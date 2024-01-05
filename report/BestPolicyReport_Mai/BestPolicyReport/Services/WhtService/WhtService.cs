@@ -28,19 +28,29 @@ namespace BestPolicyReport.Services.WhtService
             return Task.FromResult(sql);
         }
        
-        public async Task<List<WhtCommOutReportResult>?> GetWhtCommOutReportJson(WhtReportInput data)
+        public async Task<List<WhtCommOutOvOutReportResult>?> GetWhtCommOutOvOutReportJson(WhtReportInput data)
         {
-            var sql = $@" ";
+            var sql = $@"select ar.dfrpreferno as ""dfRpReferNo"",
+                         ar.rprefdate as ""rpRefDate"",
+                         a.""agentCode"",
+                         case 
+                         	when e.""personType"" = 'O' then concat(t.""TITLETHAIBEGIN"", ' ', e.""t_ogName"", ' ', t.""TITLETHAIEND"") 
+                         	when e.""personType"" = 'P' then concat(t.""TITLETHAIBEGIN"", ' ', e.""t_firstName"", ' ', e.""t_lastName"", ' ', t.""TITLETHAIEND"") 
+                         	else null
+                         end as ""agentName"",
+                         ar.commout as ""commOutAmt"",
+                         ar.whtcommout as ""whtCommOutAmt"",
+                         ar.ovout as ""ovOutAmt"",
+                         ar.whtovout as ""whtOvOutAmt"",
+                         ar.transactiontype as ""transactionType""
+                         from static_data.b_jaaraps ar
+                         left join static_data.""Agents"" a on ar.advisorno = a.id
+                         left join static_data.""Entities"" e on a.""entityID"" = e.id
+                         left join static_data.""Titles"" t on e.""titleID"" = t.""TITLEID""
+                         where ar.transactiontype = 'COMM-OUT'
+                         and ar.status = 'A' ";
             sql = await GetWhereSql(data, sql);
-            var json = await _dataContext.WhtCommOutReportResults.FromSqlRaw(sql).ToListAsync();
-            return json;
-        }
-
-        public async Task<List<WhtOvOutReportResult>?> GetWhtOvOutReportJson(WhtReportInput data)
-        {
-            var sql = $@" ";
-            sql = await GetWhereSql(data, sql);
-            var json = await _dataContext.WhtOvOutReportResults.FromSqlRaw(sql).ToListAsync();
+            var json = await _dataContext.WhtCommOutOvOutReportResults.FromSqlRaw(sql).ToListAsync();
             return json;
         }
     }

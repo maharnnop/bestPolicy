@@ -26,5 +26,6 @@
         public double? BillPremium { get; set; }
         public string? DfRpReferNo { get; set; }
         public DateTime? RpRefDate { get; set; }
+        public string? TransactionType { get; set; }
     }
 }

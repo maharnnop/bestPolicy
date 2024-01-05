@@ -1,4 +1,4 @@
-﻿namespace BestPolicyReport.Models.OutputVatCommInReport
+﻿namespace BestPolicyReport.Models.OutputVatReport
 {
     public class OutputVatCommInReportResult
     {
@@ -8,8 +8,7 @@
         public string? InsurerName { get; set; }
         public double? CommInAmt { get; set; }
         public double? VatCommInAmt { get; set; }
-        public string? TransactionStatus { get; set; }
+        public string? ArApStatus { get; set; }
         public string? TransactionType { get; set; }
-        public string? PolicyStatus { get; set; }
     }
 }

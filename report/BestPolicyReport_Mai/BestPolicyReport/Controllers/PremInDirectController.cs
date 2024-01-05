@@ -36,7 +36,7 @@ namespace BestPolicyReport.Controllers
                 return BadRequest("sql result = null");
             }
             using var workbook = new XLWorkbook();
-            var sheetName = "ลูกค้าจ่ายค่าเบี้ยที่บริษัทประกันโดยตรง";
+            var sheetName = "ลูกค้าจ่ายเบี้ยที่ประกันโดยตรง";
             var worksheet = workbook.Worksheets.Add(sheetName);
 
             // Headers

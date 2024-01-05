@@ -2,8 +2,7 @@
 using BestPolicyReport.Models.DailyPolicyReport;
 using BestPolicyReport.Models.BillReport;
 using BestPolicyReport.Models.CashierReport;
-using BestPolicyReport.Models.OutputVatCommInReport;
-using BestPolicyReport.Models.OutputVatOvInReport;
+using BestPolicyReport.Models.OutputVatReport;
 using BestPolicyReport.Models.ArApReport;
 using BestPolicyReport.Models.PremInDirectReport;
 using BestPolicyReport.Models.WhtReport;
@@ -29,8 +28,7 @@ namespace BestPolicyReport.Data
             modelBuilder.Entity<PremInReportResult>().HasNoKey();
             modelBuilder.Entity<PolicyGroupBillReportResult>().HasNoKey();
             modelBuilder.Entity<PremInDirectReportResult>().HasNoKey();
-            modelBuilder.Entity<WhtCommOutReportResult>().HasNoKey();
-            modelBuilder.Entity<WhtOvOutReportResult>().HasNoKey();
+            modelBuilder.Entity<WhtCommOutOvOutReportResult>().HasNoKey();
         }
 
         public DbSet<DailyPolicyReportResult> DailyPolicyReportResults { get; set; }
@@ -43,7 +41,6 @@ namespace BestPolicyReport.Data
         public DbSet<PremInReportResult> PremInReportResults { get; set; }
         public DbSet<PolicyGroupBillReportResult> PolicyGroupBillReportResults { get; set; }
         public DbSet<PremInDirectReportResult> PremInDirectReportResults { get; set; }
-        public DbSet<WhtCommOutReportResult> WhtCommOutReportResults { get; set; }
-        public DbSet<WhtOvOutReportResult> WhtOvOutReportResults { get; set; }
+        public DbSet<WhtCommOutOvOutReportResult> WhtCommOutOvOutReportResults { get; set; }
     }
 }
