@@ -8115,12 +8115,6 @@
   },
   "logs": [
     {
-      "code": "Undefined",
-      "level": "Warning",
-      "warningLevel": 1,
-      "message": "Problem reading the cache file D:\\Onedrive-Dhipaya\\OneDrive - Dhipaya Insurance Public Company Limited\\Best Policy\\bestPolicy\\report\\BestPolicyReport_Mai\\BestPolicyReport\\obj\\project.nuget.cache : Invalid property identifier character: <. Path 'logs[0]', line 157, position 0."
-    },
-    {
       "code": "NU1701",
       "level": "Warning",
       "warningLevel": 1,
